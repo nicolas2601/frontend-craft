@@ -1,0 +1,2 @@
+# Preserve the supplied upstream source byte-for-byte, including its original EOF.
+skills/frontend-craft/references/noel-playbook-source.md -whitespace

@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "condition": "supervised-artifact-gated",
+  "generator": {"provider": "cline-pass", "model_id": "cline-pass/deepseek-v4.1-flash-1017", "effort": "max"},
+  "trial_count": 5,
+  "concurrency": 1,
+  "wall_budget_seconds_per_trial": 1200,
+  "maximum_stage_sessions_per_trial": 4,
+  "user_brief_policy": "Stored verbatim; supervisor stage assignments and feedback are separate, explicit experimental inputs",
+  "safety": {"new_paid_services": false, "credit_fallback": false, "account_rotation": false, "private_asset_uploads": false, "real_email_or_order_submission": false, "automatic_sixth_trial": false},
+  "cases": [
+    {
+      "id": "01-urban-bikes",
+      "brief": "Utiliza frontend-craft y genera una web para una marca de bicicletas urbanas personalizables.",
+      "surface": "Persuade/Experience",
+      "flow": "Choose a fitting product option and equipment, see a truthful visual consequence and total, inspect and dismiss a demo summary",
+      "review_focus": ["Two actual alternative organizing ideas, not recolored CAUCE/TERCA", "Material/asset finish appropriate to the chosen direction", "Visible decision feedback on mobile and synchronized accessible descriptions", "Real component sourcing/adaptation evidence where appropriate"]
+    },
+    {
+      "id": "02-independent-festival",
+      "brief": "Utiliza frontend-craft y genera una web para un festival de música independiente.",
+      "surface": "Persuade/Read",
+      "flow": "Select a day and inspect its lineup and event detail with a reversible local interaction",
+      "review_focus": ["Expressive typographic/composition proposition rooted in the fictional event", "Useful schedule controls rather than repeated decorative cards", "Motion/pacing contributes information without blocking reading", "No invented real endorsements or actual ticket sale"]
+    },
+    {
+      "id": "03-product-design-studio",
+      "brief": "Utiliza frontend-craft y genera una web para un estudio de diseño de producto.",
+      "surface": "Experience/Persuade",
+      "flow": "Explore a project and its material/detail views, then return with context and focus preserved",
+      "review_focus": ["Finished coherent project media and distinctive presentation", "Useful project explorer composed from suitable primitives", "Responsive cropping and media loading/error behavior", "Fictional portfolio clearly distinguished from actual client work"]
+    },
+    {
+      "id": "04-equipment-rental-workbench",
+      "brief": "Utiliza frontend-craft y genera un panel para gestionar alquileres de equipos audiovisuales.",
+      "surface": "Operate",
+      "flow": "Filter synthetic inventory, select equipment and perform a reversible demo booking/state action",
+      "review_focus": ["Information priority and efficient controls rather than a marketing landing", "Actual compatible library/component integration with useful states", "Keyboard, empty results, validation/recovery and clear selection", "No claim of a real backend or completed rental"]
+    },
+    {
+      "id": "05-mobile-walking-guide",
+      "brief": "Utiliza frontend-craft y genera una guía móvil de rutas de caminata urbanas.",
+      "surface": "Read/Operate",
+      "flow": "Choose a synthetic route, inspect its readable steps/detail and return to the route choice",
+      "review_focus": ["Mobile-first hierarchy, thumb reach and visible state consequence", "Useful navigation/detail component and honest illustrative map/media", "Narrow viewport, focus/touch, long text and reduced motion", "No live GPS/tracking, accounts, paid map API or false navigation accuracy"]
+    }
+  ],
+  "interpretation": "Adaptive cross-context coverage, not a matched causal benchmark. A completed attempt may be rejected or blocked; five attempts are not five aesthetic passes. Historical autonomous bicycle trials remain separately labeled and interrupted."
+}

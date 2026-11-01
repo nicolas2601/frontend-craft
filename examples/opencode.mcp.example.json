@@ -1,0 +1,13 @@
+{
+  "mcp": {
+    "servers": {
+      "opencode-observer": {
+        "type": "local",
+        "command": [
+          "node",
+          "/ABSOLUTE/CLONE/PATH/tools/opencode-observer/index.mjs"
+        ]
+      }
+    }
+  }
+}
