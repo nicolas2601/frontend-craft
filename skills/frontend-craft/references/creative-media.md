@@ -17,6 +17,7 @@ Write one compact shot/component brief: `visitor question → subject/asset → 
 | Need | Suitable candidate | Required input and fallback |
 | --- | --- | --- |
 | Responsive controls, masks, line drawings, simple spatial transitions | Native CSS/SVG/WAAPI or the project's installed motion tool | Design start/intermediate/end states; retain semantic HTML, keyboard access and reduced-motion behavior |
+| Original vector art (spot illustration, isometric scene, icon/logo mark, diagram, animated SVG, science figure) | The [`svg-craft`](svg-craft.md) skill: one style pack or seeded generator, then lint + render-and-look + safe optimize | The shipped kits and tools; look at 16-32 px and dark too; reduced-motion state must be the finished picture |
 | Authored 2D illustration or a richer vector sequence | Lottie when its asset/player fit; a Rive state-machine asset when one actually exists | Inspect the real JSON/.riv and runtime compatibility; provide status text, an appropriate still and reserved dimensions. A guide is not an animation asset |
 | Inspect, rotate or configure an actual object | A scoped Three.js viewer or the project's existing renderer | Supplied/licensed or deliberately authored geometry, textures, camera and lighting; bounded controls, loading/error UI, adjacent HTML actions and a static product view |
 | A few justified visual-material effects | A scoped shader/WebGL component | A no-WebGL fallback, context-loss recovery and bounded resource use. Avoid one renderer/animation loop per repeated list item |
