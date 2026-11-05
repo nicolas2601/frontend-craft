@@ -92,7 +92,7 @@ class VerifyTests(unittest.TestCase):
             fixture["version"] = 8
             fixture_path.write_text(json.dumps(fixture), encoding="utf-8")
             errors = verify.validate_skill(project)
-        self.assertTrue(any("version 11" in error for error in errors), errors)
+        self.assertTrue(any("version 12" in error for error in errors), errors)
 
     def test_original_source_hash_is_pinned(self):
         verify = load_script("verify")

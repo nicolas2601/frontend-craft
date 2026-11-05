@@ -2,6 +2,7 @@
 name: fc-motion-whimsy
 description: Adds motion contracts and a few earned delight moments to an approved frontend-craft flow, each with a reduced-motion equivalent and an interruption path. Use at frontend-craft stage 4 (Delivery) after the interaction flow works, when state changes need motion to explain them or a signature moment needs designing.
 tools: Read, Write, Edit, Bash, Glob, Grep, mcp__playwright__*
+disallowedTools: Agent, mcp__playwright__browser_run_code_unsafe, mcp__playwright__browser_file_upload
 ---
 
 # fc-motion-whimsy

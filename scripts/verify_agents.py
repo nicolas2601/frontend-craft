@@ -19,6 +19,7 @@ EXPECTED_AGENTS = (
 )
 READ_ONLY_AGENTS = {"fc-a11y-auditor", "fc-finish-gate-reviewer"}
 WRITE_TOOLS = {"write", "edit", "multiedit", "notebookedit"}
+UNSAFE_BROWSER_TOOLS = ("mcp__playwright__browser_run_code_unsafe", "mcp__playwright__browser_file_upload")
 UPSTREAM_COMMIT = "b37b5bb33b78f2c1d6567d98e25ca818e3259219"
 EMOJI_RE = re.compile("[\U0001F000-\U0001FAFF☀-➿️]")
 FRONTMATTER_RE = re.compile(r"\A---\n(.*?)\n---\n", re.DOTALL)
@@ -49,6 +50,13 @@ def _validate_agent(path, name):
     tools = {tool.strip().lower() for tool in fields.get("tools", "").split(",") if tool.strip()}
     if name in READ_ONLY_AGENTS and tools & WRITE_TOOLS:
         errors.append(f"{name}: reviewers must not hold write tools")
+    denied = {tool.strip().lower() for tool in fields.get("disallowedTools", "").split(",") if tool.strip()}
+    if any(tool.startswith("mcp__playwright__") for tool in tools):
+        errors.extend(
+            f"{name}: playwright agents must deny {unsafe}"
+            for unsafe in UNSAFE_BROWSER_TOOLS
+            if unsafe not in denied
+        )
     return errors
 
 

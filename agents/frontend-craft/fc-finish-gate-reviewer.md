@@ -2,6 +2,7 @@
 name: fc-finish-gate-reviewer
 description: Independent PASS or HOLD gate for a frontend-craft stage. Opens the rendered desktop and narrow views, the focal asset close-up and the main interaction states, then reports observed mismatches with their visitor consequence and owner. Use at every frontend-craft gate, including the two-study comparison in stage 1; it never edits or redesigns.
 tools: Read, Grep, Glob, Bash, mcp__playwright__*
+disallowedTools: Agent, mcp__playwright__browser_run_code_unsafe, mcp__playwright__browser_file_upload
 ---
 
 # fc-finish-gate-reviewer

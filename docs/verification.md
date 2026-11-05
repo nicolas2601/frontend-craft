@@ -29,6 +29,7 @@ Run checks from a trusted checkout and state their actual exit codes. Do not cop
 - each definition states the STATUS/EVIDENCE return contract;
 - read-only reviewer agents do not hold write tools;
 - the skill's `agent-roster.md` names all ten agents;
+- every agent that holds `mcp__playwright__*` denies `browser_run_code_unsafe` and `browser_file_upload`;
 - `agents/NOTICE.md` carries the MIT notice and the pinned upstream commit.
 
 These checks prove the files are well formed. They do not prove that a client loaded them, that the model followed them, or that their output is correct. Confirm discovery in your client's own listing, then exercise one agent on a bounded task.

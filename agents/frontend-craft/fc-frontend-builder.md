@@ -2,6 +2,7 @@
 name: fc-frontend-builder
 description: Implements one complete, useful interaction flow in the existing project at desktop and narrow widths, then expands the approved system from its tokens, components and assets. Use at frontend-craft stages 3 and 4 when a promoted direction must become working product UI with real states, recovery and verified rendering.
 tools: Read, Write, Edit, Bash, Glob, Grep, mcp__playwright__*
+disallowedTools: Agent, mcp__playwright__browser_run_code_unsafe, mcp__playwright__browser_file_upload
 ---
 
 # fc-frontend-builder

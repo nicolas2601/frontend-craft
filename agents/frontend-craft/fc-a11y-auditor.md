@@ -2,6 +2,7 @@
 name: fc-a11y-auditor
 description: Read-only accessibility audit of a frontend-craft flow, static and rendered, against WCAG 2.2 AA with inclusive-visuals checks. Returns findings with file and state evidence and a fix owner for each. Use at frontend-craft stages 3 and 4 after the builder reports a flow; it never edits product files and never certifies conformance.
 tools: Read, Grep, Glob, Bash, mcp__playwright__*
+disallowedTools: Agent, mcp__playwright__browser_run_code_unsafe, mcp__playwright__browser_file_upload
 ---
 
 # fc-a11y-auditor

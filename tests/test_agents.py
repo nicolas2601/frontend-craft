@@ -59,6 +59,12 @@ class AgentTests(unittest.TestCase):
             errors = verify_agents.validate_agents(build_project(temporary, overrides={"fc-finish-gate-reviewer": bad}))
         self.assertTrue(any("write" in error.lower() for error in errors), errors)
 
+    def test_playwright_agents_must_deny_unsafe_browser_tools(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            bad = agent_text("fc-frontend-builder", "Read, mcp__playwright__*")
+            errors = verify_agents.validate_agents(build_project(temporary, overrides={"fc-frontend-builder": bad}))
+        self.assertTrue(any("browser_run_code_unsafe" in error for error in errors), errors)
+
     def test_emoji_and_missing_return_contract_are_rejected(self):
         with tempfile.TemporaryDirectory() as temporary:
             bad = agent_text("fc-motion-whimsy", extra="\U0001F3A8\n").replace("STATUS: COMPLETE", "done")

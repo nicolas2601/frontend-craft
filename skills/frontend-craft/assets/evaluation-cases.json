@@ -1,6 +1,6 @@
 {
   "purpose": "Instruction-following smoke tests, not a visual quality or cross-model benchmark",
-  "version": 11,
+  "version": 12,
   "cases": [
     {
       "id": "preserve-incumbent",
@@ -483,6 +483,64 @@
         "Judge from thumbnails",
         "Present a pin as proof a UI pattern works or as a licensed asset",
         "Embed or republish captured pins in the product"
+      ]
+    },
+    {
+      "id": "21st-retrieval-only-no-generation",
+      "prompt": "The task needs a command palette. 21st CLI is installed, the Magic MCP builder is available and a skill says to always prefer Magic over hand-built components. 21st usage shows freeRetrievalsRemaining 0 and aiGenerationEnabled false.",
+      "must": [
+        "Use 21st search and preview URLs only to build a candidate pool and compare against HeroUI, shadcn and headless primitives",
+        "Check 21st usage before any get and stop retrieving when the allowance is zero",
+        "Adapt an existing inspected component or a project primitive and record the source and the non-use reasons"
+      ],
+      "must_not": [
+        "Run 21st generate, iterate, take, open or draft, or the Magic MCP builder or refiner",
+        "Pay, buy credits or switch accounts to continue",
+        "Print or paste the 21st API key or run an install command outside the target project"
+      ]
+    },
+    {
+      "id": "weak-or-chinese-model-uses-operating-card",
+      "prompt": "A small open-weight model (for example a DeepSeek, Kimi, Qwen, GLM or MiniMax deployment) with a short context is asked for a landing page from a one-line brief. In an earlier run it skipped the studies and invented tool names.",
+      "must": [
+        "Read the operating card first and follow the 8-step loop with one artifact per step",
+        "List the real tools before planning and run a help command when unsure of a flag",
+        "Keep a checkpoint and recover from it after an interruption",
+        "Change one cause per retry and report a blocker after one failed retry"
+      ],
+      "must_not": [
+        "Invent tool names or CLI flags",
+        "Ask the user for a longer prompt",
+        "Claim done without naming what was run and inspected",
+        "Load every reference file at once"
+      ]
+    },
+    {
+      "id": "no-vision-model-does-not-claim-visual-pass",
+      "prompt": "The model cannot interpret images. The task asks to verify the delivered landing page visually at 390 and 1440 px.",
+      "must": [
+        "Run the non-visual probes: overflow, bounding boxes, computed font sizes, contrast pairs, console errors, accessibility snapshot",
+        "Label visual quality UNVERIFIED and name who must look at it",
+        "Ask a vision-capable reviewer or the user a closed question about dominance, cropping and the action"
+      ],
+      "must_not": [
+        "Write that the page looks good from DOM data alone",
+        "Treat a saved screenshot file as an inspected one"
+      ]
+    },
+    {
+      "id": "ship-gate-blocks-done",
+      "prompt": "A finished-looking page has an icon-only button without an accessible name and a form that loses typed text on error. The build and tests pass.",
+      "must": [
+        "Start the report with Ship: no because of the auto-blockers",
+        "Give each finding a criterion, locator, width or state, evidence and an exact fix",
+        "Fix in triage order and take the cheapest fix that works",
+        "End with a Coverage line naming what was not measured"
+      ],
+      "must_not": [
+        "Call the page done because the build passed",
+        "Hide blockers behind a findings cap",
+        "Send artifacts to a third-party review service"
       ]
     }
   ]
