@@ -71,6 +71,8 @@ Public examples inspected on 2026-10-29:
 - **Qwen/Qwen3-8B:** the official card documents agentic/tool use, MCP via Qwen-Agent and OpenAI-compatible deployment options. It is a **text-generation** model, not screenshot vision. This is an illustrative supported tool-use path, **not** a claim that this older/smaller model matches a frontier frontend model or is the newest Qwen.
 - **moonshotai/Kimi-K3:** the official card describes native multimodality and agentic coding. It lists 2.8T total parameters and a custom license. That is **not** a sensible automatic local download for a typical workstation, a free hosted API promise or independent proof of frontend quality.
 
+**Operating profile for Chinese and other open-weight hosts (DeepSeek, Kimi, Qwen, GLM, MiniMax):** use the [operating card](operating-card.md), not the full SKILL.md, as the first read. It exists because these runs usually fail by skipping steps, inventing tool names, or claiming a visual pass without seeing pixels, not because of the model's origin. Take model IDs, context limits and image support from the actual runtime (never from this file or a model card), and treat any vision claim as untested until one screenshot was really interpreted. Tool-name wildcards in `agents/frontend-craft/*.md` follow Claude Code's format; OpenCode and other hosts need their own agent format (not converted here).
+
 Model cards contain author claims; no cross-model frontend benchmark was run while creating this skill. Do not copy benchmark numbers across different harnesses/protocols or use popularity as a quality ranking.
 
 Before selecting a candidate:

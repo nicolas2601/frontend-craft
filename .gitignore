@@ -17,3 +17,4 @@ dist/
 *.log
 .trash/
 tools/opencode-observer/verification*.json
+/pnpm-lock.yaml

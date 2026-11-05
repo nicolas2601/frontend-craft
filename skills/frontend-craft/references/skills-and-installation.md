@@ -80,6 +80,24 @@ The live UI Skills registry returned **16 distinct `emilkowalski/*` paths** on 2
 
 **Taste v2 transfer, bounded:** keep its subject-specific inventory, section-by-section claim→evidence mapping, closest-competitor substitution test, useful real content and rendered before/after inspection. They reinforce [composition and personality](composition-and-personality.md) and [product craft foundation](product-craft-foundation.md); they do not require random direction scripts, a fixed number of images/motions, removal of all ornament, or the author's gallery-score thresholds. The fetched Taste guide describes companion assets/scripts and author-reported study findings; this review did not inspect or run those payloads or reproduce the study.
 
+### UI Skills round 3 (2026-11-05)
+
+Sixteen more guides were retrieved with `get_skill` and read in full by a read-only worker; nothing they mention was executed or installed. `leonxlnx/redesign-skill` failed to retrieve twice ("Failed to fetch skill content") and is not described. Companion files (better-interface `review-format.md` and sibling skills, ui-review `criteria.md`, design-review `checklist.md`, regards references and scripts, taste scripts) were not read. The MCP now serves Taste as `tasteskill 2.5.0`; [taste-method](taste-method.md) audited v2.1.5, so treat them as different versions.
+
+| Guide | Mechanism transferred (into [ship gate](ship-gate.md) or [operating card](operating-card.md)) | Not imported |
+| --- | --- | --- |
+| `jakubkrehel/better-interface` | 13 auto-blockers, cheaper-fix ladder, one root cause per finding, cap with blockers first | Six sibling `better-*` skills and its review command |
+| `arla6ka/ui-review` | Finding schema (criterion, locator, width, evidence), trap probes, verdict first with a Coverage line | `.ui-review/` paths, capture script, 13-criteria file (not read) |
+| `pbakaus/polish`, `pbakaus/critique`, `pbakaus/layout` | Drift classification, fixed triage order, squint test, decision-point count, persona walk, support-contact tie-break | Storage/snapshot scripts, detector, mandatory two sub-agents, 2-4 questions flow |
+| `kemiljk/design-system-evolution`, `interaction-contracts`, `ai-output-judgement` | Smallest-change ladder, out-of-order responses, "would I defend this default" check, greppable median failures | Count-based abstraction rule is rejected for UI (code duplication rule is unchanged) |
+| `rams-design/rams`, `ibelick/baseline-ui`, `zeke/swiss-design` | Greppable WCAG checklist, one next action per empty state, opacity hierarchy, typographic micro-rules, 200 ms hover default | Marketing footer, stack mandates, house palette and font tables, blanket gradient ban |
+| `filipwojda/regards-art-direction`, `bencium/bencium-innovative-ux-designer` | Two-line headline rule, 25-word statement, 8-12 item subject inventory, type-only ablation test, "praise is not a lock" | Regards MCP, picture/motion quotas, 10-direction batches, "never create SVG" (svg-craft stays) |
+| `leonxlnx/taste-skill` (2.5.0) | Pair every rule with the check that fails when it breaks; fail-the-page waiver rule | Random palette/layout dealing, numeric photo/loop quotas |
+| `superfuture/design-review` | Three severity tiers, safe-fix versus ask-first split | **Rejected:** it sends an anonymous usage ping to a third-party endpoint on every run and its Pro mode uploads artifacts with a license key |
+| `emilkowalski/pick-ui-library` | Map the task to a component, flag a competing dependency instead of churning it, one recommendation | The curated list (it ages) |
+
+Conflicts and positions: keep the context-based duration rule but use about 200 ms as the unguided default; keep svg-craft over any "no SVG" rule; keep rendered studies and written premise over a "show before explaining" mode (use that only if the person wants an unprimed reaction); reject dealt/random directions and numeric quotas; keep critical/major/minor severity.
+
 ### Design-system implementation complement
 
 Inspected [dylantarre/design-system-skills](https://github.com/dylantarre/design-system-skills/tree/45bddad0fb1e3a0c3a05781324621d78bdacd3bc) on 2026-10-30: all **29 SKILL.md guides** and the three TypeScript token algorithms were read in the extended review. Snippets/algorithms were not executed or runtime-validated; no plugin was installed. The getting-started guide's count of 28 is stale relative to that pinned tree.

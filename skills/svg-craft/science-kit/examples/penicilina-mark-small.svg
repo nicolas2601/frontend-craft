@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="t d">
+<title id="t">Penicilina</title><desc id="d">Un moho verdeazulado al centro con una zona clara a su alrededor, rodeado por bacterias rojas que se mantienen a distancia.</desc>
+<style>svg{color:#0F1512}@media (prefers-color-scheme:dark){svg{color:#F4EFE3}}</style>
+<circle cx="32" cy="32" r="29.5" fill="none" stroke="currentColor" stroke-width="5"/>
+<circle cx="32" cy="32" r="9" fill="#0E8F7E"/>
+<circle cx="53.00" cy="32.00" r="4.4" fill="#EE4B2B"/><circle cx="42.50" cy="50.19" r="4.4" fill="#EE4B2B"/><circle cx="21.50" cy="50.19" r="4.4" fill="#EE4B2B"/><circle cx="11.00" cy="32.00" r="4.4" fill="#EE4B2B"/><circle cx="21.50" cy="13.81" r="4.4" fill="#EE4B2B"/><circle cx="42.50" cy="13.81" r="4.4" fill="#EE4B2B"/>
+</svg>
