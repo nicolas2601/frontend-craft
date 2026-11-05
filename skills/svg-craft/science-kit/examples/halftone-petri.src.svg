@@ -1,0 +1,28 @@
+<svg role="img" aria-label="Placa de Petri, estilo halftone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360">
+<rect id="@P@paper" width="480" height="360" fill="#f4f1ea"/>
+<defs><!--DEFS--></defs>
+<g filter="url(#@P@wob)" stroke="#111" stroke-linecap="round" stroke-linejoin="round" fill="none">
+  <!-- floor pool -->
+  <stip d="${H.E(240,262,196,30)}" t="rad 240 262 196 0.5 0.0"/>
+  <!-- dish wall (open contour) -->
+  <path d="M66 214 C66 246 146 272 240 272 C334 272 414 246 414 214" stroke-width="2.4"/>
+  <path d="M66 214 L66 192" stroke-width="2.4"/><path d="M414 214 L414 192" stroke-width="2.4"/>
+  <stip d="M66 192 L66 214 C66 246 146 272 240 272 C334 272 414 246 414 214 L414 192 C414 218 334 244 240 244 C146 244 66 218 66 192 Z" t="lin 66 230 0.12 414 230 0.5"/>
+  <!-- agar surface -->
+  <path d="${H.E(240,192,174,52)}" fill="#f4f1ea" stroke-width="2.4"/>
+  <stip d="${H.E(240,192,166,47)}" t="rad 240 192 170 0.14 0.46 + noise 0.35"/>
+  <!-- clear halo: stays paper -->
+  <path d="${H.E(240,194,96,29)}" fill="#f4f1ea" stroke-width="1.5" stroke-dasharray="1 6"/>
+  <!-- bacteria outside the halo -->
+  <g fill="#111" stroke="none">
+   ${[[96,186],[112,206],[130,170],[150,214],[176,172],[168,222],[318,170],[338,216],[360,180],[384,196],[352,162],[300,226],[214,160],[268,232],[130,196],[396,208]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="3.6" ry="2.3"/>`).join('')}
+  </g>
+  <!-- mold colony: solid mass with paper highlights -->
+  <path d="${H.E(240,194,24,8)}" fill="#111" stroke="none"/>
+  <path d="M222 192 C230 189 248 189 258 192" stroke="#f4f1ea" stroke-width="1.3"/>
+  <!-- lid, lifted, outline only -->
+  <path d="${H.E(240,118,184,56)}" stroke-width="1.8"/>
+  <path d="M92 106 C120 90 170 84 214 84" stroke-width="1.5"/>
+  <stip d="${H.E(240,118,180,53)}" t="flat 0.07"/>
+</g>
+</svg>

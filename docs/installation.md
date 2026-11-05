@@ -2,7 +2,9 @@
 
 The core skill is portable: copy the complete `skills/frontend-craft/` folder to a skill directory supported by the receiving client. Client discovery locations and reload behavior vary by version. Installation, discovery, invocation, and successful use are separate checks.
 
-## Install the skill in a project
+The tool-by-tool inventory, with install sources and verification status, is in the [README tool inventory](../README.md#tool-inventory). This page gives the procedures.
+
+## Install the skill
 
 For a client that supports project-local `.agents/skills`, run this from the target project root after replacing the source path with the actual unpacked location:
 
@@ -17,12 +19,56 @@ The guard intentionally stops if a same-named skill already exists. Inspect a co
 
 After copying, reload the client if required, confirm that `frontend-craft` is discoverable, and invoke it using the client's own displayed mechanism. A symlink or directory on disk alone is not proof the active model loaded the skill.
 
+## Install the svg-craft skill
+
+`skills/svg-craft/` is a separate skill folder. Copy it next to `frontend-craft` in the same skill directory, then install its tools in place. Do not copy another machine's `node_modules`.
+
+```sh
+test ! -e <skills-dir>/svg-craft && \
+  cp -R /absolute/path/to/frontend-craft/skills/svg-craft <skills-dir>/svg-craft
+cd <skills-dir>/svg-craft/tools && npm ci
+```
+
+Replace `<skills-dir>` with the skill directory you used above. `npm ci` installs `playwright-core` and `svgo` from the lockfile. Rendering needs a Chrome or Chromium binary: set `CHROME_PATH` to its absolute path in the environment that runs the tools. `text2path.py` additionally needs Python 3 and fonttools:
+
+```sh
+python3 -m venv .venv
+. .venv/bin/activate                 # macOS/Linux
+# Windows PowerShell: .venv\Scripts\Activate.ps1
+python -m pip install fonttools
+```
+
+The bundled packs carry their own MIT license files (see [rights](rights-and-redistribution.md#svg-craft-packs)). The anatomy kit (about 40 MB) is not bundled and is not needed for the core tools.
+
+## Install the subagents
+
+The ten specialist agents are in `agents/frontend-craft/` as `fc-*.md` files. They are Claude Code subagent definitions. Install the folder as a whole, not one file at a time, into one of these scopes:
+
+- Project scope, from the target project root:
+
+```sh
+mkdir -p .claude/agents
+test ! -e .claude/agents/frontend-craft && \
+  cp -R /absolute/path/to/frontend-craft/agents/frontend-craft \
+  .claude/agents/frontend-craft
+```
+
+- User scope: the same pattern with `~/.claude/agents/` as the parent. Use `mkdir -p ~/.claude/agents` first.
+
+The guard stops if the destination exists; inspect a collision before replacing anything. Claude Code scans `.claude/agents/` and `~/.claude/agents/` recursively; the subfolder does not change an agent's identity, which comes from its `name` frontmatter field (OFFICIAL-DOC, code.claude.com/docs/en/sub-agents, fetched 2026-11-05).
+
+Reload: Claude Code watches existing agent directories and picks up added or edited files within seconds. If the agents directory did not exist when the session started, restart Claude Code, because a running session does not detect a newly created `agents` directory. Confirm the ten names (`fc-reference-scout`, `fc-ux-architect`, `fc-art-director`, `fc-ui-system-designer`, `fc-component-sourcer`, `fc-asset-artist`, `fc-frontend-builder`, `fc-motion-whimsy`, `fc-a11y-auditor`, `fc-finish-gate-reviewer`) appear in your client's own listing of subagents.
+
+Only the main session spawns agents; the orchestration contract is the skill reference `agent-roster.md`. The attribution for the upstream roles is in [agents/NOTICE.md](../agents/NOTICE.md).
+
+Other clients: OpenCode and other hosts use different agent formats. This repository does not convert the files, and no other client's format has been verified here.
+
 ## Runtime prerequisites
 
-These commands are opt-in instructions, not actions performed for you. Use official installers for your OS, then verify the executables. The local authoring environment was observed on Node.js **26.2/Linux**; that does not establish compatibility for every OS. Although the observer's direct package dependencies support Node.js 18+, the full optional toolchain was not verified on Node 18. HeroUI CLI 3.2.0 requires Node.js **22.22.0+** and pnpm **12+**.
+These commands are opt-in instructions, not actions performed for you. Use official installers for your OS, then verify the executables. The local authoring environment was observed on Node.js **26.2/Linux**; that does not establish compatibility for every OS. The observer's direct package dependencies support Node.js 18+, but the full optional toolchain was not verified on Node 18. HeroUI CLI requires Node.js **22.22.0+**. awwwards-mcp requires Node.js **22.13+**. Claude Code's npm install requires Node.js **22+**.
 
 - [Node.js downloads](https://nodejs.org/en/download): install an LTS release compatible with the tool you choose, then run `node --version` and `npm --version`.
-- [Python downloads](https://www.python.org/downloads/): Python 3 is required for the bundled helper/tests; the helper uses only the standard library. Run `python3 --version` (or `python --version` on Windows). No `pip install` is needed for the helper.
+- [Python downloads](https://www.python.org/downloads/): Python 3 is required for the bundled helper, the tests, and svg-craft `text2path.py`. The helper uses only the standard library. Run `python3 --version` (or `python --version` on Windows).
 - Example OS package-manager installs (not run here; package versions are controlled by the OS/package manager):
 
 ```sh
@@ -34,6 +80,7 @@ brew install node python
 ```
 
 On Windows, use the official Node.js `.msi` and Python installer from the download pages above. Check the installed Node version against each tool's requirement; generic OS package commands may not provide a recent enough Node release.
+
 - For optional Python CLI packages, prefer a project virtual environment instead of a global install:
 
 ```sh
@@ -43,11 +90,30 @@ python3 -m venv .venv
 python -m pip install --upgrade huggingface_hub
 ```
 
+## Configure MCP servers
+
+Configuration is separate from installation. Merge entries into an existing host configuration; never overwrite it. Replace every placeholder path. The examples contain no auth or environment values.
+
+### Claude Code
+
+Two equivalent routes exist. The command form writes the entry for you; `--scope project` writes it to `.mcp.json` in the project root so it can be shared:
+
+```sh
+claude mcp add --transport http figma --scope project https://mcp.figma.com/mcp
+claude mcp add --scope project playwright -- npx @playwright/mcp@latest
+```
+
+Or merge the entries from [`examples/claude-code.mcp.example.json`](../examples/claude-code.mcp.example.json) into `.mcp.json` under `mcpServers`. That file includes the observer, Playwright, Chrome DevTools, Figma, UI Skills and shadcn entries. Claude Code asks before using project servers in an interactive session. Run `claude mcp get <name>` or `claude mcp list` yourself to inspect what is registered; this kit does not run those commands for you.
+
+### OpenCode v2
+
+OpenCode v2 uses `mcp.servers`, a different schema. Start from [`examples/opencode.mcp.example.json`](../examples/opencode.mcp.example.json), which uses `"type": "local"` with a `command` array. Remote servers use `"type": "remote"` with `url` and optional `headers`. Use `{env:NAME}` for secrets; shell forms like `$NAME` are not expanded in JSON (OFFICIAL-DOC, opencode.ai/v2/docs/mcp-servers, fetched 2026-11-05). Do not paste the Claude Code file into OpenCode's config.
+
 ## Optional OpenCode observer
 
 The observer is not needed for the core skill. It requires a working OpenCode v2 CLI and an already-configured Cline Pass provider only for starting a run. It does not bundle credentials, create accounts, or promise free inference. Check provider quotas/cost before starting a run. The implementation calls `process.getuid()` for ownership checks; Windows behavior is not verified, so do not assume the observer works there.
 
-Install OpenCode v2 using the upstream [CLI instructions](https://github.com/anomalyco/opencode#installation). The upstream v2 recipe checked here is:
+Install OpenCode v2 using the upstream [documentation](https://opencode.ai/v2/docs). The recipe checked on 2026-11-05 (anomalyco/opencode README) includes:
 
 ```sh
 npm install --global @opencode/cli@latest
@@ -62,7 +128,7 @@ npm ci
 npm test
 ```
 
-Register `tools/opencode-observer/index.mjs` as a local stdio MCP server. The host configuration schemas differ: use the [Claude Code `.mcp.json` example](../examples/claude-code.mcp.example.json) for Claude Code's `mcpServers` format, or the [OpenCode v2.1.2 config example](../examples/opencode.mcp.example.json) for OpenCode's `mcp.servers` format. Replace the absolute clone-path placeholder and merge the entry; never overwrite an existing host configuration. The examples contain no auth or environment values. Schemas were checked against [Claude Code MCP docs](https://code.claude.com/docs/en/mcp) on 2026-11-01 and [OpenCode v2.1.2 MCP docs](https://github.com/anomalyco/opencode/blob/v2.1.2/services/www/src/docs/content/mcp-servers.mdx). Other clients/versions can differ.
+Register `tools/opencode-observer/index.mjs` as a local stdio MCP server, using the Claude Code or OpenCode example above. Replace the absolute clone-path placeholder and merge the entry.
 
 The server exposes bounded session metadata/timelines; visible excerpts are opt-in and untrusted. Starting a test can spend provider quota and modify files; directory checks are not a sandbox. Do not pass secrets or private data. See [verification](verification.md).
 
@@ -70,7 +136,7 @@ The server exposes bounded session metadata/timelines; visible excerpts are opt-
 
 The runner is optional and model-backed. It requires an existing, current-user-owned workspace under the user's home directory or the system temporary directory; the runner rejects several sensitive home subdirectories. Windows behavior is not verified. Choose an enabled native Cline Pass model ID and its supported effort from `opencode_models` first. `run` starts one build-agent session for the current phase and can consume quota and write files; there is no automatic login, approval, or rollback.
 
-Keep the state JSON outside the workspace (neither inside it nor an ancestor of it). The workspace must already exist. The original brief is the final `init` argument, preserved verbatim; keep it short, 1–4000 characters, and free of credentials. On POSIX shells:
+Keep the state JSON outside the workspace (neither inside it nor an ancestor of it). The workspace must already exist. The original brief is the final `init` argument, preserved verbatim; keep it short, 1-4000 characters, and free of credentials. On POSIX shells:
 
 ```sh
 WORKSPACE="$HOME/work/frontend-trial-01"  # use an existing, owned trial directory
@@ -85,7 +151,7 @@ node tools/opencode-observer/supervisor-cli.mjs run "$STATE"
 node tools/opencode-observer/supervisor-cli.mjs status "$STATE"
 ```
 
-The four ordered phases are `direction`, `proof`, `interaction`, and `delivery`. Each producer session works in its own `<workspace>/<phase>/` directory. Later phases receive links to prior approved artifacts and notes as read-only handoffs. After each `run`, inspect the artifacts yourself, then record a human gate with `review <state.json> <approve|reject> <artifact-paths-json> <reviewer-notes> <evidence>`. Artifact paths are relative to the current phase directory (for example `study-1.png`, not `direction/study-1.png`) and must be nonempty regular files without symlinks or path traversal. An approval requires 1–20 existing files; rejection may use `[]`. Notes/evidence are required strings, but the CLI only hashes listed files—it does not view pixels or determine whether the written evidence is true. Only `awaiting_review` is reviewable; failed, interrupted, or uncertain run outcomes are not approval states and must not be retried or approved automatically.
+The four ordered phases are `direction`, `proof`, `interaction`, and `delivery`. Each producer session works in its own `<workspace>/<phase>/` directory. Later phases receive links to prior approved artifacts and notes as read-only handoffs. After each `run`, inspect the artifacts yourself, then record a human gate with `review <state.json> <approve|reject> <artifact-paths-json> <reviewer-notes> <evidence>`. Artifact paths are relative to the current phase directory (for example `study-1.png`, not `direction/study-1.png`) and must be nonempty regular files without symlinks or path traversal. An approval requires 1-20 existing files; rejection may use `[]`. Notes/evidence are required strings, but the CLI only hashes listed files; it does not view pixels or determine whether the written evidence is true. Only `awaiting_review` is reviewable; failed, interrupted, or uncertain run outcomes are not approval states and must not be retried or approved automatically.
 
 Example syntax only; replace paths and notes with real artifacts and a review you actually performed:
 
@@ -96,68 +162,19 @@ node tools/opencode-observer/supervisor-cli.mjs review "$STATE" approve \
   "Opened both rendered files directly and compared them with the brief."
 ```
 
-Each trial allows up to four sequential phase sessions within one shared 1,200-second wall-clock budget from its first `run`; human review time counts. Each `run` requests shutdown of the session it started. If shutdown cannot be confirmed, the process keeps the global lock at `~/.cache/opencode-observer/supervisor.lock` fail-closed. A retained lock is not cleared automatically—inspect the state and session before taking action; do not delete the lock to force a retry. The CLI records state but does not create a pixel-review certificate or self-approve a phase. See [Verification](verification.md) for the distinction between process checks and product review.
+Each trial allows up to four sequential phase sessions within one shared 1,200-second wall-clock budget from its first `run`; human review time counts. Each `run` requests shutdown of the session it started. If shutdown cannot be confirmed, the process keeps the global lock at `~/.cache/opencode-observer/supervisor.lock` fail-closed. A retained lock is not cleared automatically; inspect the state and session before taking action, and do not delete the lock to force a retry. The CLI records state but does not create a pixel-review certificate or self-approve a phase. See [Verification](verification.md) for the distinction between process checks and product review.
 
 ## Optional design and component tools
 
-Install or invoke only a tool that fits the chosen project. These examples do not initialize projects, log in, or accept terms automatically.
+The commands and sources for each tool are in the [README tool inventory](../README.md#tool-inventory). Procedure notes that the table does not carry:
 
-### OpenCode, 21st.dev, HeroUI, and Context7
-
-| Tool | Opt-in command | Requirements and boundary |
-| --- | --- | --- |
-| OpenCode v2 | `npm install --global @opencode/cli@latest` | Node/npm; verify with `opencode --version`. Current upstream v2 command, not v1. |
-| 21st.dev CLI | `npx @21st-dev/cli@1.18.0 search "color picker"` | Node/npm. Official CLI docs list `@21st-dev/cli` (binary `21st`). Optional pinned global install: `npm install --global @21st-dev/cli@1.18.0`. This example searches; `21st login` is separate and is not required by this instruction. A 2026-11-01 read-only search returned three color-picker candidates, reported Free, AI generation off and 0 credits, with two source-retrieval uses remaining at that time. Those limits/terms can change; search metadata is not component adoption. |
-| HeroUI CLI | `npx heroui-cli@3.2.0 --help` | Node.js 22.22.0+ and pnpm 12+. If pnpm is absent, optional install: `npm install --global pnpm@12`. Optional global CLI install: `npm install --global heroui-cli@3.2.0`. `heroui install` changes the current project's dependencies; run it only after choosing HeroUI and reviewing the target project. |
-| Context7 CLI | `npx ctx7@latest library React "the documentation question"` | Node/npm. Then use the returned library ID with `npx ctx7@latest docs <libraryId> "the documentation question"`. No global install or account is required by these commands. |
-
-Sources: [21st CLI](https://help.21st.dev/cli), [HeroUI CLI](https://github.com/heroui-inc/heroui-cli), [Context7 CLI](https://github.com/upstash/context7). Package versions and remote registry contents change; confirm before pinning them in a project.
-
-### Hugging Face Hub CLI and MCP
-
-The Hub CLI is included in `huggingface_hub`; install it in the virtual environment above and verify with `hf --help`. The official docs also provide a standalone installer. Public Hub browsing does not generally require authentication. **Do not run `hf auth login` unless you deliberately need a gated/private resource or write action.** This package's image helper does not use the Hub CLI or a token.
-
-For the official remote MCP server, visit [Hugging Face MCP settings](https://huggingface.co/settings/mcp), select your client, and use the client-specific configuration it generates. The documented endpoint is `https://huggingface.co/mcp`; setup may require you to authenticate with Hugging Face and approve access in your client. This guide does not log you in or authorize tools. Review enabled capabilities before use; Hub MCP may expose write/jobs/community tools in addition to search. See [official setup docs](https://huggingface.co/docs/hub/en/hf-mcp-server).
-
-### Playwright MCP, UI Skills MCP, and browser setup
-
-Start the official Playwright MCP package with Node/npm:
-
-```sh
-npx @playwright/mcp@latest
-```
-
-Configure that command in the receiving MCP client using its current local-stdio schema. This starts the server; it does not by itself prove the browser works. If Chromium binaries are missing, the official Playwright CLI provides these separate, opt-in commands:
-
-```sh
-npx playwright install chromium
-# Linux: also install required OS packages when appropriate
-npx playwright install --with-deps chromium
-```
-
-The second command may need elevated OS package permissions. MCP package and browser installation are different steps; browser install details depend on the selected browser/platform. See [Playwright MCP](https://github.com/microsoft/playwright-mcp) and [browser installation docs](https://playwright.dev/docs/browsers).
-
-UI Skills publishes the public MCP endpoint `https://www.ui-skills.com/mcp` with `list_skills` and `get_skill`. For Claude Code only, the documented remote-server registration form is:
-
-```sh
-claude mcp add --transport http ui-skills https://www.ui-skills.com/mcp
-```
-
-UI Skills' endpoint page does not document auth details. Do not assume other clients share Claude Code's command/config format. See [UI Skills MCP](https://www.ui-skills.com/mcp).
-
-### Optional video utilities
-
-Only install FFmpeg when the task needs local video inspection/encoding. Examples (package versions and system dependencies vary):
-
-```sh
-# macOS with Homebrew
-brew install ffmpeg
-
-# Debian/Ubuntu
-sudo apt-get install ffmpeg
-```
-
-Both packages normally provide `ffmpeg` and `ffprobe`; verify with `ffmpeg -version` and `ffprobe -version`. On Windows, use the download links from [FFmpeg's official download page](https://ffmpeg.org/download.html) and follow the chosen build's setup instructions; no Windows package-manager recipe was verified here. Installing FFmpeg does not install a video-generation model/provider. See [creative media limits](tools-and-provenance.md).
+- **21st.dev**: `21st login` opens a browser sign-in and saves a local session. Retrieval has a daily quota. Use `search` and `get`; `add`, generation, and `publish` have side effects and are not part of discovery. Install a retrieved component only into a project after inspecting it.
+- **HeroUI**: run `info` and `doc` for reference. `init`, `install`, `upgrade`, `uninstall`, `design-md` and `agents-md` change project files or dependencies; run them only after choosing HeroUI for a specific project and reviewing the target.
+- **Context7**: `npx ctx7@latest library <name> "<question>"` returns a library ID; pass that ID to `docs`. No global install or account is required.
+- **Playwright browsers**: `npx playwright install chromium` installs the browser binary. On Linux, `--with-deps` may need elevated OS-package permissions; run it only when appropriate.
+- **Hugging Face CLI**: install with `python -m pip install --upgrade huggingface_hub` in a virtual environment, or the official standalone installer (`curl -LsSf https://hf.co/cli/install.sh | bash` on macOS and Linux). Verify with `hf --help`. Do not run `hf auth login` unless you deliberately need a gated, private, or write action.
+- **UI Skills**: `list_skills` on a narrow topic, then `get_skill` for one returned path. Claude Code registration: `claude mcp add --transport http ui-skills https://www.ui-skills.com/mcp`.
+- **ffmpeg**: `ffmpeg -version` and `ffprobe -version` verify the install. Installing FFmpeg does not install a video-generation model or provider. See [creative media limits](../skills/frontend-craft/references/creative-media.md).
 
 ## Included public image helper (no package install)
 

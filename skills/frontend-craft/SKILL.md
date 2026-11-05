@@ -9,18 +9,22 @@ description: Product-design judgment grounded in Noel Santiago's complete user-s
 
 **Anti-slop is an acceptance constraint, not a style preset.** Reject interchangeable structure, invented proof, unfinished focal assets, decorative-only interactions and unsupported completion claims using the [observable rejection criteria](references/professional-review-loop.md#6-rejection-examples-not-a-new-template). Fix the observed cause; changing colors, names or adding effects is not a repair.
 
+**Small, open-weight or Chinese-model host (DeepSeek, Kimi, Qwen, GLM, MiniMax), tight context, or a run that skipped steps?** Read [Operating card](references/operating-card.md) first and follow its 8-step loop literally; it gives the same method as short imperative steps with an artifact per step, tool discipline and a no-vision fallback. Capable models can start below.
+
 Read [Product craft foundation](references/product-craft-foundation.md) first. This adaptation of the user-designated Noel Santiago playbook is the primary method: **understand → commit to a world → prove the visual system → build from it → inspect → correct → retain scoped feedback**. Optional skills support this method; they do not replace it.
 
 The [complete source and staged reading map](references/noel-playbook-guide.md) are bundled too. Read the source sections relevant to the task; do not substitute this short core for its detailed system, component, motion and feedback methods. Prior demos are not the base or a default visual style.
 
 **Apply through artifacts, not declarations.** For a new expressive site, use this order before writing a full page:
-1. Inspect actual subject/composition reference views; reading design advice is not viewing a reference.
+1. Inspect actual subject/composition reference views (Pinterest for mood and material, Awwwards/Lazyweb/design-screenshots for live structure and motion, Figma when the user supplies a file, the incumbent and 2-4 competitors); open them at size and keep source/rights notes per [inspiration research](references/inspiration-research.md). Reading design advice is not viewing a reference.
 2. Check fitting component and media routes before committing to stack or drawing the focal object. Make bounded discovery calls through available CLI/MCP/helpers; keep the actual candidate or blocker, not an assumption that custom code is best.
 3. Render two small, genuinely different first-view studies. Choose by the visitor's job, intended feeling and visible composition—not a paragraph describing each.
 4. Prove one complete useful interaction at desktop and narrow widths, including visible feedback, accessible state and recovery, before repeated cosmetic revisions or secondary sections.
 5. Expand the selected system, then inspect and correct the delivered states.
 
 Use the [professional review loop](references/professional-review-loop.md). Read applicable procedures and Noel source sections at their stage, not the entire catalog at once. Keep **job → source → artifact/decision → observed check or blocker** in existing context; recover it after compaction. Missing access needs an honest fallback. Reading, hashes and self-scores prove neither application nor quality; see [reliability limits](references/model-portability.md#7-reading-is-not-application). This sequence does not turn a small scoped edit into a new design project.
+
+**Delegate expressive or multi-part builds to specialist agents.** If the host has a subagent/task tool, the main session is the orchestrator and runs the ten `fc-*` specialists of the [agent roster](references/agent-roster.md) stage by stage: reference scout + UX architect + **two art directors on different organizing axes** in parallel for direction; system designer + component sourcer + asset artist in parallel for proof; the builder for one complete interaction, then delivery with the motion agent; the a11y auditor and finish-gate reviewer inspect independently at every gate. Only the orchestrator spawns agents; a reviewer never reviews its own output; a gate withholds promotion, it does not sandbox. Hand each agent the user brief verbatim, approved artifact paths with hashes, its writable lane and the required `STATUS/EVIDENCE` return. With no subagent tool, play the roles in sequence and keep the same artifacts. Skip delegation for a small scoped edit (zero to two agents), and never delegate the final judgment to a producer's "done".
 
 ## 1. Establish the real job
 
@@ -30,7 +34,7 @@ Classify each surface: **Persuade** (decide/act), **Experience** (explore), **Op
 
 For an audit, report evidence without editing unless fixes are requested. Work only in the assigned project. Old fixtures, neighboring projects and examples do not turn a new request into their task or an evaluation exercise.
 
-Check actual capabilities: references, editing, project checks, browser and screenshot interpretation. Distinguish installed, discoverable, permitted, quota-available and successfully used. A missing MCP name does not rule out a supported CLI/helper; an installed Hub CLI is not an image generator. If image understanding is unavailable, functional work can continue, but visual quality remains unverified. Never fabricate calls, screenshots, assets or measurements. In Nico's environment all browser interaction uses Playwright MCP.
+Check actual capabilities: references, editing, project checks, browser and screenshot interpretation. Distinguish installed, discoverable, permitted, quota-available and successfully used. A missing MCP name does not rule out a supported CLI/helper; an installed Hub CLI is not an image generator. If image understanding is unavailable, functional work can continue, but visual quality remains unverified. Never fabricate calls, screenshots, assets or measurements. In Nico's environment all browser interaction uses Playwright MCP. When the Figma MCP is connected, read an approved design with its context/screenshot tools; write into a Figma file only when the user asked for it.
 
 ## 2. Choose a direction, not a collection of effects
 
@@ -56,7 +60,7 @@ For expressive, image-led work, the central artifact is part of the core task—
 
 Original composition does not require every asset to be newly drawn. Legitimate, truthfully attributed product media and well-chosen components can express the subject better than a weak reconstruction. Do not impose an unasked code-only/no-product-assets constraint and then call the resulting simplification creativity.
 
-**An enlarged icon, rough contour, generic blob or placeholder diagram is not a finished hero asset.** SVG/CSS can be excellent final media, but their silhouette, proportions, detail, material language and composition must meet the chosen visual reference. “Drawn in code” does not prove craft, realism or authorship. Do not impose photorealism on an intentionally flat illustrated direction either.
+**An enlarged icon, rough contour, generic blob or placeholder diagram is not a finished hero asset.** SVG/CSS can be excellent final media, but their silhouette, proportions, detail, material language and composition must meet the chosen visual reference. “Drawn in code” does not prove craft, realism or authorship. Do not impose photorealism on an intentionally flat illustrated direction either. **Author SVG focal assets, icons, logos, diagrams and animated vector art through the [`svg-craft`](references/svg-craft.md) skill** (style packs with their own kits, seeded generators, a mandatory render-and-look loop, lint and a SVGO profile that keeps title/role/animation targets); freehand `d=""` paths are the fallback, not the default.
 
 Inspect the focal artifact close-up before duplicating it. Wrong proportions, broken joins, illegible labels or disconnected parts are revision issues, not stylistic personality. After a focused repair, compare again with the intended finish. If it still misses, inspect a different feasible media/construction candidate before another cosmetic pass; do not accumulate SVG paths, blur or explanations to defend a failed visual. Do not consume the whole run polishing an unproven object while the main interaction remains untested. A generation/stock/controlled-scene route is valid only when its rights, scope and actual output fit.
 
@@ -78,7 +82,7 @@ For a new shared system, render a compact proof using the real components: hiera
 
 A signature component must improve what someone can understand or do. Define **job → anatomy → input/state → visible consequence → recovery**. A four-item animated glossary is not automatically useful to someone choosing a service. Reuse project components, native behavior and installed accessible primitives before inventing a dependency or hand-writing a focus trap.
 
-For a nontrivial reusable piece, use [component sourcing](references/component-sourcing.md): search the actual compatible registry, inspect finalists, adapt and render the fitting piece. In a compatible React project inspect the relevant HeroUI API; use an available 21st CLI/MCP for a warranted composite rather than merely naming it. Compare against project/native/headless behavior and respect free allowance/rights. Installed CLI documentation, a package declaration or an unused import is not integrated component use. Do not select a stack solely to avoid available fitting resources, bulk-install a template or force a framework.
+For a nontrivial reusable piece, use [component sourcing](references/component-sourcing.md): search the actual compatible registry, inspect finalists, adapt and render the fitting piece. In a compatible React project inspect the relevant HeroUI API; use the 21st CLI only to search and retrieve existing community components within the free retrieval allowance (never its generate/iterate/take features or the Magic MCP builder) for a warranted composite rather than merely naming it. Compare against project/native/headless behavior and respect free allowance/rights. Installed CLI documentation, a package declaration or an unused import is not integrated component use. Do not select a stack solely to avoid available fitting resources, bulk-install a template or force a framework.
 
 Compare a bounded candidate set and record the actual query/source, choice or specific non-use reason, and adaptation; “custom is more original” is not enough to reimplement a solved behavior badly. Project dependency adoption can be a normal scoped build step when host/user policy permits it, unlike global installs, accounts or billing. If evidence is absent, do not claim the source was used. Keep promised visual consequences in view while the person decides.
 
@@ -98,7 +102,7 @@ Preserve normal scrolling, zoom and content selection. Budget blur, shadows, Web
 
 ## 6. Verify without certifying your own taste
 
-Run the actual relevant tests/build/typecheck/lint. Inspect the real delivered surface, console, target widths, zoom/reflow, keyboard/focus, primary flow, recovery and reduced motion. Label synthetic data, emulation and untested hardware honestly. Screenshots saved are not screenshots inspected; readable DOM is not visual perception.
+Run the actual relevant tests/build/typecheck/lint. Then apply the [ship gate](references/ship-gate.md): its 13 auto-blockers, finding shape, fix order and `Ship: no / yes, with fixes / yes` verdict with a Coverage line. Inspect the real delivered surface, console, target widths, zoom/reflow, keyboard/focus, primary flow, recovery and reduced motion. Label synthetic data, emulation and untested hardware honestly. Screenshots saved are not screenshots inspected; readable DOM is not visual perception.
 
 Compare the actual result with the brief and inspected references: **view/state → observed mismatch and visitor consequence → correction/replacement → re-render and remaining issue**. Include the first viewport, central media close-up, main interaction and narrow arrangement. Fix related high-impact problems in a focused batch, preserve known-good behavior and recheck the same states. Iteration can regress: retain the better candidate instead of blindly adding edits. Do not weaken checks or silently change conditions to hide a failure.
 
@@ -113,12 +117,17 @@ Deliver briefly: **what changed → what actually ran/was inspected → limits**
 - [Product craft foundation](references/product-craft-foundation.md): primary Noel-playbook-derived judgment and scoped feedback.
 - [Professional review loop](references/professional-review-loop.md): observable acceptance/rejection, visual alternatives, actionable critique, failed-asset strategy changes and evidence-bounded professional methods.
 - [Complete Noel playbook guide](references/noel-playbook-guide.md): the complete user-supplied source, progressive section routing, provenance and technical/authorization limits.
+- [Agent roster](references/agent-roster.md): ten frontend specialist subagents (definitions in `agents/frontend-craft/`), stage protocol, lanes, handoff contract and gates.
+- [Inspiration research](references/inspiration-research.md): Pinterest protocol, Awwwards/Lazyweb/design-screenshots/Figma as reference sources, take/becomes/leave notes.
 - [Design system](references/design-system.md): detailed composition, color, typography, tokens and component reasoning.
 - [Composition and personality](references/composition-and-personality.md): genuinely different page architectures, distinctive product relationships, cinematic staging and meaningful scroll-state selection.
 - [Taste method](references/taste-method.md): source-audited anti-template mechanisms, direction-library limits, local resource gaps and script side effects.
 - [Interaction and verification](references/interaction-and-verification.md): accessibility, platform behavior, state contracts and checks.
 - [Creative media](references/creative-media.md): asset fidelity, original 2D/3D, direct manipulation and film/story techniques.
-- [Component sourcing](references/component-sourcing.md): verified 21st and HeroUI CLI discovery, source/library selection by task, adaptation, quota and license checks.
+- [SVG craft](references/svg-craft.md) + the `svg-craft` skill (`~/.claude/skills/svg-craft`): vector illustration (13 styles), isometric scenes, icons, logos, diagrams, animated SVG and science figures; tools `lint.mjs`, `render.mjs` (sizes, light/dark, mono, animation frames, reduced motion) and `optimize.mjs`.
+- [Ship gate](references/ship-gate.md): auto-blockers, finding shape, fix order, cheapest-fix ladder, structure/type checks, greppable source checks, interaction contract and the ship verdict.
+- [Operating card](references/operating-card.md): the whole method as an 8-step loop for small, open-weight or Chinese models; tool discipline, no-vision fallback, model-tier markers.
+- [Component sourcing](references/component-sourcing.md): 21st as retrieval-only (never generation), HeroUI CLI discovery, source/library selection by task, adaptation, quota and license checks.
 - [Free-first assets](references/free-assets.md): asset briefs, anonymous ZeroGPU generation, output review and honest limits.
 - [Internal HF video module](modules/hf-video/SKILL.md): current Wan contract/limitations, an honestly tested local composition option, shot planning, persistence and media checks.
 - [Skills and installation](references/skills-and-installation.md): selective UI Skills, resources, costs and verified bootstrap recipes. Installation requires the host's actual authorization; never change global settings to make a tool work.

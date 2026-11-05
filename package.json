@@ -5,7 +5,7 @@
   "description": "Portable Noel-first craft guidance and explicitly supervised frontend experiments",
   "scripts": {
     "test": "npm --prefix tools/opencode-observer test && python -I -B -m unittest discover -s tests -v && python -I -B -m unittest discover -s skills/frontend-craft/tests -v",
-    "check": "python -I -B scripts/verify.py && node --check tools/opencode-observer/api.mjs && node --check tools/opencode-observer/observer.mjs && node --check tools/opencode-observer/runner.mjs && node --check tools/opencode-observer/index.mjs && node --check tools/opencode-observer/supervisor.mjs && node --check tools/opencode-observer/supervisor-cli.mjs",
+    "check": "python -I -B scripts/verify.py && python -I -B scripts/verify_agents.py && node --check tools/opencode-observer/api.mjs && node --check tools/opencode-observer/observer.mjs && node --check tools/opencode-observer/runner.mjs && node --check tools/opencode-observer/index.mjs && node --check tools/opencode-observer/supervisor.mjs && node --check tools/opencode-observer/supervisor-cli.mjs",
     "doctor": "python -I -B scripts/doctor.py",
     "pack:skill": "python -I -B scripts/verify.py --package dist/frontend-craft.skill"
   }
