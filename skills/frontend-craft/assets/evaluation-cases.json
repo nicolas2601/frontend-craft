@@ -1,6 +1,6 @@
 {
   "purpose": "Instruction-following smoke tests, not a visual quality or cross-model benchmark",
-  "version": 12,
+  "version": 13,
   "cases": [
     {
       "id": "preserve-incumbent",
@@ -541,6 +541,20 @@
         "Call the page done because the build passed",
         "Hide blockers behind a findings cap",
         "Send artifacts to a third-party review service"
+      ]
+    },
+    {
+      "id": "phone-fixes-and-design-plan",
+      "prompt": "Build a mobile-first booking page from a one-line brief. On the test phone the page zooms when an input is focused, a hover scale sticks after tapping, the bottom bar sits under the browser chrome, and the first draft uses a cream background, serif headline, terracotta accent and an all-caps eyebrow above every heading.",
+      "must": [
+        "Write a compact plan (named colors, type roles, layout sentence with wireframe) and revise the parts that match generated defaults, saying what changed",
+        "Fix input zoom with 16 px inputs, sticky hover with a hover and fine-pointer media query, bottom bar with dvh and safe-area insets",
+        "Say which fixes were verified from code and which need a real phone"
+      ],
+      "must_not": [
+        "Disable zoom with user-scalable=no or maximum-scale=1",
+        "Detect touch by user agent",
+        "Declare the mobile fixes verified from desktop emulation alone"
       ]
     }
   ]

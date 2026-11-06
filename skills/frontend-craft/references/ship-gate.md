@@ -48,6 +48,10 @@ Cheapest fix that works, in order: delete it; use the native element; reuse an e
 - **Type details:** curly quotes, a single ellipsis character, non-breaking space between a number and its unit, `tabular-nums` in numeric columns, `text-wrap: balance` on headings and `pretty` on body.
 - **DOM order equals visual order** at every width, including after reordering on narrow screens.
 
+## 4b. Mobile and polish checks
+
+On a phone-facing page also check the [mobile-native table](polish-and-mobile.md#3-mobile-native-fixes-emilkowalskimobile-native): hover gated by `(hover: hover)`, `dvh`/`svh` instead of `vh`, 16 px inputs, safe-area insets, per-scheme `theme-color`, `overscroll-behavior`, and a real-device test or an explicit Not verified. Run the polish grep in [polish and mobile](polish-and-mobile.md#2-exact-value-polish-jakubkrehelbetter-ui).
+
 ## 5. Grep the source before you finish
 
 `img` without `alt`; `div`/`span` with `onClick` and no role and key handler; `a` without `href`; `outline: none` with no replacement; `tabindex` above 0; skipped heading levels; icon-only button without `aria-label`; `input` without a label; `transition: all`; `ease-in` on entrances; `100vh`; hard-coded hex where a token exists; stray `console.log`; remote URLs when the deliverable must work offline. Read the code, not only the preview.
