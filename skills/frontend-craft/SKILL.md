@@ -125,6 +125,7 @@ Deliver briefly: **what changed → what actually ran/was inspected → limits**
 - [Interaction and verification](references/interaction-and-verification.md): accessibility, platform behavior, state contracts and checks.
 - [Creative media](references/creative-media.md): asset fidelity, original 2D/3D, direct manipulation and film/story techniques.
 - [SVG craft](references/svg-craft.md) + the `svg-craft` skill (`~/.claude/skills/svg-craft`): vector illustration (13 styles), isometric scenes, icons, logos, diagrams, animated SVG and science figures; tools `lint.mjs`, `render.mjs` (sizes, light/dark, mono, animation frames, reduced motion) and `optimize.mjs`.
+- [Polish and mobile](references/polish-and-mobile.md): design plan before code and generated-default tells, exact-value polish, mobile-native fix table, WCAG audit workflow.
 - [Ship gate](references/ship-gate.md): auto-blockers, finding shape, fix order, cheapest-fix ladder, structure/type checks, greppable source checks, interaction contract and the ship verdict.
 - [Operating card](references/operating-card.md): the whole method as an 8-step loop for small, open-weight or Chinese models; tool discipline, no-vision fallback, model-tier markers.
 - [Component sourcing](references/component-sourcing.md): 21st as retrieval-only (never generation), HeroUI CLI discovery, source/library selection by task, adaptation, quota and license checks.

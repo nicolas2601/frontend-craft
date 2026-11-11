@@ -96,6 +96,8 @@ Sixteen more guides were retrieved with `get_skill` and read in full by a read-o
 | `superfuture/design-review` | Three severity tiers, safe-fix versus ask-first split | **Rejected:** it sends an anonymous usage ping to a third-party endpoint on every run and its Pro mode uploads artifacts with a license key |
 | `emilkowalski/pick-ui-library` | Map the task to a component, flag a competing dependency instead of churning it, one recommendation | The curated list (it ages) |
 
+Round 3b (same day, four more guides read in full, companion files not read): `anthropics/frontend-design` (design plan, generated-default tells, copy rules), `jakubkrehel/better-ui` (exact polish values), `emilkowalski/mobile-native` (phone fix table) and `wshobson/wcag-audit-patterns` (audit workflow) are condensed in [polish and mobile](polish-and-mobile.md). Where better-ui differs from Noel (press 0.96 versus .97, 100 ms stagger versus 30-80 ms) Noel wins for lists and routine UI.
+
 Conflicts and positions: keep the context-based duration rule but use about 200 ms as the unguided default; keep svg-craft over any "no SVG" rule; keep rendered studies and written premise over a "show before explaining" mode (use that only if the person wants an unprimed reaction); reject dealt/random directions and numeric quotas; keep critical/major/minor severity.
 
 ### Design-system implementation complement
