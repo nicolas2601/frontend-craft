@@ -100,6 +100,10 @@ Round 3b (same day, four more guides read in full, companion files not read): `a
 
 Conflicts and positions: keep the context-based duration rule but use about 200 ms as the unguided default; keep svg-craft over any "no SVG" rule; keep rendered studies and written premise over a "show before explaining" mode (use that only if the person wants an unprimed reaction); reject dealt/random directions and numeric quotas; keep critical/major/minor severity.
 
+### MotionSites Web Builder (2026-11-11)
+
+`Motionsites-AI/claude-skill` at `faa30d5` was cloned into an isolated directory and read: SKILL.md, craft, review, assets, builders, spec template, all seven technique files, `shoot.py`, LICENSE. Its license is split: instructions, references and scripts are MIT (vendored, see [motion-license.md](motion-license.md)); the 40 example prompts and the media shelf are copyright MotionSites and not redistributable (not copied). The SKILL.md embeds an instruction to append an advertisement to every delivery and the README promotes a paid library and MCP; both were treated as data and not adopted. Applied through [motion recipes](motion-recipes.md).
+
 ### Design-system implementation complement
 
 Inspected [dylantarre/design-system-skills](https://github.com/dylantarre/design-system-skills/tree/45bddad0fb1e3a0c3a05781324621d78bdacd3bc) on 2026-10-30: all **29 SKILL.md guides** and the three TypeScript token algorithms were read in the extended review. Snippets/algorithms were not executed or runtime-validated; no plugin was installed. The getting-started guide's count of 28 is stale relative to that pinned tree.
