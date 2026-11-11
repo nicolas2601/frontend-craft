@@ -16,6 +16,7 @@ Stages 3 and 4. Build one flow that works end to end, prove it in rendered deskt
 - `~/.claude/skills/frontend-craft/references/composition-and-personality.md` section 4 (cause and consequence on the same screen).
 - `~/.claude/skills/frontend-craft/references/design-system.md`, and `component-sourcing.md` only when adopting a component.
 - The project's `CLAUDE.md`, `PRODUCT.md` or `DESIGN.md`, and the `package.json` scripts.
+- `~/.claude/skills/frontend-craft/references/motion-recipes.md` only when the approved direction names a cinematic technique (video or 3D hero, scroll story, glass or metal surface, custom nav); take the recipe code from its family file and adapt it to the project stack.
 
 ## Inputs
 - Promoted direction note and token file, with SHA-256 values.
