@@ -90,7 +90,7 @@ Compose around realistic uneven content and reachable states: selected, pending,
 
 ## 5. Design motion with the experience
 
-Use [interaction and verification](references/interaction-and-verification.md). Give motion a job: feedback, continuity, explanation, direct manipulation or appropriate delight. Frequent tasks need fast response; rare scenes can carry more expression. Keep typography, material, geometry and movement telling the same story.
+Use [interaction and verification](references/interaction-and-verification.md). For a cinematic or high-craft build, take one signature technique and two to four quiet supports from the [motion recipes](references/motion-recipes.md) instead of inventing code from scratch; Noel's frequency and reduced-motion rules still win. Give motion a job: feedback, continuity, explanation, direct manipulation or appropriate delight. Frequent tasks need fast response; rare scenes can carry more expression. Keep typography, material, geometry and movement telling the same story.
 
 For a signature scene, specify **trigger → opening → meaningful intermediate change → resolved state → interruption/reverse → reduced-motion equivalent**. Show new information or a transformation; floating the same object and fading words is not a complete narrative.
 
@@ -125,6 +125,7 @@ Deliver briefly: **what changed → what actually ran/was inspected → limits**
 - [Interaction and verification](references/interaction-and-verification.md): accessibility, platform behavior, state contracts and checks.
 - [Creative media](references/creative-media.md): asset fidelity, original 2D/3D, direct manipulation and film/story techniques.
 - [SVG craft](references/svg-craft.md) + the `svg-craft` skill (`~/.claude/skills/svg-craft`): vector illustration (13 styles), isometric scenes, icons, logos, diagrams, animated SVG and science figures; tools `lint.mjs`, `render.mjs` (sizes, light/dark, mono, animation frames, reduced motion) and `optimize.mjs`.
+- [Motion recipes](references/motion-recipes.md): 58 working techniques (video and 3D heroes, glass and metal surfaces, type motion, scroll stories, navs, carousels) with exact values, adapted from the MIT part of MotionSites Web Builder; filters, Playwright QA snippet and license in [motion-license.md](references/motion-license.md). Read the index, then only the family you need.
 - [Polish and mobile](references/polish-and-mobile.md): design plan before code and generated-default tells, exact-value polish, mobile-native fix table, WCAG audit workflow.
 - [Ship gate](references/ship-gate.md): auto-blockers, finding shape, fix order, cheapest-fix ladder, structure/type checks, greppable source checks, interaction contract and the ship verdict.
 - [Operating card](references/operating-card.md): the whole method as an 8-step loop for small, open-weight or Chinese models; tool discipline, no-vision fallback, model-tier markers.

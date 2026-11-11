@@ -7,6 +7,7 @@ It is guidance, not an autonomous benchmark or an aesthetic-quality certificate.
 ## What is included
 
 - `skills/frontend-craft/` - the complete skill and its staged references. Install the whole directory; do not copy only `SKILL.md`.
+- Motion recipes inside the skill (`references/motion-*.md`): 58 techniques adapted from the MIT part of MotionSites Web Builder, with notice in `motion-license.md`. Its example prompts and media shelf are copyrighted and not included.
 - `skills/svg-craft/` - a vendored SVG skill (illustration packs, diagrams, animation, logos, generative and science kits) with its own tools in `tools/`. Its anatomy kit (about 40 MB) is not bundled.
 - `agents/frontend-craft/` - ten specialist subagents (`fc-*.md`) adapted for frontend work from the MIT-licensed agency-agents project. Attribution is in [agents/NOTICE.md](agents/NOTICE.md).
 - `tools/opencode-observer/` - an optional local MCP server for inspecting bounded OpenCode session activity and, when explicitly invoked, starting a separate build-agent test.

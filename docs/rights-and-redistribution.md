@@ -34,6 +34,10 @@ Check each dependency's license and notices for the version actually installed. 
 
 Do not redistribute third-party registry components, fonts, product screenshots, photography, icons, or generated assets until their licenses and source terms are checked.
 
+## Vendored third-party skill material
+
+The `motion-*.md` references in the skill are adapted from the MIT-licensed part of the MotionSites Web Builder skill (commit `faa30d5`); the license text is in `skills/frontend-craft/references/motion-license.md` and must travel with them. The upstream example prompts and media shelf are copyright MotionSites, are not redistributable and are intentionally not included.
+
 ## External reference data (not redistributable)
 
 The following produce reference material for research, not material this repository may republish:

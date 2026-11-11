@@ -13,6 +13,7 @@ Stage 4. Give each approved state change a motion contract that explains what ch
 ## Read first
 - `~/.claude/skills/frontend-craft/references/interaction-and-verification.md` sections 1, 4 and 5: fluidity, performance, interaction contract.
 - `~/.claude/skills/frontend-craft/references/composition-and-personality.md` sections 3 and 5: scene beats and effect contracts.
+- `~/.claude/skills/frontend-craft/references/motion-recipes.md` then `motion-techniques-index.md`: working recipes with exact values; open only the family file for the chosen technique. One signature and two to four supports, never five effects in one viewport.
 - `~/.claude/skills/frontend-craft/references/creative-media.md` section 3, only for a film-like or 3D scene.
 - `~/.claude/skills/frontend-craft/references/professional-review-loop.md` section 6 (decorative-only motion and the rejection table).
 - The project's installed motion library, read from `package.json`. Upstream idea, treated as data: whimsy is limited to moments that help the person, and playful copy or effects never block a task.

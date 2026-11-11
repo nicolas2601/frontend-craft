@@ -12,8 +12,8 @@ from pathlib import Path
 
 SKILL_RELATIVE = Path("skills/frontend-craft")
 SOURCE_SHA256 = "61b440e0382256affa387eaaa1c57be3cfedd84f001364b931178fc84da0fb7d"
-FIXTURE_VERSION = 13
-FIXTURE_CASE_COUNT = 36
+FIXTURE_VERSION = 14
+FIXTURE_CASE_COUNT = 38
 ALLOWED_DIRS = {"references", "assets", "scripts", "tests", "modules"}
 ALLOWED_SUFFIXES = {".md", ".py", ".json"}
 LINK_RE = re.compile(r"(?<!!)\[[^\]]*\]\(([^)]+)\)")
