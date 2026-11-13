@@ -15,6 +15,8 @@ As a plugin (the gate comes with it as a Stop hook declared in the skill's front
 
 From a local clone: `/plugin marketplace add /path/to/frontend-craft`.
 
+Verified on 2026-11-13 with Claude Code 2.1.321: `claude plugin validate .` passes with no warnings, and installing from a local clone through the marketplace loads five skills at about 830 always-on tokens (`frontend-craft` costs about 3,200 tokens when it fires). The GitHub form works once the manifests are on the default branch.
+
 Or as plain skills: symlink or copy `skills/*` into `~/.claude/skills/` (user) or `.claude/skills/` (project). The Stop hook is in `skills/frontend-craft/SKILL.md` and runs only while that skill is active in the session; it does nothing when no build is armed.
 
 ## Codex
