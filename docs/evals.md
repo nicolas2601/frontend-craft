@@ -86,6 +86,9 @@ Compared with the same model and prompt without the plugin (a stock dark dev-too
 | festival-vue #3 | OpenCode, GLM-5.3 Flash (free) | Nothing built | Free usage limit reached | Not a skill issue |
 | devtool-next #2 | Claude Code, Haiku | Did not load frontend-craft at first (picked a Next.js skill). The gate loop then worked: 4 FAIL, 5 FAIL, 0 FAIL over three rounds, using the kit via `--kit-only`. Without a deal the page is the stock dark dev-tool template | Skill selection is the model's call; a host router added competing suggestions | Plugin `UserPromptSubmit` hook that points web-page prompts at the run |
 
+| festival-vue #4 | pi 1.3.0, OmniRoute `auto/coding:free` | Read `SKILL.md`, skipped `start.mjs`, wrote the page from its defaults; follow-ups made no progress | The free router sends turns to small models (Mistral 7B) or ones that reject the context (`413 Request too large`); it cannot carry a multi-step build | The run now opens with the start command and the check fails `no-direction` without a deal, so any agent that does follow up is told why |
+| festival-vue #5 | pi 1.3.0, self-hosted Qwen3.8-27B | Not run: the model server was down (HTTP 530 from its tunnel) | Infrastructure | — |
+
 The OpenCode gate plugin was also rewritten for OpenCode's plugin API v2 after finding it did not load in 2.2.7.
 
 All fourteen blueprints render through the check with sample text (`npm run test:blueprints`): every one passes with an entrance and a scroll-linked scene.
