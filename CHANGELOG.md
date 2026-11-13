@@ -14,6 +14,17 @@ Rebuilt from a reference library into an executable system that weak and strong 
 - Claude Code plugin and marketplace manifests; `agents/openai.yaml` per skill.
 - Tests (node:test), structural verifier, pack script and an eval runner that drives a real agent CLI.
 
+- Composition blueprints (`blueprints/`, `kit/layouts.css`): every composition ships a working page skeleton; `start.mjs` copies it and writes it as `index.html` for plain HTML. `npm run test:blueprints` renders all fourteen through the check.
+- Claude Code plugin `UserPromptSubmit` hook that routes web-page prompts to the run.
+- Checks: hero action inside the first screen (`fold-action-*`), colored italic accent words (`tell-italic-accent`), rendered size of SVG text, unfilled `{{...}}` markers.
+
+### Fixed (found by running real agents)
+- Scripts exited silently when called through a symlinked install.
+- The deal matched type and palette to the brief but not to each other.
+- Motion under-counted (unit-sized values) and sticky navs counted as pinned scenes.
+- The OpenCode gate plugin now uses plugin API v2.
+- The eval runner passes `PWD` with `cwd`, works on disk instead of tmpfs and requires a followed deal for a pass.
+
 ### Changed
 - `frontend-craft/SKILL.md` is a 1,200-word run with numeric house rules instead of a 39-file reference set.
 
