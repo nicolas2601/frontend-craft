@@ -36,12 +36,26 @@ test('start.mjs deals into a fresh folder and writes a page for plain HTML', () 
   const { dir, link } = linkedSkill();
   const project = path.join(dir, 'site');
   fs.mkdirSync(project);
-  const res = node([path.join(link, 'scripts', 'start.mjs'), '--kind', 'event', '--moods', 'music,festive', '--seed', '3'], project, { XDG_STATE_HOME: dir });
+  const res = node([path.join(link, 'scripts', 'start.mjs'), '--kind', 'event', '--fallback', '--moods', 'music,festive', '--seed', '3'], project, { XDG_STATE_HOME: dir });
   assert.equal(res.status, 0, res.stderr);
   for (const f of ['.craft/deal.json', '.craft/brief.md', '.craft/gate.json', 'craft/tokens.css', 'craft/layouts.css', 'craft/blueprint.html', 'index.html']) {
     assert.ok(fs.existsSync(path.join(project, f)), f);
   }
   assert.match(fs.readFileSync(path.join(project, 'index.html'), 'utf8'), /href="craft\/layouts\.css"/);
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('start.mjs sends website kinds to design-taste-frontend and keeps app and docs', () => {
+  const { dir, link } = linkedSkill();
+  const project = path.join(dir, 'site');
+  fs.mkdirSync(project);
+  const site = node([path.join(link, 'scripts', 'start.mjs'), '--kind', 'landing', '--moods', 'warm,coffee'], project, { XDG_STATE_HOME: dir });
+  assert.equal(site.status, 2);
+  assert.match(site.stderr, /design-taste-frontend skill/);
+  assert.match(site.stderr, /--fallback/);
+  assert.ok(!fs.existsSync(path.join(project, '.craft', 'deal.json')), 'a refused website kind deals nothing');
+  const app = node([path.join(link, 'scripts', 'start.mjs'), '--kind', 'app', '--moods', 'calm,precise', '--seed', '5'], project, { XDG_STATE_HOME: dir });
+  assert.equal(app.status, 0, app.stderr);
   fs.rmSync(dir, { recursive: true, force: true });
 });
 

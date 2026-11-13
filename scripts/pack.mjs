@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(ROOT, 'dist');
-const SKILLS = ['frontend-craft', 'craft-motion', 'craft-review', 'craft-learn', 'svg-craft'];
+const SKILLS = fs.readdirSync(path.join(ROOT, 'skills'), { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name);
 const EXCLUDE = ['*/node_modules/*', '*/__pycache__/*', '*.pyc', '*/.DS_Store'];
 
 fs.mkdirSync(DIST, { recursive: true });

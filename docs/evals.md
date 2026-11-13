@@ -2,6 +2,14 @@
 
 Each case is a deliberately short prompt in `evals/cases.json`. `node scripts/eval.mjs --case <id>` runs it through a real agent CLI in a fresh folder, scores the result with `check.mjs`, and sends the FAIL list back into the same session up to three times. A case passes when the gate passes and the agent followed its deal. The screenshots are part of the result: the check measures defects, not taste.
 
+## Status in 2.1
+
+The runs below measured the 2.0 website path (frontend-craft's own deal, blueprints and kit), which is now the
+fallback. They passed the check, and the user judged all three pages visually flat and template-like: the check
+measured defects, not richness. That verdict is why websites now route to the bundled `design-taste-frontend`
+engine. Runs of the 2.1 route will be added here, failures included; until then nothing in this file shows that
+2.1 produces better pages.
+
 ## 2026-11-13: cafe-bucaramanga, DeepSeek V4.1 Flash in OpenCode 2.2.7
 
 Prompt: `haz una landing page para una cafetería en Bucaramanga` (nothing else).

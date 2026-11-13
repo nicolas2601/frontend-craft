@@ -4,10 +4,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { KINDS, loadLibrary, moodsOf } from '../skills/frontend-craft/scripts/lib/deal.mjs';
+import { checkAll, readManifest } from './vendor.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SKILLS = path.join(ROOT, 'skills');
 const OWN = ['frontend-craft', 'craft-motion', 'craft-review', 'craft-learn'];
+const OWN_PACKS = ['svg-craft'];
 const BODY_WORDS = { 'frontend-craft': 1900, default: 900 };
 const ALLOWED_KEYS = new Set(['name', 'description', 'hooks', 'license', 'metadata', 'allowed-tools']);
 const errors = [];
@@ -58,10 +60,26 @@ function checkVocabulary() {
   if (kindLine.join() !== KINDS.join()) fail('frontend-craft', `kind list in SKILL.md differs from deal.mjs: ${KINDS.join(', ')}`);
 }
 
+/** Bundled skills: unchanged from their pinned upstream, licensed, and nothing in skills/ unaccounted for. */
+function checkBundled() {
+  const vendor = readManifest();
+  for (const problem of checkAll(vendor)) fail('vendor', problem);
+  const known = new Set([...OWN, ...OWN_PACKS, ...vendor.skills.map((s) => s.name)]);
+  for (const entry of fs.readdirSync(SKILLS, { withFileTypes: true })) {
+    if (entry.isDirectory() && !known.has(entry.name)) fail(entry.name, 'not an own skill and not listed in vendor.json');
+  }
+  for (const { name, repo } of vendor.skills) {
+    if (!vendor.repos[repo]?.license) fail(name, `no license recorded for ${repo}`);
+    if (!fs.readdirSync(path.join(SKILLS, name)).some((f) => /^(LICENSE|NOTICE)/.test(f))) fail(name, 'bundled without its license file');
+  }
+  return vendor.skills.length;
+}
+
 const report = OWN.map((s) => `${s}: ${checkSkill(s) ?? '?'} words`);
 checkVocabulary();
+const bundled = checkBundled();
 if (errors.length) {
   console.error(errors.map((e) => `FAIL ${e}`).join('\n'));
   process.exit(1);
 }
-console.log(`verify: ${OWN.length} skills OK\n${report.join('\n')}`);
+console.log(`verify: ${OWN.length} own skills OK, ${bundled} bundled skills match vendor.json\n${report.join('\n')}`);

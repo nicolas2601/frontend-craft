@@ -15,12 +15,14 @@ Judge the page a visitor gets, not the code you expect. Requires the `frontend-c
 ## The run
 
 1. **Render it.** `node <fc>/scripts/check.mjs --url <url> --kind <kind>` (or `--root <build folder>`). Use `--no-deal` unless the project has a `.craft/deal.json` you are reviewing against.
+   A page built by `design-taste-frontend` (it has a `.taste-skill/` folder): also run its gate, `node <taste>/scripts/gate.mjs` with `<taste>` that skill's folder (a manual run lists its FAILs), and judge against its house rules, not this skill's.
 2. **Look.** Open every screenshot in `.craft/shots/`. Answer each with a fact, not an adjective:
    - What dominates the first screen at 1440, and is it the thing being sold?
    - At 390 px, is the primary action visible without scrolling? What is cropped?
    - Which parts read as a generated default (cream + serif italic + terracotta, purple gradient, glow blobs, three equal cards, an eyebrow over every heading, stock phrases)?
    - What moves, and what job does each motion do? What should move and does not?
    - Where does the type scale, spacing or color break its own system?
+   Then load `impeccable` and run its critique on the same screenshots; merge its findings into yours, deduplicated.
 3. **Write the findings**: at most 12 rows, highest visitor impact first.
 
 ```
