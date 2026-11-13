@@ -1,5 +1,28 @@
 # Changelog
 
+## 2.1.0 - 2026-11-13
+
+Websites now build with a bundled engine that has a real visual layer; frontend-craft becomes the router.
+
+### Added
+- Bundled skills, unchanged from upstream at pinned commits (`vendor.json`, `THIRD_PARTY_NOTICES.md`):
+  `design-taste-frontend` (taste-skill 2.5.1, MIT), `impeccable` (Apache-2.0), fifteen Emil Kowalski skills (MIT),
+  `ui-ux-pro-max` (MIT), `ui-animation` (MIT), each with its assets, scripts, references and licence file.
+- `scripts/vendor.mjs`: restore, `--update` to upstream HEAD, `--check`; `npm run verify` fails when a bundled
+  skill differs by one byte from its pinned commit or lacks its licence.
+- `stop-gates.mjs`: one Stop hook that runs both gates (Codex `config.toml` example in docs/installation.md).
+- The OpenCode plugin runs the website gate as well as frontend-craft's.
+
+### Changed
+- `frontend-craft` routes: websites to `design-taste-frontend` then the `review-animations` and `impeccable`
+  finish passes; apps, dashboards and docs to its own run. `start.mjs` refuses a website kind while the engine is
+  installed (`--fallback` overrides). The prompt hook and the OpenCode agent route the same way.
+- README and docs rewritten around the router.
+
+### Removed
+- `examples/roastery` and its screenshots: the page passed the check but was visually flat.
+- `skills/frontend-craft/history.json` from version control (deal history is user state).
+
 ## 2.0.0 - 2026-11-13
 
 Rebuilt from a reference library into an executable system that weak and strong models can follow.

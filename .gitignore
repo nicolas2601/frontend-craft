@@ -20,3 +20,4 @@ tools/opencode-observer/verification*.json
 /pnpm-lock.yaml
 .impeccable/
 .craft/
+skills/*/history.json

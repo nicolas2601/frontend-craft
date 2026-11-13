@@ -1,6 +1,6 @@
 [
   {
-    "at": "2026-11-13T18:24:18.888Z",
+    "at": "2026-11-13T23:03:41.563Z",
     "kind": "event",
     "palette": "indigo-marigold",
     "type": "anton-archivo",
@@ -8,35 +8,11 @@
     "signature": "rail"
   },
   {
-    "at": "2026-11-13T18:29:42.085Z",
-    "kind": "event",
-    "palette": "noir-red",
-    "type": "syne-manrope",
-    "composition": "ticket-receipt",
-    "signature": "mask"
-  },
-  {
-    "at": "2026-11-13T18:55:15.754Z",
-    "kind": "event",
-    "palette": "ultramarine-poster",
-    "type": "unbounded-golos",
-    "composition": "place-coordinates",
-    "signature": "scrub"
-  },
-  {
-    "at": "2026-11-13T19:08:53.421Z",
-    "kind": "event",
+    "at": "2026-11-13T23:03:41.714Z",
+    "kind": "app",
     "palette": "glacier-signal",
-    "type": "schibsted-solo",
-    "composition": "poster-headline",
-    "signature": "words-blur"
-  },
-  {
-    "at": "2026-11-13T19:19:34.681Z",
-    "kind": "event",
-    "palette": "espresso-honey",
-    "type": "bagel-nunito",
-    "composition": "marquee-bands",
-    "signature": "marquee"
+    "type": "tenor-jost",
+    "composition": "index-list",
+    "signature": "scramble"
   }
 ]

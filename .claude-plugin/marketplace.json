@@ -1,12 +1,14 @@
 {
   "name": "frontend-craft",
   "description": "Frontend design and motion skills with a browser gate",
-  "owner": { "name": "nicolas2601" },
+  "owner": {
+    "name": "nicolas2601"
+  },
   "plugins": [
     {
       "name": "frontend-craft",
       "source": "./",
-      "description": "Deal a direction, build with the motion kit, pass the browser check. Includes craft-motion, craft-review, craft-learn and svg-craft."
+      "description": "Router plus bundled design-taste-frontend, impeccable, Emil Kowalski motion skills, ui-ux-pro-max and ui-animation; browser gates; svg-craft."
     }
   ]
 }
