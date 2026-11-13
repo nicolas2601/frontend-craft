@@ -21,6 +21,8 @@ hooks:
 
 The user gives the subject. You do not pick colors, fonts or layout by taste: you **deal** them, build with the **kit**, and you are done when the **check** passes. Other design skills loaded in the session may advise on details; for a new page the deal decides colors, type and composition. `<skill>` is this folder. Needs Node 22+ and Chrome, Chromium or Edge.
 
+**First command, before you write any markup:** `node <skill>/scripts/start.mjs --kind <kind> --moods <2-3 moods>` from the project folder (step 3 explains the flags). Without a deal the check fails with `no-direction`.
+
 ## Route first
 
 | Task | Do |

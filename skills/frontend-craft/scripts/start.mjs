@@ -70,7 +70,7 @@ function kitOnly(args, cwd, dir, kind) {
   copyKit(path.join(cwd, kitDir));
   const gate = readJson(path.join(dir, 'gate.json'), {});
   const target = resolveTarget(args, gate) ?? null;
-  writeJson(path.join(dir, 'gate.json'), { ...gate, armed: true, off: false, kind, target, blocks: gate.blocks ?? 0, startedAt: gate.startedAt ?? new Date().toISOString() });
+  writeJson(path.join(dir, 'gate.json'), { ...gate, armed: true, off: false, kitOnly: true, kind, target, blocks: gate.blocks ?? 0, startedAt: gate.startedAt ?? new Date().toISOString() });
   return { text: `Kit copied to ${kitDir} (craft.css, craft-motion.js, motion/). No deal: keep the project's tokens; map them to --c-* and --f-* if you use craft.css defaults.\n${target ? `Gate armed on ${target.url ?? target.root}.` : 'Pass --url or --root to arm the gate on a target.'}` };
 }
 

@@ -100,7 +100,7 @@ async function scoreRound(dir, kind) {
   if (!found.target) return { found, report: null };
   const deal = readJson(path.join(found.projectDir, '.craft', 'deal.json'));
   try {
-    const report = await runCheck({ target: found.target, kind, deal: deal?.brand ? null : deal, out: path.join(found.projectDir, '.craft') });
+    const report = await runCheck({ target: found.target, kind, deal: deal?.brand ? null : deal, out: path.join(found.projectDir, '.craft'), requireDeal: true });
     return { found, report, deal };
   } finally {
     found.stop();
