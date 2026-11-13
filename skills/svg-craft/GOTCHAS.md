@@ -18,7 +18,7 @@
 
 ## Packs
 - Nested `SKILL.md` files were renamed `PACK.md` so the harness does not register 20 extra skills (token cost every turn).
-- Pack scripts import `playwright`; `packs/node_modules` is a symlink to `tools/node_modules` so they resolve it. Set `CHROME_PATH=/usr/bin/chromium` on Linux.
+- Pack scripts import `playwright`; `packs/node_modules` is a symlink to `tools/node_modules` so they resolve it. A fresh install has no `tools/node_modules`: run `npm ci --prefix tools` first. Set `CHROME_PATH=/usr/bin/chromium` on Linux.
 - Isometric-mono: one green ramp is the style (also the colour of a Penicillium colony). A flask built from stacked prisms reads as a cake: use `poly3` cones or accept it. Keep every footprint within +-110 plan units and paint back to front by `x+y`.
 - Halftone cards compile to 300-700 kB of dots: use as `<img>` or rasterise to WebP for the web; they pass the pack linter but fail a 60 kB budget on purpose.
 - `packs/isometric/*.md` are guides only. The Anatomy kit (40 MB, many tests) is not vendored: `git clone https://github.com/wheresryan22/anatomy` when an interactive isometric explainer is required.
