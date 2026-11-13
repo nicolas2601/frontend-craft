@@ -1,0 +1,3 @@
+interface:
+  display_name: "Craft Motion"
+  short_description: "Add or fix motion in an existing interface with the frontend-craft kit"

@@ -1,0 +1,10 @@
+{
+  "$comment": "Basic prompts on purpose: the skill must carry the design, not the prompt. A case passes when the gate passes within the allowed rounds and the deal was followed.",
+  "cases": [
+    { "id": "cafe-bucaramanga", "prompt": "haz una landing page para una cafetería en Bucaramanga", "kind": "landing" },
+    { "id": "festival-vue", "prompt": "make a website for a small indie music festival in Medellín, use Vue", "kind": "event" },
+    { "id": "devtool-next", "prompt": "landing page for a CLI tool that cleans up git branches, in Next.js", "kind": "product" },
+    { "id": "photographer-html", "prompt": "portfolio site for a wedding photographer, just html css js", "kind": "portfolio" },
+    { "id": "sushi-svelte", "prompt": "página para un restaurante de sushi en Medellín con Svelte", "kind": "venue" }
+  ]
+}

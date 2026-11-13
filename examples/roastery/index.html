@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tostadero Cañaveral · Café de origen tostado en Bucaramanga</title>
+  <meta name="description" content="Cuatro fincas de Santander, tostadas en lotes de doce kilos cada martes en Bucaramanga.">
+  <meta name="theme-color" content="#1c1410">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Source+Sans+3:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="craft/tokens.css">
+  <link rel="stylesheet" href="craft/craft.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="bar">
+    <a class="brand craft-display" href="#" data-enter>Cañaveral</a>
+    <span class="coords" data-scramble>7.1193 N · 73.1227 W</span>
+    <a class="btn btn-small" href="#pedido" data-enter data-press>Reservar un lote</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <h1 class="craft-display" data-words>Tostado el martes, en tu taza el viernes</h1>
+        <p class="lede" data-enter>Cuatro fincas de Santander, un tueste claro y lotes de doce kilos. Sin bodega, sin café de hace meses.</p>
+        <a class="btn" href="#pedido" data-enter data-magnetic data-press>Reservar un lote</a>
+      </div>
+      <figure class="curve" data-mask="up" aria-label="Curva de tueste del lote de esta semana">
+        <svg viewBox="0 0 600 360" role="img" aria-labelledby="curve-title">
+          <title id="curve-title">Temperatura del grano durante 11 minutos de tueste</title>
+          <g class="grid"><path d="M40 320H580M40 240H580M40 160H580M40 80H580"/></g>
+          <path class="profile" d="M40 300 C110 300 140 230 200 200 S300 140 360 118 S470 92 520 84 L560 80"/>
+          <circle class="crack" cx="430" cy="100" r="7"/>
+          <text x="440" y="132">primer crack, min 8:40</text>
+          <text x="40" y="350">0:00</text><text x="530" y="350">11:00</text>
+        </svg>
+      </figure>
+    </section>
+
+    <section class="index" aria-labelledby="origenes">
+      <h2 id="origenes" class="craft-display">Los orígenes de esta semana</h2>
+      <ol data-reveal="stagger">
+        <li><span class="n">01</span><span class="name">Mesa de los Santos</span><span class="note">Lavado · panela, cáscara de naranja</span><span class="price">$38.000</span></li>
+        <li><span class="n">02</span><span class="name">Charalá</span><span class="note">Honey · fruta roja, nibs de cacao</span><span class="price">$42.000</span></li>
+        <li><span class="n">03</span><span class="name">Zapatoca</span><span class="note">Natural · mora, azúcar morena</span><span class="price">$44.000</span></li>
+        <li><span class="n">04</span><span class="name">Barichara</span><span class="note">Lavado · caramelo, nuez</span><span class="price">$36.000</span></li>
+      </ol>
+    </section>
+
+    <section class="manifesto" data-pin>
+      <div>
+        <p class="craft-display" data-scroll-words="pinned">Compramos a cuatro familias que visitamos cada cosecha, pagamos por encima del precio de bolsa y tostamos claro para que sepas de dónde viene, no cuánto fuego tuvo.</p>
+      </div>
+    </section>
+
+    <section class="ledger" aria-labelledby="como">
+      <h2 id="como" class="craft-display">Cómo funciona el pedido</h2>
+      <dl data-reveal="stagger">
+        <div><dt>Cierre</dt><dd>Lunes, 12:00 m.</dd></div>
+        <div><dt>Tueste</dt><dd>Martes, lotes de <strong data-count>12</strong> kg</dd></div>
+        <div><dt>Entrega</dt><dd>Viernes en Bucaramanga, Floridablanca y Girón</dd></div>
+        <div><dt>Recogida</dt><dd>Carrera 33 # 45-12, Cabecera</dd></div>
+      </dl>
+    </section>
+  </main>
+
+  <footer id="pedido" class="close">
+    <p class="craft-display" data-reveal>Quedan lotes para este martes.</p>
+    <a class="btn" href="https://wa.me/570000000000" data-magnetic data-press>Reservar por WhatsApp</a>
+    <small>Precios por bolsa de 340 g. Datos de ejemplo.</small>
+  </footer>
+
+  <script type="module">
+    import { init } from './craft/craft-motion.js';
+    init(document);
+  </script>
+</body>
+</html>

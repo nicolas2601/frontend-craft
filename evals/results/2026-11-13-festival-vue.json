@@ -1,0 +1,42 @@
+{
+  "case": "festival-vue",
+  "prompt": "make a website for a small indie music festival in Medellín, use Vue",
+  "model": "opencode/glm-5.3-flash-free",
+  "dir": "/home/nicolas/.cache/frontend-craft/evals/festival-vue-a9A8jc",
+  "session": "ses_e29d79e19ffe31sCCXw630Rvbm",
+  "armedByAgent": false,
+  "deal": null,
+  "pass": false,
+  "fails": [
+    "no-target",
+    "no-deal"
+  ],
+  "warns": [],
+  "motion": null,
+  "shots": [],
+  "rounds": [
+    {
+      "round": 0,
+      "code": 1,
+      "session": "ses_e29d79e19ffe31sCCXw630Rvbm"
+    },
+    {
+      "round": 0,
+      "fails": [
+        "no-target"
+      ]
+    },
+    {
+      "round": 1,
+      "fails": [
+        "no-target"
+      ]
+    },
+    {
+      "round": 2,
+      "fails": [
+        "no-target"
+      ]
+    }
+  ]
+}

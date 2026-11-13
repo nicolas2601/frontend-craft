@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en"><!-- set lang to the copy's language -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{Brand: what it is, for whom or where}}</title>
+  <meta name="description" content="{{one sentence: what it is, for whom, where}}">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <!-- paste the font <link> tags from .craft/brief.md here -->
+  <link rel="stylesheet" href="craft/tokens.css">
+  <link rel="stylesheet" href="craft/craft.css">
+  <link rel="stylesheet" href="craft/layouts.css">
+</head>
+<body>
+<!-- Blueprint: index-list. Keep the structure, scale and kit attributes; replace every {{...}};
+     rename sections for the subject. Build every .visual for real (SVG, CSS, canvas or a supplied image). -->
+<header class="nav">
+  <a class="brand" href="#top" data-enter>{{brand name}}</a>
+  <nav class="links" aria-label="Sections"><a href="#s2">{{section 2 label}}</a><a href="#s3">{{section 3 label}}</a></nav>
+  <a class="btn small" href="#action" data-enter data-press>{{primary action: verb + object}}</a>
+</header>
+<main id="top">
+  <section class="l-index-head">
+    <h1 class="h-display craft-display" data-words>{{name or 3-6 word promise}}</h1>
+    <p class="lede" data-enter>{{one sentence, at most 22 words}}</p>
+    <div class="actions" data-enter><a class="btn" href="#action" data-magnetic data-press>{{primary action}}</a></div>
+  </section>
+  <ol class="index" id="s2" data-reveal="stagger" aria-label="{{what the list is}}">
+    <li data-spotlight><span class="n">01</span><span class="name">{{item 1}}</span><span class="note muted">{{one line about item 1}}</span><span class="meta">{{price, date or year}}</span></li>
+    <li data-spotlight><span class="n">02</span><span class="name">{{item 2}}</span><span class="note muted">{{one line about item 2}}</span><span class="meta">{{price, date or year}}</span></li>
+    <li data-spotlight><span class="n">03</span><span class="name">{{item 3}}</span><span class="note muted">{{one line about item 3}}</span><span class="meta">{{price, date or year}}</span></li>
+    <li data-spotlight><span class="n">04</span><span class="name">{{item 4}}</span><span class="note muted">{{one line about item 4}}</span><span class="meta">{{price, date or year}}</span></li>
+    <li data-spotlight><span class="n">05</span><span class="name">{{item 5}}</span><span class="note muted">{{one line about item 5}}</span><span class="meta">{{price, date or year}}</span></li>
+  </ol>
+  <section class="l-split" id="s3" data-scrub>
+    <div class="copy"><h2 class="h-section craft-display">{{one item told in depth}}</h2><p class="lede">{{why it matters, two sentences}}</p></div>
+    <figure class="stage visual" data-mask="up">{{visual: that item, built for real}}</figure>
+  </section>
+  <section class="pin-statement" data-pin aria-label="{{what the statement is about}}">
+    <div><p data-scroll-words="pinned">{{20-35 words: the belief or fact behind the offer, specific to the subject}}</p></div>
+  </section>
+  <section class="section" id="action">
+    <h2 class="h-display craft-display" data-reveal>{{closing line that repeats the promise}}</h2>
+    <div class="actions" data-reveal><a class="btn" href="{{real link: form, booking, WhatsApp, store}}" data-magnetic data-press>{{primary action}}</a></div>
+  </section>
+</main>
+<footer class="section muted">{{address, hours or contact}}</footer>
+<script type="module">import { init } from './craft/craft-motion.js'; init(document);</script>
+</body>
+</html>

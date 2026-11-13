@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><!-- set lang to the copy's language -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{Brand: what it is, for whom or where}}</title>
+  <meta name="description" content="{{one sentence: what it is, for whom, where}}">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <!-- paste the font <link> tags from .craft/brief.md here -->
+  <link rel="stylesheet" href="craft/tokens.css">
+  <link rel="stylesheet" href="craft/craft.css">
+  <link rel="stylesheet" href="craft/layouts.css">
+</head>
+<body>
+<!-- Blueprint: stacked-chapters. Keep the structure, scale and kit attributes; replace every {{...}};
+     rename sections for the subject. Build every .visual for real (SVG, CSS, canvas or a supplied image). -->
+<header class="nav">
+  <a class="brand" href="#top" data-enter>{{brand name}}</a>
+  <nav class="links" aria-label="Sections"><a href="#s2">{{section 2 label}}</a><a href="#s3">{{section 3 label}}</a></nav>
+  <a class="btn small" href="#action" data-enter data-press>{{primary action: verb + object}}</a>
+</header>
+<main id="top">
+  <section class="l-statement">
+    <h1 class="h-display craft-display" data-words>{{3-9 word headline}}</h1>
+    <div class="foot">
+      <p class="lede" data-enter>{{one sentence, at most 22 words: who it is for and what they get}}</p>
+      <div class="actions" data-enter><a class="btn" href="#action" data-magnetic data-press>{{primary action}}</a><a class="btn ghost" href="#s2" data-press>{{secondary action}}</a></div>
+    </div>
+  </section>
+  <section data-stack id="s2" aria-label="{{the story in chapters}}">
+    <article class="chapter"><h3>{{chapter 1}}</h3><p>{{two sentences: what happens in chapter 1}}</p></article>
+    <article class="chapter"><h3>{{chapter 2}}</h3><p>{{two sentences: what happens in chapter 2}}</p></article>
+    <article class="chapter"><h3>{{chapter 3}}</h3><p>{{two sentences: what happens in chapter 3}}</p></article>
+    <article class="chapter"><h3>{{chapter 4}}</h3><p>{{two sentences: what happens in chapter 4}}</p></article>
+  </section>
+  <section class="section" id="s3">
+    <div class="facts" data-reveal="stagger">
+      <p><strong data-count>{{real number 1}}</strong> {{what number 1 counts}}</p>
+      <p><strong data-count>{{real number 2}}</strong> {{what number 2 counts}}</p>
+      <p><strong data-count>{{real number 3}}</strong> {{what number 3 counts}}</p>
+    </div>
+  </section>
+  <section class="section" id="action">
+    <h2 class="h-display craft-display" data-reveal>{{closing line that repeats the promise}}</h2>
+    <div class="actions" data-reveal><a class="btn" href="{{real link: form, booking, WhatsApp, store}}" data-magnetic data-press>{{primary action}}</a></div>
+  </section>
+</main>
+<footer class="section muted">{{address, hours or contact}}</footer>
+<script type="module">import { init } from './craft/craft-motion.js'; init(document);</script>
+</body>
+</html>

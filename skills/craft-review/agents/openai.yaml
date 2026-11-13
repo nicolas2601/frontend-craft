@@ -1,0 +1,3 @@
+interface:
+  display_name: "Craft Review"
+  short_description: "Strict rendered review of a page: findings as Before, After, Why"

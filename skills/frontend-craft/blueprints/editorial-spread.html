@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en"><!-- set lang to the copy's language -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{Brand: what it is, for whom or where}}</title>
+  <meta name="description" content="{{one sentence: what it is, for whom, where}}">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <!-- paste the font <link> tags from .craft/brief.md here -->
+  <link rel="stylesheet" href="craft/tokens.css">
+  <link rel="stylesheet" href="craft/craft.css">
+  <link rel="stylesheet" href="craft/layouts.css">
+</head>
+<body>
+<!-- Blueprint: editorial-spread. Keep the structure, scale and kit attributes; replace every {{...}};
+     rename sections for the subject. Build every .visual for real (SVG, CSS, canvas or a supplied image). -->
+<header class="nav">
+  <a class="brand" href="#top" data-enter>{{brand name}}</a>
+  <nav class="links" aria-label="Sections"><a href="#s2">{{section 2 label}}</a><a href="#s3">{{section 3 label}}</a></nav>
+  <a class="btn small" href="#action" data-enter data-press>{{primary action: verb + object}}</a>
+</header>
+<main id="top">
+  <section class="spread">
+    <h1 class="h-display craft-display" data-words>{{3-9 word headline}}</h1>
+    <div class="deck stack"><p class="lede" data-enter>{{deck: two sentences}}</p><div class="actions" data-enter><a class="btn" href="#action" data-magnetic data-press>{{primary action}}</a></div></div>
+    <figure class="plate visual" data-mask="up" data-parallax="0.08">{{visual: a tall plate, built for real or supplied}}</figure>
+    <div class="story" data-reveal><p>{{paragraph 1}}</p><p>{{paragraph 2}}</p></div>
+  </section>
+  <section class="section" id="s2"><p class="pull" data-scroll-words>{{pull quote: the line a reader would repeat}}</p></section>
+  <section class="section" id="s3">
+    <div class="facts" data-reveal="stagger">
+      <p><strong data-count>{{real number 1}}</strong> {{what number 1 counts}}</p>
+      <p><strong data-count>{{real number 2}}</strong> {{what number 2 counts}}</p>
+      <p><strong data-count>{{real number 3}}</strong> {{what number 3 counts}}</p>
+    </div>
+  </section>
+  <section class="section" id="action">
+    <h2 class="h-display craft-display" data-reveal>{{closing line that repeats the promise}}</h2>
+    <div class="actions" data-reveal><a class="btn" href="{{real link: form, booking, WhatsApp, store}}" data-magnetic data-press>{{primary action}}</a></div>
+  </section>
+</main>
+<footer class="section muted">{{address, hours or contact}}</footer>
+<script type="module">import { init } from './craft/craft-motion.js'; init(document);</script>
+</body>
+</html>
