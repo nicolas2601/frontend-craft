@@ -1,0 +1,42 @@
+{
+  "case": "sushi-svelte",
+  "prompt": "página para un restaurante de sushi en Medellín con Svelte",
+  "model": "default",
+  "dir": "/home/nicolas/.cache/frontend-craft/evals/sushi-svelte-6tJu3X",
+  "session": "latest",
+  "armedByAgent": false,
+  "deal": null,
+  "pass": false,
+  "fails": [
+    "no-target",
+    "no-deal"
+  ],
+  "warns": [],
+  "motion": null,
+  "shots": [],
+  "rounds": [
+    {
+      "round": 0,
+      "code": 1,
+      "session": "latest"
+    },
+    {
+      "round": 0,
+      "fails": [
+        "no-target"
+      ]
+    },
+    {
+      "round": 1,
+      "fails": [
+        "no-target"
+      ]
+    },
+    {
+      "round": 2,
+      "fails": [
+        "no-target"
+      ]
+    }
+  ]
+}

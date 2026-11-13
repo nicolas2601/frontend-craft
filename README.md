@@ -127,7 +127,15 @@ About thirty rules over facts measured in the rendered page. FAIL blocks, WARN a
 
 ## Evals
 
-`evals/cases.json` holds deliberately short prompts. `node scripts/eval.mjs --case <id>` runs one through a real agent CLI (OpenCode by default, any model with `--model`), then loops the gate's FAIL list back into the same session up to three times, the same loop a Stop hook gives Claude Code, and writes the result to `evals/results/`. Results so far: [docs/evals.md](docs/evals.md).
+`evals/cases.json` holds deliberately short prompts. `node scripts/eval.mjs --case <id>` runs one through a real agent CLI (OpenCode by default, any model with `--model`), then loops the gate's FAIL list back into the same session up to three times, the same loop a Stop hook gives Claude Code, and writes the result to `evals/results/`. Results so far ([docs/evals.md](docs/evals.md), failures included):
+
+| Harness | Model | Case | Deal followed | Gate |
+|---|---|---|---|---|
+| OpenCode 2.2.7 | DeepSeek V4.1 Flash | Coffee shop landing (Vite + React) | Yes | PASS |
+| Claude Code (as plugin) | Haiku | CLI tool landing (Next.js) | Yes | PASS, first round |
+| Codex CLI 0.162 | ChatGPT default | Wedding photographer portfolio (plain HTML) | Yes | PASS, first round |
+
+Each failed run on the way found a bug in the skill, the checker or the runner, now fixed and listed in the write-up.
 
 ## Develop
 

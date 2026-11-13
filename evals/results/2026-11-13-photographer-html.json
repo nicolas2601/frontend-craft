@@ -1,0 +1,58 @@
+{
+  "case": "photographer-html",
+  "prompt": "portfolio site for a wedding photographer, just html css js",
+  "model": "default",
+  "dir": "/home/nicolas/.cache/frontend-craft/evals/photographer-html-lEWAG7",
+  "session": "01a1d647-bbe3-7b62-a151-147d0638fa98",
+  "armedByAgent": true,
+  "deal": {
+    "palette": "ink-violet-paper",
+    "type": "tenor-jost",
+    "composition": "editorial-spread",
+    "signature": "mask"
+  },
+  "pass": true,
+  "fails": [],
+  "warns": [],
+  "motion": {
+    "entrance": 6,
+    "reveals": 15,
+    "scrollLinked": 2,
+    "linkedExamples": [
+      "span.craft-word \"the\"",
+      "span.craft-word \"rest.\""
+    ],
+    "sticky": []
+  },
+  "shots": [
+    "/home/nicolas/.cache/frontend-craft/evals/photographer-html-lEWAG7/site/.craft/shots/1440-early.png",
+    "/home/nicolas/.cache/frontend-craft/evals/photographer-html-lEWAG7/site/.craft/shots/1440.png",
+    "/home/nicolas/.cache/frontend-craft/evals/photographer-html-lEWAG7/site/.craft/shots/390.png",
+    "/home/nicolas/.cache/frontend-craft/evals/photographer-html-lEWAG7/site/.craft/shots/1440-01.png",
+    "/home/nicolas/.cache/frontend-craft/evals/photographer-html-lEWAG7/site/.craft/shots/1440-02.png",
+    "/home/nicolas/.cache/frontend-craft/evals/photographer-html-lEWAG7/site/.craft/shots/1440-03.png",
+    "/home/nicolas/.cache/frontend-craft/evals/photographer-html-lEWAG7/site/.craft/shots/1440-04.png",
+    "/home/nicolas/.cache/frontend-craft/evals/photographer-html-lEWAG7/site/.craft/shots/1440-05.png"
+  ],
+  "rounds": [
+    {
+      "round": 0,
+      "code": 0,
+      "session": "01a1d647-bbe3-7b62-a151-147d0638fa98"
+    },
+    {
+      "round": 0,
+      "fails": [],
+      "motion": {
+        "entrance": 6,
+        "reveals": 15,
+        "scrollLinked": 2,
+        "linkedExamples": [
+          "span.craft-word \"the\"",
+          "span.craft-word \"rest.\""
+        ],
+        "sticky": []
+      }
+    }
+  ]
+}
