@@ -4,6 +4,17 @@ frontend-craft is a set of Agent Skills: folders with a `SKILL.md`, scripts and 
 
 Requirements: Node 22 or later; Chrome, Chromium or Edge for the checkers (or any browser at `CHROME_PATH`); Python 3 for `ui-ux-pro-max`; ffmpeg optional (photo crops in `design-taste-frontend`).
 
+What each bundled skill needs beyond its own files:
+
+| Skill | Needs | Checked on a clean HOME |
+|---|---|---|
+| `design-taste-frontend` | Node, Chrome; network for Google Fonts and licensed photo frames fetched on demand | `start.mjs deal` and `gate.mjs` run |
+| `impeccable` | Nothing preinstalled: `scripts/impeccable` downloads its engine (about 23 MB, pinned version, verified against `scripts/engine-checksums.txt`) on first run into `~/.impeccable/bin` | engine 0.1.23 downloaded and answered |
+| `ui-ux-pro-max` | Python 3, no packages; run `scripts/search.py` from its folder | `--design-system` search answered |
+| `ui-animation` | Only for measuring a screen recording: ffmpeg and `pip install opencv-python numpy scipy` | not run |
+| `svg-craft` (own) | `npm ci --prefix tools` once | `npm ci` exits 0 |
+| Emil skills | Nothing (Markdown only) | |
+
 ## Any harness: the skills CLI
 
 ```sh

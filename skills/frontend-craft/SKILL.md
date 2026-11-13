@@ -34,6 +34,8 @@ The user gives the subject; you supply the design judgment through the skills th
 | Icon, logo, illustration, diagram | `svg-craft` |
 | End of a session with design corrections | `craft-learn` |
 
+Bundled tools run from their own folder (`<skill>/../<name>`), never from the project: `ui-ux-pro-max` search is `python3 <its folder>/scripts/search.py "<query>" --design-system` (its SKILL.md prints a plugin path that does not exist here; use this one); `impeccable` is `<its folder>/scripts/impeccable <verb>` (`impeccable.cmd` on Windows), which downloads its ~23 MB engine once on first run and verifies it against the bundled checksums.
+
 ## Websites
 
 1. Load `design-taste-frontend` and follow its run exactly: its `start.mjs` deal, `photos.mjs` frames, `moments.mjs` pick, the starter and hero files, its checker and `gate.mjs`. Its house rules decide the page; do not mix in this skill's palettes, blueprints or kit.
