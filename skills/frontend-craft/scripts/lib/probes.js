@@ -216,6 +216,8 @@ export function probeSticky() {
   const out = [];
   for (const el of document.querySelectorAll('body *')) {
     if (getComputedStyle(el).position !== 'sticky') continue;
+    // A pinned scene holds a stage at least half a screen tall; a sticky nav or table header is not one.
+    if (el.getBoundingClientRect().height < innerHeight * 0.5) continue;
     const host = el.parentElement;
     if (host && host.getBoundingClientRect().height > innerHeight * 1.4) out.push(window.__craft.describe(host));
     if (out.length >= 6) break;

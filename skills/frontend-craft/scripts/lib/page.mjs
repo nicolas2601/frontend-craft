@@ -46,7 +46,8 @@ function differs(a, b) {
   if (a === b) return false;
   const [x, y] = [num(a), num(b)];
   if (x.length !== y.length || !x.length) return a !== b;
-  return x.some((v, i) => Math.abs(v - y[i]) > 0.5 && Math.abs(v - y[i]) / Math.max(1, Math.abs(v)) > 0.02);
+  // Unit-sized values (opacity, --p, scale factors) move by hundredths; pixel values by half a pixel.
+  return x.some((v, i) => Math.abs(v - y[i]) > (Math.abs(v) <= 2 && Math.abs(y[i]) <= 2 ? 0.02 : 0.5));
 }
 const FIELDS = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
