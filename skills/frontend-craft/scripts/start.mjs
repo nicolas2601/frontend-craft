@@ -5,6 +5,10 @@
     node <skill>/scripts/start.mjs --kind landing --moods warm,craft,coffee [--kit src/craft]
         [--url http://localhost:5173 | --root dist | --file index.html]
         [--redeal] [--seed 42] [--pin palette=id,type=id,composition=id,signature=id] [--brand] [--kit-only] [--list]
+        [--fallback]
+
+  Website kinds (every kind but app and docs) are built by the design-taste-frontend skill when it is installed:
+  start.mjs then stops and points there, unless --fallback says that skill cannot run here.
 
   Writes .craft/deal.json, .craft/brief.md and .craft/gate.json, copies the kit (craft.css,
   craft-motion.js, motion/) plus a dealt tokens.css into --kit, and prints the brief.
@@ -21,6 +25,19 @@ import { craftDir, isMain, parseArgs, readJson, resolveTarget, writeJson } from 
 const SKILL = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const KIT = path.join(SKILL, 'kit');
 const HISTORY_MAX = 40;
+const OWN_KINDS = ['app', 'docs'];
+const HOME = process.env.HOME ?? process.env.USERPROFILE ?? '';
+const TASTE = [
+  path.join(SKILL, '..', 'design-taste-frontend'),
+  path.join(HOME, '.agents', 'skills', 'design-taste-frontend'),
+  path.join(HOME, '.claude', 'skills', 'design-taste-frontend'),
+  path.join(HOME, '.config', 'opencode', 'skills', 'design-taste-frontend'),
+];
+
+/** The website engine's folder when it is installed next to this skill or in a known skills folder. */
+export function tasteSkill() {
+  return TASTE.find((dir) => fs.existsSync(path.join(dir, 'scripts', 'gate.mjs'))) ?? null;
+}
 
 function defaultKitDir(cwd) {
   if (fs.existsSync(path.join(cwd, 'src'))) return 'src/craft';
@@ -86,6 +103,11 @@ export function run(argv, cwd = process.cwd()) {
   const kind = String(args.kind ?? 'landing');
   if (!KINDS.includes(kind)) throw new Error(`unknown --kind "${kind}". Use one of: ${KINDS.join(', ')}`);
   if (args['kit-only']) return kitOnly(args, cwd, dir, kind);
+  const taste = OWN_KINDS.includes(kind) || args.fallback ? null : tasteSkill();
+  if (taste) {
+    throw new Error(`a ${kind} is a website: build it with the design-taste-frontend skill (${taste}), following its SKILL.md run from start.mjs deal to gate.mjs. `
+      + 'Use this deal for a website only when that skill cannot run here: add --fallback and say so in the report.');
+  }
   const vocabulary = moodsOf(lib);
   const moods = args.moods && args.moods !== true ? String(args.moods).split(',').map((m) => m.trim().toLowerCase()).filter(Boolean) : [];
   const unknown = moods.filter((m) => !vocabulary.includes(m));
