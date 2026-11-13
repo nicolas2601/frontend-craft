@@ -34,7 +34,8 @@ Where does it live (hero, 16 px favicon, deck, README, Figma)? Light, dark or bo
 
 ## 4. Verify (mandatory, in this order)
 ```bash
-T=~/.claude/skills/svg-craft/tools            # node >= 20, deps already installed in tools/node_modules
+T=<this skill>/tools                           # node >= 20
+[ -d "$T/node_modules" ] || npm ci --prefix "$T"   # once per install: svgo and playwright-core (no browser download)
 node $T/lint.mjs asset.svg                    # structure, ids, refs, a11y, fonts, safety, motion, budget
 node $T/render.mjs asset.svg --out r --sizes 512,64,32,16 --bg both --sheet     # then READ r/asset.sheet.png
 node $T/render.mjs asset.svg --out r --sizes 128,32,16 --bg light --mono --sheet   # silhouette test for marks
