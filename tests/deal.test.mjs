@@ -55,6 +55,9 @@ test('persuade pages always get a scroll story', () => {
 test('pins and brand mode are respected', () => {
   const d = run(3, { pins: { palette: 'paper-mono', type: 'geist-solo', composition: 'interface-hero' } });
   assert.deepEqual([d.palette.id, d.type.id, d.composition.id], ['paper-mono', 'geist-solo', 'interface-hero']);
+  const outside = run(3, { pins: { composition: 'index-list', signature: 'scroll-words' } });
+  assert.equal(outside.motion.signature.id, 'scroll-words', 'a pinned signature wins even outside the composition list');
+  assert.ok(!outside.motion.supports.some((x) => x.id === 'scroll-words'));
   const b = run(3, { brand: true });
   assert.equal(b.palette, null);
   assert.equal(b.type, null);

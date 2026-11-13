@@ -131,6 +131,13 @@ export function probeText({ minPx }) {
     const large = size >= 24 || (size >= 18.66 && Number(cs.fontWeight) >= 700);
     if (ratio < (large ? 3 : 4.5)) lowContrast.push(`${C.describe(el)} ${ratio.toFixed(2)}:1`);
   }
+  // SVG labels scale with their viewBox: measure the rendered size, not the declared one.
+  for (const t of document.querySelectorAll('svg text')) {
+    if (!t.textContent.trim() || !C.visible(t) || C.hiddenFromAT(t.closest('svg'))) continue;
+    const scale = t.getScreenCTM()?.a ?? 1;
+    const px = Number.parseFloat(getComputedStyle(t).fontSize) * scale;
+    if (px < minPx - 1) small.push(`svg text "${t.textContent.trim().slice(0, 30)}" ${px.toFixed(1)}px rendered`);
+  }
   return { small: small.slice(0, 8), lowContrast: lowContrast.slice(0, 8), lowContrastCount: lowContrast.length };
 }
 

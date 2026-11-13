@@ -20,6 +20,17 @@ brief ──> start.mjs ──> deal + tokens.css + kit + brief.md
                               ^───────────────────────┘
 ```
 
+## Example
+
+[`examples/roastery/`](examples/roastery/) is a coffee roastery page built by the run itself: dealt with `start.mjs --pin palette=espresso-honey,type=zilla-source,composition=index-list,signature=scroll-words`, built with the kit, and passed through `check.mjs` (its two failures along the way, a 21 px tall logo link and SVG chart labels rendering at 7.5 px on phones, were caught by the check and fixed).
+
+<p>
+  <img src="docs/img/roastery-1440.png" alt="Roastery example at 1440 px: slab-serif headline on espresso brown, honey action button, roast curve chart" width="640">
+  <img src="docs/img/roastery-390.png" alt="The same page at 390 px" width="180">
+</p>
+
+Serve the folder (`npx serve examples/roastery`) to see the motion: words blur in, the origins list staggers, the manifesto lights word by word while pinned, the coordinates scramble, the action buttons lean toward the cursor.
+
 ## Skills
 
 | Skill | Job |

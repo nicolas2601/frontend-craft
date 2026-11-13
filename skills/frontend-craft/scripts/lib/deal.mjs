@@ -72,7 +72,7 @@ export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = f
 
   const candidates = composition.signatures;
   const recentSig = recentIds(history, 'signature');
-  const signature = pins.signature && candidates.includes(pins.signature) ? pins.signature
+  const signature = pins.signature && lib.signatures.some((x) => x.id === pins.signature) ? pins.signature
     : pick(candidates.map((id) => ({ id })), { rng, recent: recentSig }).id;
   const supports = candidates.filter((s) => s !== signature).sort(() => rng() - 0.5).slice(0, 2);
   const persuade = !['app', 'docs'].includes(kind);
