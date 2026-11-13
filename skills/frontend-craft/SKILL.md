@@ -67,7 +67,7 @@ The user gives the subject. You do not pick colors, fonts or layout by taste: yo
 - `data-press` on every button and button-like link.
 At most 4 moving effects in one viewport and one pinned or scrubbed scene per screen. Your own CSS motion animates only `transform` and `opacity`, 150-300 ms for UI, `var(--ease-out)`; never `transition: all`, never `ease-in` on entrances, never `scale(0)`. Things the user does often (nav links, tabs, inputs) get at most a 150 ms color or opacity change. Kit attributes and options: `references/motion.md`.
 
-**Media.** Never invent or hotlink image or video URLs. Use supplied files; otherwise build the visual in CSS, SVG or canvas (`svg-craft` for illustration) or a labelled placeholder with a fixed aspect ratio. Every `img` has `alt` and `width`/`height` or `aspect-ratio`.
+**Media.** Never invent or hotlink image or video URLs. Use supplied files; or download licensed stand-ins (Unsplash, Pexels) into the project with a `SOURCES.txt` naming photographer, page URL and license, and say in the report they are samples; otherwise build the visual in CSS, SVG or canvas (`svg-craft` for illustration). Every `img` has `alt` and `width`/`height` or `aspect-ratio`.
 
 **Access.** One `h1`; `header`, `main`, `footer`; `lang`, `title`, meta description, a viewport meta that allows zoom; targets of 44x44 px; text over images gets a scrim. Focus rings and reduced motion come with the kit; do not remove them.
 

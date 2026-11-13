@@ -37,6 +37,27 @@ Human review of the screenshots: coherent, readable, specific and clearly not th
 
 With this machine's OpenCode configuration every turn carries about 147,000 input tokens of tools and instructions before the task. Standalone runs do not record their usage in the shared session store, so the exact total for this case was not captured.
 
+## 2026-11-13: photographer-html, Codex CLI (ChatGPT login)
+
+Prompt: `portfolio site for a wedding photographer, just html css js`. Command: `codex exec -s workspace-write --json`. No plugin, no hook: Codex found the skills in `~/.agents/skills`.
+
+| | Result |
+|---|---|
+| Followed the skill | Ran `start.mjs`, built from the blueprint, passed the gate in the first round; also wrote its own logic and browser tests |
+| Dealt direction | palette `ink-violet-paper`, type `tenor-jost`, composition `editorial-spread`, signature `mask` |
+| Motion measured | 6 elements animate in, 15 reveals, scroll-lit words |
+| Media | Three Unsplash photographs downloaded into `assets/` with a `SOURCES.txt` (photographer, URL, license) and marked as samples, not hotlinked. The skill now names this as an allowed route |
+| Gate | `RESULT: PASS`, 0 WARN |
+
+<p>
+  <img src="img/eval-portfolio-codex-1440.png" alt="Codex result at 1440 px: Tenor Sans headline on lilac paper, asymmetric photo layout" width="640">
+  <img src="img/eval-portfolio-codex-390.png" alt="The same page at 390 px" width="180">
+</p>
+
+## 2026-11-13: sushi-svelte, Gemini CLI
+
+Not run: Gemini CLI 0.42 stopped at authentication with "Resource has been exhausted (e.g. check quota)". Gemini CLI does discover the skills (`gemini skills list` shows all five).
+
 ## 2026-11-13: devtool-next, Haiku in Claude Code with the repo loaded as a plugin
 
 Prompt: `landing page for a CLI tool that cleans up git branches, in Next.js`. Command: `claude -p --plugin-dir <repo> --model haiku`, the host's other skills and hooks still active.
