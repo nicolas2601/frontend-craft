@@ -22,5 +22,21 @@
     "type": "unbounded-golos",
     "composition": "place-coordinates",
     "signature": "scrub"
+  },
+  {
+    "at": "2026-11-13T19:08:53.421Z",
+    "kind": "event",
+    "palette": "glacier-signal",
+    "type": "schibsted-solo",
+    "composition": "poster-headline",
+    "signature": "words-blur"
+  },
+  {
+    "at": "2026-11-13T19:19:34.681Z",
+    "kind": "event",
+    "palette": "espresso-honey",
+    "type": "bagel-nunito",
+    "composition": "marquee-bands",
+    "signature": "marquee"
   }
 ]

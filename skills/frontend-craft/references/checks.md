@@ -4,6 +4,7 @@
 
 | id | Level | Means | Usual cause and fix |
 |---|---|---|---|
+| `no-direction` | FAIL | A persuasion page was built without a deal | Run `start.mjs` first; `--brand` for an existing identity, `--kit-only` for motion on existing UI, `--no-deal` for reviews |
 | `h1-count` | FAIL | Not exactly one visible h1 | Logo or section titles marked h1; keep one, use h2 for sections |
 | `meta-title`, `meta-lang`, `meta-viewport` | FAIL | Document basics missing | Set `<title>`, `<html lang>`, the viewport meta |
 | `zoom-blocked` | FAIL | `user-scalable=no` or `maximum-scale=1` | Remove both; fix input zoom with 16 px inputs instead |
