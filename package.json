@@ -1,6 +1,6 @@
 {
-  "name": "frontend-craft-toolkit",
-  "version": "0.1.0",
+  "name": "frontend-craft",
+  "version": "2.0.0",
   "private": true,
   "description": "Portable Noel-first craft guidance and explicitly supervised frontend experiments",
   "scripts": {
@@ -8,5 +8,6 @@
     "check": "python -I -B scripts/verify.py && python -I -B scripts/verify_agents.py && node --check tools/opencode-observer/api.mjs && node --check tools/opencode-observer/observer.mjs && node --check tools/opencode-observer/runner.mjs && node --check tools/opencode-observer/index.mjs && node --check tools/opencode-observer/supervisor.mjs && node --check tools/opencode-observer/supervisor-cli.mjs",
     "doctor": "python -I -B scripts/doctor.py",
     "pack:skill": "python -I -B scripts/verify.py --package dist/frontend-craft.skill"
-  }
+  },
+  "type": "module"
 }

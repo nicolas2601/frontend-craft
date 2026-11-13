@@ -1,0 +1,154 @@
+// The three browser passes: normal (1440 -> 390), reduced motion, no JavaScript.
+import path from 'node:path';
+import { changed, open, pageHeight, scrollTo, setViewport, settle, shot, sleep, watchRuntime } from './page.mjs';
+import { installHelpers } from './helpers.js';
+import {
+  probeCss, probeDocument, probeInvisible, probeLook, probeMotionState, probeOverflow, probeSticky, probeTargets, probeText,
+} from './probes.js';
+
+const MOTION_RECORDER = `(() => {
+  const seen = new Set(); const t0 = performance.now();
+  const note = (el) => { if (el && el.nodeType === 1 && performance.now() - t0 < 4000) seen.add(el); };
+  const animate = Element.prototype.animate;
+  Element.prototype.animate = function (...a) { note(this); return animate.apply(this, a); };
+  addEventListener('animationstart', (e) => note(e.target), true);
+  addEventListener('transitionstart', (e) => note(e.target), true);
+  new MutationObserver((ms) => { for (const m of ms) note(m.target); })
+    .observe(document, { attributes: true, attributeFilter: ['style'], subtree: true });
+  window.__craftEntrance = () => [...seen].filter((el) => {
+    if (!el.isConnected) return false;
+    const r = el.getBoundingClientRect();
+    return r.top < innerHeight && r.bottom > 0 && r.width > 0;
+  }).length;
+})();`;
+
+async function prepare(browser, { reduced = false, noJs = false } = {}) {
+  const s = await browser.newPage();
+  for (const m of ['Page.enable', 'Runtime.enable', 'Network.enable']) await s.send(m);
+  if (reduced) await s.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+  if (noJs) await s.send('Emulation.setScriptExecutionDisabled', { value: true });
+  else await s.send('Page.addScriptToEvaluateOnNewDocument', { source: MOTION_RECORDER });
+  return s;
+}
+
+/** Scroll the whole page in small steps so in-view observers fire; returns sampled positions. */
+async function scrollThrough(s, stepMs) {
+  const { h, vh } = await pageHeight(s);
+  const max = Math.max(0, h - vh);
+  const positions = [];
+  for (let y = 0; y <= max + 1; y += Math.round(vh * 0.6)) {
+    await scrollTo(s, Math.min(y, max));
+    positions.push(Math.min(y, max));
+    await sleep(stepMs);
+  }
+  await scrollTo(s, max);
+  await sleep(stepMs * 4);
+  return { max, vh };
+}
+
+/** Elements invisible at every sampled scroll position (a fade-out at one spot is fine). */
+async function alwaysInvisible(s, ys) {
+  let common = null;
+  for (const y of ys) {
+    await scrollTo(s, y);
+    await sleep(350);
+    const lost = new Set(await s.run(probeInvisible));
+    common = common ? new Set([...common].filter((x) => lost.has(x))) : lost;
+    if (!common.size) break;
+  }
+  return [...(common ?? [])];
+}
+
+async function scrollLinked(s, max, vh) {
+  const linked = new Set();
+  const pairs = Math.min(6, Math.floor(max / vh));
+  for (let k = 0; k < pairs; k += 1) {
+    const y1 = Math.min(max, Math.round((k + 0.5) * vh));
+    const y2 = Math.min(max, y1 + Math.round(vh * 0.5));
+    if (y2 <= y1) continue;
+    await scrollTo(s, y1); await sleep(320);
+    const a = await s.run(probeMotionState);
+    await scrollTo(s, y2); await sleep(320);
+    const b = await s.run(probeMotionState);
+    await scrollTo(s, y1); await sleep(320);
+    const a2 = await s.run(probeMotionState);
+    const moved = new Set(changed(a, b));
+    const stable = new Set(changed(a, a2));
+    for (const i of moved) if (!stable.has(i)) linked.add(a[i][11]);
+  }
+  return [...linked];
+}
+
+export async function normalPass(browser, url, shotsDir) {
+  const s = await prepare(browser);
+  const runtime = watchRuntime(s);
+  await setViewport(s, 1440);
+  const { load } = await open(s, url);
+  await sleep(60);
+  await s.run(installHelpers);
+  const lookEarly = await s.run(probeLook).catch(() => null);
+  await sleep(240);
+  const shots = [await shot(s, path.join(shotsDir, '1440-early.png'))];
+  await settle(s, load, 2200);
+  const entrance = await s.run(() => (window.__craftEntrance ? window.__craftEntrance() : 0));
+  const facts = {
+    doc: await s.run(probeDocument),
+    look: await s.run(probeLook),
+    lookEarly,
+    css: await s.run(probeCss),
+    text: { 1440: await s.run(probeText, { minPx: 12 }) },
+    overflow: { 1440: await s.run(probeOverflow) },
+  };
+  shots.push(await shot(s, path.join(shotsDir, '1440.png')));
+  const before = await s.run(probeMotionState);
+  const { max, vh } = await scrollThrough(s, 70);
+  const after = await s.run(probeMotionState);
+  const reveals = changed(before, after, (row) => Number(row[9]) > vh && Number(row[0]) < 0.2).length;
+  const linked = await scrollLinked(s, max, vh);
+  const sticky = await s.run(probeSticky);
+  const tiles = [];
+  for (let k = 1; k <= Math.min(5, Math.floor(max / vh)); k += 1) {
+    await scrollTo(s, k * vh);
+    await sleep(600);
+    tiles.push(await shot(s, path.join(shotsDir, `1440-${String(k).padStart(2, '0')}.png`)));
+  }
+  const invisibleScrolled = await alwaysInvisible(s, [0, ...tiles.map((_, k) => (k + 1) * vh), max]);
+  for (const w of [1280, 768, 390]) {
+    await scrollTo(s, 0);
+    await setViewport(s, w);
+    await sleep(300);
+    facts.overflow[w] = await s.run(probeOverflow);
+  }
+  facts.text[390] = await s.run(probeText, { minPx: 12 });
+  facts.targets = await s.run(probeTargets);
+  shots.push(await shot(s, path.join(shotsDir, '390.png')), ...tiles);
+  facts.motion = { entrance, reveals, scrollLinked: linked.length, linkedExamples: linked.slice(0, 4), sticky };
+  facts.invisible = { scrolled: invisibleScrolled };
+  facts.consoleErrors = runtime.consoleErrors;
+  facts.network = runtime.network;
+  s.close();
+  return { facts, shots };
+}
+
+export async function reducedPass(browser, url) {
+  const s = await prepare(browser, { reduced: true });
+  await setViewport(s, 1440);
+  const { load } = await open(s, url);
+  await settle(s, load, 900);
+  const { max } = await scrollThrough(s, 40);
+  const lost = await alwaysInvisible(s, [0, max]);
+  s.close();
+  return lost;
+}
+
+export async function noJsPass(browser, url) {
+  const s = await prepare(browser, { noJs: true });
+  await setViewport(s, 1440);
+  const { load } = await open(s, url);
+  await settle(s, load, 500);
+  const textLength = await s.run(() => document.body?.innerText.trim().length ?? 0);
+  const { max } = await pageHeight(s).then(({ h, vh }) => ({ max: Math.max(0, h - vh) }));
+  const lost = await alwaysInvisible(s, [0, max]);
+  s.close();
+  return { lost, textLength };
+}
