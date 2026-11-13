@@ -4,7 +4,7 @@
 
     node <skill>/scripts/start.mjs --kind landing --moods warm,craft,coffee [--kit src/craft]
         [--url http://localhost:5173 | --root dist | --file index.html]
-        [--redeal] [--seed 42] [--pin palette=id,type=id,composition=id,signature=id] [--brand] [--list]
+        [--redeal] [--seed 42] [--pin palette=id,type=id,composition=id,signature=id] [--brand] [--kit-only] [--list]
 
   Writes .craft/deal.json, .craft/brief.md and .craft/gate.json, copies the kit (craft.css,
   craft-motion.js, motion/) plus a dealt tokens.css into --kit, and prints the brief.
@@ -49,6 +49,16 @@ function listVocabulary(lib) {
   ].join('\n');
 }
 
+/** Existing UI: copy the kit and arm the gate without dealing a direction. */
+function kitOnly(args, cwd, dir, kind) {
+  const kitDir = String(args.kit ?? defaultKitDir(cwd));
+  copyKit(path.join(cwd, kitDir));
+  const gate = readJson(path.join(dir, 'gate.json'), {});
+  const target = resolveTarget(args, gate) ?? null;
+  writeJson(path.join(dir, 'gate.json'), { ...gate, armed: true, off: false, kind, target, blocks: gate.blocks ?? 0, startedAt: gate.startedAt ?? new Date().toISOString() });
+  return { text: `Kit copied to ${kitDir} (craft.css, craft-motion.js, motion/). No deal: keep the project's tokens; map them to --c-* and --f-* if you use craft.css defaults.\n${target ? `Gate armed on ${target.url ?? target.root}.` : 'Pass --url or --root to arm the gate on a target.'}` };
+}
+
 export function run(argv, cwd = process.cwd()) {
   const args = parseArgs(argv);
   const lib = loadLibrary();
@@ -57,6 +67,7 @@ export function run(argv, cwd = process.cwd()) {
   const dir = craftDir(cwd);
   const kind = String(args.kind ?? 'landing');
   if (!KINDS.includes(kind)) throw new Error(`unknown --kind "${kind}". Use one of: ${KINDS.join(', ')}`);
+  if (args['kit-only']) return kitOnly(args, cwd, dir, kind);
   const vocabulary = moodsOf(lib);
   const moods = args.moods && args.moods !== true ? String(args.moods).split(',').map((m) => m.trim().toLowerCase()).filter(Boolean) : [];
   const unknown = moods.filter((m) => !vocabulary.includes(m));
