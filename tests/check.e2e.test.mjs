@@ -30,3 +30,8 @@ test('the generated-default page fails on the defects it has', { skip: !chrome, 
     assert.ok(ids.has(id), `missing ${id}; got ${[...ids].join(', ')}`);
   }
 });
+
+test('a persuasion page built without a deal fails no-direction', { skip: !chrome, timeout: 120000 }, async () => {
+  const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/good/index.html' }, kind: 'landing', out: out(), quick: true, requireDeal: true });
+  assert.deepEqual(r.findings.filter((x) => x.level === 'FAIL').map((x) => x.id), ['no-direction']);
+});

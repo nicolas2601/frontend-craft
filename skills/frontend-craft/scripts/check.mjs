@@ -15,11 +15,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { launch } from './lib/chrome.mjs';
 import { noJsPass, normalPass, reducedPass } from './lib/passes.mjs';
-import { evaluate } from './lib/rules.mjs';
+import { PERSUADE_KINDS, evaluate } from './lib/rules.mjs';
 import { serve } from './lib/serve.mjs';
 import { craftDir, isMain, parseArgs, readJson, resolveTarget, writeJson } from './lib/state.mjs';
 
-export async function runCheck({ target, kind = 'landing', deal = null, out, quick = false }) {
+export async function runCheck({ target, kind = 'landing', deal = null, out, quick = false, requireDeal = false }) {
   const shotsDir = path.join(out, 'shots');
   fs.mkdirSync(shotsDir, { recursive: true });
   const server = target.root ? await serve(target.root) : null;
@@ -32,6 +32,9 @@ export async function runCheck({ target, kind = 'landing', deal = null, out, qui
     facts.invisible.nojs = noJs.lost;
     Object.assign(facts, { kind, deal });
     const findings = evaluate(facts);
+    if (requireDeal && !deal && PERSUADE_KINDS.includes(kind)) {
+      findings.unshift({ level: 'FAIL', id: 'no-direction', msg: 'no dealt direction for this page (.craft/deal.json is missing)', fix: 'run node <skill>/scripts/start.mjs --kind <kind> --moods <moods> in the project folder and rebuild from its blueprint; use --brand if the project already has its colors and fonts' });
+    }
     if (!quick && noJs.textLength < 50 && ['landing', 'product', 'event', 'venue', 'brand', 'campaign'].includes(kind)) {
       findings.push({ level: 'WARN', id: 'nojs-empty', msg: 'the page is empty without JavaScript (client-only render)', fix: 'prerender or SSR the marketing page so crawlers and slow phones get content' });
     }
@@ -75,6 +78,7 @@ async function main() {
     target,
     kind: String(args.kind ?? gate?.kind ?? deal?.kind ?? 'landing'),
     deal,
+    requireDeal: !args['no-deal'] && !gate?.kitOnly,
     out: path.resolve(String(args.out ?? dir)),
     quick: !!args.quick,
   });

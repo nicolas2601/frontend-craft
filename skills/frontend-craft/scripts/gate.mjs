@@ -85,7 +85,7 @@ async function main() {
     return;
   }
   const deal = readJson(path.join(out, 'deal.json'));
-  const check = (st) => runCheck({ target: st.target, kind: st.kind ?? deal?.kind ?? 'landing', deal: deal?.brand ? null : deal, out });
+  const check = (st) => runCheck({ target: st.target, kind: st.kind ?? deal?.kind ?? 'landing', deal: deal?.brand ? null : deal, out, requireDeal: !st.kitOnly && !deal?.brand });
 
   if (!args.hook) {
     process.chdir(project);
