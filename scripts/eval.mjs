@@ -7,7 +7,7 @@
     node scripts/eval.mjs --case devtool-next --model haiku --model-flag --model --no-title --resume-flag --resume \
       --agent-cmd "claude -p --output-format json --permission-mode acceptEdits --allowedTools Bash,Read,Write,Edit,Glob,Grep,Skill"
 
-  Per case: a fresh folder, the prompt sent once, then up to --rounds follow-ups carrying the gate's
+  Per case: a fresh folder under ~/.cache/frontend-craft/evals (or --workdir; never tmpfs, installs are large), the prompt sent once, then up to --rounds follow-ups carrying the gate's
   FAIL list (the same loop a Stop hook gives Claude Code). A project's dev server is started by the
   runner so the check can see it. Results go to evals/results/<date>-<case>.json.
 */
@@ -43,13 +43,15 @@ function startDev(cwd) {
   if (!pkg.scripts?.dev) return Promise.resolve(null);
   return new Promise((resolve) => {
     const child = spawn('npm', ['run', 'dev'], { cwd, stdio: ['ignore', 'pipe', 'pipe'], detached: true });
-    const timer = setTimeout(() => resolve({ url: null, stop: () => process.kill(-child.pid, 'SIGKILL') }), 90000);
+    const stop = () => { try { process.kill(-child.pid, 'SIGKILL'); } catch { /* already gone */ } };
+    const timer = setTimeout(() => resolve({ url: null, stop }), 90000);
     const onData = (d) => {
       const m = String(d).replace(/\x1b\[[0-9;]*m/g, '').match(/https?:\/\/(localhost|127\.0\.0\.1):\d+\/?/);
-      if (m) { clearTimeout(timer); resolve({ url: m[0], stop: () => process.kill(-child.pid, 'SIGKILL') }); }
+      if (m) { clearTimeout(timer); resolve({ url: m[0], stop }); }
     };
     child.stdout.on('data', onData);
     child.stderr.on('data', onData);
+    child.on('exit', () => { clearTimeout(timer); resolve({ url: null, stop }); });
   });
 }
 
@@ -59,10 +61,27 @@ function sessionIdOf(output) {
     ?? output.match(/"session_id"\s*:\s*"([0-9a-f-]{36})"/)?.[1] ?? null;
 }
 
+/** The folder itself, or the one subfolder holding a package.json or index.html. */
+function projectIn(dir) {
+  const has = (d) => ['package.json', 'index.html'].some((f) => fs.existsSync(path.join(d, f)));
+  if (has(dir)) return dir;
+  const subs = fs.readdirSync(dir, { withFileTypes: true }).filter((e) => e.isDirectory() && !e.name.startsWith('.') && e.name !== 'node_modules');
+  return subs.map((e) => path.join(dir, e.name)).find(has) ?? dir;
+}
+
+function dropDeps(dir) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (!e.isDirectory() || e.name.startsWith('.')) continue;
+    const full = path.join(dir, e.name);
+    if (e.name === 'node_modules' || e.name === '.next') fs.rmSync(full, { recursive: true, force: true });
+    else if (full.split(path.sep).length - dir.split(path.sep).length < 2) dropDeps(full);
+  }
+}
+
 /** Find something checkable in the folder the agent produced. */
 async function locateTarget(dir) {
   const gateFile = findGate(dir);
-  const projectDir = gateFile ? path.dirname(path.dirname(gateFile)) : dir;
+  const projectDir = gateFile ? path.dirname(path.dirname(gateFile)) : projectIn(dir);
   const gate = gateFile ? readJson(gateFile, {}) : null;
   const dev = await startDev(projectDir);
   if (dev?.url) return { projectDir, gate, target: { url: dev.url }, stop: dev.stop };
@@ -88,7 +107,9 @@ async function runCase(c, args) {
   const base = String(args['agent-cmd'] ?? 'opencode run --standalone --agent frontend --auto --format json').split(' ');
   const model = args.model ? [String(args['model-flag'] ?? '-m'), String(args.model)] : [];
   const rounds = Number(args.rounds ?? 3);
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), `fc-eval-${c.id}-`));
+  const base0 = String(args.workdir ?? path.join(os.homedir(), '.cache', 'frontend-craft', 'evals'));
+  fs.mkdirSync(base0, { recursive: true });
+  const dir = fs.mkdtempSync(path.join(base0, `${c.id}-`));
   const log = [];
   console.log(`[${c.id}] ${dir}`);
   const title = args['no-title'] ? [] : ['--title', `fc-eval-${c.id}`];
@@ -114,6 +135,7 @@ async function runCase(c, args) {
     shots: scored.report?.shots ?? [], rounds: log,
   };
   writeJson(path.join(ROOT, 'evals', 'results', `${new Date().toISOString().slice(0, 10)}-${c.id}.json`), result);
+  if (!args['keep-deps']) dropDeps(dir);
   console.log(`[${c.id}] ${result.pass ? 'PASS' : 'FAIL'} ${result.fails.join(', ')}`);
   return result;
 }
