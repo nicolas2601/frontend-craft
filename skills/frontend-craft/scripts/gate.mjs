@@ -11,9 +11,8 @@
 */
 import fs from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { formatReport, runCheck } from './check.mjs';
-import { parseArgs, readJson, writeJson } from './lib/state.mjs';
+import { isMain, parseArgs, readJson, writeJson } from './lib/state.mjs';
 
 export const MAX_BLOCKS = 4;
 
@@ -101,7 +100,7 @@ async function main() {
   if (!result.allow) process.stdout.write(JSON.stringify({ decision: 'block', reason: result.reason }));
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   main().catch((err) => {
     console.error(`gate: ${err.message}`);
     process.exit(process.argv.includes('--hook') ? 0 : 2);

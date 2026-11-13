@@ -13,10 +13,10 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { KINDS, deal, historyFile, loadLibrary, moodsOf, rngFrom, summarize } from './lib/deal.mjs';
 import { briefMd, tokensCss } from './lib/render.mjs';
-import { craftDir, parseArgs, readJson, resolveTarget, writeJson } from './lib/state.mjs';
+import { craftDir, isMain, parseArgs, readJson, resolveTarget, writeJson } from './lib/state.mjs';
 
 const SKILL = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const KIT = path.join(SKILL, 'kit');
@@ -126,7 +126,7 @@ export function run(argv, cwd = process.cwd()) {
   return { text: `${brief}\n${tail}${page}`, deal: current };
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   try {
     console.log(run(process.argv.slice(2)).text);
   } catch (err) {

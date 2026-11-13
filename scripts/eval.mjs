@@ -25,7 +25,8 @@ const AGENT_TIMEOUT_MS = 40 * 60 * 1000;
 
 function sh(cmd, args, { cwd, timeout = AGENT_TIMEOUT_MS } = {}) {
   return new Promise((resolve) => {
-    const child = spawn(cmd, args, { cwd, stdio: ['ignore', 'pipe', 'pipe'] });
+    // PWD must match cwd: some CLIs (OpenCode) take their working directory from PWD, not from the process cwd.
+    const child = spawn(cmd, args, { cwd, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, PWD: cwd } });
     let out = '';
     let err = '';
     const timer = setTimeout(() => child.kill('SIGKILL'), timeout);

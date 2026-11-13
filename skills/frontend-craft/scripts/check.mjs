@@ -13,12 +13,11 @@
 */
 import fs from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { launch } from './lib/chrome.mjs';
 import { noJsPass, normalPass, reducedPass } from './lib/passes.mjs';
 import { evaluate } from './lib/rules.mjs';
 import { serve } from './lib/serve.mjs';
-import { craftDir, parseArgs, readJson, resolveTarget, writeJson } from './lib/state.mjs';
+import { craftDir, isMain, parseArgs, readJson, resolveTarget, writeJson } from './lib/state.mjs';
 
 export async function runCheck({ target, kind = 'landing', deal = null, out, quick = false }) {
   const shotsDir = path.join(out, 'shots');
@@ -83,7 +82,7 @@ async function main() {
   process.exit(report.findings.some((x) => x.level === 'FAIL') ? 1 : 0);
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   main().catch((err) => {
     console.error(`check: could not run: ${err.message}`);
     process.exit(2);

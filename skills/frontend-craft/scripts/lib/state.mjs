@@ -1,6 +1,7 @@
 // The project's .craft/ folder: deal, brief, gate state and screenshots.
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export const DIR = '.craft';
 
@@ -45,4 +46,13 @@ export function resolveTarget(args, gate) {
   }
   if (gate?.target) return gate.target;
   return null;
+}
+
+/** True when the module is the script node was started with, also through a symlinked skill folder. */
+export function isMain(metaUrl) {
+  try {
+    return fs.realpathSync(fileURLToPath(metaUrl)) === fs.realpathSync(process.argv[1] ?? '');
+  } catch {
+    return false;
+  }
 }
