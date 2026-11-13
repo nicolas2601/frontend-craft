@@ -34,7 +34,7 @@ The user gives the subject. You do not pick colors, fonts or layout by taste: yo
 
 ## The run
 
-1. **Read the project.** `package.json`, framework, existing `DESIGN.md`, tokens and components. Preserve what exists. If the brand already has colors and fonts, add `--brand` in step 3.
+1. **Read the project.** `package.json`, framework, existing `DESIGN.md`, tokens and components. Preserve what exists. If the brand already has colors and fonts, add `--brand` in step 3. A new project goes in a new folder inside the current working directory; run every script from that folder.
 2. **Pick the kind and 2-3 moods.** Kinds: landing, product, portfolio, event, venue, brand, campaign, app, docs. Moods: beauty, bold, brutal, calm, coffee, craft, creative, culture, developer, editorial, energetic, fashion, festive, finance, food, fresh, friendly, health, heritage, hospitality, industrial, luxury, minimal, modern, music, nature, nightlife, organic, playful, precise, print, retro, science, sport, tea, tech, travel, warm, wellness, youth.
 3. **Deal.** `node <skill>/scripts/start.mjs --kind landing --moods warm,craft,coffee`
    It copies the kit into the project (`src/craft/`, `app/craft/` or `craft/`; override with `--kit`), writes the dealt `tokens.css`, and prints the brief (also in `.craft/brief.md`). The brief is binding: its palette, pairing, composition and motion are the design. Do not swap them for your own preference; `--redeal` gives a new hand.
