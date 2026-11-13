@@ -62,7 +62,7 @@ npx skills@latest add nicolas2601/frontend-craft
 
 **By hand.** Copy or symlink each folder in `skills/` into your agent's skills directory (`~/.claude/skills/`, `~/.agents/skills/`, `~/.config/opencode/skills/`, or `.agents/skills/` in a project).
 
-**OpenCode gate.** OpenCode has no Stop hook. Copy [`integrations/opencode/frontend-craft-gate.js`](integrations/opencode/frontend-craft-gate.js) to `~/.config/opencode/plugins/` and add `"./plugins/frontend-craft-gate.js"` to the `plugin` array in `opencode.json`: when a session goes idle with a failing build, the fix list is sent back into the session. An optional `frontend` agent is in [`integrations/opencode/agents/frontend.md`](integrations/opencode/agents/frontend.md).
+**OpenCode gate.** OpenCode has no Stop hook. Copy [`integrations/opencode/frontend-craft-gate.js`](integrations/opencode/frontend-craft-gate.js) to `~/.config/opencode/plugins/` (OpenCode loads that folder by itself; plugin API v2): when a session goes idle with a failing build, the fix list is sent back into the session. An optional `frontend` agent is in [`integrations/opencode/agents/frontend.md`](integrations/opencode/agents/frontend.md).
 
 Details per harness: [docs/installation.md](docs/installation.md).
 

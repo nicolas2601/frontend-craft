@@ -27,7 +27,7 @@ Copy or symlink `skills/*` into `~/.agents/skills/` (or `.agents/skills/` in the
 
 OpenCode discovers skills in `~/.config/opencode/skills/`, `~/.claude/skills/` and `~/.agents/skills/`. Then:
 
-1. Gate: copy `integrations/opencode/frontend-craft-gate.js` to `~/.config/opencode/plugins/` and add `"./plugins/frontend-craft-gate.js"` to the `plugin` array of `~/.config/opencode/opencode.json`. When a top-level session goes idle while an armed build in its directory still fails, the plugin sends the fix list back into the session. Restart OpenCode (and its background service) to load it.
+1. Gate: copy `integrations/opencode/frontend-craft-gate.js` to `~/.config/opencode/plugins/`; OpenCode loads every plugin in that folder (plugin API v2: a default export with `id` and `setup`). Do not also list the file in `opencode.json`. When a top-level session goes idle while an armed build in its directory still fails, the plugin sends the fix list back into the session. Restart OpenCode (and its background service) to load it.
 2. Optional agent: copy `integrations/opencode/agents/frontend.md` to `~/.config/opencode/agents/`. It routes to the right skill and holds the agent to the check.
 
 ## Cursor, Gemini CLI, Windsurf and others

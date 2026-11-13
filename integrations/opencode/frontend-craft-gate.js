@@ -1,9 +1,9 @@
-// frontend-craft gate for OpenCode. When a top-level session goes idle while an armed build in the
-// working directory still has FAILs, it sends the fix list back into the same session.
+// frontend-craft gate for OpenCode (plugin API v2). When a session goes idle while an armed build in
+// the working directory still has FAILs, it sends the fix list back into the same session.
 // The gate script decides; it allows the stop after its block budget, so this never loops forever.
 //
-// Install: copy this file to ~/.config/opencode/plugins/ and add "./plugins/frontend-craft-gate.js"
-// to the "plugin" array of ~/.config/opencode/opencode.json.
+// Install: copy this file to ~/.config/opencode/plugins/. OpenCode loads every plugin in that folder;
+// do not also list it in opencode.json (a configured plugin path must be a directory).
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import os from 'node:os';
@@ -33,32 +33,44 @@ function runGate(script, directory) {
   });
 }
 
-export const FrontendCraftGate = async ({ client, directory }) => {
-  const busy = new Set();
-  return {
-    event: async ({ event }) => {
-      if (event?.type !== 'session.idle') return;
-      const sessionID = event.properties?.sessionID;
-      if (!sessionID || busy.has(sessionID)) return;
+const sessionOf = (event) => event?.properties?.sessionID ?? event?.data?.sessionID ?? event?.sessionID ?? null;
+
+export default {
+  id: 'frontend-craft-gate',
+  setup(ctx) {
+    const directory = ctx.location?.directory ?? process.cwd();
+    const controller = new AbortController();
+    const busy = new Set();
+
+    const onIdle = async (sessionID) => {
       const script = gateScript(directory);
-      if (!script) return;
+      if (!script || busy.has(sessionID)) return;
       busy.add(sessionID);
       try {
-        const info = await client.session.get({ path: { id: sessionID } }).catch(() => null);
-        if (info?.data?.parentID) return;
         const out = await runGate(script, directory);
         if (!out) return;
         const verdict = JSON.parse(out);
         if (verdict.decision !== 'block') return;
-        // Not awaited: the prompt resolves only after the next turn, and that turn's idle event must reach us.
-        client.session.prompt({ path: { id: sessionID }, body: { parts: [{ type: 'text', text: verdict.reason }] } }).catch(() => {});
+        await ctx.session.prompt({ sessionID, text: verdict.reason });
       } catch {
         // a broken gate must never break the session
       } finally {
         busy.delete(sessionID);
       }
-    },
-  };
-};
+    };
 
-export default FrontendCraftGate;
+    void (async () => {
+      try {
+        for await (const event of ctx.event.subscribe({ signal: controller.signal })) {
+          if (event?.type !== 'session.idle') continue;
+          const sessionID = sessionOf(event);
+          if (sessionID) void onIdle(sessionID);
+        }
+      } catch {
+        // subscription closed
+      }
+    })();
+
+    return () => controller.abort();
+  },
+};
