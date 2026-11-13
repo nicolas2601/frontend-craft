@@ -2,12 +2,18 @@
   "name": "frontend-craft",
   "version": "2.0.0",
   "private": true,
-  "description": "Portable Noel-first craft guidance and explicitly supervised frontend experiments",
+  "description": "Agent skills that make any coding model build web pages that do not look generated",
   "scripts": {
-    "test": "npm --prefix tools/opencode-observer test && python -I -B -m unittest discover -s tests -v && python -I -B -m unittest discover -s skills/frontend-craft/tests -v",
-    "check": "python -I -B scripts/verify.py && python -I -B scripts/verify_agents.py && node --check tools/opencode-observer/api.mjs && node --check tools/opencode-observer/observer.mjs && node --check tools/opencode-observer/runner.mjs && node --check tools/opencode-observer/index.mjs && node --check tools/opencode-observer/supervisor.mjs && node --check tools/opencode-observer/supervisor-cli.mjs",
-    "doctor": "python -I -B scripts/doctor.py",
-    "pack:skill": "python -I -B scripts/verify.py --package dist/frontend-craft.skill"
+    "test": "node --test \"tests/*.test.mjs\"",
+    "test:unit": "node --test tests/library.test.mjs tests/deal.test.mjs tests/rules.test.mjs tests/gate.test.mjs",
+    "verify": "node scripts/verify.mjs",
+    "check": "node scripts/verify.mjs && node --test \"tests/*.test.mjs\"",
+    "pack": "node scripts/pack.mjs",
+    "eval": "node scripts/eval.mjs",
+    "observer:test": "npm --prefix tools/opencode-observer test"
   },
-  "type": "module"
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  }
 }
