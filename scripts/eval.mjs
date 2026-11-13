@@ -73,6 +73,17 @@ function projectIn(dir) {
   return subs.map((e) => path.join(dir, e.name)).find(has) ?? dir;
 }
 
+/** Kill processes the agent left running inside the case folder (dev servers, watchers). Linux only. */
+function killLeftovers(dir) {
+  if (process.platform !== 'linux') return;
+  for (const pid of fs.readdirSync('/proc').filter((d) => /^\d+$/.test(d))) {
+    try {
+      const cwd = fs.readlinkSync(`/proc/${pid}/cwd`);
+      if (cwd === dir || cwd.startsWith(`${dir}${path.sep}`)) process.kill(Number(pid), 'SIGTERM');
+    } catch { /* gone or not ours */ }
+  }
+}
+
 function dropDeps(dir) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     if (!e.isDirectory() || e.name.startsWith('.')) continue;
@@ -146,6 +157,7 @@ async function runCase(c, args) {
     shots: scored.report?.shots ?? [], rounds: log,
   };
   writeJson(path.join(ROOT, 'evals', 'results', `${new Date().toISOString().slice(0, 10)}-${c.id}.json`), result);
+  killLeftovers(dir);
   if (!args['keep-deps']) dropDeps(dir);
   console.log(`[${c.id}] ${result.pass ? 'PASS' : 'FAIL'} ${result.fails.join(', ')}`);
   return result;

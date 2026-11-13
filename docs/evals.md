@@ -93,6 +93,8 @@ The OpenCode gate plugin was also rewritten for OpenCode's plugin API v2 after f
 
 All fourteen blueprints render through the check with sample text (`npm run test:blueprints`): every one passes with an entrance and a scroll-linked scene.
 
+Run one case at a time on machines with less than 16 GB of RAM: two agents building Next.js projects in parallel, plus the checker's Chrome, ran a 9.6 GB laptop out of memory and both runs were stopped.
+
 ## Running more
 
 ```sh
