@@ -1,14 +1,15 @@
 ---
 name: frontend-craft
 description: >-
-  Builds websites and interfaces that do not look generated, in any framework (plain HTML, React,
-  Next.js, Vue, Svelte, Astro, Tailwind). Deals a direction (palette, type pairing, composition,
-  motion) from a curated library instead of picking by taste, ships a dependency-free motion kit
-  (word reveals, scroll-lit text, stacking cards, pinned rails, scrub, count-up, marquee, magnetic
-  buttons) and a browser check that blocks finishing while defects remain. Use whenever you build,
-  redesign, restyle or polish a landing page, website, portfolio, product, event, restaurant or
-  brand page, add animations or scroll effects, or when the user says a page looks basic, generic,
-  templated or "AI-made".
+  Entry point for frontend work in any framework (plain HTML, React, Next.js, Vue, Svelte, Astro,
+  Tailwind) that routes each task to the skill that does it best and enforces a browser gate before
+  finishing. Websites and landing pages build with the bundled design-taste-frontend engine (real
+  licensed photographs, dealt moments, effects on tech pages, its own checker and gate), then get
+  impeccable and Emil Kowalski polish passes; app screens, dashboards and docs use this skill's dealt
+  tokens, motion kit and check. Use whenever you build, redesign, restyle or polish a landing page,
+  website, portfolio, product, shop, cafe, event, SaaS or app interface, add animations or scroll
+  effects, review a page, or when the user says a page looks basic, flat, generic, templated or
+  "AI-made".
 hooks:
   Stop:
     - hooks:
@@ -19,22 +20,31 @@ hooks:
 
 # frontend-craft
 
-The user gives the subject. You do not pick colors, fonts or layout by taste: you **deal** them, build with the **kit**, and you are done when the **check** passes. Other design skills loaded in the session may advise on details; for a new page the deal decides colors, type and composition. `<skill>` is this folder. Needs Node 22+ and Chrome, Chromium or Edge.
-
-**First command, before you write any markup:** `node <skill>/scripts/start.mjs --kind <kind> --moods <2-3 moods>` from the project folder (step 3 explains the flags). Without a deal the check fails with `no-direction`.
+The user gives the subject; you supply the design judgment through the skills this one routes to, and you finish only when a browser gate passes. Never answer a visual request from memory: run the routed skill's scripts. `<skill>` is this folder; sibling skills sit next to it (`<skill>/../<name>`). Needs Node 22+ and Chrome, Chromium or Edge.
 
 ## Route first
 
 | Task | Do |
 |---|---|
-| New page, site or redesign with a visual goal | The run below |
-| Add or fix motion in existing UI | `craft-motion` skill |
-| Review a page without editing | `craft-review` skill |
-| End of a session with design corrections | `craft-learn` skill |
-| Icon, logo, illustration, diagram | `svg-craft` skill |
-| App, dashboard or docs | The run with `--kind app` or `--kind docs` (no motion floor; restraint) |
+| Website or landing page (company, product, shop, cafe, hotel, studio, event, portfolio, SaaS, AI tool, game) or a redesign of one | **Websites** below: the `design-taste-frontend` run, then the finish passes |
+| App screen, dashboard, admin or docs | The run below with `--kind app` or `--kind docs` (no motion floor; restraint); `ui-ux-pro-max` search for styles and UX rules |
+| Add or fix motion in existing UI | `craft-motion`, with `animate`, `choreograph` and `animation-performance` |
+| Review a page without editing | `craft-review`, plus `impeccable` (critique, audit) |
+| UI that must survive bad data | `break-ui` |
+| Icon, logo, illustration, diagram | `svg-craft` |
+| End of a session with design corrections | `craft-learn` |
 
-## The run
+## Websites
+
+1. Load `design-taste-frontend` and follow its run exactly: its `start.mjs` deal, `photos.mjs` frames, `moments.mjs` pick, the starter and hero files, its checker and `gate.mjs`. Its house rules decide the page; do not mix in this skill's palettes, blueprints or kit.
+2. Finish passes, only after its gate prints `GATE: PASS`: run `review-animations` on the hover layer and the dealt moments, then `impeccable` (critique) on the first screen and the 390 px view. Apply only fixes that keep `design-taste-frontend`'s house rules, then run its `gate.mjs` again; it must still pass.
+3. Report with its report format, plus what the finish passes changed.
+
+Order when advice conflicts: the user, then accessibility, then `design-taste-frontend` for websites (this skill for apps and docs), then `impeccable` and the Emil skills, then defaults.
+
+Only when `design-taste-frontend` is not installed and cannot be installed (`npx skills add <this repo> --skill design-taste-frontend`) build a website with the run below and a website kind, and say so in the report.
+
+## The run (apps and docs; websites only as the fallback above)
 
 1. **Read the project.** `package.json`, framework, existing `DESIGN.md`, tokens and components. Preserve what exists. If the brand already has colors and fonts, add `--brand` in step 3. A new project goes in a new folder inside the current working directory; run every script from that folder.
 2. **Pick the kind and 2-3 moods.** Kinds: landing, product, portfolio, event, venue, brand, campaign, app, docs. Moods: beauty, bold, brutal, calm, coffee, craft, creative, culture, developer, editorial, energetic, fashion, festive, finance, food, fresh, friendly, health, heritage, hospitality, industrial, luxury, minimal, modern, music, nature, nightlife, organic, playful, precise, print, retro, science, sport, tea, tech, travel, warm, wellness, youth.

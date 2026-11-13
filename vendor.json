@@ -1,0 +1,179 @@
+{
+  "about": "Third-party skills bundled with frontend-craft, copied unchanged from their upstream repos at the pinned commit. Never edit them here: run `node scripts/vendor.mjs` to restore and `node scripts/vendor.mjs --update` to move to upstream HEAD. `hash` is checked by `npm run verify`.",
+  "repos": {
+    "Leonxlnx/taste-skill": {
+      "ref": "f6b76575f949707b4e3c37cd86cb44b0b98643e8",
+      "license": "MIT"
+    },
+    "pbakaus/impeccable": {
+      "ref": "c4cd1924c389f68d37c687d9c2bbf13f12547c41",
+      "license": "Apache-2.0"
+    },
+    "emilkowalski/skills": {
+      "ref": "0f2e23b32bb1265e84cff8d3e75785fec953fb1b",
+      "license": "MIT"
+    },
+    "nextlevelbuilder/ui-ux-pro-max-skill": {
+      "ref": "6ae86f61f520d6ca229d2f40e070410638c908c5",
+      "license": "MIT"
+    },
+    "mblode/agent-skills": {
+      "ref": "402a666823ddf9b8cd9be76c3314b1119078ff01",
+      "license": "MIT"
+    }
+  },
+  "skills": [
+    {
+      "name": "design-taste-frontend",
+      "repo": "Leonxlnx/taste-skill",
+      "path": "skills/taste-skill",
+      "role": "website engine: deal, photographs, moments, effects, checker and finish gate",
+      "hash": "0b3daac464c525d108874eea656ab68a340f69d2ca2517e945af3cd5646025ce",
+      "files": 1632
+    },
+    {
+      "name": "impeccable",
+      "repo": "pbakaus/impeccable",
+      "path": ".agents/skills/impeccable",
+      "role": "critique, audit and polish passes",
+      "hash": "b8e2e5a876f8b1360d88fefcc4e813da0756aebf7b138065504d25c99c492ab0",
+      "files": 65
+    },
+    {
+      "name": "emil-design-eng",
+      "repo": "emilkowalski/skills",
+      "path": "skills/emil-design-eng",
+      "role": "interaction and polish details",
+      "hash": "c9ac02e078119d8a0156332d8febef93da95c18a8f958fbca9ad0b74b13add21",
+      "files": 2
+    },
+    {
+      "name": "animate",
+      "repo": "emilkowalski/skills",
+      "path": "skills/animate",
+      "role": "whether and how to animate: easing, duration",
+      "hash": "74bdcbb1343747d9ca7f409a67929c0b412e1f8b66e2165e5632ff14b079900f",
+      "files": 3
+    },
+    {
+      "name": "choreograph",
+      "repo": "emilkowalski/skills",
+      "path": "skills/choreograph",
+      "role": "several elements moving together",
+      "hash": "20d394e6b6aab8ea7e33a76d7eb5c3018e7248a08f6ec94d65765503511cebe8",
+      "files": 3
+    },
+    {
+      "name": "animation-performance",
+      "repo": "emilkowalski/skills",
+      "path": "skills/animation-performance",
+      "role": "frame budget and jank",
+      "hash": "6c13cd84b0d17b39fe0008c6517de84881b387eabc9689e651256acdf32c0620",
+      "files": 2
+    },
+    {
+      "name": "animation-vocabulary",
+      "repo": "emilkowalski/skills",
+      "path": "skills/animation-vocabulary",
+      "role": "naming motion",
+      "hash": "9923ba4878e676190f97b09d04f6f97701b50e7fd1901685be27de98f65cfe86",
+      "files": 2
+    },
+    {
+      "name": "review-animations",
+      "repo": "emilkowalski/skills",
+      "path": "skills/review-animations",
+      "role": "motion review",
+      "hash": "a2dc725a3e4c7264b0eef72a4bf15187ba1969e5b34447c71a8cd7fbe86fef1f",
+      "files": 3
+    },
+    {
+      "name": "improve-animations",
+      "repo": "emilkowalski/skills",
+      "path": "skills/improve-animations",
+      "role": "fixing existing motion",
+      "hash": "99f3dacc689a6ca3a07e9ff94771d217e882b90cd2171b1c569b3dd5f842c5cf",
+      "files": 4
+    },
+    {
+      "name": "remove-animations",
+      "repo": "emilkowalski/skills",
+      "path": "skills/remove-animations",
+      "role": "removing motion that does not help",
+      "hash": "5fe2e9d20aaaef01bf3842d6c444beecdd5c7b342081c4dc02773ea35ef587ae",
+      "files": 2
+    },
+    {
+      "name": "find-animation-opportunities",
+      "repo": "emilkowalski/skills",
+      "path": "skills/find-animation-opportunities",
+      "role": "where motion would help",
+      "hash": "a8e7a9134da7a93d50803fa45c9c055485dfdbe5b5a5042b938a4f7ef4df4f79",
+      "files": 2
+    },
+    {
+      "name": "gestures",
+      "repo": "emilkowalski/skills",
+      "path": "skills/gestures",
+      "role": "drag, swipe and sheets",
+      "hash": "0439342262cdf87e14735101bb963e41378ca82da8112c11097672f5a56fae47",
+      "files": 2
+    },
+    {
+      "name": "break-ui",
+      "repo": "emilkowalski/skills",
+      "path": "skills/break-ui",
+      "role": "worst-case data stress test",
+      "hash": "947e978848090d1d7323b58cfeb5c671b88ae9efb57a8f2dfe9d478698c62109",
+      "files": 3
+    },
+    {
+      "name": "pick-ui-library",
+      "repo": "emilkowalski/skills",
+      "path": "skills/pick-ui-library",
+      "role": "choosing component libraries",
+      "hash": "4f0d3bf51dacac1ff5e31cdbcdaeb10df30cbfcdf98f4a8e0c9c0479c1d6c9cf",
+      "files": 2
+    },
+    {
+      "name": "prototype",
+      "repo": "emilkowalski/skills",
+      "path": "skills/prototype",
+      "role": "quick interaction prototypes",
+      "hash": "aa8bbfaf73f7904b709d77f46160927f2b0be609a365f60a8da494b94f5110a3",
+      "files": 3
+    },
+    {
+      "name": "apple-design",
+      "repo": "emilkowalski/skills",
+      "path": "skills/apple-design",
+      "role": "Apple-style interface conventions",
+      "hash": "19ce8c8b6816fdf98cd63cc05e323c1fed067f70294e350e14b780f61ef8c4ac",
+      "files": 2
+    },
+    {
+      "name": "learn-taste",
+      "repo": "emilkowalski/skills",
+      "path": "skills/learn-taste",
+      "role": "recording design preferences",
+      "hash": "89691d6510127f262de9327595fe6bad464952b9d909798156072f4f7899c113",
+      "files": 2
+    },
+    {
+      "name": "ui-ux-pro-max",
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "path": ".claude/skills/ui-ux-pro-max",
+      "role": "searchable styles, palettes, font pairings and UX rules for apps",
+      "hash": "3435a1a106c5f919919ed9edf5447d06031deb8c7ab1267bfbf672e59ef7d683",
+      "files": 76
+    },
+    {
+      "name": "ui-animation",
+      "repo": "mblode/agent-skills",
+      "path": "skills/ui-animation",
+      "role": "springs, curve fitting from recordings, interface sound",
+      "hash": "806b43bb194724e5819e3ea4c1350cb0c1616b642ad26760ac2864ef6d7ea86a",
+      "files": 26
+    }
+  ]
+}

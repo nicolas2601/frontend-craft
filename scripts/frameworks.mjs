@@ -59,7 +59,7 @@ for (const name of only) {
   const fw = FRAMEWORKS[name];
   const dir = path.join(base, name);
   scaffold(dir, fw);
-  start(['--kind', 'landing', '--pin', `composition=${composition}`, '--seed', '11', '--kit', 'src/craft'], dir);
+  start(['--kind', 'landing', '--fallback', '--pin', `composition=${composition}`, '--seed', '11', '--kit', 'src/craft'], dir);
   const deal = readJson(path.join(dir, '.craft', 'deal.json'));
   const body = blueprintBody(fs.readFileSync(path.join(dir, 'src', 'craft', 'blueprint.html'), 'utf8'));
   fs.writeFileSync(path.join(dir, 'src', fw.file), fw.app(body));

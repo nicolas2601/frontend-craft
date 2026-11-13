@@ -1,160 +1,130 @@
 # frontend-craft
 
-Agent skills that make any coding model build web pages that do not look generated: in any framework, from the shortest prompt, with a browser check that will not let the agent stop while the page is broken.
+One install that gives a coding agent a complete frontend toolset: a website engine with real photographs and a browser gate, critique and polish passes, motion rules, a motion kit for apps, SVG authoring, and a router that sends each task to the right one. Works in any harness that reads Agent Skills (Claude Code, Codex, OpenCode, Gemini CLI, Cursor, pi) and in any framework.
 
-Ask a model for "a landing page for a coffee shop" and most of them return the same page: cream background, a serif headline with one italic word, a terracotta accent, tracked monospace labels, three equal cards, and almost no motion. Longer prompts do not fix this, because the model falls back to its defaults whenever a decision is left open. frontend-craft closes those decisions with three things a model can follow mechanically:
-
-1. **A deal, not a taste call.** `start.mjs` picks the palette, type pairing, page composition and motion from a curated library, weighted by the brief's mood, skipping what recent builds used. Two coffee shops built a week apart get different pages.
-2. **A kit, not a description of animation.** A dependency-free motion runtime driven by data attributes (word reveals, scroll-lit text, stacking cards, pinned rails, scrub, count-up, marquee, magnetic buttons), plus design tokens. It works the same in plain HTML, React, Next.js, Vue, Svelte and Astro.
-3. **A gate, not a self-assessment.** `check.mjs` renders the page in headless Chrome at four widths, with reduced motion and with JavaScript off, and fails on what a visitor would hit: horizontal scroll, unreadable contrast, invisible content, console errors, missing fonts, no entrance, no scroll story, placeholder copy, and the generated-default look itself. In Claude Code the gate runs as a Stop hook; in other harnesses the agent runs it and does not finish while it exits 1.
+Ask a model for "a landing page for a coffee shop" and most of them return the same flat page: cream background, a serif headline, a terracotta accent, three equal cards, no photographs and almost no motion. Rules in a prompt do not fix it, because the model falls back to its defaults whenever a decision is left open. The skills here close those decisions with scripts the model runs and a gate it cannot talk its way past.
 
 ```
-brief ──> start.mjs ──> deal + tokens.css + kit + brief.md
-                              │
-                    agent builds the page with the kit
-                              │
-          check.mjs (Chrome: 1440/1280/768/390, reduced motion, no JS)
-                              │
-                FAIL ──> fix list back to the agent ──┐
-                PASS ──> report with screenshots      │
-                              ^───────────────────────┘
+prompt ──> frontend-craft (router)
+             ├─ website / landing ──> design-taste-frontend run
+             │                          deal ─ photographs ─ moments ─ build ─ checker ─ gate.mjs
+             │                          then impeccable critique + review-animations, gate again
+             ├─ app / dashboard / docs ──> frontend-craft run: dealt tokens + motion kit + check.mjs
+             ├─ motion on existing UI ──> craft-motion + animate / choreograph / animation-performance
+             ├─ review ──> craft-review + impeccable
+             └─ icon, logo, illustration, diagram ──> svg-craft
 ```
 
-## Example
+## What is in the box
 
-[`examples/roastery/`](examples/roastery/) is a coffee roastery page built by the run itself: dealt with `start.mjs --pin palette=espresso-honey,type=zilla-source,composition=index-list,signature=scroll-words`, built with the kit, and passed through `check.mjs` (its two failures along the way, a 21 px tall logo link and SVG chart labels rendering at 7.5 px on phones, were caught by the check and fixed).
-
-<p>
-  <img src="docs/img/roastery-1440.png" alt="Roastery example at 1440 px: slab-serif headline on espresso brown, honey action button, roast curve chart" width="640">
-  <img src="docs/img/roastery-390.png" alt="The same page at 390 px" width="180">
-</p>
-
-Serve the folder (`npx serve examples/roastery`) to see the motion: words blur in, the origins list staggers, the manifesto lights word by word while pinned, the coordinates scramble, the action buttons lean toward the cursor.
-
-## Skills
+**Own skills**
 
 | Skill | Job |
 |---|---|
-| [`frontend-craft`](skills/frontend-craft/SKILL.md) | Build or redesign a page or site: deal, build with the kit, pass the check. Holds the kit, library and scripts. |
+| [`frontend-craft`](skills/frontend-craft/SKILL.md) | The router, and the run for apps, dashboards and docs: dealt tokens, a dependency-free motion kit, `check.mjs`. |
 | [`craft-motion`](skills/craft-motion/SKILL.md) | Add, fix or trim motion in an interface that already exists. |
 | [`craft-review`](skills/craft-review/SKILL.md) | Strict rendered review: findings as Before, After, Why with exact values. Does not edit. |
 | [`craft-learn`](skills/craft-learn/SKILL.md) | Turn a session's design corrections into testable rules in `DESIGN.md`. |
 | [`svg-craft`](skills/svg-craft/SKILL.md) | Icons, logos, illustrations, diagrams and animated SVG, with a render-and-look loop. |
 
-The satellites call scripts in `frontend-craft`, so install them together.
+**Bundled skills**, copied unchanged from upstream at a pinned commit ([vendor.json](vendor.json), licences in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)):
+
+| Skill | From | Job here |
+|---|---|---|
+| [`design-taste-frontend`](skills/design-taste-frontend/SKILL.md) | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) 2.5.1, MIT | The website engine: kind-based plans, dealt palettes and type, a vetted photo library with credits (bundled WebP frames plus licensed Unsplash and Wikimedia Commons frames fetched on demand), 18 scroll and type moments, 25 shader effects and 11 scenes for tech pages, a checker and a finish gate |
+| [`impeccable`](skills/impeccable/SKILL.md) | [pbakaus/impeccable](https://github.com/pbakaus/impeccable), Apache-2.0 | Critique, audit and polish passes |
+| `emil-design-eng`, `animate`, `choreograph`, `animation-performance`, `animation-vocabulary`, `review-animations`, `improve-animations`, `remove-animations`, `find-animation-opportunities`, `gestures`, `break-ui`, `pick-ui-library`, `prototype`, `apple-design`, `learn-taste` | [emilkowalski/skills](https://github.com/emilkowalski/skills), MIT | Motion and interaction craft |
+| [`ui-ux-pro-max`](skills/ui-ux-pro-max/SKILL.md) | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill), MIT | Searchable styles, palettes, font pairings and UX rules (Python 3) |
+| [`ui-animation`](skills/ui-animation/SKILL.md) | [mblode/agent-skills](https://github.com/mblode/agent-skills), MIT | Springs, easing fitted from recordings, interface sound |
+
+Every bundled skill arrives with its assets, scripts, references and licence file. `npm run verify` fails if any of them differs by one byte from the pinned upstream commit.
 
 ## Install
 
-Requirements: Node 22 or later and Chrome, Chromium or Edge (Playwright's Chromium also works; set `CHROME_PATH` for anything else).
+Requirements: Node 22 or later and Chrome, Chromium or Edge (set `CHROME_PATH` for anything else). Python 3 for `ui-ux-pro-max`; ffmpeg is optional (photo crops).
 
-**Claude Code (plugin).** The Stop-hook gate comes with it, plus a prompt hook that points web-page requests at the run so the skill fires even when other design skills compete.
+**Any harness that reads Agent Skills.** Install every skill in the repo, so the router finds its siblings:
+
+```sh
+npx skills@latest add nicolas2601/frontend-craft --all          # every skill, every detected agent
+npx skills@latest add nicolas2601/frontend-craft -g -a claude-code -s '*' -y   # one agent, global
+```
+
+**Claude Code plugin.** Brings every skill, the two Stop-hook gates (each skill's own) and a prompt hook that points web-page requests at the router:
 
 ```sh
 /plugin marketplace add nicolas2601/frontend-craft
 /plugin install frontend-craft@frontend-craft
 ```
 
-**Any agent that reads Agent Skills** (Claude Code, Codex, Cursor, OpenCode, Gemini CLI, and others):
+**OpenCode gate.** OpenCode has no Stop hook. Copy [`integrations/opencode/frontend-craft-gate.js`](integrations/opencode/frontend-craft-gate.js) to `~/.config/opencode/plugins/`. When a session goes idle it runs both gates (the website engine's and frontend-craft's) and sends a block's fix list back into the session. An optional `frontend` agent is in [`integrations/opencode/agents/`](integrations/opencode/agents/frontend.md).
 
-```sh
-npx skills@latest add nicolas2601/frontend-craft
-```
+**By hand.** Copy each folder in `skills/` into your agent's skills directory (`~/.agents/skills/`, `~/.claude/skills/`, `~/.config/opencode/skills/`, or `.agents/skills/` in a project). Keep them as siblings.
 
-**By hand.** Copy or symlink each folder in `skills/` into your agent's skills directory (`~/.claude/skills/`, `~/.agents/skills/`, `~/.config/opencode/skills/`, or `.agents/skills/` in a project).
-
-**OpenCode gate.** OpenCode has no Stop hook. Copy [`integrations/opencode/frontend-craft-gate.js`](integrations/opencode/frontend-craft-gate.js) to `~/.config/opencode/plugins/` (OpenCode loads that folder by itself; plugin API v2): when a session goes idle with a failing build, the fix list is sent back into the session. An optional `frontend` agent is in [`integrations/opencode/agents/frontend.md`](integrations/opencode/agents/frontend.md).
-
-Details per harness: [docs/installation.md](docs/installation.md).
+Details and the gate in each harness: [docs/installation.md](docs/installation.md).
 
 ## Use
 
-Ask in plain words. The skill supplies the design decisions.
+Ask in plain words; the skills supply the design decisions.
 
-> haz una landing page para una cafetería en Bucaramanga
+> haz una landing page para una cafetería de especialidad en Bucaramanga
 >
-> make a site for an indie music festival in Medellín, use Vue
+> make a dashboard for our support queue, React
 >
 > this page looks generic, fix it
 >
 > review localhost:5173 strictly
 
-What the agent does, in order:
+A model that does not pick the router by itself can be pointed at it: `@frontend-craft` in OpenCode, `/frontend-craft` in Claude Code, or "use the frontend-craft skill" anywhere.
+
+The website run, as the agent executes it (from the project folder; `<taste>` is the installed `design-taste-frontend` folder):
 
 ```sh
-node <skill>/scripts/start.mjs --kind landing --moods warm,craft,coffee   # deal, copy the kit, print the brief
-# ...build the page with the dealt tokens, composition and kit attributes...
-node <skill>/scripts/start.mjs --url http://localhost:5173                # point the gate at the running page
-node <skill>/scripts/check.mjs                                            # until RESULT: PASS
+node <taste>/scripts/gate.mjs --start index.html --kind place --category "specialty coffee" --primary "Get directions"
+node <taste>/scripts/start.mjs deal --page place --trade cafe --history .taste-skill/history.json
+node <taste>/scripts/photos.mjs pick --trade cafe --draft-lead --sections hero,bar,coffee,visit
+node <taste>/scripts/moments.mjs pick --page place --count 1 --photo --history .taste-skill/history.json
+# ...build from assets/starter.html...
+node <taste>/scripts/gate.mjs        # until GATE: PASS, then the impeccable and review-animations passes, then the gate again
 ```
 
-Useful flags: `--redeal` (a new hand), `--pin palette=pine-brass,type=geist-solo` (keep what the user approved), `--brand` (the project already has colors and fonts), `--kit-only` (existing UI, motion only), `--list` (every kind, mood and library id).
+## The app run and the kit
 
-## The kit
+For app screens, dashboards and docs, `frontend-craft` deals tokens and copies a motion kit:
 
-```html
-<h1 class="craft-display" data-words>Roasted on Tuesday, in your cup by Friday</h1>
-<a class="cta" href="#order" data-enter data-magnetic data-press>Reserve this week's batch</a>
-
-<section data-pin>
-  <div><p data-scroll-words="pinned">We buy from four farms we visit every harvest.</p></div>
-</section>
-
-<section data-stack><article>…</article><article>…</article><article>…</article></section>
-<strong data-count>1.280</strong> bags shipped
+```sh
+node <skill>/scripts/start.mjs --kind app --moods calm,precise
+node <skill>/scripts/check.mjs       # until RESULT: PASS
 ```
 
-```js
-import { init } from './craft/craft-motion.js';
-const cleanup = init(document); // React: useEffect(() => init(document), [])
+The kit is fifteen effects on data attributes (`data-enter`, `data-words`, `data-scroll-words`, `data-stack`, `data-count`, `data-press`, ...), one `requestAnimationFrame` loop and no dependencies. Under `prefers-reduced-motion` every effect shows its final state, without JavaScript all content stays visible, and cleanup restores the DOM. Reference: [motion.md](skills/frontend-craft/references/motion.md), framework wiring: [frameworks.md](skills/frontend-craft/references/frameworks.md). `start.mjs` refuses a website kind while `design-taste-frontend` is installed; `--fallback` builds one with the kit when that engine cannot run.
+
+## Keeping the bundle current
+
+```sh
+node scripts/vendor.mjs            # restore every bundled skill at its pinned commit
+node scripts/vendor.mjs --update   # move to upstream HEAD, re-copy, record new hashes
+npm run verify                     # own skills' structure + bundled skills unchanged + licences present
 ```
 
-Fifteen effects, one `requestAnimationFrame` loop, shared observers, no dependencies. Under `prefers-reduced-motion` every effect shows its final state; without JavaScript all content stays visible; split text keeps one readable copy for screen readers; cleanup restores the DOM, so it is safe in React StrictMode and on route changes. Reference: [skills/frontend-craft/references/motion.md](skills/frontend-craft/references/motion.md). Framework wiring: [references/frameworks.md](skills/frontend-craft/references/frameworks.md).
-
-## The library
-
-| | Count | Notes |
-|---|---|---|
-| Palettes | 24 | Seven roles each; every text pair passes WCAG AA, enforced by tests |
-| Type pairings | 24 | 41 Google Fonts families (OFL), each checked to exist; `<link>` and `next/font` setup generated |
-| Compositions | 14 | What the first screen shows and how sections are paced (poster headline, split stage, index list, pinned rail, stacked chapters, specimen sheet, ...) |
-| Motion signatures | 14 | Each mapped to kit attributes and a job |
-
-The deal never pairs a cream ground with a serif display face, always includes a scroll story on persuasion pages, and avoids the last six choices recorded in `~/.local/state/frontend-craft/history.json`.
-
-## The check
-
-About thirty rules over facts measured in the rendered page. FAIL blocks, WARN advises; every finding names the element and the fix. The full catalogue is in [references/checks.md](skills/frontend-craft/references/checks.md). It also writes screenshots (`1440-early.png`, `1440.png`, `390.png` and tiles down the page) for the agent and the user to look at, because no script can judge taste.
+Bundled skills are never edited in this repo. Integration lives in the router (`skills/frontend-craft`), the prompt hook (`hooks/route.mjs`) and the OpenCode plugin.
 
 ## Evals
 
-`evals/cases.json` holds deliberately short prompts. `node scripts/eval.mjs --case <id>` runs one through a real agent CLI (OpenCode by default, any model with `--model`), then loops the gate's FAIL list back into the same session up to three times, the same loop a Stop hook gives Claude Code, and writes the result to `evals/results/`. Results so far ([docs/evals.md](docs/evals.md), failures included):
-
-| Harness | Model | Case | Deal followed | Gate |
-|---|---|---|---|---|
-| OpenCode 2.2.7 | DeepSeek V4.1 Flash | Coffee shop landing (Vite + React) | Yes | PASS |
-| Claude Code (as plugin) | Haiku | CLI tool landing (Next.js) | Yes | PASS, first round |
-| Codex CLI 0.162 | ChatGPT default | Wedding photographer portfolio (plain HTML) | Yes | PASS, first round |
-
-Framework wiring without an agent: `npm run test:frameworks` builds the stacked-chapters blueprint in Vite + Vue 3.5 and Vite + Svelte 5 with the kit wired as in `references/frameworks.md`; both pass the check (10 entrances, 4 pinned cards). React, Next.js and plain HTML are covered by the agent runs above.
-
-Each failed run on the way found a bug in the skill, the checker or the runner, now fixed and listed in the write-up.
+`evals/cases.json` holds deliberately short prompts; `node scripts/eval.mjs --case <id>` runs one through a real agent CLI and loops the gate's FAIL list back into the session. The earlier runs ([docs/evals.md](docs/evals.md)) measured the dealt-kit website path that is now the fallback: they passed the check but the pages were visually flat, which is why websites now route to `design-taste-frontend`. Runs of the new route are pending and will be recorded there, failures included.
 
 ## Develop
 
 ```sh
-npm test          # unit tests, library contrast tests and the end-to-end check in Chrome
-npm run verify    # skill structure: frontmatter, word budgets, links, vocabulary in sync with the library
-npm run test:blueprints  # all 14 blueprints rendered through the check
-npm run test:frameworks  # the kit and a blueprint built in real Vue and Svelte projects, then checked
-npm run pack      # dist/<skill>.skill zip files
+npm test                 # unit tests, contrast tests, routing, gates (Chrome)
+npm run verify           # own skills' structure and the bundled skills' hashes
+npm run test:blueprints  # the 14 app/fallback blueprints through the check
+npm run test:frameworks  # the kit built in real Vue and Svelte projects, then checked
+npm run pack             # dist/<skill>.skill zip files, one per skill
 ```
 
-Layout: `skills/` (what gets installed), `tests/` (node:test, fixtures), `scripts/` (repo tooling: verify, eval, pack), `evals/`, `integrations/` (harness glue), `docs/`, `tools/opencode-observer/` (optional MCP server for inspecting OpenCode runs), `archive/v1/` (the previous version, kept for reference).
+Layout: `skills/` (what gets installed: own and bundled), `vendor.json` (bundled sources and hashes), `tests/`, `scripts/` (verify, vendor, eval, pack), `evals/`, `integrations/` (harness glue), `hooks/` (Claude Code plugin hooks), `docs/`, `tools/opencode-observer/`, `archive/v1/`.
 
-## Credits
+## Credits and licence
 
-Ideas adapted, not copied, from MIT-licensed work: dealing from a library with history and a finish gate as a Stop hook from [taste-skill](https://github.com/leonxlnx/taste-skill) (Leonxlnx); motion rules and the Before/After/Why review format from [emilkowalski/skills](https://github.com/emilkowalski/skills) (Emil Kowalski); the writing discipline for agent-facing documents from [mattpocock/skills](https://github.com/mattpocock/skills) (Matt Pocock). `svg-craft` vendors MIT packs listed in `skills/svg-craft/packs/*/LICENSE-*`. The archived v1 includes MIT recipes from MotionSites with their notice.
-
-## License
-
-MIT, see [LICENSE](LICENSE). Vendored packs keep their own MIT notices.
+Own code is MIT ([LICENSE](LICENSE)). Bundled skills keep their own licences (MIT or Apache-2.0) in their folders; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). `svg-craft` vendors MIT packs listed in `skills/svg-craft/packs/*/LICENSE-*`. The writing discipline for agent-facing documents follows [mattpocock/skills](https://github.com/mattpocock/skills).

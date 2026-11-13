@@ -1,8 +1,8 @@
 {
   "name": "frontend-craft",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
-  "description": "Agent skills that make any coding model build web pages that do not look generated",
+  "description": "Frontend skills for any coding agent: a router, a bundled website engine with real photographs and a browser gate, polish and motion skills",
   "scripts": {
     "test": "node --test \"tests/*.test.mjs\"",
     "test:unit": "node --test tests/library.test.mjs tests/deal.test.mjs tests/rules.test.mjs tests/gate.test.mjs",
@@ -12,7 +12,8 @@
     "eval": "node scripts/eval.mjs",
     "observer:test": "npm --prefix tools/opencode-observer test",
     "test:blueprints": "node scripts/blueprints.mjs",
-    "test:frameworks": "node scripts/frameworks.mjs"
+    "test:frameworks": "node scripts/frameworks.mjs",
+    "vendor": "node scripts/vendor.mjs"
   },
   "type": "module",
   "engines": {

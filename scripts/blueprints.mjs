@@ -22,7 +22,7 @@ for (const comp of lib.compositions.filter((c) => !only || only.includes(c.id)))
   const dir = path.join(base, comp.id);
   fs.rmSync(dir, { recursive: true, force: true });
   fs.mkdirSync(dir, { recursive: true });
-  start(['--kind', comp.kinds[0], '--pin', `composition=${comp.id}`, '--seed', '7', '--file', 'index.html'], dir);
+  start(['--kind', comp.kinds[0], '--fallback', '--pin', `composition=${comp.id}`, '--seed', '7', '--file', 'index.html'], dir);
   const deal = readJson(path.join(dir, '.craft', 'deal.json'));
   const page = path.join(dir, 'index.html');
   const html = fill(fs.readFileSync(page, 'utf8')).replace('<!-- paste the font <link> tags from .craft/brief.md here -->', fontLinks(deal.type));
