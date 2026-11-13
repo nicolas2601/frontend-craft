@@ -3,7 +3,7 @@ import path from 'node:path';
 import { changed, open, pageHeight, scrollTo, setViewport, settle, shot, sleep, watchRuntime } from './page.mjs';
 import { installHelpers } from './helpers.js';
 import {
-  probeCss, probeDocument, probeInvisible, probeLook, probeMotionState, probeOverflow, probeSticky, probeTargets, probeText,
+  probeCss, probeDocument, probeFold, probeInvisible, probeLook, probeMotionState, probeOverflow, probeSticky, probeTargets, probeText,
 } from './probes.js';
 
 const MOTION_RECORDER = `(() => {
@@ -98,6 +98,7 @@ export async function normalPass(browser, url, shotsDir) {
     css: await s.run(probeCss),
     text: { 1440: await s.run(probeText, { minPx: 12 }) },
     overflow: { 1440: await s.run(probeOverflow) },
+    fold: { 1440: await s.run(probeFold) },
   };
   shots.push(await shot(s, path.join(shotsDir, '1440.png')));
   const before = await s.run(probeMotionState);
@@ -119,6 +120,8 @@ export async function normalPass(browser, url, shotsDir) {
     await sleep(300);
     facts.overflow[w] = await s.run(probeOverflow);
   }
+  await sleep(500);
+  facts.fold[390] = await s.run(probeFold);
   facts.text[390] = await s.run(probeText, { minPx: 12 });
   facts.targets = await s.run(probeTargets);
   shots.push(await shot(s, path.join(shotsDir, '390.png')), ...tiles);

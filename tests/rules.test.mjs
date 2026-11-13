@@ -40,6 +40,11 @@ test('the cream + serif italic + terracotta + mono look fails', () => {
   assert.ok(ids(out).includes('tell-default-editorial'));
 });
 
+test('a hero action below the first screen fails', () => {
+  const fold = { 1440: { ok: false, bottom: 932, vh: 900, label: 'a.btn "Install"' }, 390: { ok: true } };
+  assert.deepEqual(ids(evaluate(facts({ fold }))), ['fold-action-1440']);
+});
+
 test('an italic accent word in another color fails on any palette', () => {
   const h1 = { ...facts().doc.h1, italic: true, italicAccent: true };
   assert.ok(ids(evaluate(facts({ doc: { ...facts().doc, h1 } }))).includes('tell-italic-accent'));

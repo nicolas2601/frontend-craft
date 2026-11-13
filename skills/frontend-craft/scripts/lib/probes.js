@@ -252,3 +252,18 @@ export function probeCss() {
   }
   return { transitionAll: all, easeIn: easeIn.slice(0, 4), vh100: vh100.slice(0, 4) };
 }
+
+/** The hero's own action (not the nav's) must sit fully inside the first screen. */
+export function probeFold() {
+  const C = window.__craft;
+  const h1 = [...document.querySelectorAll('h1')].find(C.visible);
+  if (!h1) return { ok: true };
+  const top = h1.getBoundingClientRect().top;
+  const actions = [...document.querySelectorAll('a[href], button')].filter((el) => {
+    if (!C.visible(el) || el.closest('header, nav, footer')) return false;
+    return el.getBoundingClientRect().top >= top;
+  });
+  if (!actions.length) return { ok: true };
+  const first = actions[0].getBoundingClientRect();
+  return { ok: actions.some((el) => el.getBoundingClientRect().bottom <= innerHeight + 1), bottom: Math.round(first.bottom), vh: innerHeight, label: C.describe(actions[0]) };
+}

@@ -37,6 +37,24 @@ Human review of the screenshots: coherent, readable, specific and clearly not th
 
 With this machine's OpenCode configuration every turn carries about 147,000 input tokens of tools and instructions before the task. Standalone runs do not record their usage in the shared session store, so the exact total for this case was not captured.
 
+## 2026-11-13: devtool-next, Haiku in Claude Code with the repo loaded as a plugin
+
+Prompt: `landing page for a CLI tool that cleans up git branches, in Next.js`. Command: `claude -p --plugin-dir <repo> --model haiku`, the host's other skills and hooks still active.
+
+| | Result |
+|---|---|
+| Followed the skill | The plugin's prompt hook pointed it at the run; it ran `start.mjs`, built from the blueprint and passed the gate in the first round |
+| Dealt direction | palette `acid-lime-black`, type `geist-solo`, composition `split-stage`, signature `stack` |
+| Motion measured | 13 elements animate in, 29 scroll-linked, 8 reveals, stacked chapters and a sticky stage |
+| Gate | `RESULT: PASS`, 0 WARN |
+
+<p>
+  <img src="img/eval-next-haiku-plugin-1440.png" alt="Haiku result at 1440 px: large Geist headline on black, acid lime action, terminal stage" width="640">
+  <img src="img/eval-next-haiku-plugin-390.png" alt="The same page at 390 px" width="180">
+</p>
+
+Compared with the same model and prompt without the plugin (a stock dark dev-tool template), the headline has scale and the page has a scroll story. Two defects the check did not catch at the time: the hero's action sat below the fold at 1440x900 (the check now fails it as `fold-action-1440`), and the stacked cards showed mostly empty surface on arrival (the chapter layout now puts the heading at the top). Three blueprints failed the new fold rule and were tightened.
+
 ## 2026-11-13: what the other runs taught (and why they are not passes)
 
 | Run | Harness and model | Outcome | Cause found | Fixed by |

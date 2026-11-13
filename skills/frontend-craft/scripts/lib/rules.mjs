@@ -83,8 +83,11 @@ function lookRules({ look, lookEarly, doc, deal }) {
   return out;
 }
 
-function layoutRules({ text, overflow, targets, css }) {
+function layoutRules({ text, overflow, targets, css, fold = {} }) {
   const out = [];
+  for (const [w, r] of Object.entries(fold)) {
+    if (r && !r.ok) out.push(f('FAIL', `fold-action-${w}`, `at ${w}px the hero's action (${r.label}) ends at ${r.bottom}px, below the ${r.vh}px screen`, 'shorten the headline or step it down one size, trim hero padding, or move the action up: the first screen shows headline, line and action'));
+  }
   const wide = Object.entries(overflow).filter(([, o]) => o.scrollWidth > o.width + 1);
   if (wide.length) {
     const [w, o] = wide.at(-1);
