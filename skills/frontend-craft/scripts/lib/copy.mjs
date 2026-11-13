@@ -1,6 +1,7 @@
 // Copy lint: placeholder text blocks shipping, stock marketing phrases and generic CTAs are flagged.
 
 export const PLACEHOLDERS = [
+  /\{\{[^}]{1,160}\}\}/,
   /lorem ipsum/i, /dolor sit amet/i, /\byour company\b/i, /\bcompany name\b/i, /\bjohn doe\b/i, /\bjane doe\b/i,
   /\[(product|company|name|brand|insert)[^\]]*\]/i, /\bTODO\b/, /\bTBD\b/, /\binsert (text|copy|image)/i,
   /\byour (name|text|tagline) here\b/i, /\btu empresa\b/i, /\bnombre de (la )?empresa\b/i, /\btexto de ejemplo\b/i,

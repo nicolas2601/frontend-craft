@@ -102,7 +102,9 @@ export function briefMd(d, { kitDir, checkCmd }) {
   lines.push('## Motion', motionBlock(d),
     '- Entrance: data-enter on 3-6 first-screen elements in reading order (nav, headline, line, action, visual); done by 1.5 s.',
     '- Press feedback: data-press on every button and button-like link.', '');
-  lines.push('## Files', `Kit copied to ${kitDir}: tokens.css, craft.css, craft-motion.js (+ motion/). Import tokens.css then craft.css, then call init(document) once.`, '',
+  lines.push('## Start from the blueprint',
+    `${kitDir}/blueprint.html is this composition as a working page: layout, scale, sticky scenes and kit attributes already wired. Copy its structure into your page or components, replace every {{...}} (the check fails on any left), and build every .visual for real. Restyle details freely; keep the skeleton and the scale.`, '',
+    '## Files', `Kit copied to ${kitDir}: tokens.css, craft.css, layouts.css, craft-motion.js (+ motion/), blueprint.html. Load tokens.css, craft.css, layouts.css in that order, then call init(document) once.`, '',
     '## Done means', `\`${checkCmd}\` prints RESULT: PASS, and you opened the screenshots it lists.`);
   return `${lines.join('\n')}\n`;
 }

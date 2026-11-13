@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { contrast, hexToRgb } from '../skills/frontend-craft/scripts/lib/color.mjs';
-import { KINDS, loadLibrary } from '../skills/frontend-craft/scripts/lib/deal.mjs';
+import { KINDS, loadLibrary, typeFits } from '../skills/frontend-craft/scripts/lib/deal.mjs';
+import { isCream } from '../skills/frontend-craft/scripts/lib/color.mjs';
 
 const lib = loadLibrary();
 const ratio = (a, b) => contrast(hexToRgb(a), hexToRgb(b));
@@ -52,4 +53,11 @@ test('type pairings name weights and a display treatment', () => {
 test('the generated default display faces are never dealt', () => {
   const banned = ['Inter', 'Roboto', 'Poppins', 'Montserrat', 'Fraunces', 'Playfair Display', 'Instrument Serif', 'Space Grotesk'];
   for (const p of lib.pairings) assert.ok(!banned.includes(p.display.family), `${p.id} uses ${p.display.family}`);
+});
+
+test('every palette has at least three type pairings that fit it', () => {
+  for (const pal of lib.palettes) {
+    const fits = lib.pairings.filter((p) => typeFits(p, pal, isCream(hexToRgb(pal.roles.bg))));
+    assert.ok(fits.length >= 3, `${pal.id}: ${fits.map((p) => p.id).join(', ')}`);
+  }
 });

@@ -78,3 +78,10 @@ test('tokens.css carries every role and the display treatment', () => {
   }
   assert.match(css, /html \{ background: var\(--c-bg\); \}/);
 });
+
+test('the dealt type always shares a mood with the dealt palette', () => {
+  for (let s = 1; s <= 300; s += 1) {
+    const d = deal({ lib, kind: 'event', moods: ['music', 'festive', 'culture'], rng: rngFrom(s) });
+    assert.ok(d.type.moods.some((m) => d.palette.moods.includes(m)), `${d.palette.id} + ${d.type.id}`);
+  }
+});

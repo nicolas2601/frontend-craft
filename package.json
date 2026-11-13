@@ -10,7 +10,8 @@
     "check": "node scripts/verify.mjs && node --test \"tests/*.test.mjs\"",
     "pack": "node scripts/pack.mjs",
     "eval": "node scripts/eval.mjs",
-    "observer:test": "npm --prefix tools/opencode-observer test"
+    "observer:test": "npm --prefix tools/opencode-observer test",
+    "test:blueprints": "node scripts/blueprints.mjs"
   },
   "type": "module",
   "engines": {

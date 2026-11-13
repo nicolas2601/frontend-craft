@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en"><!-- set lang to the copy's language -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{Brand: what it is, for whom or where}}</title>
+  <meta name="description" content="{{one sentence: what it is, for whom, where}}">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <!-- paste the font <link> tags from .craft/brief.md here -->
+  <link rel="stylesheet" href="craft/tokens.css">
+  <link rel="stylesheet" href="craft/craft.css">
+  <link rel="stylesheet" href="craft/layouts.css">
+</head>
+<body>
+<!-- Blueprint: marquee-bands. Keep the structure, scale and kit attributes; replace every {{...}};
+     rename sections for the subject. Build every .visual for real (SVG, CSS, canvas or a supplied image). -->
+<header class="nav">
+  <a class="brand" href="#top" data-enter>{{brand name}}</a>
+  <nav class="links" aria-label="Sections"><a href="#s2">{{section 2 label}}</a><a href="#s3">{{section 3 label}}</a></nav>
+  <a class="btn small" href="#action" data-enter data-press>{{primary action: verb + object}}</a>
+</header>
+<main id="top">
+  <div class="band" data-marquee="40" aria-label="{{what scrolls by}}">
+    <span>{{band item 1}}</span>
+    <span>{{band item 2}}</span>
+    <span>{{band item 3}}</span>
+    <span>{{band item 4}}</span>
+    <span>{{band item 5}}</span>
+  </div>
+  <section class="l-band-hero">
+    <h1 class="h-mega craft-display" data-words>{{2-5 word headline}}</h1>
+    <div class="foot">
+      <p class="lede" data-enter>{{one sentence, at most 22 words: who it is for and what they get}}</p>
+      <div class="actions" data-enter><a class="btn" href="#action" data-magnetic data-press>{{primary action}}</a><a class="btn ghost" href="#s2" data-press>{{secondary action}}</a></div>
+    </div>
+  </section>
+  <div class="band inverse" data-marquee="60" aria-label="{{dates or places}}">
+    <span>{{date or place 1}}</span>
+    <span>{{date or place 2}}</span>
+    <span>{{date or place 3}}</span>
+    <span>{{date or place 4}}</span>
+    <span>{{date or place 5}}</span>
+  </div>
+  <ol class="index" id="s2" data-reveal="stagger" aria-label="{{lineup or offer}}">
+    <li data-spotlight><span class="n">01</span><span class="name">{{act or item 1}}</span><span class="note muted">{{one line}}</span><span class="meta">{{day or time 1}}</span></li>
+    <li data-spotlight><span class="n">02</span><span class="name">{{act or item 2}}</span><span class="note muted">{{one line}}</span><span class="meta">{{day or time 2}}</span></li>
+    <li data-spotlight><span class="n">03</span><span class="name">{{act or item 3}}</span><span class="note muted">{{one line}}</span><span class="meta">{{day or time 3}}</span></li>
+    <li data-spotlight><span class="n">04</span><span class="name">{{act or item 4}}</span><span class="note muted">{{one line}}</span><span class="meta">{{day or time 4}}</span></li>
+    <li data-spotlight><span class="n">05</span><span class="name">{{act or item 5}}</span><span class="note muted">{{one line}}</span><span class="meta">{{day or time 5}}</span></li>
+  </ol>
+  <section class="pin-statement" id="s3" data-pin aria-label="{{what the statement is about}}">
+    <div><p data-scroll-words="pinned">{{20-35 words: the belief or fact behind the offer, specific to the subject}}</p></div>
+  </section>
+  <section class="section" id="action">
+    <h2 class="h-display craft-display" data-reveal>{{closing line that repeats the promise}}</h2>
+    <div class="actions" data-reveal><a class="btn" href="{{real link: form, booking, WhatsApp, store}}" data-magnetic data-press>{{primary action}}</a></div>
+  </section>
+</main>
+<footer class="section muted">{{address, hours or contact}}</footer>
+<script type="module">import { init } from './craft/craft-motion.js'; init(document);</script>
+</body>
+</html>

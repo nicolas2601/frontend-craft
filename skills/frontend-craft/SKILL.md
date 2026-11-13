@@ -39,7 +39,7 @@ The user gives the subject. You do not pick colors, fonts or layout by taste: yo
 3. **Deal.** `node <skill>/scripts/start.mjs --kind landing --moods warm,craft,coffee`
    It copies the kit into the project (`src/craft/`, `app/craft/` or `craft/`; override with `--kit`), writes the dealt `tokens.css`, and prints the brief (also in `.craft/brief.md`). The brief is binding: its palette, pairing, composition and motion are the design. Do not swap them for your own preference; `--redeal` gives a new hand.
 4. **Write the copy before markup** (rules below), in the audience's language.
-5. **Build.** Wire the kit for the framework (table below). Lay out the dealt composition: its first screen, then its sections in order. Put the dealt signature and supports where the brief says. Follow the house rules.
+5. **Build from the blueprint.** `<kit>/blueprint.html` is the dealt composition as a working page: layout, scale, pinned scenes and kit attributes already wired. Wire the kit for the framework (table below), move the blueprint's structure into your page or components, replace every `{{...}}` (the check fails on any left), and build every `.visual` for real. Keep its skeleton and scale; restyle details. Put the dealt signature and supports where the brief says. Follow the house rules.
 6. **Check.** Start the dev server or build, then once: `node <skill>/scripts/start.mjs --url http://localhost:5173` (or `--root dist`). Then `node <skill>/scripts/check.mjs`.
 7. **Fix and look.** Fix every FAIL (each line has its fix; details in `references/checks.md`). Open every screenshot it lists in `.craft/shots/` and compare with the brief: what dominates, what is cropped at 390 px, where the action is. Fix the three weakest things you see. Re-run until `RESULT: PASS`.
 8. **Report** in the format at the end. In Claude Code the Stop hook runs the check for you; elsewhere run `node <skill>/scripts/gate.mjs` and do not stop while it exits 1.
@@ -73,7 +73,7 @@ At most 4 moving effects in one viewport and one pinned or scrubbed scene per sc
 
 ## Wiring the kit
 
-Load `tokens.css`, then `craft.css`, then your styles. Call `init(document)` once after the DOM exists; it returns a cleanup. Add `<script>document.documentElement.classList.add('craft-js')</script>` in `<head>` so first-screen elements do not flash before the kit runs.
+Load `tokens.css`, then `craft.css`, then `layouts.css`, then your styles. Call `init(document)` once after the DOM exists; it returns a cleanup. Add `<script>document.documentElement.classList.add('craft-js')</script>` in `<head>` so first-screen elements do not flash before the kit runs.
 
 | Stack | Wiring |
 |---|---|

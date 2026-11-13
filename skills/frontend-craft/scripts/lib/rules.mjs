@@ -135,7 +135,7 @@ export function evaluate(facts) {
   const out = [
     ...documentRules(facts), ...fontRules(facts), ...lookRules(facts), ...layoutRules(facts),
     ...visibilityRules(facts), ...motionRules(facts), ...runtimeRules(facts),
-    ...lintCopy(facts.doc.text, facts.doc.ctas),
+    ...lintCopy(`${facts.doc.text}\n${facts.doc.title}\n${facts.doc.description ?? ''}`, facts.doc.ctas),
   ];
   return out.sort((a, b) => (a.level === b.level ? 0 : a.level === 'FAIL' ? -1 : 1));
 }

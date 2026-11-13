@@ -53,6 +53,12 @@ function pick(items, { moods = [], recent = new Set(), rng, allow = () => true }
   return pool.at(-1).it;
 }
 
+/** Type must speak the palette's language: share a mood with it, and no serif display on a cream ground. */
+export function typeFits(pairing, palette, creamBg) {
+  if (creamBg && pairing.display.serif) return false;
+  return !palette || pairing.moods.some((m) => palette.moods.includes(m));
+}
+
 function recentIds(history, key) {
   return new Set(history.slice(-RECENT).map((h) => h[key]).filter(Boolean));
 }
@@ -66,7 +72,7 @@ export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = f
     ?? pick(lib.palettes, { moods, rng, recent: recentIds(history, 'palette') }));
   const creamBg = palette && isCream(hexToRgb(palette.roles.bg));
   const type = brand ? null : (byId(lib.pairings, pins.type)
-    ?? pick(lib.pairings, { moods, rng, recent: recentIds(history, 'type'), allow: (p) => !(creamBg && p.display.serif) }));
+    ?? pick(lib.pairings, { moods, rng, recent: recentIds(history, 'type'), allow: (p) => typeFits(p, palette, creamBg) }));
   const composition = byId(lib.compositions, pins.composition)
     ?? pick(lib.compositions, { rng, recent: recentIds(history, 'composition'), allow: (c) => c.kinds.includes(kind) });
 

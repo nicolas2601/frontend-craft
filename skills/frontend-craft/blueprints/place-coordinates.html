@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><!-- set lang to the copy's language -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{Brand: what it is, for whom or where}}</title>
+  <meta name="description" content="{{one sentence: what it is, for whom, where}}">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <!-- paste the font <link> tags from .craft/brief.md here -->
+  <link rel="stylesheet" href="craft/tokens.css">
+  <link rel="stylesheet" href="craft/craft.css">
+  <link rel="stylesheet" href="craft/layouts.css">
+</head>
+<body>
+<!-- Blueprint: place-coordinates. Keep the structure, scale and kit attributes; replace every {{...}};
+     rename sections for the subject. Build every .visual for real (SVG, CSS, canvas or a supplied image). -->
+<header class="nav">
+  <a class="brand" href="#top" data-enter>{{brand name}}</a>
+  <nav class="links" aria-label="Sections"><a href="#s2">{{section 2 label}}</a><a href="#s3">{{section 3 label}}</a></nav>
+  <a class="btn small" href="#action" data-enter data-press>{{primary action: verb + object}}</a>
+</header>
+<main id="top">
+  <section class="l-place">
+    <div class="stack">
+      <h1 class="h-display craft-display" data-words>{{place name or 3-6 word promise}}</h1>
+      <p class="coords" data-scramble>{{latitude N, longitude W}}</p>
+      <p class="lede" data-enter>{{one sentence: what you find there and when}}</p>
+      <div class="actions" data-enter><a class="btn" href="#action" data-magnetic data-press>{{primary action}}</a><a class="btn ghost" href="#s3" data-press>{{how to get there}}</a></div>
+    </div>
+    <figure class="visual" data-mask="up" data-scrub aria-label="{{map of the area}}">{{visual: an SVG map of the real streets around the place; draw the route with stroke-dashoffset: calc(LENGTH * (1 - var(--p)))}}</figure>
+  </section>
+  <ol class="index" id="s2" data-reveal="stagger" aria-label="{{what you find there}}">
+    <li><span class="n">01</span><span class="name">{{offer 1}}</span><span class="note muted">{{one line}}</span><span class="meta">{{price 1}}</span></li>
+    <li><span class="n">02</span><span class="name">{{offer 2}}</span><span class="note muted">{{one line}}</span><span class="meta">{{price 2}}</span></li>
+    <li><span class="n">03</span><span class="name">{{offer 3}}</span><span class="note muted">{{one line}}</span><span class="meta">{{price 3}}</span></li>
+    <li><span class="n">04</span><span class="name">{{offer 4}}</span><span class="note muted">{{one line}}</span><span class="meta">{{price 4}}</span></li>
+  </ol>
+  <section class="section" id="s3">
+    <h2 class="h-section craft-display">{{hours and address}}</h2>
+    <dl class="ledger" data-reveal="stagger">
+      <div><dt>{{label 1}}</dt><dd>{{value 1}}</dd></div>
+      <div><dt>{{label 2}}</dt><dd>{{value 2}}</dd></div>
+      <div><dt>{{label 3}}</dt><dd>{{value 3}}</dd></div>
+      <div><dt>{{label 4}}</dt><dd>{{value 4}}</dd></div>
+    </dl>
+  </section>
+  <section class="section" id="action">
+    <h2 class="h-display craft-display" data-reveal>{{closing line that repeats the promise}}</h2>
+    <div class="actions" data-reveal><a class="btn" href="{{real link: form, booking, WhatsApp, store}}" data-magnetic data-press>{{primary action}}</a></div>
+  </section>
+</main>
+<footer class="section muted">{{address, hours or contact}}</footer>
+<script type="module">import { init } from './craft/craft-motion.js'; init(document);</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en"><!-- set lang to the copy's language -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{Brand: what it is, for whom or where}}</title>
+  <meta name="description" content="{{one sentence: what it is, for whom, where}}">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <!-- paste the font <link> tags from .craft/brief.md here -->
+  <link rel="stylesheet" href="craft/tokens.css">
+  <link rel="stylesheet" href="craft/craft.css">
+  <link rel="stylesheet" href="craft/layouts.css">
+</head>
+<body>
+<!-- Blueprint: object-center. Keep the structure, scale and kit attributes; replace every {{...}};
+     rename sections for the subject. Build every .visual for real (SVG, CSS, canvas or a supplied image). -->
+<header class="nav">
+  <a class="brand" href="#top" data-enter>{{brand name}}</a>
+  <nav class="links" aria-label="Sections"><a href="#s2">{{section 2 label}}</a><a href="#s3">{{section 3 label}}</a></nav>
+  <a class="btn small" href="#action" data-enter data-press>{{primary action: verb + object}}</a>
+</header>
+<main id="top">
+  <section class="l-object">
+    <h1 class="h-display craft-display" style="max-width: 18ch" data-words>{{3-9 word headline}}</h1>
+    <div class="visual" data-enter>{{visual: one object from the subject, built in SVG with 2-4 named parts}}
+      <span class="label" style="left: 4%; top: 18%">{{part 1}}</span>
+      <span class="label" style="right: 2%; top: 42%">{{part 2}}</span>
+      <span class="label" style="left: 8%; bottom: 12%">{{part 3}}</span>
+    </div>
+    <div class="actions" data-enter><a class="btn" href="#action" data-magnetic data-press>{{primary action}}</a></div>
+  </section>
+  <section class="pin-statement" id="s2" data-pin aria-label="{{the object in motion}}">
+    <div><div class="visual" data-scrub="pinned" style="width: min(80vw, 620px); aspect-ratio: 1; transform: rotate(calc(var(--p) * 120deg)) scale(calc(0.85 + var(--p) * 0.3))">{{visual: the same object turning or opening as you scroll}}</div></div>
+  </section>
+  <section class="section" id="s3">
+    <h2 class="h-section craft-display">{{what each part does}}</h2>
+    <ol class="statements" data-reveal="stagger">
+      <li>{{part 1: what it does for the visitor}}</li>
+      <li>{{part 2: what it does for the visitor}}</li>
+      <li>{{part 3: what it does for the visitor}}</li>
+    </ol>
+    <div class="facts" data-reveal="stagger">
+      <p><strong data-count>{{real number 1}}</strong> {{what number 1 counts}}</p>
+      <p><strong data-count>{{real number 2}}</strong> {{what number 2 counts}}</p>
+      <p><strong data-count>{{real number 3}}</strong> {{what number 3 counts}}</p>
+    </div>
+  </section>
+  <section class="section" id="action">
+    <h2 class="h-display craft-display" data-reveal>{{closing line that repeats the promise}}</h2>
+    <div class="actions" data-reveal><a class="btn" href="{{real link: form, booking, WhatsApp, store}}" data-magnetic data-press>{{primary action}}</a></div>
+  </section>
+</main>
+<footer class="section muted">{{address, hours or contact}}</footer>
+<script type="module">import { init } from './craft/craft-motion.js'; init(document);</script>
+</body>
+</html>

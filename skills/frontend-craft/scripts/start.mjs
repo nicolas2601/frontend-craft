@@ -33,6 +33,21 @@ function copyKit(dest) {
   fs.cpSync(KIT, dest, { recursive: true, filter: (src) => !src.endsWith('.md') });
 }
 
+/**
+ * The dealt composition as a working page, with kit paths relative to the project root.
+ * A plain HTML project with no page yet gets it as index.html directly.
+ */
+function copyBlueprint(id, cwd, kitDir) {
+  const src = path.join(SKILL, 'blueprints', `${id}.html`);
+  if (!fs.existsSync(src)) return null;
+  const kit = kitDir.split(path.sep).join('/');
+  const html = fs.readFileSync(src, 'utf8').replaceAll('href="craft/', `href="${kit}/`).replaceAll("from './craft/", `from './${kit}/`);
+  fs.writeFileSync(path.join(cwd, kitDir, 'blueprint.html'), html);
+  const plain = !fs.existsSync(path.join(cwd, 'package.json')) && !fs.existsSync(path.join(cwd, 'index.html'));
+  if (plain) fs.writeFileSync(path.join(cwd, 'index.html'), html);
+  return plain ? 'index.html' : null;
+}
+
 function parsePins(raw) {
   if (!raw || raw === true) return {};
   return Object.fromEntries(String(raw).split(',').map((kv) => kv.split('=').map((s) => s.trim())));
@@ -64,6 +79,9 @@ export function run(argv, cwd = process.cwd()) {
   const lib = loadLibrary();
   if (args.list) return { text: listVocabulary(lib) };
 
+  if (!path.relative(path.resolve(SKILL, '..', '..'), cwd).startsWith('..')) {
+    throw new Error(`you are inside the skill's own folder (${cwd}). Create the project in a new folder inside the session's working directory and run start.mjs from there.`);
+  }
   const dir = craftDir(cwd);
   const kind = String(args.kind ?? 'landing');
   if (!KINDS.includes(kind)) throw new Error(`unknown --kind "${kind}". Use one of: ${KINDS.join(', ')}`);
@@ -84,9 +102,11 @@ export function run(argv, cwd = process.cwd()) {
   }
 
   const kitDir = String(args.kit ?? current.kitDir ?? defaultKitDir(cwd));
+  let createdPage = null;
   current.kitDir = kitDir;
   if (!args['no-kit']) {
     copyKit(path.join(cwd, kitDir));
+    createdPage = copyBlueprint(current.composition.id, cwd, kitDir);
     if (current.palette && current.type) fs.writeFileSync(path.join(cwd, kitDir, 'tokens.css'), tokensCss(current));
   }
   writeJson(path.join(dir, 'deal.json'), current);
@@ -102,7 +122,8 @@ export function run(argv, cwd = process.cwd()) {
   fs.writeFileSync(path.join(dir, 'brief.md'), brief);
   const tail = target ? `Gate armed on ${target.url ?? target.root}.`
     : 'No target yet: once the dev server runs, re-run start.mjs with --url <dev url> (the deal is kept), or pass --root <build folder>.';
-  return { text: `${brief}\n${tail}`, deal: current };
+  const page = createdPage ? `\nindex.html was created from the blueprint: fill it in place.` : '';
+  return { text: `${brief}\n${tail}${page}`, deal: current };
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
