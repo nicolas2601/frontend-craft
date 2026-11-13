@@ -1,0 +1,72 @@
+{
+  "case": "devtool-next",
+  "prompt": "landing page for a CLI tool that cleans up git branches, in Next.js",
+  "model": "haiku",
+  "dir": "/home/nicolas/.cache/frontend-craft/evals/devtool-next-tEGy4D",
+  "session": "e89851f9-d035-4a3f-a560-39d5c8ba4216",
+  "armedByAgent": true,
+  "deal": {
+    "palette": "acid-lime-black",
+    "type": "geist-solo",
+    "composition": "split-stage",
+    "signature": "stack"
+  },
+  "pass": true,
+  "fails": [],
+  "warns": [],
+  "motion": {
+    "entrance": 13,
+    "reveals": 8,
+    "scrollLinked": 29,
+    "linkedExamples": [
+      "article.chapter \"Merged branches onlyAnything whose commi\"",
+      "article.chapter \"Unmerged work stays putBranches with com\"",
+      "section#s3.l-split \"ScanCompare every local branch against m",
+      "div.chapters \"ScanCompare every local branch against m\""
+    ],
+    "sticky": [
+      "section \"Merged branches onlyAnything whose commi\"",
+      "section \"Merged branches onlyAnything whose commi\"",
+      "section \"Merged branches onlyAnything whose commi\"",
+      "section#s3.l-split \"ScanCompare every local branch against m\""
+    ]
+  },
+  "shots": [
+    "/home/nicolas/.cache/frontend-craft/evals/devtool-next-tEGy4D/git-branch-sweep/.craft/shots/1440-early.png",
+    "/home/nicolas/.cache/frontend-craft/evals/devtool-next-tEGy4D/git-branch-sweep/.craft/shots/1440.png",
+    "/home/nicolas/.cache/frontend-craft/evals/devtool-next-tEGy4D/git-branch-sweep/.craft/shots/390.png",
+    "/home/nicolas/.cache/frontend-craft/evals/devtool-next-tEGy4D/git-branch-sweep/.craft/shots/1440-01.png",
+    "/home/nicolas/.cache/frontend-craft/evals/devtool-next-tEGy4D/git-branch-sweep/.craft/shots/1440-02.png",
+    "/home/nicolas/.cache/frontend-craft/evals/devtool-next-tEGy4D/git-branch-sweep/.craft/shots/1440-03.png",
+    "/home/nicolas/.cache/frontend-craft/evals/devtool-next-tEGy4D/git-branch-sweep/.craft/shots/1440-04.png",
+    "/home/nicolas/.cache/frontend-craft/evals/devtool-next-tEGy4D/git-branch-sweep/.craft/shots/1440-05.png"
+  ],
+  "rounds": [
+    {
+      "round": 0,
+      "code": 0,
+      "session": "e89851f9-d035-4a3f-a560-39d5c8ba4216"
+    },
+    {
+      "round": 0,
+      "fails": [],
+      "motion": {
+        "entrance": 13,
+        "reveals": 8,
+        "scrollLinked": 29,
+        "linkedExamples": [
+          "article.chapter \"Merged branches onlyAnything whose commi\"",
+          "article.chapter \"Unmerged work stays putBranches with com\"",
+          "section#s3.l-split \"ScanCompare every local branch against m",
+          "div.chapters \"ScanCompare every local branch against m\""
+        ],
+        "sticky": [
+          "section \"Merged branches onlyAnything whose commi\"",
+          "section \"Merged branches onlyAnything whose commi\"",
+          "section \"Merged branches onlyAnything whose commi\"",
+          "section#s3.l-split \"ScanCompare every local branch against m\""
+        ]
+      }
+    }
+  ]
+}

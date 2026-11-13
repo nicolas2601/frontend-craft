@@ -1,0 +1,33 @@
+{
+  "$comment": "Motion vocabulary. Each signature maps to kit attributes and states its job. The deal picks one signature and two supports; never more than four effects in one viewport.",
+  "signatures": [
+    { "id": "words-blur", "attrs": "data-words on the h1", "job": "orchestrated entrance: the headline arrives word by word",
+      "html": "<h1 class=\"craft-display\" data-words>Roasted on Tuesday, in your cup by Friday</h1>" },
+    { "id": "scroll-words", "attrs": "data-pin section + data-scroll-words=\"pinned\"", "job": "scroll story: a statement lights up as it is read",
+      "html": "<section data-pin><div><p data-scroll-words=\"pinned\">We buy from four farms we visit every harvest.</p></div></section>" },
+    { "id": "stack", "attrs": "data-stack on the list of cards", "job": "scroll story: chapters pile up, one covers the last",
+      "html": "<section data-stack><article>One</article><article>Two</article><article>Three</article></section>" },
+    { "id": "scrub", "attrs": "data-scrub (or data-scrub=\"pinned\" inside data-pin) + CSS using var(--p)", "job": "scroll story: an object turns, opens, fills or moves with scroll",
+      "html": "<div data-scrub style=\"transform: rotate(calc(var(--p) * 180deg)) scale(calc(0.8 + var(--p) * 0.4))\"></div>" },
+    { "id": "rail", "attrs": "data-rail > data-rail-track > panels", "job": "scroll story: a sideways journey through steps or work",
+      "html": "<section data-rail><div data-rail-track><article>01</article><article>02</article><article>03</article></div></section>" },
+    { "id": "marquee", "attrs": "data-marquee=\"60\" on a row of items", "job": "rhythm: an endless band of names, dates or items",
+      "html": "<div data-marquee=\"60\"><span>Mesa de los Santos</span><span>Charalá</span><span>Zapatoca</span></div>" },
+    { "id": "count", "attrs": "data-count on an element whose text is the final number", "job": "proof: a real number counts up when seen",
+      "html": "<strong data-count>1.280</strong> bags shipped" },
+    { "id": "mask", "attrs": "data-mask=\"up|down|left|right\"", "job": "reveal: an image or block wipes open once",
+      "html": "<figure data-mask=\"up\">...</figure>" },
+    { "id": "reveal-stagger", "attrs": "data-reveal=\"stagger\" on a list", "job": "reveal: items of a list arrive in sequence",
+      "html": "<ul data-reveal=\"stagger\"><li>...</li><li>...</li></ul>" },
+    { "id": "parallax", "attrs": "data-parallax=\"0.15\" (0.05-0.3)", "job": "depth: a layer drifts slower than the page",
+      "html": "<img data-parallax=\"0.12\" src=\"...\" alt=\"...\">" },
+    { "id": "magnetic", "attrs": "data-magnetic=\"0.3\" on the primary action", "job": "delight: the main button leans toward the cursor",
+      "html": "<a class=\"cta\" href=\"#order\" data-magnetic data-press>Reserve a bag</a>" },
+    { "id": "spotlight", "attrs": "data-spotlight on a surface", "job": "feedback: a soft light follows the cursor over a panel",
+      "html": "<article data-spotlight>...</article>" },
+    { "id": "scramble", "attrs": "data-scramble or data-scramble=\"hover\" on short text", "job": "delight: labels resolve from noise",
+      "html": "<span data-scramble>N 7.1193  W 73.1227</span>" },
+    { "id": "progress", "attrs": "data-progress on a thin fixed bar", "job": "orientation: how far through a long page you are",
+      "html": "<div data-progress style=\"position:fixed;inset:0 0 auto;height:3px;background:var(--c-accent)\"></div>" }
+  ]
+}

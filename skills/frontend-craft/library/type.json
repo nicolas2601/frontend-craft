@@ -1,0 +1,735 @@
+{
+  "$comment": "Display/text pairings, all free on Google Fonts (OFL). deal.mjs builds the <link>, the next/font names and the CSS variables from these fields. tracking and leading apply to display sizes only.",
+  "pairings": [
+    {
+      "id": "bricolage-hanken",
+      "moods": [
+        "friendly",
+        "bold",
+        "playful",
+        "food",
+        "craft"
+      ],
+      "display": {
+        "family": "Bricolage Grotesque",
+        "weights": [
+          700,
+          800
+        ],
+        "tracking": "-0.045em",
+        "leading": 0.92,
+        "case": "none",
+        "serif": false
+      },
+      "text": {
+        "family": "Hanken Grotesk",
+        "weights": [
+          400,
+          500,
+          600
+        ]
+      },
+      "note": "A grotesk with ink traps and some wobble; warm without going retro."
+    },
+    {
+      "id": "schibsted-solo",
+      "moods": [
+        "precise",
+        "editorial",
+        "minimal",
+        "finance",
+        "tech"
+      ],
+      "display": {
+        "family": "Schibsted Grotesk",
+        "weights": [
+          700,
+          800
+        ],
+        "tracking": "-0.04em",
+        "leading": 0.95,
+        "case": "none",
+        "serif": false
+      },
+      "text": {
+        "family": "Schibsted Grotesk",
+        "weights": [
+          400,
+          500
+        ]
+      },
+      "note": "One newsroom grotesk at two weights; Swiss restraint."
+    },
+    {
+      "id": "bigshoulders-chivo",
+      "moods": [
+        "industrial",
+        "sport",
+        "bold",
+        "energetic",
+        "brutal"
+      ],
+      "display": {
+        "family": "Big Shoulders Display",
+        "weights": [
+          800,
+          900
+        ],
+        "tracking": "-0.01em",
+        "leading": 0.86,
+        "case": "uppercase",
+        "serif": false
+      },
+      "text": {
+        "family": "Chivo",
+        "weights": [
+          400,
+          500,
+          700
+        ]
+      },
+      "note": "Tall condensed capitals from Chicago signage; posters that shout."
+    },
+    {
+      "id": "anton-archivo",
+      "moods": [
+        "bold",
+        "sport",
+        "music",
+        "nightlife",
+        "energetic"
+      ],
+      "display": {
+        "family": "Anton",
+        "weights": [
+          400
+        ],
+        "tracking": "0em",
+        "leading": 0.88,
+        "case": "uppercase",
+        "serif": false
+      },
+      "text": {
+        "family": "Archivo",
+        "weights": [
+          400,
+          500,
+          700
+        ]
+      },
+      "mono": {
+        "family": "JetBrains Mono",
+        "weights": [
+          500
+        ]
+      },
+      "note": "Heavy condensed headline type with a sturdy grotesk underneath."
+    },
+    {
+      "id": "newsreader-instrument",
+      "moods": [
+        "editorial",
+        "heritage",
+        "calm",
+        "culture",
+        "print"
+      ],
+      "display": {
+        "family": "Newsreader",
+        "weights": [
+          500,
+          600
+        ],
+        "tracking": "-0.03em",
+        "leading": 1.0,
+        "case": "none",
+        "serif": true
+      },
+      "text": {
+        "family": "Instrument Sans",
+        "weights": [
+          400,
+          500,
+          600
+        ]
+      },
+      "note": "A reading serif set upright and large; magazine, not wedding invitation."
+    },
+    {
+      "id": "bodoni-jost",
+      "moods": [
+        "luxury",
+        "fashion",
+        "beauty",
+        "heritage"
+      ],
+      "display": {
+        "family": "Bodoni Moda",
+        "weights": [
+          500,
+          700
+        ],
+        "tracking": "-0.02em",
+        "leading": 0.95,
+        "case": "none",
+        "serif": true
+      },
+      "text": {
+        "family": "Jost",
+        "weights": [
+          400,
+          500
+        ]
+      },
+      "note": "Hairline contrast and a geometric sans; couture, keep it upright."
+    },
+    {
+      "id": "gloock-intertight",
+      "moods": [
+        "editorial",
+        "food",
+        "warm",
+        "culture",
+        "creative"
+      ],
+      "display": {
+        "family": "Gloock",
+        "weights": [
+          400
+        ],
+        "tracking": "-0.02em",
+        "leading": 0.98,
+        "case": "none",
+        "serif": true
+      },
+      "text": {
+        "family": "Inter Tight",
+        "weights": [
+          400,
+          500,
+          600
+        ]
+      },
+      "note": "A high-contrast display serif with soft joints over a compact sans."
+    },
+    {
+      "id": "syne-manrope",
+      "moods": [
+        "creative",
+        "bold",
+        "fashion",
+        "music",
+        "youth"
+      ],
+      "display": {
+        "family": "Syne",
+        "weights": [
+          700,
+          800
+        ],
+        "tracking": "-0.03em",
+        "leading": 0.9,
+        "case": "none",
+        "serif": false
+      },
+      "text": {
+        "family": "Manrope",
+        "weights": [
+          400,
+          500,
+          600
+        ]
+      },
+      "note": "An art-school display face that widens as it gets heavier."
+    },
+    {
+      "id": "unbounded-golos",
+      "moods": [
+        "tech",
+        "playful",
+        "youth",
+        "energetic",
+        "festive"
+      ],
+      "display": {
+        "family": "Unbounded",
+        "weights": [
+          600,
+          800
+        ],
+        "tracking": "-0.04em",
+        "leading": 0.95,
+        "case": "none",
+        "serif": false
+      },
+      "text": {
+        "family": "Golos Text",
+        "weights": [
+          400,
+          500,
+          600
+        ]
+      },
+      "note": "Wide rounded geometry; loud and friendly at once."
+    },
+    {
+      "id": "martian-plex",
+      "moods": [
+        "developer",
+        "tech",
+        "precise",
+        "retro",
+        "science"
+      ],
+      "display": {
+        "family": "Martian Mono",
+        "weights": [
+          600,
+          700
+        ],
+        "tracking": "-0.05em",
+        "leading": 1.0,
+        "case": "none",
+        "serif": false
+      },
+      "text": {
+        "family": "IBM Plex Sans",
+        "weights": [
+          400,
+          500,
+          600
+        ]
+      },
+      "mono": {
+        "family": "IBM Plex Mono",
+        "weights": [
+          400,
+          500
+        ]
+      },
+      "note": "A wide monospace for headlines; the product is the code."
+    },
+    {
+      "id": "youngserif-figtree",
+      "moods": [
+        "friendly",
+        "food",
+        "warm",
+        "craft",
+        "coffee"
+      ],
+      "display": {
+        "family": "Young Serif",
+        "weights": [
+          400
+        ],
+        "tracking": "-0.02em",
+        "leading": 1.0,
+        "case": "none",
+        "serif": true
+      },
+      "text": {
+        "family": "Figtree",
+        "weights": [
+          400,
+          500,
+          600
+        ]
+      },
+      "note": "A sturdy old-style serif with personality; bakery chalkboard, not a magazine."
+    },
+    {
+      "id": "delagothic-zenkaku",
+      "moods": [
+        "bold",
+        "playful",
+        "tea",
+        "culture",
+        "youth"
+      ],
+      "display": {
+        "family": "Dela Gothic One",
+        "weights": [
+          400
+        ],
+        "tracking": "-0.01em",
+        "leading": 1.0,
+        "case": "none",
+        "serif": false
+      },
+      "text": {
+        "family": "Zen Kaku Gothic New",
+        "weights": [
+          400,
+          500,
+          700
+        ]
+      },
+      "note": "Heavy Japanese gothic forms; packaging and arcade signage."
+    },
+    {
+      "id": "epilogue-solo",
+      "moods": [
+        "modern",
+        "editorial",
+        "minimal",
+        "creative",
+        "precise"
+      ],
+      "display": {
+        "family": "Epilogue",
+        "weights": [
+          800,
+          900
+        ],
+        "tracking": "-0.05em",
+        "leading": 0.9,
+        "case": "none",
+        "serif": false
+      },
+      "text": {
+        "family": "Epilogue",
+        "weights": [
+          400,
+          500
+        ]
+      },
+      "note": "One variable grotesk pushed to black for headlines."
+    },
+    {
+      "id": "caslon-franklin",
+      "moods": [
+        "heritage",
+        "editorial",
+        "calm",
+        "finance",
+        "culture"
+      ],
+      "display": {
+        "family": "Libre Caslon Display",
+        "weights": [
+          400
+        ],
+        "tracking": "-0.02em",
+        "leading": 1.0,
+        "case": "none",
+        "serif": true
+      },
+      "text": {
+        "family": "Libre Franklin",
+        "weights": [
+          400,
+          500,
+          600
+        ]
+      },
+      "note": "Colonial printing serif with an American gothic; law, archives, institutions."
+    },
+    {
+      "id": "familjen-solo",
+      "moods": [
+        "friendly",
+        "modern",
+        "fresh",
+        "travel",
+        "wellness"
+      ],
+      "display": {
+        "family": "Familjen Grotesk",
+        "weights": [
+          600,
+          700
+        ],
+        "tracking": "-0.035em",
+        "leading": 0.95,
+        "case": "none",
+        "serif": false
+      },
+      "text": {
+        "family": "Familjen Grotesk",
+        "weights": [
+          400,
+          500
+        ]
+      },
+      "note": "Scandinavian grotesk with quirky details; approachable and clean."
+    },
+    {
+      "id": "darker-karla",
+      "moods": [
+        "fashion",
+        "bold",
+        "creative",
+        "nightlife",
+        "brutal"
+      ],
+      "display": {
+        "family": "Darker Grotesque",
+        "weights": [
+          800,
+          900
+        ],
+        "tracking": "-0.02em",
+        "leading": 0.82,
+        "case": "none",
+        "serif": false
+      },
+      "text": {
+        "family": "Karla",
+        "weights": [
+          400,
+          500,
+          600
+        ]
+      },
+      "note": "Narrow, tall, black; editorial fashion headlines."
+    },
+    {
+      "id": "archivo-wide",
+      "moods": [
+        "industrial",
+        "bold",
+        "sport",
+        "tech",
+        "brutal"
+      ],
+      "display": {
+        "family": "Archivo",
+        "weights": [
+          800,
+          900
+        ],
+        "stretch": "125%",
+        "axes": "wdth,wght@62..125,100..900",
+        "tracking": "-0.03em",
+        "leading": 0.9,
+        "case": "uppercase",
+        "serif": false
+      },
+      "text": {
+        "family": "Archivo",
+        "weights": [
+          400,
+          500
+        ]
+      },
+      "note": "Archivo at full width for headlines and normal width for text: one family, two voices."
+    },
+    {
+      "id": "zilla-source",
+      "moods": [
+        "craft",
+        "warm",
+        "food",
+        "heritage",
+        "coffee"
+      ],
+      "display": {
+        "family": "Zilla Slab",
+        "weights": [
+          600,
+          700
+        ],
+        "tracking": "-0.02em",
+        "leading": 0.95,
+        "case": "none",
+        "serif": true
+      },
+      "text": {
+        "family": "Source Sans 3",
+        "weights": [
+          400,
+          500,
+          600
+        ]
+      },
+      "note": "A slab with bracketed serifs; workshops, workwear, roasteries."
+    },
+    {
+      "id": "geist-solo",
+      "moods": [
+        "tech",
+        "developer",
+        "minimal",
+        "precise",
+        "finance"
+      ],
+      "display": {
+        "family": "Geist",
+        "weights": [
+          600,
+          700
+        ],
+        "tracking": "-0.05em",
+        "leading": 0.95,
+        "case": "none",
+        "serif": false
+      },
+      "text": {
+        "family": "Geist",
+        "weights": [
+          400,
+          500
+        ]
+      },
+      "mono": {
+        "family": "Geist Mono",
+        "weights": [
+          400,
+          500
+        ]
+      },
+      "note": "Engineered sans with a matching mono; for products whose interface is the hero."
+    },
+    {
+      "id": "bagel-nunito",
+      "moods": [
+        "playful",
+        "food",
+        "youth",
+        "friendly",
+        "festive"
+      ],
+      "display": {
+        "family": "Bagel Fat One",
+        "weights": [
+          400
+        ],
+        "tracking": "-0.01em",
+        "leading": 0.95,
+        "case": "none",
+        "serif": false
+      },
+      "text": {
+        "family": "Nunito",
+        "weights": [
+          400,
+          600,
+          700
+        ]
+      },
+      "note": "Puffy, edible letters with a rounded companion; snacks and kids."
+    },
+    {
+      "id": "tenor-jost",
+      "moods": [
+        "luxury",
+        "calm",
+        "beauty",
+        "hospitality",
+        "wellness"
+      ],
+      "display": {
+        "family": "Tenor Sans",
+        "weights": [
+          400
+        ],
+        "tracking": "0.06em",
+        "leading": 1.05,
+        "case": "uppercase",
+        "serif": false
+      },
+      "text": {
+        "family": "Jost",
+        "weights": [
+          400,
+          500
+        ]
+      },
+      "note": "Spaced humanist capitals; hotels, spas, perfume."
+    },
+    {
+      "id": "shrikhand-dmsans",
+      "moods": [
+        "playful",
+        "retro",
+        "food",
+        "festive",
+        "music"
+      ],
+      "display": {
+        "family": "Shrikhand",
+        "weights": [
+          400
+        ],
+        "tracking": "-0.01em",
+        "leading": 1.0,
+        "case": "none",
+        "serif": false
+      },
+      "text": {
+        "family": "DM Sans",
+        "weights": [
+          400,
+          500,
+          700
+        ]
+      },
+      "note": "Gujarati-inspired heavy italic display; diner signs and festival flyers."
+    },
+    {
+      "id": "rethink-solo",
+      "moods": [
+        "friendly",
+        "tech",
+        "fresh",
+        "modern",
+        "health"
+      ],
+      "display": {
+        "family": "Rethink Sans",
+        "weights": [
+          700,
+          800
+        ],
+        "tracking": "-0.045em",
+        "leading": 0.92,
+        "case": "none",
+        "serif": false
+      },
+      "text": {
+        "family": "Rethink Sans",
+        "weights": [
+          400,
+          500
+        ]
+      },
+      "note": "A humanist grotesk with open shapes; services that should feel kind."
+    },
+    {
+      "id": "familjen-plexmono-lab",
+      "moods": [
+        "science",
+        "tech",
+        "developer",
+        "precise",
+        "retro"
+      ],
+      "display": {
+        "family": "Familjen Grotesk",
+        "weights": [
+          700
+        ],
+        "tracking": "-0.04em",
+        "leading": 0.92,
+        "case": "none",
+        "serif": false
+      },
+      "text": {
+        "family": "IBM Plex Sans",
+        "weights": [
+          400,
+          500
+        ]
+      },
+      "mono": {
+        "family": "IBM Plex Mono",
+        "weights": [
+          400,
+          500
+        ]
+      },
+      "note": "Lab notebook: a characterful grotesk with a mono for data and labels."
+    }
+  ]
+}

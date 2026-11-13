@@ -1,0 +1,66 @@
+{
+  "case": "cafe-bucaramanga",
+  "prompt": "haz una landing page para una cafetería en Bucaramanga",
+  "model": "default",
+  "dir": "/tmp/fc-eval-cafe-bucaramanga-sFn7Te",
+  "session": "ses_e2a14162fffegDQag52KcelQ1p",
+  "armedByAgent": true,
+  "deal": {
+    "palette": "clay-plum",
+    "type": "bricolage-hanken",
+    "composition": "place-coordinates",
+    "signature": "scramble"
+  },
+  "pass": true,
+  "fails": [],
+  "warns": [
+    "nojs-empty"
+  ],
+  "motion": {
+    "entrance": 7,
+    "reveals": 0,
+    "scrollLinked": 0,
+    "linkedExamples": [],
+    "sticky": [
+      "div#root \"La Mano de MolerLa mesaHorarioCómo llega\""
+    ]
+  },
+  "shots": [
+    "/tmp/fc-eval-cafe-bucaramanga-sFn7Te/.craft/shots/1440-early.png",
+    "/tmp/fc-eval-cafe-bucaramanga-sFn7Te/.craft/shots/1440.png",
+    "/tmp/fc-eval-cafe-bucaramanga-sFn7Te/.craft/shots/390.png",
+    "/tmp/fc-eval-cafe-bucaramanga-sFn7Te/.craft/shots/1440-01.png",
+    "/tmp/fc-eval-cafe-bucaramanga-sFn7Te/.craft/shots/1440-02.png",
+    "/tmp/fc-eval-cafe-bucaramanga-sFn7Te/.craft/shots/1440-03.png"
+  ],
+  "rounds": [
+    {
+      "round": 0,
+      "code": 0,
+      "session": "ses_e2a14162fffegDQag52KcelQ1p"
+    },
+    {
+      "round": 0,
+      "fails": [],
+      "motion": {
+        "entrance": 7,
+        "reveals": 0,
+        "scrollLinked": 0,
+        "linkedExamples": [],
+        "sticky": [
+          "div#root \"La Mano de MolerLa mesaHorarioCómo llega\""
+        ]
+      }
+    }
+  ],
+  "rescored": {
+    "note": "re-measured after the motion-threshold and sticky-scene fixes in check.mjs",
+    "motion": {
+      "entrance": 7,
+      "scrollLinked": 10,
+      "reveals": 8,
+      "sticky": []
+    },
+    "result": "PASS, 1 WARN (nojs-empty)"
+  }
+}

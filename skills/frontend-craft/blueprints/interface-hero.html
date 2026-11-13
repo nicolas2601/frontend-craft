@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><!-- set lang to the copy's language -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{Brand: what it is, for whom or where}}</title>
+  <meta name="description" content="{{one sentence: what it is, for whom, where}}">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <!-- paste the font <link> tags from .craft/brief.md here -->
+  <link rel="stylesheet" href="craft/tokens.css">
+  <link rel="stylesheet" href="craft/craft.css">
+  <link rel="stylesheet" href="craft/layouts.css">
+</head>
+<body>
+<!-- Blueprint: interface-hero. Keep the structure, scale and kit attributes; replace every {{...}};
+     rename sections for the subject. Build every .visual for real (SVG, CSS, canvas or a supplied image). -->
+<header class="nav">
+  <a class="brand" href="#top" data-enter>{{brand name}}</a>
+  <nav class="links" aria-label="Sections"><a href="#s2">{{section 2 label}}</a><a href="#s3">{{section 3 label}}</a></nav>
+  <a class="btn small" href="#action" data-enter data-press>{{primary action: verb + object}}</a>
+</header>
+<main id="top">
+  <section class="l-interface">
+    <div class="stack">
+      <h1 class="h-display craft-display" data-words>{{3-9 word headline}}</h1>
+      <p class="lede" data-enter>{{one sentence, at most 22 words}}</p>
+      <div class="actions" data-enter><a class="btn" href="#action" data-magnetic data-press>{{primary action}}</a></div>
+    </div>
+    <div class="app" data-enter data-spotlight role="img" aria-label="{{what the interface shows}}">
+      <div class="bar"><i></i><i></i><i></i></div>
+      <div class="rows">
+        <div class="row"><span>{{status 1}}</span><span>{{item 1}}</span><span>{{value 1}}</span></div>
+        <div class="row"><span>{{status 2}}</span><span>{{item 2}}</span><span>{{value 2}}</span></div>
+        <div class="row"><span>{{status 3}}</span><span>{{item 3}}</span><span>{{value 3}}</span></div>
+        <div class="row"><span>{{status 4}}</span><span>{{item 4}}</span><span>{{value 4}}</span></div>
+        <div class="row"><span>{{status 5}}</span><span>{{item 5}}</span><span>{{value 5}}</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="section" id="s2">
+    <div class="facts" data-reveal="stagger">
+      <p><strong data-count>{{real number 1}}</strong> {{what number 1 counts}}</p>
+      <p><strong data-count>{{real number 2}}</strong> {{what number 2 counts}}</p>
+      <p><strong data-count>{{real number 3}}</strong> {{what number 3 counts}}</p>
+    </div>
+  </section>
+  <section class="l-split" id="s3" data-scrub>
+    <div class="chapters">
+      <article data-reveal><h3>{{step 1}}</h3><p class="muted">{{what happens in step 1, one sentence}}</p></article>
+      <article data-reveal><h3>{{step 2}}</h3><p class="muted">{{what happens in step 2, one sentence}}</p></article>
+      <article data-reveal><h3>{{step 3}}</h3><p class="muted">{{what happens in step 3, one sentence}}</p></article>
+    </div>
+    <div class="stage visual" aria-hidden="true">{{visual: the same object changing as you scroll, driven by var(--p) from 0 to 1, e.g. transform: rotate(calc(var(--p) * 90deg))}}</div>
+  </section>
+  <section class="section" id="action">
+    <h2 class="h-display craft-display" data-reveal>{{closing line that repeats the promise}}</h2>
+    <div class="actions" data-reveal><a class="btn" href="{{real link: form, booking, WhatsApp, store}}" data-magnetic data-press>{{primary action}}</a></div>
+  </section>
+</main>
+<footer class="section muted">{{address, hours or contact}}</footer>
+<script type="module">import { init } from './craft/craft-motion.js'; init(document);</script>
+</body>
+</html>

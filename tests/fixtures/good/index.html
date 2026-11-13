@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Fixture roastery: small-batch coffee from Santander</title>
+  <meta name="description" content="Single-origin coffee roasted every Tuesday in Bucaramanga.">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <style>
+    @font-face { font-family: 'Fixture Display'; src: local('DejaVu Sans Bold'), local('DejaVuSans-Bold'), local('Liberation Sans Bold'); font-weight: 700; }
+    @font-face { font-family: 'Fixture Text'; src: local('DejaVu Sans'), local('DejaVuSans'), local('Liberation Sans'); font-weight: 400; }
+    :root {
+      --c-bg: #1c1410; --c-surface: #261b16; --c-ink: #f2e6d8; --c-muted: #b9a595;
+      --c-line: #3a2c24; --c-accent: #e8b04b; --c-accent-ink: #1c1410;
+      --f-display: 'Fixture Display', sans-serif; --f-text: 'Fixture Text', sans-serif;
+    }
+  </style>
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/craft.css">
+  <style>
+    header { display: flex; justify-content: space-between; align-items: center; padding: var(--s-6) var(--gutter); }
+    .hero { min-height: 100svh; display: grid; align-content: center; gap: var(--s-8); padding: 0 var(--gutter); }
+    h1 { font-size: var(--t-display); margin: 0; max-width: 14ch; }
+    .lede { font-size: var(--t-lg); color: var(--c-muted); max-width: 40ch; margin: 0; }
+    .cta { display: inline-flex; align-items: center; min-height: 48px; padding: 0 var(--s-6); border-radius: 999px;
+      background: var(--c-accent); color: var(--c-accent-ink); text-decoration: none; font-weight: 700; justify-self: start; }
+    .manifesto p { font-family: var(--f-display); font-size: var(--t-3xl); line-height: 1.15; max-width: 22ch; margin: 0 auto; }
+    .manifesto > div { display: grid; place-items: center; padding: 0 var(--gutter); }
+    .cards { padding: var(--section) var(--gutter); display: grid; gap: var(--s-8); }
+    .cards article { min-height: 60svh; border-radius: var(--r-lg); background: var(--c-surface); padding: var(--s-12); }
+    .cards h2 { font-family: var(--f-display); font-size: var(--t-2xl); margin: 0 0 var(--s-4); }
+    .stats { display: flex; gap: var(--s-16); padding: var(--section) var(--gutter); flex-wrap: wrap; }
+    .stats strong { display: block; font-family: var(--f-display); font-size: var(--t-3xl); color: var(--c-accent); }
+    .band { padding: var(--s-8) 0; font-family: var(--f-display); font-size: var(--t-2xl); color: var(--c-muted); }
+    footer { padding: var(--section) var(--gutter); color: var(--c-muted); }
+    .bar { position: fixed; inset: 0 0 auto; height: 3px; background: var(--c-accent); z-index: 10; }
+  </style>
+</head>
+<body>
+  <div class="bar" data-progress></div>
+  <header>
+    <span class="craft-display" data-enter>Fixture</span>
+    <a class="cta" href="#order" data-enter data-press>Order a bag</a>
+  </header>
+  <main>
+    <section class="hero">
+      <h1 class="craft-display" data-words>Roasted on Tuesday, in your cup by Friday</h1>
+      <p class="lede" data-enter>Three single origins from Santander farms, roasted in batches of twelve kilos.</p>
+      <a class="cta" href="#order" data-enter data-magnetic data-press>Reserve this week's batch</a>
+    </section>
+    <section class="manifesto" data-pin>
+      <div>
+        <p data-scroll-words="pinned">We buy from four farms we visit every harvest, pay above the exchange price and roast light so you taste the place, not the fire.</p>
+      </div>
+    </section>
+    <section class="cards" data-stack>
+      <article><h2>Mesa de los Santos</h2><p>Washed caturra, 1,600 m. Panela, orange peel and a clean finish.</p></article>
+      <article><h2>Charalá</h2><p>Honey process castillo, 1,800 m. Red fruit and cacao nibs.</p></article>
+      <article><h2>Zapatoca</h2><p>Natural bourbon, 1,700 m. Blackberry jam and brown sugar.</p></article>
+    </section>
+    <section class="stats" data-reveal="stagger">
+      <div><strong data-count>1.280</strong> bags shipped this year</div>
+      <div><strong data-count>12</strong> kilos per batch</div>
+      <div><strong data-count>4</strong> partner farms</div>
+    </section>
+    <div class="band" data-marquee aria-label="Origins"><span>Mesa de los Santos</span><span>Charalá</span><span>Zapatoca</span><span>Barichara</span></div>
+  </main>
+  <footer id="order"><p data-reveal>Orders close Monday at noon. Pickup at Carrera 33, Bucaramanga.</p></footer>
+  <script type="module">
+    import { init } from '../../../skills/frontend-craft/kit/craft-motion.js';
+    init(document);
+  </script>
+</body>
+</html>

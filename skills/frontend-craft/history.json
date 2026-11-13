@@ -1,0 +1,26 @@
+[
+  {
+    "at": "2026-11-13T18:24:18.888Z",
+    "kind": "event",
+    "palette": "indigo-marigold",
+    "type": "anton-archivo",
+    "composition": "horizontal-rail",
+    "signature": "rail"
+  },
+  {
+    "at": "2026-11-13T18:29:42.085Z",
+    "kind": "event",
+    "palette": "noir-red",
+    "type": "syne-manrope",
+    "composition": "ticket-receipt",
+    "signature": "mask"
+  },
+  {
+    "at": "2026-11-13T18:55:15.754Z",
+    "kind": "event",
+    "palette": "ultramarine-poster",
+    "type": "unbounded-golos",
+    "composition": "place-coordinates",
+    "signature": "scrub"
+  }
+]

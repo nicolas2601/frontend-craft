@@ -18,3 +18,5 @@ dist/
 .trash/
 tools/opencode-observer/verification*.json
 /pnpm-lock.yaml
+.impeccable/
+.craft/

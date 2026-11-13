@@ -1,0 +1,21 @@
+{
+  "name": "frontend-craft",
+  "displayName": "Frontend Craft",
+  "version": "2.0.0",
+  "description": "Skills that make any model build web pages that do not look generated: a dealt design direction, a dependency-free motion kit and a browser gate that blocks finishing while defects remain.",
+  "author": {
+    "name": "nicolas2601",
+    "url": "https://github.com/nicolas2601"
+  },
+  "homepage": "https://github.com/nicolas2601/frontend-craft",
+  "repository": "https://github.com/nicolas2601/frontend-craft",
+  "keywords": [
+    "frontend",
+    "design",
+    "animation",
+    "landing-page",
+    "accessibility",
+    "skills"
+  ],
+  "license": "MIT"
+}
