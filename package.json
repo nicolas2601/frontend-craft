@@ -11,7 +11,8 @@
     "pack": "node scripts/pack.mjs",
     "eval": "node scripts/eval.mjs",
     "observer:test": "npm --prefix tools/opencode-observer test",
-    "test:blueprints": "node scripts/blueprints.mjs"
+    "test:blueprints": "node scripts/blueprints.mjs",
+    "test:frameworks": "node scripts/frameworks.mjs"
   },
   "type": "module",
   "engines": {

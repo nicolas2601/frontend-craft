@@ -95,6 +95,10 @@ All fourteen blueprints render through the check with sample text (`npm run test
 
 Run one case at a time on machines with less than 16 GB of RAM: two agents building Next.js projects in parallel, plus the checker's Chrome, ran a 9.6 GB laptop out of memory and both runs were stopped.
 
+## Framework wiring (no agent)
+
+`npm run test:frameworks` generates minimal Vite projects for Vue 3.5.45 and Svelte 5.57.3, deals with `start.mjs`, ports the blueprint with the wiring from `references/frameworks.md` (`onMounted`/`onBeforeUnmount` in Vue, `onMount` in Svelte), builds and checks the build. 2026-11-13: both PASS, 10 elements animating in, stacked cards pinned. Together with the agent runs this covers plain HTML, React (Vite), Next.js, Vue and Svelte.
+
 ## Running more
 
 ```sh
