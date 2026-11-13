@@ -4,6 +4,8 @@
 
     node scripts/eval.mjs --case cafe-bucaramanga [--model cline-pass/deepseek-v4.1-flash] [--rounds 3]
     node scripts/eval.mjs --all --agent-cmd "opencode run --standalone --agent frontend --auto --format json"
+    node scripts/eval.mjs --case devtool-next --model haiku --model-flag --model --no-title --resume-flag --resume \
+      --agent-cmd "claude -p --output-format json --permission-mode acceptEdits --allowedTools Bash,Read,Write,Edit,Glob,Grep,Skill"
 
   Per case: a fresh folder, the prompt sent once, then up to --rounds follow-ups carrying the gate's
   FAIL list (the same loop a Stop hook gives Claude Code). A project's dev server is started by the
@@ -51,8 +53,10 @@ function startDev(cwd) {
   });
 }
 
+/** OpenCode prints "sessionID", Claude Code prints "session_id". */
 function sessionIdOf(output) {
-  return output.match(/"sessionID"\s*:\s*"(ses[^"]+)"/)?.[1] ?? null;
+  return output.match(/"sessionID"\s*:\s*"(ses[^"]+)"/)?.[1]
+    ?? output.match(/"session_id"\s*:\s*"([0-9a-f-]{36})"/)?.[1] ?? null;
 }
 
 /** Find something checkable in the folder the agent produced. */
@@ -82,12 +86,13 @@ async function scoreRound(dir, kind) {
 
 async function runCase(c, args) {
   const base = String(args['agent-cmd'] ?? 'opencode run --standalone --agent frontend --auto --format json').split(' ');
-  const model = args.model ? ['-m', String(args.model)] : [];
+  const model = args.model ? [String(args['model-flag'] ?? '-m'), String(args.model)] : [];
   const rounds = Number(args.rounds ?? 3);
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), `fc-eval-${c.id}-`));
   const log = [];
   console.log(`[${c.id}] ${dir}`);
-  let res = await sh(base[0], [...base.slice(1), ...model, '--title', `fc-eval-${c.id}`, c.prompt], { cwd: dir });
+  const title = args['no-title'] ? [] : ['--title', `fc-eval-${c.id}`];
+  let res = await sh(base[0], [...base.slice(1), ...model, ...title, c.prompt], { cwd: dir });
   const session = sessionIdOf(res.out);
   log.push({ round: 0, code: res.code, session });
   let scored = await scoreRound(dir, c.kind);
@@ -97,7 +102,7 @@ async function runCase(c, args) {
     console.log(`[${c.id}] round ${r - 1}: ${fails.length} FAIL ${fails.map((x) => x.id).join(', ')}`);
     if (!fails.length) break;
     const followUp = `The frontend-craft gate found ${fails.length} FAIL:\n${fails.map((x) => `- ${x.id}: ${x.msg}\n  fix: ${x.fix}`).join('\n')}\nFix them, run the check, look at the screenshots, then report.`;
-    res = await sh(base[0], [...base.slice(1), ...model, '--session', session, followUp], { cwd: dir });
+    res = await sh(base[0], [...base.slice(1), ...model, String(args['resume-flag'] ?? '--session'), session, followUp], { cwd: dir });
     scored = await scoreRound(dir, c.kind);
   }
   const fails = scored.report?.findings.filter((x) => x.level === 'FAIL') ?? null;

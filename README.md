@@ -142,3 +142,7 @@ Layout: `skills/` (what gets installed), `tests/` (node:test, fixtures), `script
 ## Credits
 
 Ideas adapted, not copied, from MIT-licensed work: dealing from a library with history and a finish gate as a Stop hook from [taste-skill](https://github.com/leonxlnx/taste-skill) (Leonxlnx); motion rules and the Before/After/Why review format from [emilkowalski/skills](https://github.com/emilkowalski/skills) (Emil Kowalski); the writing discipline for agent-facing documents from [mattpocock/skills](https://github.com/mattpocock/skills) (Matt Pocock). `svg-craft` vendors MIT packs listed in `skills/svg-craft/packs/*/LICENSE-*`. The archived v1 includes MIT recipes from MotionSites with their notice.
+
+## License
+
+MIT, see [LICENSE](LICENSE). Vendored packs keep their own MIT notices.
