@@ -135,6 +135,8 @@ About thirty rules over facts measured in the rendered page. FAIL blocks, WARN a
 | Claude Code (as plugin) | Haiku | CLI tool landing (Next.js) | Yes | PASS, first round |
 | Codex CLI 0.162 | ChatGPT default | Wedding photographer portfolio (plain HTML) | Yes | PASS, first round |
 
+Framework wiring without an agent: `npm run test:frameworks` builds the stacked-chapters blueprint in Vite + Vue 3.5 and Vite + Svelte 5 with the kit wired as in `references/frameworks.md`; both pass the check (10 entrances, 4 pinned cards). React, Next.js and plain HTML are covered by the agent runs above.
+
 Each failed run on the way found a bug in the skill, the checker or the runner, now fixed and listed in the write-up.
 
 ## Develop
@@ -142,6 +144,8 @@ Each failed run on the way found a bug in the skill, the checker or the runner, 
 ```sh
 npm test          # unit tests, library contrast tests and the end-to-end check in Chrome
 npm run verify    # skill structure: frontmatter, word budgets, links, vocabulary in sync with the library
+npm run test:blueprints  # all 14 blueprints rendered through the check
+npm run test:frameworks  # the kit and a blueprint built in real Vue and Svelte projects, then checked
 npm run pack      # dist/<skill>.skill zip files
 ```
 
