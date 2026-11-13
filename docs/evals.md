@@ -37,6 +37,20 @@ Human review of the screenshots: coherent, readable, specific and clearly not th
 
 With this machine's OpenCode configuration every turn carries about 147,000 input tokens of tools and instructions before the task. Standalone runs do not record their usage in the shared session store, so the exact total for this case was not captured.
 
+## 2026-11-13: what the other runs taught (and why they are not passes)
+
+| Run | Harness and model | Outcome | Cause found | Fixed by |
+|---|---|---|---|---|
+| festival-vue #1 | OpenCode, GLM-5.3 Flash (free) | Built; user judged it "horrible": thin colonial serif on a gig-poster blue, half the first screen empty, a card cut off at the edge | The deal matched type and palette to the brief separately, never to each other; compositions were one sentence each | Type must share a mood with the palette; every composition ships a working blueprint |
+| devtool-next #1 | Claude Code, Haiku | Gate passed, but no deal: a dark take on the default look (one lime italic word in a serif headline, tracked mono labels) | `start.mjs` called through the symlinked install exited silently; seven design skills loaded at once competed | Scripts run through symlinks (tests); the check fails italic accent words on any palette; eval passes now require a followed deal |
+| festival-vue #2 | OpenCode, GLM-5.3 Flash (free) | Ran `start.mjs`, then ignored the deal; `deal-font` and `deal-palette` failed and it stopped there | The eval runner gave the agent the wrong working directory (inherited `PWD`), so the follow-up loop never found the project | Runner sets `PWD` with `cwd` |
+| festival-vue #3 | OpenCode, GLM-5.3 Flash (free) | Nothing built | Free usage limit reached | Not a skill issue |
+| devtool-next #2 | Claude Code, Haiku | Did not load frontend-craft at first (picked a Next.js skill). The gate loop then worked: 4 FAIL, 5 FAIL, 0 FAIL over three rounds, using the kit via `--kit-only`. Without a deal the page is the stock dark dev-tool template | Skill selection is the model's call; a host router added competing suggestions | Plugin `UserPromptSubmit` hook that points web-page prompts at the run |
+
+The OpenCode gate plugin was also rewritten for OpenCode's plugin API v2 after finding it did not load in 2.2.7.
+
+All fourteen blueprints render through the check with sample text (`npm run test:blueprints`): every one passes with an entrance and a scroll-linked scene.
+
 ## Running more
 
 ```sh
