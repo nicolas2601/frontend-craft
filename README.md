@@ -47,7 +47,7 @@ The satellites call scripts in `frontend-craft`, so install them together.
 
 Requirements: Node 22 or later and Chrome, Chromium or Edge (Playwright's Chromium also works; set `CHROME_PATH` for anything else).
 
-**Claude Code (plugin).** The Stop-hook gate comes with it.
+**Claude Code (plugin).** The Stop-hook gate comes with it, plus a prompt hook that points web-page requests at the run so the skill fires even when other design skills compete.
 
 ```sh
 /plugin marketplace add nicolas2601/frontend-craft

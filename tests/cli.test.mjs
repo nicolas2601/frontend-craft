@@ -52,3 +52,12 @@ test('start.mjs refuses to build inside the skill repository', () => {
   assert.equal(res.status, 2);
   assert.match(res.stderr, /inside the skill's own folder/);
 });
+
+test('the plugin hook points web-page prompts at frontend-craft and stays silent otherwise', () => {
+  const hook = path.join(ROOT, 'hooks', 'route.mjs');
+  const ask = (prompt) => spawnSync(process.execPath, [hook], { input: JSON.stringify({ prompt }), encoding: 'utf8' }).stdout;
+  for (const p of ['haz una landing page para una cafetería', 'portfolio site for a photographer', 'landing for a server monitoring tool']) {
+    assert.match(ask(p), /frontend-craft skill/, p);
+  }
+  for (const p of ['fix the failing migration', 'write a web scraper for prices']) assert.equal(ask(p), '', p);
+});
