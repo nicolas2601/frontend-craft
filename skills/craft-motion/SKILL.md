@@ -10,7 +10,7 @@ description: >-
 
 # craft-motion
 
-Motion needs a job: feedback, continuity, explanation, direct manipulation or delight. A page gets one entrance, one scroll story and quiet feedback; not a fade on every section. Requires the `frontend-craft` skill next to this one (`<fc>` below is its folder).
+Motion needs a job: feedback, continuity, explanation, direct manipulation or delight. A page gets one entrance, one scroll story and quiet feedback; not a fade on every section. Requires the `frontend-craft` skill next to this one (`<fc>` below is its folder). Not for a new page or site: build those with the `frontend-craft` run, which deals the direction.
 
 ## The run
 

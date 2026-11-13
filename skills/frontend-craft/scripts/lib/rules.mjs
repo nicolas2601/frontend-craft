@@ -59,6 +59,7 @@ function lookRules({ look, lookEarly, doc, deal }) {
   if (look.accents.some(isTerracotta)) signals.push('terracotta accent');
   if (look.monoLabels >= 3) signals.push(`${look.monoLabels} tracked mono labels`);
   if (signals.length >= 3) out.push(f('FAIL', 'tell-default-editorial', `the generated default look: ${signals.join(' + ')}`, 'follow the dealt palette and pairing; drop the italic accent word and the mono eyebrows'));
+  if (doc.h1?.italicAccent && !deal?.brand) out.push(f('FAIL', 'tell-italic-accent', 'the headline sets a word in an italic of another color', 'set the whole headline in the dealt display face; carry emphasis with size, weight or line breaks'));
   if (look.purpleGradient) out.push(f('WARN', 'tell-purple-gradient', 'purple/indigo gradient on the first screen', 'use the dealt palette; one flat field of color beats a default gradient'));
   if (look.glowOrbs) out.push(f('WARN', 'tell-glow-orbs', `${look.glowOrbs} blurred glow blob(s) on the first screen`, 'remove decorative blobs; light the subject instead'));
   if (look.equalRows.length) out.push(f('WARN', 'tell-equal-cards', `row of identical cards: ${look.equalRows[0]}`, 'vary scale: one dominant item and smaller ones, or a list instead of cards'));

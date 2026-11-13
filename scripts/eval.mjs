@@ -130,7 +130,9 @@ async function runCase(c, args) {
   const result = {
     case: c.id, prompt: c.prompt, model: args.model ?? 'default', dir, session,
     armedByAgent: !!scored.found.gate, deal: scored.deal ? { palette: scored.deal.palette?.id, type: scored.deal.type?.id, composition: scored.deal.composition?.id, signature: scored.deal.motion?.signature?.id } : null,
-    pass: fails !== null && fails.length === 0, fails: fails?.map((x) => x.id) ?? ['no-target'],
+    // Passing the gate without following a deal is not a pass: the design came from the model's defaults.
+    pass: fails !== null && fails.length === 0 && !!scored.found.gate && !!scored.deal,
+    fails: [...(fails?.map((x) => x.id) ?? ['no-target']), ...(scored.deal ? [] : ['no-deal'])],
     warns: scored.report?.findings.filter((x) => x.level === 'WARN').map((x) => x.id) ?? [], motion: scored.report?.motion ?? null,
     shots: scored.report?.shots ?? [], rounds: log,
   };

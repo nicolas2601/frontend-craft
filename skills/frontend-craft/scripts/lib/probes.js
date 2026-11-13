@@ -7,6 +7,10 @@ export function probeDocument() {
   const h1 = h1s[0];
   const h1cs = h1 ? getComputedStyle(h1) : null;
   const italicInH1 = h1 ? [h1, ...h1.querySelectorAll('*')].some((n) => getComputedStyle(n).fontStyle === 'italic') : false;
+  const italicAccent = h1 ? [...h1.querySelectorAll('*')].some((n) => {
+    const cs = getComputedStyle(n);
+    return cs.fontStyle === 'italic' && cs.color !== h1cs.color && n.textContent.trim().length > 0;
+  }) : false;
   const fonts = [...document.fonts].map((f) => ({ family: f.family.replace(/^['"]|['"]$/g, ''), status: f.status }));
   const imgs = [...document.images].map((img) => ({
     src: (img.currentSrc || img.src || '').slice(0, 120),
@@ -30,6 +34,7 @@ export function probeDocument() {
       weight: h1cs.fontWeight,
       size: Number.parseFloat(h1cs.fontSize),
       italic: italicInH1,
+      italicAccent,
     } : null,
     bodyFamily: C.firstFamily(getComputedStyle(document.body).fontFamily),
     fonts,

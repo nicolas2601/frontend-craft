@@ -25,7 +25,7 @@ test('a page built with the kit passes, with entrance and scroll story detected'
 test('the generated-default page fails on the defects it has', { skip: !chrome, timeout: 120000 }, async () => {
   const r = await runCheck({ target: { root: path.join(ROOT, 'tests/fixtures/slop'), page: 'index.html' }, kind: 'landing', out: out() });
   const ids = new Set(r.findings.filter((x) => x.level === 'FAIL').map((x) => x.id));
-  for (const id of ['tell-default-editorial', 'overflow', 'contrast', 'img-alt', 'img-broken', 'transition-all',
+  for (const id of ['tell-default-editorial', 'tell-italic-accent', 'overflow', 'contrast', 'img-alt', 'img-broken', 'transition-all',
     'motion-entrance', 'motion-scroll-story', 'copy-placeholder', 'copy-emoji', 'meta-lang', 'meta-viewport']) {
     assert.ok(ids.has(id), `missing ${id}; got ${[...ids].join(', ')}`);
   }

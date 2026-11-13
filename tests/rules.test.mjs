@@ -40,6 +40,11 @@ test('the cream + serif italic + terracotta + mono look fails', () => {
   assert.ok(ids(out).includes('tell-default-editorial'));
 });
 
+test('an italic accent word in another color fails on any palette', () => {
+  const h1 = { ...facts().doc.h1, italic: true, italicAccent: true };
+  assert.ok(ids(evaluate(facts({ doc: { ...facts().doc, h1 } }))).includes('tell-italic-accent'));
+});
+
 test('a landing page with no entrance and no scroll story fails; an app does not', () => {
   const still = { motion: { entrance: 0, reveals: 2, scrollLinked: 0, sticky: [] } };
   assert.deepEqual(ids(evaluate(facts(still))).sort(), ['motion-entrance', 'motion-scroll-story']);
