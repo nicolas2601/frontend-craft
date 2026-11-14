@@ -6,7 +6,9 @@ import path from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { runCheck } from '../skills/frontend-craft/scripts/check.mjs';
-import { findChrome } from '../skills/frontend-craft/scripts/lib/chrome.mjs';
+import { findChrome, launch } from '../skills/frontend-craft/scripts/lib/chrome.mjs';
+import { open, settle, sleep } from '../skills/frontend-craft/scripts/lib/page.mjs';
+import { serve } from '../skills/frontend-craft/scripts/lib/serve.mjs';
 import { loadLibrary } from '../skills/frontend-craft/scripts/lib/deal.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -82,4 +84,58 @@ test('the four hero scenes start in headless Chrome without console errors', { s
   const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/scenes/index.html' }, kind: 'app', out: out(), quick: true, detector: false });
   assert.deepEqual(r.richness.scenes.map((s) => `${s.id}:${s.on}`).sort(), ['chrome:true', 'dots:true', 'ink:true', 'iridescent:true']);
   assert.ok(!r.findings.some((x) => x.id === 'console'), r.findings.map((x) => x.id).join(', '));
+});
+
+test('a kit hero loop plays on screen, can be paused, and holds its poster under reduced motion', { skip: !chrome, timeout: 200000 }, async () => {
+  const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/loop/index.html' }, kind: 'app', out: out(), detector: false });
+  assert.deepEqual(r.findings.filter((x) => x.id.startsWith('video-')), []);
+  assert.deepEqual(r.richness.loops.map(({ kit, muted, poster, played, firstScreen, toggle }) => ({ kit, muted, poster, played, firstScreen, toggle })),
+    [{ kit: true, muted: true, poster: true, played: true, firstScreen: true, toggle: true }]);
+
+  const server = await serve(ROOT);
+  const browser = await launch();
+  try {
+    const state = (s) => s.run(() => {
+      const v = document.querySelector('video');
+      return { paused: v.paused, pressed: document.querySelector('[data-loop-toggle]').getAttribute('aria-pressed') };
+    });
+    const page = async (reduced) => {
+      const s = await browser.newPage();
+      for (const m of ['Page.enable', 'Runtime.enable']) await s.send(m);
+      if (reduced) await s.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+      await s.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
+      const { load } = await open(s, `${server.url}tests/fixtures/loop/index.html`);
+      await settle(s, load, 800);
+      return s;
+    };
+    const click = (s) => s.run(() => { document.querySelector('[data-loop-toggle]').click(); return true; });
+    const scroll = (s, y) => s.run((top) => { window.scrollTo({ top, behavior: 'instant' }); return true; }, y);
+
+    const s = await page(false);
+    assert.deepEqual(await state(s), { paused: false, pressed: 'false' });
+    await scroll(s, 3000); await sleep(400);
+    assert.equal((await state(s)).paused, true, 'pauses off screen');
+    await scroll(s, 0); await sleep(400);
+    assert.equal((await state(s)).paused, false, 'resumes on screen');
+    await click(s); await sleep(200);
+    assert.deepEqual(await state(s), { paused: true, pressed: 'true' });
+    await scroll(s, 3000); await sleep(300); await scroll(s, 0); await sleep(400);
+    assert.equal((await state(s)).paused, true, 'a pause by the person sticks');
+    s.close();
+
+    const rm = await page(true);
+    assert.deepEqual(await state(rm), { paused: true, pressed: 'true' });
+    await click(rm); await sleep(400);
+    assert.deepEqual(await state(rm), { paused: false, pressed: 'false' }, 'plays when the person asks');
+    rm.close();
+  } finally {
+    await browser.close();
+    await server.close();
+  }
+});
+
+test('autoplaying videos without a poster, a pause control or a reduced-motion stop are caught', { skip: !chrome, timeout: 200000 }, async () => {
+  const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/loop/bad.html' }, kind: 'app', out: out(), detector: false });
+  const got = new Set(r.findings.map((x) => `${x.level}:${x.id}`));
+  for (const id of ['FAIL:video-reduced', 'FAIL:video-muted', 'WARN:video-pause', 'WARN:video-poster']) assert.ok(got.has(id), `missing ${id}; got ${[...got].join(', ')}`);
 });

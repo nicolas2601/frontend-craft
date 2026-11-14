@@ -152,10 +152,12 @@ export async function reducedPass(browser, url) {
   await setViewport(s, 1440);
   const { load } = await open(s, url);
   await settle(s, load, 900);
+  const playing = await s.run(() => [...document.querySelectorAll('video')].filter((v) => !v.paused && !v.ended)
+    .map((v) => (v.currentSrc || 'video').split('/').pop()));
   const { max } = await scrollThrough(s, 40);
   const lost = await alwaysInvisible(s, [0, max]);
   s.close();
-  return lost;
+  return { lost, playing };
 }
 
 export async function noJsPass(browser, url) {

@@ -46,6 +46,9 @@
 | `slop-numbering` | FAIL | Two or more numbering systems ("01 —" kickers, "01 / 04" counters, numbered captions, bare numerals) | Keep one, or none |
 | `slop-repeat-photo` | FAIL | One photograph in two sections | One frame per section; fetch more |
 | `slop-stamp` | FAIL | A round badge with a few words, tilted or spinning, or text on a circle | Remove it; set the fact as type |
+| `deal-scene`, `scene-off` | FAIL, WARN | The dealt hero scene is not on the page; or it shows its poster because WebGL did not start | `<div class="craft-scene" data-scene="...">` in the first screen (`scenes.md`); a hero loop that played in the first screen also counts (`hero-video.md`) |
+| `video-reduced`, `video-muted` | FAIL | A video plays under reduced motion; an autoplaying or looping video has sound | `data-loop` on the video with the kit, no `autoplay` attribute, `muted playsinline` |
+| `video-pause`, `video-poster` | WARN | A looping video cannot be paused, or has no poster | A `data-loop-toggle` button next to it (WCAG 2.2.2); `poster=` its first frame (`scripts/video.mjs` writes one) |
 | `site-transitions` | WARN | A multi-page site has no page transition | `surfaces.css` (`@view-transition`) plus one `view-transition-name` |
 | `impeccable/<rule>` | FAIL (slop, errors), WARN (quality; marquee, oversized-h1, tight tracking, hard shadows) | impeccable's detector on the rendered page | Its fix line; `impeccable detect <url>` reruns it alone. `--no-detector` skips it |
 

@@ -31,7 +31,9 @@ const PER_SITE = new Set(['concept-missing', 'concept-thin', 'deal-component', '
 async function checkPage(browser, { url, shotsDir, kind, deal, concept, quick, requireDeal, detector }) {
   const selectors = parseConcept(concept)?.breaks ?? [];
   const { facts, shots } = await normalPass(browser, url, shotsDir, { selectors });
-  facts.invisible.reduced = quick ? [] : await reducedPass(browser, url);
+  const reduced = quick ? { lost: [], playing: [] } : await reducedPass(browser, url);
+  facts.invisible.reduced = reduced.lost;
+  facts.reducedVideos = reduced.playing;
   const noJs = quick ? { lost: [], textLength: 1000 } : await noJsPass(browser, url);
   facts.invisible.nojs = noJs.lost;
   Object.assign(facts, { kind, deal, concept });

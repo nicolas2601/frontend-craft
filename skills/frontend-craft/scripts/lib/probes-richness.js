@@ -65,8 +65,17 @@ export function probeRichness() {
   }
   const scenes = [...document.querySelectorAll('[data-scene]')].filter((el) => C.visible(el))
     .map((el) => ({ id: el.dataset.scene, on: el.hasAttribute('data-scene-on') && !el.hasAttribute('data-scene-off') }));
+  // looping or autoplaying videos: whether they ran, sit in the first screen, and can be paused
+  const loops = [...document.querySelectorAll('video')].filter((v) => v.loop || v.autoplay || v.hasAttribute('data-loop')).slice(0, 12)
+    .map((v) => {
+      const r = v.getBoundingClientRect();
+      return { src: (v.currentSrc || v.querySelector('source')?.src || '').split('/').pop(), kit: v.hasAttribute('data-loop'), muted: v.muted,
+        poster: !!v.poster, played: v.played.length > 0, firstScreen: r.height > 0 && r.top + scrollY < innerHeight,
+        toggle: v.controls || !!v.parentElement?.querySelector('[data-loop-toggle]') };
+    });
   return {
     scenes,
+    loops,
     setPieces: [...setPieces],
     pictures: list.length,
     fullBleed: list.some((p) => p.w >= vw * 0.95),
