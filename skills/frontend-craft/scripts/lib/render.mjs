@@ -1,4 +1,5 @@
 // Turn a deal into files: tokens.css, font loading snippets and the direction brief.
+import { componentBlock, finishBlock, languageBlock, pagesBlock, platformBlock, referencesBlock, tellsBlock } from './brief-blocks.mjs';
 
 const plus = (family) => family.replace(/ /g, '+');
 const fallback = (face) => (face.serif ? 'Georgia, serif' : 'system-ui, sans-serif');
@@ -88,6 +89,11 @@ export const SET_PIECE_JOBS = {
   develop: 'a photograph comes up from grey and soft to full colour',
   tilt: 'a picture or panel rises from a tilted plane',
   split: 'one half holds still while the other scrolls past it',
+  'word-track': 'a line of huge words travels sideways across a pinned screen',
+  'word-swap': 'one word in a sentence changes as you scroll',
+  'type-zoom': 'one word fills the screen and the camera flies through it',
+  'word-mask': 'a heading rises line by line out of masks',
+  'bento-assemble': 'scattered tiles settle into a bento grid',
 };
 
 function motionBlock(d, setPiecesRef) {
@@ -101,6 +107,10 @@ function directionBlock(d) {
   const x = d.direction;
   if (!x) return [];
   const why = d.wildcard ? ' (dealt outside the subject\'s usual moods on purpose: commit to it, do not soften it back to the default)' : '';
+  if (['app', 'docs'].includes(d.kind)) {
+    return [`## Direction: ${x.id}${why}`, x.idea, '', `- Surfaces: ${x.grounds.how}`, `- Type: ${x.type.how}`, `- Avoid: ${x.avoid}`, '',
+      'For a product interface the direction is the material (surfaces, type, colour); the work itself (tables, forms, navigation) stays clear and dense.', ''];
+  }
   return [`## Direction: ${x.id}${why}`, x.idea, '',
     `- Grounds: at least ${x.grounds.min} different section grounds. ${x.grounds.how}`,
     `- Type: the h1 at least ${x.type.minPx}px tall at 1440 wide. ${x.type.how}`,
@@ -129,15 +139,17 @@ function photosBlock(d, { taste }) {
 }
 
 function conceptBlock(d) {
-  if (!d.direction) return [];
-  return ['## Concept (before any markup)', 'Write `.craft/concept.md` with three headings; the check reads it:', '',
+  if (!d.direction || ['app', 'docs'].includes(d.kind)) return [];
+  return ['## Concept (before any markup)', 'Write `.craft/concept.md` with five headings; the check reads it:', '',
     '```md', '# Idea', 'One or two sentences: the one thing only this subject has (its place, its process, a number, its people) and how this page shows it.',
-    '# Signature', 'Which set piece or effect carries that idea, and what moves when.',
-    '# Rejected', 'Three defaults this page will not use for this subject (for a cafe: cream and terracotta with a serif, three feature cards, a centred hero over a cup).', '```', ''];
+    '# Signature', 'Which set piece or effect carries that idea, and what moves when. Motion that tells the idea (time passing, a thing being made), not only things appearing.',
+    '# Rejected', 'Three defaults this page will not use for this subject (for a cafe: cream and terracotta with a serif, three feature cards, a centred hero over a cup).',
+    '# Breaks', 'One line per break of the direction, naming the element that carries it in backticks: `.hero-letterbox`, `#tape-hours`. The check looks for each one.',
+    '# Components', `The dealt library component${d.motion.component ? ` (${d.motion.component.id})` : ''} and any other library piece you used: where it sits, what you changed, its source.`, '```', ''];
 }
 
-export function briefMd(d, { kitDir, checkCmd, taste = null, setPiecesRef = 'references/set-pieces.md' }) {
-  const lines = [`# Direction for this build (${d.kind}; moods: ${d.moods.join(', ') || 'none given'})`, '', ...directionBlock(d)];
+export function briefMd(d, { kitDir, checkCmd, taste = null, setPiecesRef = 'references/set-pieces.md', componentsRef = 'references/components.md', surfacesRef = 'references/surfaces.md' }) {
+  const lines = [`# Direction for this build (${d.kind}; moods: ${d.moods.join(', ') || 'none given'})`, '', ...directionBlock(d), ...languageBlock(d)];
   if (d.palette) {
     const r = d.palette.roles;
     lines.push(`## Palette: ${d.palette.id} (${d.palette.scheme})`, d.palette.note, '',
@@ -155,13 +167,15 @@ export function briefMd(d, { kitDir, checkCmd, taste = null, setPiecesRef = 'ref
   const c = d.composition;
   lines.push(`## Composition: ${c.id}`, c.idea, '', `First screen: ${c.firstScreen}`, '',
     'Sections, in order (rename them for the subject; keep the pacing):', ...c.sections.map((s, i) => `${i + 1}. ${s}`), '');
-  lines.push(...conceptBlock(d), ...photosBlock(d, { taste }));
+  lines.push(...conceptBlock(d), ...pagesBlock(d, { setPiecesRef }), ...platformBlock(d), ...referencesBlock(d), ...photosBlock(d, { taste }));
   lines.push('## Motion', motionBlock(d, setPiecesRef),
     '- Entrance: data-enter on 3-6 first-screen elements in reading order (nav, headline, line, action, visual); done by 1.5 s.',
     '- Press feedback: data-press on every button and button-like link.', '');
+  lines.push(...componentBlock(d, { componentsRef }), ...tellsBlock());
   lines.push('## Start from the blueprint',
     `${kitDir}/blueprint.html is this composition as a working page: layout, scale, sticky scenes and kit attributes already wired. Copy its structure into your page or components, replace every {{...}} (the check fails on any left), and build every .visual for real. Restyle details freely; keep the skeleton and the scale.`, '',
-    '## Files', `Kit copied to ${kitDir}: tokens.css, craft.css, layouts.css, set-pieces.css, craft-motion.js (+ motion/), blueprint.html. Load tokens.css, craft.css, layouts.css, set-pieces.css in that order, then call init(document) once.`, '',
-    '## Done means', `\`${checkCmd}\` prints RESULT: PASS, and you opened the screenshots it lists.`);
+    '## Files', `Kit copied to ${kitDir}: tokens.css, craft.css, layouts.css, set-pieces.css, surfaces.css, craft-motion.js (+ motion/), blueprint.html. Load tokens.css, craft.css, layouts.css, set-pieces.css, surfaces.css in that order, then call init(document) once. Glass, bento, riso, mono and page transitions: ${surfacesRef}.`, '',
+    ...finishBlock(),
+    '## Done means', `\`${checkCmd}\` prints RESULT: PASS, you opened the screenshots it lists, and the finishing passes above are done.`);
   return `${lines.join('\n')}\n`;
 }

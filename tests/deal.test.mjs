@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { hexToRgb, isCream } from '../skills/frontend-craft/scripts/lib/color.mjs';
-import { RECENT, RECENT_DIRECTIONS, SCROLL_STORIES, SET_PIECES, deal, loadLibrary, rngFrom, summarize } from '../skills/frontend-craft/scripts/lib/deal.mjs';
+import {
+  RECENT, RECENT_DIRECTIONS, SCROLL_STORIES, SET_PIECES, deal, dealSetPieces, loadLibrary, normalizePages, pickComponent, rngFrom, summarize,
+} from '../skills/frontend-craft/scripts/lib/deal.mjs';
 import { googleFontsUrl, nextFont, tokensCss } from '../skills/frontend-craft/scripts/lib/render.mjs';
 
 const lib = loadLibrary();
@@ -39,7 +41,7 @@ test('mood filtering keeps palettes on mood unless the direction is a wildcard',
   }
 });
 
-test('websites get an art direction and two set pieces; app and docs get neither', () => {
+test('websites get an art direction and two set pieces; apps a product direction without set pieces; docs none', () => {
   for (let s = 1; s <= 40; s += 1) {
     const site = run(s);
     assert.ok(site.direction, 'a landing is dealt a direction');
@@ -49,11 +51,12 @@ test('websites get an art direction and two set pieces; app and docs get neither
       assert.ok(site.direction.setPieces.includes(id), `${id} comes from ${site.direction.id}`);
     }
     if (site.direction.scheme !== 'any') assert.equal(site.palette.scheme, site.direction.scheme, `${site.direction.id} on ${site.palette.id}`);
-    for (const kind of ['app', 'docs']) {
-      const d = deal({ lib, kind, moods: ['calm'], rng: rngFrom(s) });
-      assert.equal(d.direction, null);
-      assert.deepEqual(d.motion.setPieces, []);
-    }
+    const app = deal({ lib, kind: 'app', moods: ['calm'], rng: rngFrom(s) });
+    assert.ok(app.direction.modes.includes('operate'), app.direction.id);
+    assert.deepEqual(app.motion.setPieces, []);
+    const docs = deal({ lib, kind: 'docs', moods: ['calm'], rng: rngFrom(s) });
+    assert.equal(docs.direction, null);
+    assert.deepEqual(docs.motion.setPieces, []);
   }
 });
 
@@ -153,4 +156,52 @@ test('the dealt type always shares a mood with the dealt palette', () => {
     const d = deal({ lib, kind: 'event', moods: ['music', 'festive', 'culture'], rng: rngFrom(s) });
     assert.ok(d.type.moods.some((m) => d.palette.moods.includes(m)), `${d.palette.id} + ${d.type.id}`);
   }
+});
+
+test('a multi-page site gets two set pieces per page and never the same piece twice', () => {
+  for (let s = 1; s <= 60; s += 1) {
+    const d = deal({ lib, kind: 'site', moods: ['food'], rng: rngFrom(s), pages: ['/', 'menu', '/about', '/visit'] });
+    assert.deepEqual(d.pages.map((p) => p.path), ['/', '/menu', '/about', '/visit']);
+    const all = d.pages.flatMap((p) => p.setPieces);
+    assert.equal(all.length, 8);
+    assert.equal(new Set(all).size, 8, all.join(' '));
+    assert.ok(d.pages[0].setPieces.every((id) => d.direction.setPieces.includes(id)), 'the home page takes the direction\'s own pieces');
+    assert.deepEqual(d.motion.setPieces, d.pages[0].setPieces);
+  }
+  assert.deepEqual(normalizePages('menu,/visit'), ['/', '/menu', '/visit']);
+});
+
+test('every build is dealt a library component that fits its direction and its mode', () => {
+  for (let s = 1; s <= 60; s += 1) {
+    const web = deal({ lib, kind: 'landing', moods: ['food'], rng: rngFrom(s) });
+    assert.ok(web.motion.component, 'a component is dealt');
+    assert.ok(web.motion.component.fits.includes(web.direction.id), `${web.motion.component.id} fits ${web.direction.id}`);
+    assert.ok(web.motion.component.modes.includes('persuade'));
+    const app = deal({ lib, kind: 'app', moods: ['tech'], rng: rngFrom(s) });
+    assert.ok(app.motion.component.modes.includes('operate'), app.motion.component.id);
+  }
+  const pinned = deal({ lib, kind: 'landing', moods: [], rng: rngFrom(1), pins: { component: 'ScrollVelocity' } });
+  assert.equal(pinned.motion.component.id, 'ScrollVelocity');
+});
+
+test('set pieces and components used by the last builds come back only when nothing else is left', () => {
+  const direction = lib.directions.find((d) => d.id === 'kinetic-type');
+  const history = [{ setPieces: ['letters', 'type-pass'] }, { setPieces: ['iris', 'word-track'] }];
+  for (let s = 1; s <= 40; s += 1) {
+    const [pieces] = dealSetPieces(direction, { rng: rngFrom(s), history });
+    for (const id of pieces) assert.ok(!['letters', 'type-pass', 'iris', 'word-track'].includes(id), `${id} was used last time`);
+  }
+  const used = lib.components.filter((c) => c.fits.includes('kinetic-type')).slice(0, 3).map((c) => ({ component: c.id }));
+  for (let s = 1; s <= 30; s += 1) {
+    const c = pickComponent(lib.components, { direction, mode: 'persuade', rng: rngFrom(s), history: used });
+    assert.ok(!used.some((u) => u.component === c.id), c.id);
+  }
+});
+
+test('the deal carries the page language and summarize records the pieces for the next build', () => {
+  const d = deal({ lib, kind: 'landing', moods: ['food'], rng: rngFrom(7), lang: 'es' });
+  assert.equal(d.lang, 'es');
+  const sum = summarize(d);
+  assert.deepEqual(sum.setPieces, d.motion.setPieces);
+  assert.equal(sum.component, d.motion.component.id);
 });

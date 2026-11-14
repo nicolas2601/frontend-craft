@@ -11,9 +11,13 @@ export const RECENT_DIRECTIONS = 4;
 const MIN_NEAR = 3;
 /** How often a website is dealt a direction outside the subject's usual moods, on purpose. */
 export const RISK = { safe: 0, bold: 0.4, wild: 0.8 };
-export const SET_PIECES = ['iris', 'type-pass', 'zoom', 'curtain', 'fan', 'letters', 'develop', 'tilt', 'split'];
+export const SET_PIECES = ['iris', 'type-pass', 'zoom', 'curtain', 'fan', 'letters', 'develop', 'tilt', 'split', 'word-track', 'word-swap', 'type-zoom', 'word-mask', 'bento-assemble'];
+/** Set pieces and components used by the last few builds are dealt again only when nothing else fits. */
+export const RECENT_PIECES = 3;
 export const SCROLL_STORIES = ['scroll-words', 'stack', 'scrub', 'rail'];
-export const KINDS = ['landing', 'product', 'portfolio', 'event', 'venue', 'brand', 'campaign', 'app', 'docs'];
+export const KINDS = ['landing', 'site', 'product', 'portfolio', 'event', 'venue', 'brand', 'campaign', 'app', 'docs'];
+/** Kinds that build a product interface rather than persuade: no scroll set pieces, no photograph floor. */
+export const OPERATE_KINDS = ['app', 'docs'];
 
 export function loadLibrary(dir = LIB) {
   const read = (f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
@@ -23,6 +27,7 @@ export function loadLibrary(dir = LIB) {
     compositions: read('compositions.json').compositions,
     signatures: read('signatures.json').signatures,
     directions: read('directions.json').directions,
+    components: fs.existsSync(path.join(dir, 'components.json')) ? read('components.json').components : [],
   };
 }
 
@@ -66,7 +71,7 @@ export function typeFits(pairing, palette, creamBg) {
 }
 
 function recentIds(history, key, n = RECENT) {
-  return new Set(history.slice(-n).map((h) => h[key]).filter(Boolean));
+  return new Set(history.slice(-n).flatMap((h) => h[key] ?? []).filter(Boolean));
 }
 
 function shuffled(list, rng) {
@@ -82,12 +87,13 @@ function shuffled(list, rng) {
  * The art direction. With probability RISK[risk] it is taken from outside the subject's moods, so
  * the same brief does not always land on the same look; the last few directions are never repeated.
  */
-export function pickDirection(directions, { moods = [], history = [], rng, risk = 'bold', pin }) {
+export function pickDirection(directions, { moods = [], history = [], rng, risk = 'bold', pin, mode = 'persuade' }) {
   const pinned = directions.find((d) => d.id === pin);
   if (pinned) return { direction: pinned, wildcard: false };
   const recent = recentIds(history, 'direction', RECENT_DIRECTIONS);
-  const fresh = directions.filter((d) => !recent.has(d.id));
-  const pool = fresh.length ? fresh : directions;
+  const usable = directions.filter((d) => (d.modes ?? ['persuade']).includes(mode));
+  const fresh = usable.filter((d) => !recent.has(d.id));
+  const pool = fresh.length ? fresh : usable;
   const onMood = (d) => d.moods.some((m) => moods.includes(m));
   const near = moods.length ? pool.filter(onMood) : [...pool];
   const far = moods.length ? pool.filter((d) => !onMood(d)) : [];
@@ -103,11 +109,13 @@ export function pickDirection(directions, { moods = [], history = [], rng, risk 
 /**
  * @param {{ lib, kind:string, moods:string[], history?:object[], rng:() => number, pins?:object, brand?:boolean }} o
  */
-export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = false, risk = 'bold' }) {
+export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = false, risk = 'bold', lang = null, pages = [] }) {
   const byId = (list, id) => list.find((x) => x.id === id) ?? null;
-  const persuade = !['app', 'docs'].includes(kind);
-  const dealt = persuade && lib.directions?.length
-    ? pickDirection(lib.directions, { moods, history, rng, risk, pin: pins.direction })
+  const persuade = !OPERATE_KINDS.includes(kind);
+  const mode = persuade ? 'persuade' : 'operate';
+  const dealt = kind !== 'docs' && lib.directions?.length
+    // A product interface stays on the subject's moods unless the risk is wild.
+    ? pickDirection(lib.directions, { moods, history, rng, risk: persuade ? risk : risk === 'wild' ? 'bold' : 'safe', pin: pins.direction, mode })
     : { direction: null, wildcard: false };
   const { direction, wildcard } = dealt;
   // A wildcard direction brings its own moods; otherwise the subject's moods lead (the direction's when none are given).
@@ -122,7 +130,7 @@ export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = f
   const type = brand ? null : (byId(lib.pairings, pins.type)
     ?? pick(lib.pairings, { moods: typeMoods, rng, recent: recentIds(history, 'type'), allow: (p) => typeFits(p, palette, creamBg) && serifOk(p) }));
   const composition = byId(lib.compositions, pins.composition)
-    ?? pick(lib.compositions, { rng, recent: recentIds(history, 'composition'), allow: (c) => c.kinds.includes(kind) });
+    ?? pick(lib.compositions, { rng, recent: recentIds(history, 'composition'), allow: (c) => c.kinds.includes(kind === 'site' ? 'landing' : kind) });
 
   const candidates = composition.signatures;
   const recentSig = recentIds(history, 'signature');
@@ -133,11 +141,14 @@ export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = f
   if (persuade && ![signature, ...supports].some((s) => SCROLL_STORIES.includes(s))) supports[1] = SCROLL_STORIES[Math.floor(rng() * 3)];
 
   const sig = (id) => lib.signatures.find((s) => s.id === id);
-  const setPieces = direction ? shuffled(direction.setPieces, rng).slice(0, 2) : [];
+  const sitePages = kind === 'site' ? normalizePages(pages) : [];
+  const perPage = persuade && direction ? dealSetPieces(direction, { rng, history, pages: Math.max(1, sitePages.length) }) : [[]];
+  const component = pickComponent(lib.components ?? [], { direction, mode, rng, history, pin: pins.component });
   return {
-    version: 2,
+    version: 3,
     kind,
     moods,
+    lang,
     brand,
     risk: direction ? risk : null,
     direction,
@@ -145,8 +156,43 @@ export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = f
     palette,
     type,
     composition,
-    motion: { signature: sig(signature), supports: supports.map(sig), setPieces },
+    pages: sitePages.map((p, i) => ({ path: p, setPieces: perPage[i] })),
+    motion: { signature: sig(signature), supports: supports.map(sig), setPieces: perPage[0], component },
   };
+}
+
+/** Page paths for a multi-page site: "/", "/menu", ... in the order given, at most 8, no repeats. */
+export function normalizePages(pages = []) {
+  const list = (Array.isArray(pages) ? pages : String(pages).split(','))
+    .map((p) => String(p).trim()).filter(Boolean).map((p) => (p.startsWith('/') ? p : `/${p}`));
+  const out = [...new Set(list.length ? list : ['/'])].slice(0, 8);
+  return out.includes('/') ? out : ['/', ...out].slice(0, 8);
+}
+
+/**
+ * Two set pieces per page, never the same piece on two pages. The direction's own pieces come first;
+ * pieces the last few builds used come last, so the next build moves differently.
+ */
+export function dealSetPieces(direction, { rng, history = [], pages = 1 }) {
+  const recent = recentIds(history, 'setPieces', RECENT_PIECES);
+  const order = (list) => [...shuffled(list.filter((id) => !recent.has(id)), rng), ...shuffled(list.filter((id) => recent.has(id)), rng)];
+  const own = order(direction.setPieces);
+  const rest = order(SET_PIECES.filter((id) => !direction.setPieces.includes(id)));
+  const queue = [...own, ...rest];
+  return Array.from({ length: pages }, () => [queue.shift(), queue.shift()].filter(Boolean));
+}
+
+/** One library component that fits the direction (or the mode when there is none), not one of the last few. */
+export function pickComponent(components, { direction, mode, rng, history = [], pin }) {
+  const pinned = components.find((c) => c.id === pin);
+  if (pinned) return pinned;
+  const fits = components.filter((c) => c.modes.includes(mode) && (!direction || c.fits.includes(direction.id)));
+  const pool = fits.length ? fits : components.filter((c) => c.modes.includes(mode));
+  if (!pool.length) return null;
+  const recent = recentIds(history, 'component', RECENT_PIECES);
+  const fresh = pool.filter((c) => !recent.has(c.id));
+  const from = fresh.length ? fresh : pool;
+  return from[Math.floor(rng() * from.length)];
 }
 
 export function historyFile() {
@@ -156,5 +202,6 @@ export function historyFile() {
 }
 
 export function summarize(d) {
-  return { direction: d.direction?.id, palette: d.palette?.id, type: d.type?.id, composition: d.composition.id, signature: d.motion.signature.id };
+  const setPieces = d.pages?.length ? d.pages.flatMap((p) => p.setPieces) : d.motion.setPieces ?? [];
+  return { direction: d.direction?.id, palette: d.palette?.id, type: d.type?.id, composition: d.composition.id, signature: d.motion.signature.id, setPieces, component: d.motion.component?.id };
 }
