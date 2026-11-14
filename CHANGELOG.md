@@ -1,5 +1,31 @@
 # Changelog
 
+## 2.4.0 - 2026-11-14
+
+Hero loops: a real subject in real light gets a short, seamless, muted video in the first screen, made for free.
+
+### Why
+The premium sites studied for 2.3 (dinamosites and the award sites it collects) open on a living object, and
+for a place, a dish or a product that object is footage, not a shader. Generated video was only reachable
+through paid tools, and an autoplaying clip brings its own failures: it keeps playing under reduced motion,
+cannot be paused, or shows a blank box before it loads.
+
+### Added
+- `references/hero-video.md`: three free routes (a still from Z-Image Turbo animated with Wan 2.2
+  first-last-frame over the Hugging Face MCP server; coded films with HyperFrames or bang-motion; the client's
+  own or free-licence footage), what to install, the markup and the rules. Paid generators only on request.
+- `scripts/video.mjs`: a clip becomes a 30 fps loop at the page's size (H.264 mp4, VP9 webm, webp poster),
+  with a crossfade, pingpong or no seam; `--doctor` lists missing tools. Wan does not return its start frame
+  exactly (24 dB between the last and first frame of the verified clip, against about 37 dB between
+  neighbours); the crossfade, applied after the frame-rate change, brings the seam to 39 dB.
+- Kit `data-loop`: plays a muted video only on screen and in a visible tab, holds on the poster under reduced
+  motion and Save-Data, and pairs with a `data-loop-toggle` button whose pause sticks (WCAG 2.2.2).
+  `.craft-loop` in `surfaces.css`.
+- Check: `video-reduced` and `video-muted` (FAIL), `video-pause` and `video-poster` (WARN). A hero loop that
+  played in the first screen stands in for the dealt scene in `deal-scene`.
+- `references/motion.md` documents `data-scene` and `data-loop`; `references/checks.md` gains the scene and
+  video rows that 2.3 left out.
+
 ## 2.3.0 - 2026-11-14
 
 Range: multi-page sites, platforms, a live first screen, library components, and a check that fails the AI tells.

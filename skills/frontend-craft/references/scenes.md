@@ -35,3 +35,5 @@ Load `surfaces.css` and call the kit's `init(document)`. Give `.craft-scene` a s
 ## When the brief deals a scene you cannot use
 
 A scene is dealt with the direction. If the subject truly has no use for it (a legal firm and liquid chrome), re-deal with `--pin scene=<other>` from the direction's list and say why in the concept's `# Signature`.
+
+A real subject in real light (a place, a dish, a product on a plinth, steam, cloth) is better as a hero loop: a short, seamless, muted clip made free from a still (`hero-video.md`). It counts as the page's living object in place of the scene.

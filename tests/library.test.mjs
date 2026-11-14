@@ -100,3 +100,14 @@ test('every direction names hero scenes the kit can draw', async () => {
   }
   for (const id of SCENES) assert.match(doc, new RegExp(`\`${id}\``), `scenes.md documents ${id}`);
 });
+
+test('the hero loop is wired: kit effect, attribute docs and every video rule in checks.md and hero-video.md', async () => {
+  const { effects } = await import('../skills/frontend-craft/kit/craft-motion.js');
+  assert.ok(effects.includes('loop') && effects.includes('scene'));
+  const read = (f) => fs.readFileSync(path.join(SKILL_DIR, 'references', f), 'utf8');
+  assert.match(read('motion.md'), /`data-loop`/);
+  for (const id of ['video-reduced', 'video-muted', 'video-pause', 'video-poster']) {
+    assert.match(read('checks.md'), new RegExp(`\`${id}\``), `checks.md: ${id}`);
+    assert.match(read('hero-video.md'), new RegExp(`\`${id}\``), `hero-video.md: ${id}`);
+  }
+});

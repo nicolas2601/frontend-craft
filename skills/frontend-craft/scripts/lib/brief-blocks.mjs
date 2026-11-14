@@ -51,7 +51,8 @@ export function sceneBlock(d, { scenesRef }) {
   return [`## Hero scene: ${s}`, `The first screen carries one live object: ${SCENE_JOBS[s]}. It is the page's signature image, not a background behind body text.`, '',
     '```html', markup, '```', '',
     `- Give it real room (at least half the first screen) beside or under the headline; the words sit on solid ground or strong contrast, never on the busiest part. Kit: \`surfaces.css\` (.craft-scene) and \`craft-motion.js\` (data-scene). It pauses off screen, renders a still under reduced motion and keeps its poster without WebGL. Rules and variants: ${scenesRef}.`,
-    '- Pair it with huge type and one or two real facts set as HTML on top of the scene (a weight, a time, a count), not decorative labels.', ''];
+    '- Pair it with huge type and one or two real facts set as HTML on top of the scene (a weight, a time, a count), not decorative labels.',
+    '- A real subject in real light (a place, a dish, a product, steam, cloth) can take a hero loop instead: a seamless muted clip made free from a still with the Hugging Face MCP (Z-Image Turbo, then Wan 2.2 first-last-frame) and `scripts/video.mjs`. Markup, install and rules: references/hero-video.md.', ''];
 }
 
 export function referencesBlock(d) {

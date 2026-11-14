@@ -1,5 +1,15 @@
 # Architecture and decisions
 
+## 2.4: hero loops
+
+A first screen can carry footage instead of a shader when the subject is real (`references/hero-video.md`).
+Generation stays free: the Hugging Face MCP server's Z-Image Turbo makes the still and Wan 2.2
+first-last-frame animates it with the same frame at both ends. `scripts/video.mjs` closes the seam with a
+crossfade after motion interpolation (the generated end frame drifts from the start frame) and encodes mp4,
+webm and a poster. The kit's `data-loop` owns playback (on screen only, poster under reduced motion and
+Save-Data, a sticky pause), and the check reads every looping video in the normal pass (muted, poster, a pause
+control, whether it played in the first screen) and in the reduced-motion pass (still playing).
+
 ## 2.3: range and the AI tells
 
 2.3 widens what a deal can be and what the check refuses. Directions carry `modes` (persuade for websites,
