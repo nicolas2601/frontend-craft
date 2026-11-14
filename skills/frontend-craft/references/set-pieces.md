@@ -124,6 +124,70 @@ One half holds still (the words, or one photograph) while the other half scrolls
 </section>
 ```
 
+## word-track
+
+One long line of huge words crosses the screen as the reader scrolls. Use it as the opening statement of a page, under a real heading. The line is decorative (`aria-hidden`); the heading carries the meaning. Without JavaScript, or under reduced motion, the words wrap and stay on the screen.
+
+```html
+<section class="sp-word-track" data-pin style="--pin-length: 240svh">
+  <div class="sp-word-track__stage" data-scrub="pinned">
+    <h2>Tostado, molido, servido</h2>
+    <p class="sp-word-track__line" aria-hidden="true">Masa madre · Horneado · Vitrina · Mesa · Masa madre · Horneado · </p>
+  </div>
+</section>
+```
+
+## word-swap
+
+A sentence whose one slot changes word as the reader scrolls. Set `--n` on the sentence (the number of options) and `--i` on each option (from 0). The full sentence is in a screen-reader-only span; the visible parts are `aria-hidden`. Without JavaScript only the last option shows.
+
+```html
+<p class="sp-word-swap" data-scrub style="--n: 3">
+  <span class="sp-word-swap__sr">Pan para el desayuno, para compartir o para el domingo.</span>
+  <span aria-hidden="true">Pan para </span><span class="sp-word-swap__slot" aria-hidden="true"><span style="--i: 0">el desayuno</span><span style="--i: 1">compartir</span><span style="--i: 2">el domingo</span></span>.
+</p>
+```
+
+## type-zoom
+
+One short word fills the screen, zooms through and fades out, uncovering the section's content. Aim the zoom at a letter's counter with `--zoom-x` and `--zoom-y` on the stage. Without JavaScript the word is gone and the content is readable.
+
+```html
+<section class="sp-type-zoom" data-pin style="--pin-length: 220svh">
+  <div class="sp-type-zoom__stage" data-scrub="pinned" style="--zoom-x: 38%; --zoom-y: 46%">
+    <div class="sp-type-zoom__content">
+      <h2 class="craft-display">Cuarenta horas de fermento</h2>
+      <p>Cada hogaza empieza el martes y sale del horno el jueves.</p>
+    </div>
+    <p class="sp-type-zoom__word" aria-hidden="true">Pan</p>
+  </div>
+</section>
+```
+
+## word-mask
+
+A heading whose lines rise out of their own masks, one after another, as it comes into view. Set `--i` on each line (from 0). A heading can have up to nine lines at the default `--stagger: 0.08`; set a smaller `--stagger` on the heading for longer ones. The heading keeps `aria-label` because its lines are split.
+
+```html
+<h2 class="sp-word-mask craft-display" data-scrub aria-label="Lo que sale del horno hoy">
+  <span class="sp-word-mask__line" style="--i: 0" aria-hidden="true"><span>Lo que sale</span></span>
+  <span class="sp-word-mask__line" style="--i: 1" aria-hidden="true"><span>del horno hoy</span></span>
+</h2>
+```
+
+## bento-assemble
+
+The tiles of a bento scatter and settle into the grid with the scroll. Each tile is a `sp-bento-assemble__tile` with one size modifier (`__lead` 8 by 2, `__tall` 4 by 2, `__wide` 7, `__small` 5). The scatter comes from the `:nth-child` rules, and tiles keep their content. Below 640 px the grid is one column and the scatter is reduced to a fifth of its distance.
+
+```html
+<div class="sp-bento-assemble" data-scrub>
+  <article class="sp-bento-assemble__tile sp-bento-assemble__lead"><h3>Masa madre</h3><p>…</p></article>
+  <article class="sp-bento-assemble__tile sp-bento-assemble__tall"><h3>Centeno</h3><p>…</p></article>
+  <article class="sp-bento-assemble__tile sp-bento-assemble__wide"><h3>Croissant</h3><p>…</p></article>
+  <article class="sp-bento-assemble__tile sp-bento-assemble__small"><h3>Café</h3><p>…</p></article>
+</div>
+```
+
 ## Rules
 
 - Never put two kit effects on one element (`data-scrub` and `data-parallax` on the same node: the second one wins and the first stops). Nest them instead.
