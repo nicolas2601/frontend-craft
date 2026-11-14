@@ -87,7 +87,7 @@ async function main() {
   const deal = readJson(path.join(out, 'deal.json'));
   const conceptFile = path.join(out, 'concept.md');
   const concept = fs.existsSync(conceptFile) ? fs.readFileSync(conceptFile, 'utf8') : null;
-  const check = (st) => runCheck({ target: st.target, kind: st.kind ?? deal?.kind ?? 'landing', deal: deal?.brand ? null : deal, concept, out, requireDeal: !st.kitOnly && !deal?.brand });
+  const check = (st) => runCheck({ target: st.target, pages: st.pages ?? deal?.pages?.map((p) => p.path), kind: st.kind ?? deal?.kind ?? 'landing', deal: deal?.brand ? null : deal, concept, out, requireDeal: !st.kitOnly && !deal?.brand });
 
   if (!args.hook) {
     process.chdir(project);

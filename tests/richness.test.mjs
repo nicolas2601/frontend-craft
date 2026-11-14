@@ -5,7 +5,7 @@ import { loadLibrary } from '../skills/frontend-craft/scripts/lib/deal.mjs';
 import { distinctGrounds, parseConcept, richnessRules } from '../skills/frontend-craft/scripts/lib/rules-richness.mjs';
 
 const direction = loadLibrary().directions.find((d) => d.id === 'color-block');
-const CONCEPT = '# Idea\nThe roastery sits on a plateau above a canyon, so the page climbs from the canyon floor to the cup in four colour fields.\n# Signature\nThe iris opens the accent field at the roast.\n# Rejected\nCream, serif, cards.\n';
+const CONCEPT = '# Idea\nThe roastery sits on a plateau above a canyon, so the page climbs from the canyon floor to the cup in four colour fields.\n# Signature\nThe iris opens the accent field at the roast.\n# Rejected\nCream, serif, cards.\n# Breaks\n1. `.straddle` sits half on each field.\n2. `#one-word` fills its section.\n# Components\nScrollVelocity runs the origins band under the hero.\n';
 const rich = {
   richness: { pictures: 5, fullBleed: true, grounds: [[17, 17, 17], [255, 90, 54], [243, 239, 230], [29, 27, 25], 'picture'], setPieces: ['iris', 'tilt'] },
   doc: { h1: { size: 180 } },
@@ -20,10 +20,11 @@ test('close colours count as one ground and pictures as one more', () => {
   assert.equal(distinctGrounds([[255, 255, 255], [0, 0, 0], [255, 90, 54]]), 3);
 });
 
-test('the concept needs its three sections and a real idea', () => {
+test('the concept needs its five sections, a real idea and the elements that carry the breaks', () => {
   assert.deepEqual(parseConcept(CONCEPT).missing, []);
   assert.ok(parseConcept(CONCEPT).ideaWords >= 12);
-  assert.deepEqual(parseConcept('# Idea\nA cafe.\n').missing, ['signature', 'rejected']);
+  assert.deepEqual(parseConcept(CONCEPT).breaks, ['.straddle', '#one-word']);
+  assert.deepEqual(parseConcept('# Idea\nA cafe.\n').missing, ['signature', 'rejected', 'breaks', 'components']);
   assert.equal(parseConcept(null), null);
 });
 
@@ -50,4 +51,17 @@ test('full bleed is only asked of directions that want it', () => {
   const noBleed = { ...rich.richness, fullBleed: false, pictures: 6, grounds: [[17, 17, 17], [255, 90, 54]] };
   assert.ok(ids(richnessRules({ ...rich, deal, richness: noBleed })).includes('rich-full-bleed'));
   assert.ok(!ids(richnessRules({ ...rich, richness: { ...rich.richness, fullBleed: false } })).includes('rich-full-bleed'));
+});
+
+test('a concept with breaks but no element, or without the dealt component, fails', () => {
+  const noSel = CONCEPT.replace('1. `.straddle` sits half on each field.\n2. `#one-word` fills its section.', 'A photo straddles two fields.');
+  assert.deepEqual(ids(richnessRules({ ...rich, concept: noSel })), ['concept-thin']);
+  const component = { id: 'TextPressure', add: { tsTailwind: 'https://reactbits.dev/r/TextPressure-TS-TW' } };
+  const dealt = { ...rich.deal, motion: { ...rich.deal.motion, component } };
+  assert.deepEqual(ids(richnessRules({ ...rich, deal: dealt })), ['deal-component']);
+  assert.deepEqual(ids(richnessRules({ ...rich, deal: dealt, concept: CONCEPT.replace('ScrollVelocity', 'TextPressure') })), []);
+});
+
+test('apps and docs are not held to the photograph floor', () => {
+  assert.deepEqual(richnessRules({ ...rich, richness: { ...rich.richness, pictures: 0 }, kind: 'app' }), []);
 });

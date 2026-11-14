@@ -6,6 +6,7 @@ import {
   probeCss, probeDocument, probeFold, probeInvisible, probeLook, probeMotionState, probeOverflow, probeSticky, probeTargets, probeText,
 } from './probes.js';
 import { probeRichness, probeStickySections } from './probes-richness.js';
+import { probeSlop } from './probes-slop.js';
 
 const MAX_SCROLL_PAIRS = 10;
 
@@ -89,7 +90,7 @@ async function scrollLinked(s, max, vh) {
   return { linked: [...linked], sections };
 }
 
-export async function normalPass(browser, url, shotsDir) {
+export async function normalPass(browser, url, shotsDir, { selectors = [] } = {}) {
   const s = await prepare(browser);
   const runtime = watchRuntime(s);
   await setViewport(s, 1440);
@@ -115,6 +116,7 @@ export async function normalPass(browser, url, shotsDir) {
   const { max, vh } = await scrollThrough(s, 70);
   const after = await s.run(probeMotionState);
   facts.richness = await s.run(probeRichness); // after the scroll, so lazy pictures have loaded
+  facts.slop = await s.run(probeSlop, selectors);
   const reveals = changed(before, after, (row) => Number(row[9]) > vh && Number(row[0]) < 0.2).length;
   const { linked, sections } = await scrollLinked(s, max, vh);
   const sticky = await s.run(probeSticky);

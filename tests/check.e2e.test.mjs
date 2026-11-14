@@ -41,7 +41,7 @@ const directionDeal = (id, setPieces) => {
   const direction = loadLibrary().directions.find((d) => d.id === id);
   return { version: 2, kind: 'landing', direction, wildcard: false, palette: null, type: null, motion: { setPieces } };
 };
-const CONCEPT = '# Idea\nA late bar that roasts on Thursdays: the page runs from the plateau where the beans grow to the bar at night.\n# Signature\nThe zoom opens the bar photograph; the fan spreads the four lots of the month.\n# Rejected\nCream and terracotta, three feature cards, a centred hero over a cup.\n';
+const CONCEPT = '# Idea\nA late bar that roasts on Thursdays: the page runs from the plateau where the beans grow to the bar at night.\n# Signature\nThe zoom opens the bar photograph; the fan spreads the four lots of the month.\n# Rejected\nCream and terracotta, three feature cards, a centred hero over a cup.\n# Breaks\n1. `.hero` headline overlaps the photograph.\n2. `.sp-type-pass` band runs between two sections.\n# Components\nNone dealt to this fixture.\n';
 
 test('every set piece renders, moves and passes the richness floor of its direction', { skip: !chrome, timeout: 180000 }, async () => {
   const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/expressive/index.html' }, kind: 'landing', deal: directionDeal('night-poster', ['zoom', 'fan']), concept: CONCEPT, out: out() });
@@ -56,4 +56,24 @@ test('a flat page fails the richness floor of a dealt direction', { skip: !chrom
   const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/good/index.html' }, kind: 'landing', deal: directionDeal('cinematic-chapters', ['curtain', 'zoom']), out: out(), quick: true });
   const ids = new Set(r.findings.filter((x) => x.level === 'FAIL').map((x) => x.id));
   for (const id of ['rich-pictures', 'rich-full-bleed', 'deal-set-piece', 'concept-missing']) assert.ok(ids.has(id), `missing ${id}; got ${[...ids].join(', ')}`);
+});
+
+test('a multi-page site is checked page by page, with the new set pieces, surfaces and its breaks found on any page', { skip: !chrome, timeout: 400000 }, async () => {
+  const direction = { id: 'range-test', grounds: { min: 2, how: '' }, type: { minPx: 60, how: '' }, pictures: { min: 3, fullBleed: false }, setPieces: [] };
+  const pages = ['/tests/fixtures/range/index.html', '/tests/fixtures/range/menu.html'];
+  const deal = { kind: 'site', lang: 'es', direction, motion: { setPieces: [] },
+    pages: [{ path: pages[0], setPieces: ['word-track', 'type-zoom'] }, { path: pages[1], setPieces: ['word-mask', 'develop'] }] };
+  const concept = '# Idea\nUna panadería de Cabecera que hornea de noche: la página va del horno a la mesa en dos páginas con el pan como protagonista.\n# Signature\nLa palabra Pan llena la pantalla y el zoom entra por su letra.\n# Rejected\nCrema y terracota, tres tarjetas iguales, un hero centrado.\n# Breaks\n1. `.sp-word-track` cruza la pantalla.\n2. `.craft-mono` lleva el recibo.\n# Components\nNinguno en este fixture.\n';
+  const r = await runCheck({ target: { root: ROOT }, pages, kind: 'site', deal, concept, out: out() });
+  assert.deepEqual(r.findings.filter((x) => x.level === 'FAIL'), []);
+  assert.equal(r.pages.length, 2);
+  for (const id of ['word-track', 'word-swap', 'type-zoom', 'bento-assemble']) assert.ok(r.pages[0].richness.setPieces.includes(id), id);
+  for (const id of ['word-mask', 'develop']) assert.ok(r.pages[1].richness.setPieces.includes(id), id);
+  assert.ok(!r.findings.some((x) => x.id === 'site-transitions'), 'the fixture has page transitions');
+});
+
+test('the AI tells fail: wrong language, slogans, two numbering systems, a tilted badge, one photograph twice', { skip: !chrome, timeout: 200000 }, async () => {
+  const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/tells/index.html' }, kind: 'landing', deal: { kind: 'landing', lang: 'es', direction: null, motion: { setPieces: [] } }, out: out(), quick: true });
+  const ids = new Set(r.findings.filter((x) => x.level === 'FAIL').map((x) => x.id));
+  for (const id of ['copy-lang', 'copy-formula', 'slop-numbering', 'slop-stamp', 'slop-repeat-photo']) assert.ok(ids.has(id), `missing ${id}; got ${[...ids].join(', ')}`);
 });

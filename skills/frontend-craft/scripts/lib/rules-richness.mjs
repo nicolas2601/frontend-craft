@@ -5,7 +5,8 @@ import { deltaE } from './color.mjs';
 const MIN_SCENES = 2;
 const MIN_IDEA_WORDS = 12;
 const SAME_GROUND = 0.06;
-const HEADINGS = ['idea', 'signature', 'rejected'];
+const HEADINGS = ['idea', 'signature', 'rejected', 'breaks', 'components'];
+const OPERATE_KINDS = ['app', 'docs'];
 
 const f = (level, id, msg, fix) => ({ level, id, msg, fix });
 
@@ -20,7 +21,7 @@ export function distinctGrounds(grounds = []) {
   return colours.length + (picture ? 1 : 0);
 }
 
-/** The concept file's three sections, and how many words the idea has. */
+/** The concept file's sections, how many words the idea has, the selectors named under # Breaks and the # Components text. */
 export function parseConcept(text) {
   if (!text) return null;
   const parts = {};
@@ -33,22 +34,29 @@ export function parseConcept(text) {
   const missing = HEADINGS.filter((k) => !Object.keys(parts).some((p) => p.startsWith(k)) || !(parts[Object.keys(parts).find((p) => p.startsWith(k))] ?? '').trim());
   const ideaKey = Object.keys(parts).find((p) => p.startsWith('idea'));
   const ideaWords = ideaKey ? parts[ideaKey].trim().split(/\s+/).filter(Boolean).length : 0;
-  return { missing, ideaWords };
+  const section = (k) => parts[Object.keys(parts).find((p) => p.startsWith(k))] ?? '';
+  const breaks = [...section('breaks').matchAll(/`([^`]{1,80})`/g)].map((m) => m[1].trim()).filter((sel) => /^[.#[a-z]/i.test(sel));
+  return { missing, ideaWords, breaks, components: section('components') };
 }
 
-function conceptRules(concept) {
+function conceptRules(concept, deal) {
   const parsed = parseConcept(concept);
-  if (!parsed) return [f('FAIL', 'concept-missing', 'no .craft/concept.md', 'write it before the markup: # Idea, # Signature, # Rejected (the brief shows the template)')];
+  if (!parsed) return [f('FAIL', 'concept-missing', 'no .craft/concept.md', 'write it before the markup: # Idea, # Signature, # Rejected, # Breaks, # Components (the brief shows the template)')];
   const out = [];
-  if (parsed.missing.length) out.push(f('FAIL', 'concept-thin', `.craft/concept.md has no ${parsed.missing.join(', ')} section`, 'give each of # Idea, # Signature and # Rejected its own lines'));
+  if (parsed.missing.length) out.push(f('FAIL', 'concept-thin', `.craft/concept.md has no ${parsed.missing.join(', ')} section`, 'give each of # Idea, # Signature, # Rejected, # Breaks and # Components its own lines'));
   else if (parsed.ideaWords < MIN_IDEA_WORDS) out.push(f('FAIL', 'concept-thin', `the idea is ${parsed.ideaWords} words`, 'name the one thing only this subject has and how the page shows it, in one or two full sentences'));
+  else if (!parsed.breaks.length) out.push(f('FAIL', 'concept-thin', '# Breaks names no element', 'under # Breaks, one line per break with the element that carries it in backticks, e.g. `.hero-letterbox`'));
+  const component = deal?.motion?.component;
+  if (component && !parsed.missing.includes('components') && !new RegExp(`\\b${component.id}\\b`, 'i').test(parsed.components)) {
+    out.push(f('FAIL', 'deal-component', `the dealt component ${component.id} is not under # Components in .craft/concept.md`, `add it (references/components.md: shadcn add ${component.add.tsTailwind}, or port its source) and say where it sits and what it does; use a different library piece only with the reason`));
+  }
   return out;
 }
 
 /** @param {{ richness?: object, doc: object, motion: object, deal?: object, concept?: string|null }} facts */
-export function richnessRules({ richness, doc, motion, deal, concept = null }) {
+export function richnessRules({ richness, doc, motion, deal, concept = null, kind }) {
   const x = deal?.direction;
-  if (!x || !richness) return [];
+  if (!x || !richness || OPERATE_KINDS.includes(kind ?? deal.kind)) return [];
   const out = [];
   const grounds = distinctGrounds(richness.grounds);
   if (grounds < x.grounds.min) out.push(f('FAIL', 'rich-grounds', `${grounds} distinct section ground(s) over ${richness.grounds.length} sections; the ${x.id} direction asks for ${x.grounds.min}`, x.grounds.how));
@@ -58,5 +66,5 @@ export function richnessRules({ richness, doc, motion, deal, concept = null }) {
   if ((motion.scenes ?? 0) < MIN_SCENES) out.push(f('FAIL', 'rich-scenes', `scroll-linked motion in ${motion.scenes ?? 0} section(s)`, `build the dealt set pieces (${deal.motion.setPieces.join(', ')}) in two different sections`));
   const missing = (deal.motion.setPieces ?? []).filter((id) => !(richness.setPieces ?? []).includes(id));
   if (missing.length) out.push(f('FAIL', 'deal-set-piece', `dealt set piece(s) not on the page: ${missing.map((id) => `sp-${id}`).join(', ')}`, 'build them from references/set-pieces.md with their sp- classes and data-scrub'));
-  return [...out, ...conceptRules(concept)];
+  return [...out, ...conceptRules(concept, deal)];
 }

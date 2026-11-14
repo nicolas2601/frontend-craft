@@ -10,7 +10,7 @@
     @font-face { font-family: 'Fixture Display'; src: local('DejaVu Sans Bold'), local('DejaVuSans-Bold'), local('Liberation Sans Bold'); font-weight: 700; }
     @font-face { font-family: 'Fixture Text'; src: local('DejaVu Sans'), local('DejaVuSans'), local('Liberation Sans'); font-weight: 400; }
     :root {
-      --c-bg: #f4efe6; --c-surface: #e9e2d4; --c-ink: #1d1b17; --c-muted: #5b554b;
+      --c-bg: #e8ebe4; --c-surface: #dde2d8; --c-ink: #1d1b17; --c-muted: #5b554b;
       --c-line: #d6cdbb; --c-accent: #c8462b; --c-accent-ink: #fbf7ef;
       --f-display: 'Fixture Display', sans-serif; --f-text: 'Fixture Text', sans-serif;
       --display-weight: 700; --display-tracking: -0.04em; --display-leading: 0.9;
@@ -38,6 +38,9 @@
     .riso-block { max-width: 40rem; }
     .riso-block img { width: 100%; height: auto; border-radius: var(--r-md); }
     .receipt { max-width: 40rem; font-size: var(--t-base); }
+    .pad { min-height: 80svh; }
+    .pad.on-ink { background: var(--c-ink); color: var(--c-bg); }
+    .pad.on-ink p { color: var(--c-bg); }
     footer { padding: var(--section) var(--gutter); border-top: 1px solid var(--c-line); }
     footer p { margin: 0; color: var(--c-muted); }
   </style>
@@ -61,7 +64,7 @@
 
   <section class="pad">
     <figure class="plate vt-hero" style="--vt-name: hero">
-      <img src="../../../skills/design-taste-frontend/assets/photos/img/m21913761-1200.webp" alt="Pan de masa madre recién sacado del horno" width="1200" height="800">
+      <img data-parallax="0.12" src="../../../skills/design-taste-frontend/assets/photos/img/m21913761-1200.webp" alt="Pan de masa madre recién sacado del horno" width="1200" height="800">
       <figcaption>Hogaza de masa madre, 900 g, tres días de fermento.</figcaption>
     </figure>
   </section>
@@ -82,7 +85,7 @@
     <p>Café de filtro, tostado los jueves y servido hasta el mediodía.</p>
   </section>
 
-  <section class="pad">
+  <section class="pad on-ink">
     <h2>Recibo de la semana</h2>
     <div class="craft-mono craft-mono--term receipt" role="group" aria-label="Pedido de ejemplo">pedido 0412
 masa madre 900 g ........ 18.000

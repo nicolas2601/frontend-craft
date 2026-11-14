@@ -1,9 +1,10 @@
 // Turns probe facts into findings. Pure: no browser, so every rule is unit-testable.
 import { deltaE, hexToRgb, isCream, isTerracotta } from './color.mjs';
 import { lintCopy } from './copy.mjs';
-import { richnessRules } from './rules-richness.mjs';
+import { parseConcept, richnessRules } from './rules-richness.mjs';
+import { breakRules, slopRules } from './rules-slop.mjs';
 
-export const PERSUADE_KINDS = ['landing', 'product', 'portfolio', 'event', 'venue', 'brand', 'campaign'];
+export const PERSUADE_KINDS = ['landing', 'site', 'product', 'portfolio', 'event', 'venue', 'brand', 'campaign'];
 
 const SYSTEM_FONTS = ['serif', 'sans-serif', 'monospace', 'system-ui', 'ui-sans-serif', 'ui-serif', '-apple-system',
   'blinkmacsystemfont', 'segoe ui', 'arial', 'helvetica', 'helvetica neue', 'times new roman', 'times', 'georgia', 'verdana'];
@@ -139,7 +140,8 @@ function runtimeRules({ consoleErrors, network }) {
 export function evaluate(facts) {
   const out = [
     ...documentRules(facts), ...fontRules(facts), ...lookRules(facts), ...layoutRules(facts),
-    ...visibilityRules(facts), ...motionRules(facts), ...richnessRules(facts), ...runtimeRules(facts),
+    ...visibilityRules(facts), ...motionRules(facts), ...richnessRules(facts), ...runtimeRules(facts), ...slopRules(facts),
+    ...(facts.deal?.direction && PERSUADE_KINDS.includes(facts.kind) ? breakRules({ slop: facts.slop, concept: parseConcept(facts.concept) }) : []),
     ...lintCopy(`${facts.doc.text}\n${facts.doc.title}\n${facts.doc.description ?? ''}`, facts.doc.ctas),
   ];
   return out.sort((a, b) => (a.level === b.level ? 0 : a.level === 'FAIL' ? -1 : 1));
