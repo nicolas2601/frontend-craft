@@ -144,3 +144,15 @@
 /* the poster stays for no-JS and for a missing WebGL; the ink scene draws the poster itself */
 .craft-scene[data-scene-on]:not([data-scene-off]) > img { opacity: 0; }
 .craft-scene[data-scene-off] > .craft-scene__canvas { display: none; }
+
+/* Hero loop (data-loop on a video; references/hero-video.md). The poster shows until the clip plays. */
+.craft-loop { position: relative; overflow: clip; min-height: 60svh; }
+.craft-loop > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.craft-loop [data-loop-toggle] {
+  position: absolute; right: 16px; bottom: 16px; z-index: 2; min-width: 44px; min-height: 44px; padding: 0 14px;
+  border: 1px solid color-mix(in oklab, var(--c-ink, #111) 30%, transparent); border-radius: 999px;
+  background: color-mix(in oklab, var(--c-bg, #fff) 78%, transparent); color: var(--c-ink, #111);
+  font: inherit; font-size: 14px; cursor: pointer; transition: transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.craft-loop [data-loop-toggle]:active { transform: scale(0.97); }
+.craft-loop [data-loop-toggle]:focus-visible { outline: 2px solid var(--c-accent, currentColor); outline-offset: 3px; }
