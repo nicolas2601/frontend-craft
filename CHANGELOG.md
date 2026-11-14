@@ -1,5 +1,41 @@
 # Changelog
 
+## 2.2.0 - 2026-11-13
+
+Websites get a dealt art direction, scroll set pieces and real photographs, and fail the check for being flat.
+
+### Why
+Two models given the same cafe prompt, both routed through `design-taste-frontend` in 2.1, built nearly the same
+still page: that engine prints a fixed hero for a place page, deals cafes only light warm palettes and one pool of
+photographs, and its checker fails any effect or scroll-linked motion on a place, shop or service page
+(docs/evals.md, docs/architecture.md).
+
+### Added
+- `library/directions.json`: 12 art directions (night poster, editorial magazine, colour block, cinematic chapters,
+  collage, Swiss grid, kinetic type, origin route, brutal, soft pop, gallery rail, split duotone), each with its
+  grounds, headline floor, photo treatment, two template breaks and candidate set pieces.
+- `start.mjs --risk safe|bold|wild`: how often the direction comes from outside the subject's moods (0%, 40%, 80%);
+  a subject matching fewer than three directions still draws from three; the last four directions never repeat.
+- `kit/set-pieces.css` and `references/set-pieces.md`: nine scroll scenes on `data-scrub` (iris, type-pass, zoom,
+  curtain, fan, letters, develop, tilt, split), finished without JavaScript and under reduced motion.
+- The brief: the direction, a `.craft/concept.md` template (Idea, Signature, Rejected), the `photos.mjs` commands
+  for licensed photographs, and the two dealt set pieces.
+- The check's richness floor on a dealt website: `rich-grounds`, `rich-pictures`, `rich-full-bleed`, `rich-type`,
+  `rich-scenes`, `deal-set-piece`, `concept-missing`, `concept-thin`. The report prints photographs, full bleed,
+  sections and set pieces found.
+- Tests: deal divergence (two independent deals share a direction under 20% of the time), richness rules, and an
+  end-to-end page holding all nine set pieces through the check in Chrome.
+
+### Changed
+- `frontend-craft` builds every website again; `design-taste-frontend` supplies the photographs and builds only a
+  quiet site the user asks for. `start.mjs` no longer refuses website kinds (`--fallback` is gone). The prompt hook,
+  the OpenCode agent, README and docs route the same way.
+- The check samples scroll-linked motion across the whole page (up to ten pairs) and counts the sections it moves in.
+
+### Removed
+- `skills/frontend-craft/craft/`: a stray copy of the kit and a dealt `tokens.css` committed inside the skill.
+- `skills/frontend-craft/history.json` from version control (it was still tracked).
+
 ## 2.1.0 - 2026-11-13
 
 Websites now build with a bundled engine that has a real visual layer; frontend-craft becomes the router.

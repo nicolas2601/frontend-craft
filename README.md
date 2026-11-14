@@ -1,15 +1,16 @@
 # frontend-craft
 
-One install that gives a coding agent a complete frontend toolset: a website engine with real photographs and a browser gate, critique and polish passes, motion rules, a motion kit for apps, SVG authoring, and a router that sends each task to the right one. Works in any harness that reads Agent Skills (Claude Code, Codex, OpenCode, Gemini CLI, Cursor, pi) and in any framework.
+One install that gives a coding agent a complete frontend toolset: dealt art directions with scroll set pieces and real photographs for websites, a richness and defect check in a real browser, critique and polish passes, motion rules, a motion kit, SVG authoring, and a router that sends each task to the right one. Works in any harness that reads Agent Skills (Claude Code, Codex, OpenCode, Gemini CLI, Cursor, pi) and in any framework.
 
-Ask a model for "a landing page for a coffee shop" and most of them return the same flat page: cream background, a serif headline, a terracotta accent, three equal cards, no photographs and almost no motion. Rules in a prompt do not fix it, because the model falls back to its defaults whenever a decision is left open. The skills here close those decisions with scripts the model runs and a gate it cannot talk its way past.
+Ask a model for "a landing page for a coffee shop" and most of them return the same flat page: cream background, a serif headline, a terracotta accent, three equal cards, no photographs and almost no motion. Ask two different models and you get nearly the same page twice. Rules in a prompt do not fix it, because the model falls back to its defaults whenever a decision is left open. The skills here close those decisions with scripts the model runs: a deal that changes from build to build (sometimes on purpose outside the subject's usual look), and a gate that fails a page for being flat, not only for being broken.
 
 ```
 prompt ──> frontend-craft (router)
-             ├─ website / landing ──> design-taste-frontend run
-             │                          deal ─ photographs ─ moments ─ build ─ checker ─ gate.mjs
-             │                          then impeccable critique + review-animations, gate again
-             ├─ app / dashboard / docs ──> frontend-craft run: dealt tokens + motion kit + check.mjs
+             ├─ website / landing ──> start.mjs deal: art direction + palette + type + composition + 2 set pieces
+             │                          concept.md ─ real photographs ─ build ─ check.mjs (defects + richness)
+             │                          then impeccable critique + review-animations, check again
+             ├─ quiet, sober site (asked for) ──> design-taste-frontend run and its gate
+             ├─ app / dashboard / docs ──> start.mjs deal: tokens + motion kit + check.mjs (restraint)
              ├─ motion on existing UI ──> craft-motion + animate / choreograph / animation-performance
              ├─ review ──> craft-review + impeccable
              └─ icon, logo, illustration, diagram ──> svg-craft
@@ -21,7 +22,7 @@ prompt ──> frontend-craft (router)
 
 | Skill | Job |
 |---|---|
-| [`frontend-craft`](skills/frontend-craft/SKILL.md) | The router, and the run for apps, dashboards and docs: dealt tokens, a dependency-free motion kit, `check.mjs`. |
+| [`frontend-craft`](skills/frontend-craft/SKILL.md) | The router and the build run: 12 art directions, 24 palettes, 24 type pairings, 14 compositions, 9 scroll set pieces, a dependency-free motion kit, and `check.mjs` (defects plus a richness floor). |
 | [`craft-motion`](skills/craft-motion/SKILL.md) | Add, fix or trim motion in an interface that already exists. |
 | [`craft-review`](skills/craft-review/SKILL.md) | Strict rendered review: findings as Before, After, Why with exact values. Does not edit. |
 | [`craft-learn`](skills/craft-learn/SKILL.md) | Turn a session's design corrections into testable rules in `DESIGN.md`. |
@@ -31,7 +32,7 @@ prompt ──> frontend-craft (router)
 
 | Skill | From | Job here |
 |---|---|---|
-| [`design-taste-frontend`](skills/design-taste-frontend/SKILL.md) | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) 2.5.1, MIT | The website engine: kind-based plans, dealt palettes and type, a vetted photo library with credits (bundled WebP frames plus licensed Unsplash and Wikimedia Commons frames fetched on demand), 18 scroll and type moments, 25 shader effects and 11 scenes for tech pages, a checker and a finish gate |
+| [`design-taste-frontend`](skills/design-taste-frontend/SKILL.md) | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) 2.5.1, MIT | The photo library every website uses (bundled WebP frames plus licensed Wikimedia Commons frames, with credits), and the run for a quiet, sober site when the user asks for one |
 | [`impeccable`](skills/impeccable/SKILL.md) | [pbakaus/impeccable](https://github.com/pbakaus/impeccable), Apache-2.0 | Critique, audit and polish passes |
 | `emil-design-eng`, `animate`, `choreograph`, `animation-performance`, `animation-vocabulary`, `review-animations`, `improve-animations`, `remove-animations`, `find-animation-opportunities`, `gestures`, `break-ui`, `pick-ui-library`, `prototype`, `apple-design`, `learn-taste` | [emilkowalski/skills](https://github.com/emilkowalski/skills), MIT | Motion and interaction craft |
 | [`ui-ux-pro-max`](skills/ui-ux-pro-max/SKILL.md) | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill), MIT | Searchable styles, palettes, font pairings and UX rules (Python 3) |
@@ -57,7 +58,7 @@ npx skills@latest add nicolas2601/frontend-craft -g -a claude-code -s '*' -y   #
 /plugin install frontend-craft@frontend-craft
 ```
 
-**OpenCode gate.** OpenCode has no Stop hook. Copy [`integrations/opencode/frontend-craft-gate.js`](integrations/opencode/frontend-craft-gate.js) to `~/.config/opencode/plugins/`. When a session goes idle it runs both gates (the website engine's and frontend-craft's) and sends a block's fix list back into the session. An optional `frontend` agent is in [`integrations/opencode/agents/`](integrations/opencode/agents/frontend.md).
+**OpenCode gate.** OpenCode has no Stop hook. Copy [`integrations/opencode/frontend-craft-gate.js`](integrations/opencode/frontend-craft-gate.js) to `~/.config/opencode/plugins/`. When a session goes idle it runs both gates (frontend-craft's and, for a quiet site, design-taste-frontend's) and sends a block's fix list back into the session. An optional `frontend` agent is in [`integrations/opencode/agents/`](integrations/opencode/agents/frontend.md).
 
 **By hand.** Copy each folder in `skills/` into your agent's skills directory (`~/.agents/skills/`, `~/.claude/skills/`, `~/.config/opencode/skills/`, or `.agents/skills/` in a project). Keep them as siblings.
 
@@ -77,27 +78,35 @@ Ask in plain words; the skills supply the design decisions.
 
 A model that does not pick the router by itself can be pointed at it: `@frontend-craft` in OpenCode, `/frontend-craft` in Claude Code, or "use the frontend-craft skill" anywhere.
 
-The website run, as the agent executes it (from the project folder; `<taste>` is the installed `design-taste-frontend` folder):
+The website run, as the agent executes it (from the project folder; `<skill>` is the installed `frontend-craft` folder):
 
 ```sh
-node <taste>/scripts/gate.mjs --start index.html --kind place --category "specialty coffee" --primary "Get directions"
-node <taste>/scripts/start.mjs deal --page place --trade cafe --history .taste-skill/history.json
-node <taste>/scripts/photos.mjs pick --trade cafe --draft-lead --sections hero,bar,coffee,visit
-node <taste>/scripts/moments.mjs pick --page place --count 1 --photo --history .taste-skill/history.json
-# ...build from assets/starter.html...
-node <taste>/scripts/gate.mjs        # until GATE: PASS, then the impeccable and review-animations passes, then the gate again
+node <skill>/scripts/start.mjs --kind landing --moods warm,coffee      # deal; --risk safe|bold|wild
+# write .craft/concept.md (idea, signature, rejected defaults)
+node <taste>/scripts/photos.mjs search "specialty coffee bar Bucaramanga" --out .   # real, licensed frames
+node <taste>/scripts/photos.mjs fetch <ids> --hero <id> --out . && node <taste>/scripts/photos.mjs credits --out . --write
+# ...build from craft/blueprint.html with the direction and the two set pieces...
+node <skill>/scripts/check.mjs       # until RESULT: PASS, then impeccable and review-animations, then the check again
 ```
+
+### Why two agents no longer build the same page
+
+Two models given the same prompt used to converge: the same palette family, the same hero, the same photographs. Now each build is dealt an **art direction** (night poster, editorial magazine, colour block, cinematic chapters, collage, Swiss grid, kinetic type, origin route, brutal, soft pop, gallery rail, split duotone), each with its own grounds, type scale, photo treatment and two moves that break the template. With `--risk bold` (the default) about 40% of deals come from outside the subject's usual moods on purpose, and a subject that matches only one direction still draws from at least three. Measured over 2,000 deals for a coffee brief (`--moods coffee,warm`), all 12 directions come up and none more than 13% of the time; two independent deals share a direction 9% of the time and the whole hand (direction, palette, type, composition) 0.15% (`tests/deal.test.mjs` asserts under 20% and 2%).
+
+### Set pieces
+
+`kit/set-pieces.css` holds nine scroll scenes on the kit's `data-scrub`: `iris` (the next ground opens through a circle), `type-pass` (a huge line crosses the screen), `zoom` (a full-bleed photograph opens from an inset frame), `curtain` (a photograph parts in two), `fan` (a pile of photographs fans out), `letters` (a heading assembles), `develop` (a photograph comes up from grey), `tilt` and `split`. Each shows its finished state without JavaScript and under reduced motion, and all nine pass the check in Chrome on one page (`tests/fixtures/expressive`). Markup: [set-pieces.md](skills/frontend-craft/references/set-pieces.md).
 
 ## The app run and the kit
 
-For app screens, dashboards and docs, `frontend-craft` deals tokens and copies a motion kit:
+For app screens, dashboards and docs, `frontend-craft` deals tokens and copies the motion kit, with no direction and no motion floor:
 
 ```sh
 node <skill>/scripts/start.mjs --kind app --moods calm,precise
 node <skill>/scripts/check.mjs       # until RESULT: PASS
 ```
 
-The kit is fifteen effects on data attributes (`data-enter`, `data-words`, `data-scroll-words`, `data-stack`, `data-count`, `data-press`, ...), one `requestAnimationFrame` loop and no dependencies. Under `prefers-reduced-motion` every effect shows its final state, without JavaScript all content stays visible, and cleanup restores the DOM. Reference: [motion.md](skills/frontend-craft/references/motion.md), framework wiring: [frameworks.md](skills/frontend-craft/references/frameworks.md). `start.mjs` refuses a website kind while `design-taste-frontend` is installed; `--fallback` builds one with the kit when that engine cannot run.
+The kit is fifteen effects on data attributes (`data-enter`, `data-words`, `data-scroll-words`, `data-stack`, `data-count`, `data-press`, ...), one `requestAnimationFrame` loop and no dependencies. Under `prefers-reduced-motion` every effect shows its final state, without JavaScript all content stays visible, and cleanup restores the DOM. Reference: [motion.md](skills/frontend-craft/references/motion.md), framework wiring: [frameworks.md](skills/frontend-craft/references/frameworks.md).
 
 ## Keeping the bundle current
 
@@ -111,14 +120,14 @@ Bundled skills are never edited in this repo. Integration lives in the router (`
 
 ## Evals
 
-`evals/cases.json` holds deliberately short prompts; `node scripts/eval.mjs --case <id>` runs one through a real agent CLI and loops the gate's FAIL list back into the session. The earlier runs ([docs/evals.md](docs/evals.md)) measured the dealt-kit website path that is now the fallback: they passed the check but the pages were visually flat, which is why websites now route to `design-taste-frontend`. Runs of the new route are pending and will be recorded there, failures included.
+`evals/cases.json` holds deliberately short prompts; `node scripts/eval.mjs --case <id>` runs one through a real agent CLI and loops the gate's FAIL list back into the session. [docs/evals.md](docs/evals.md) records every run, failures included: the 2.0 kit pages that passed the check but looked flat, and the 2.1 runs where two models routed through `design-taste-frontend` built nearly the same still cafe page, because that engine's house rules fail any scroll motion or effect on a place page. 2.2 is the answer to both; its agent runs will be recorded there.
 
 ## Develop
 
 ```sh
-npm test                 # unit tests, contrast tests, routing, gates (Chrome)
+npm test                 # unit tests, deal divergence, richness rules, routing, gates, set pieces (Chrome)
 npm run verify           # own skills' structure and the bundled skills' hashes
-npm run test:blueprints  # the 14 app/fallback blueprints through the check
+npm run test:blueprints  # the 14 composition blueprints through the check
 npm run test:frameworks  # the kit built in real Vue and Svelte projects, then checked
 npm run pack             # dist/<skill>.skill zip files, one per skill
 ```
