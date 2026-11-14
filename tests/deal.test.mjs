@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { hexToRgb, isCream } from '../skills/frontend-craft/scripts/lib/color.mjs';
-import { RECENT, SCROLL_STORIES, deal, loadLibrary, rngFrom, summarize } from '../skills/frontend-craft/scripts/lib/deal.mjs';
+import { RECENT, RECENT_DIRECTIONS, SCROLL_STORIES, SET_PIECES, deal, loadLibrary, rngFrom, summarize } from '../skills/frontend-craft/scripts/lib/deal.mjs';
 import { googleFontsUrl, nextFont, tokensCss } from '../skills/frontend-craft/scripts/lib/render.mjs';
 
 const lib = loadLibrary();
@@ -30,11 +30,80 @@ test('recent deals are not repeated', () => {
   }
 });
 
-test('mood filtering keeps palettes on mood', () => {
-  for (let s = 1; s <= 20; s += 1) {
-    const d = deal({ lib, kind: 'landing', moods: ['developer'], rng: rngFrom(s) });
-    assert.ok(d.palette.moods.includes('developer'), d.palette.id);
+test('mood filtering keeps palettes on mood unless the direction is a wildcard', () => {
+  for (let s = 1; s <= 40; s += 1) {
+    const safe = deal({ lib, kind: 'landing', moods: ['developer'], rng: rngFrom(s), risk: 'safe' });
+    assert.ok(safe.palette.moods.includes('developer'), safe.palette.id);
+    const app = deal({ lib, kind: 'app', moods: ['developer'], rng: rngFrom(s) });
+    assert.ok(app.palette.moods.includes('developer'), app.palette.id);
   }
+});
+
+test('websites get an art direction and two set pieces; app and docs get neither', () => {
+  for (let s = 1; s <= 40; s += 1) {
+    const site = run(s);
+    assert.ok(site.direction, 'a landing is dealt a direction');
+    assert.equal(site.motion.setPieces.length, 2);
+    for (const id of site.motion.setPieces) {
+      assert.ok(SET_PIECES.includes(id), id);
+      assert.ok(site.direction.setPieces.includes(id), `${id} comes from ${site.direction.id}`);
+    }
+    if (site.direction.scheme !== 'any') assert.equal(site.palette.scheme, site.direction.scheme, `${site.direction.id} on ${site.palette.id}`);
+    for (const kind of ['app', 'docs']) {
+      const d = deal({ lib, kind, moods: ['calm'], rng: rngFrom(s) });
+      assert.equal(d.direction, null);
+      assert.deepEqual(d.motion.setPieces, []);
+    }
+  }
+});
+
+test('bold risk deals a direction outside the subject\'s moods some of the time; safe never does', () => {
+  const moods = ['coffee', 'warm', 'craft'];
+  const share = (risk) => {
+    let wild = 0;
+    for (let s = 1; s <= 300; s += 1) {
+      const d = deal({ lib, kind: 'landing', moods, rng: rngFrom(s), risk });
+      const onMood = d.direction.moods.some((m) => moods.includes(m));
+      assert.equal(d.wildcard, !onMood, `${d.direction.id} wildcard=${d.wildcard}`);
+      if (d.wildcard) wild += 1;
+    }
+    return wild / 300;
+  };
+  assert.equal(share('safe'), 0);
+  const bold = share('bold');
+  assert.ok(bold >= 0.3 && bold < 0.8, `bold wildcard share ${bold}`);
+  assert.ok(share('wild') > bold);
+});
+
+test('two agents given the same brief rarely get the same page', () => {
+  // Each agent starts from an empty history and its own random seed: what two models running the
+  // same prompt on two machines would get.
+  let sameDirection = 0;
+  let sameHand = 0;
+  const pairs = 200;
+  for (let k = 0; k < pairs; k += 1) {
+    const a = summarize(deal({ lib, kind: 'landing', moods: ['coffee', 'warm'], rng: rngFrom(1000 + k) }));
+    const b = summarize(deal({ lib, kind: 'landing', moods: ['coffee', 'warm'], rng: rngFrom(9000 + k * 7) }));
+    if (a.direction === b.direction) sameDirection += 1;
+    if (a.direction === b.direction && a.palette === b.palette && a.type === b.type && a.composition === b.composition) sameHand += 1;
+  }
+  assert.ok(sameDirection / pairs < 0.2, `same direction in ${sameDirection} of ${pairs}`);
+  assert.ok(sameHand / pairs < 0.02, `same whole hand in ${sameHand} of ${pairs}`);
+});
+
+test('the last directions are not dealt again', () => {
+  const history = [];
+  for (let s = 1; s <= 30; s += 1) {
+    const d = summarize(run(s * 13, { history }));
+    assert.ok(!history.slice(-RECENT_DIRECTIONS).some((h) => h.direction === d.direction), `direction ${d.direction} repeated at ${s}`);
+    history.push(d);
+  }
+});
+
+test('a pinned direction wins', () => {
+  const d = run(5, { pins: { direction: 'swiss-grid' } });
+  assert.equal(d.direction.id, 'swiss-grid');
+  assert.equal(d.wildcard, false);
 });
 
 test('a cream background is never paired with a serif display face', () => {

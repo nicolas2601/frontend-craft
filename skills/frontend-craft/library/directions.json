@@ -1,0 +1,600 @@
+{
+  "$comment": "Art directions for websites. start.mjs deals one per build (never one of the last four), sometimes on purpose outside the subject's usual moods, so two agents given the same prompt build two different pages. A direction decides what a palette and a composition cannot: how the grounds change, how big the type goes, how the photographs are treated, two layout moves that break the template, and the scroll set pieces (kit/set-pieces.css, references/set-pieces.md). The check measures grounds, picture count, full-bleed and headline size against these numbers.",
+  "directions": [
+    {
+      "id": "night-poster",
+      "name": "Night poster",
+      "idea": "The page is a gig poster at night: a dark ground, the headline set huge and tight, photographs lit hard like flash shots, and bands of words running between sections.",
+      "scheme": "dark",
+      "moods": [
+        "nightlife",
+        "music",
+        "bold",
+        "energetic",
+        "youth",
+        "food"
+      ],
+      "typeMoods": [
+        "bold",
+        "nightlife",
+        "brutal",
+        "energetic"
+      ],
+      "serif": false,
+      "grounds": {
+        "min": 2,
+        "how": "Most sections on the dark ground; one section turns into a full accent field with ink type on it."
+      },
+      "type": {
+        "minPx": 150,
+        "how": "The h1 at --t-mega, leading 0.85 to 0.95; one section heading also at --t-mega."
+      },
+      "pictures": {
+        "min": 5,
+        "fullBleed": true,
+        "treatment": "High contrast, cropped tight on hands, faces from behind and objects; one photograph full bleed with the headline overlapping its lower third."
+      },
+      "breaks": [
+        "The hero headline overlaps the photograph: a third of its height sits on the picture, with mix-blend-mode: difference or a solid band behind the words.",
+        "A band of names, dates or items (data-marquee) runs between two sections, rotated -2deg, edge to edge."
+      ],
+      "setPieces": [
+        "type-pass",
+        "zoom",
+        "curtain"
+      ],
+      "supports": [
+        "marquee",
+        "words-blur",
+        "magnetic"
+      ],
+      "avoid": "No cream, no beige, no italic serif word, no rounded cards in a row."
+    },
+    {
+      "id": "editorial-magazine",
+      "name": "Editorial magazine",
+      "idea": "The page reads like a feature in a printed magazine: a very large display face, asymmetric spreads, a drop cap, captions and folio numbers, photographs cropped like a photo editor would crop them.",
+      "scheme": "light",
+      "moods": [
+        "editorial",
+        "culture",
+        "print",
+        "heritage",
+        "calm",
+        "food",
+        "coffee"
+      ],
+      "typeMoods": [
+        "editorial",
+        "print",
+        "culture",
+        "heritage",
+        "luxury"
+      ],
+      "serif": null,
+      "grounds": {
+        "min": 2,
+        "how": "Paper ground, one full spread on the ink colour with a single photograph and a pull quote."
+      },
+      "type": {
+        "minPx": 120,
+        "how": "The h1 at --t-display or larger over at most four lines; a pull quote at --t-3xl; body in two columns on wide screens."
+      },
+      "pictures": {
+        "min": 6,
+        "fullBleed": true,
+        "treatment": "Photographs in unequal sizes on a 12-column grid: one full bleed, one tall portrait beside text, a pair of small details with captions."
+      },
+      "breaks": [
+        "Spreads are asymmetric: text in columns 1 to 5, the picture in 6 to 12, then the reverse with a different ratio; never two spreads alike.",
+        "A drop cap opens the first long paragraph and every section carries a folio number set in the display face at --t-3xl."
+      ],
+      "setPieces": [
+        "develop",
+        "split",
+        "letters"
+      ],
+      "supports": [
+        "mask",
+        "reveal-stagger",
+        "scroll-words"
+      ],
+      "avoid": "No cards, no icons in circles, no centred section headings."
+    },
+    {
+      "id": "color-block",
+      "name": "Colour block",
+      "idea": "Every section is a solid field of one dealt colour, cut by hard edges and big shapes, with type set large on top. The page changes colour as you scroll.",
+      "scheme": "any",
+      "moods": [
+        "bold",
+        "playful",
+        "youth",
+        "festive",
+        "creative",
+        "food"
+      ],
+      "typeMoods": [
+        "bold",
+        "playful",
+        "creative",
+        "youth"
+      ],
+      "serif": false,
+      "grounds": {
+        "min": 4,
+        "how": "Each section takes a different field: bg, surface, ink and accent in turn; text colour follows (ink on light fields, bg on dark ones)."
+      },
+      "type": {
+        "minPx": 130,
+        "how": "The h1 at --t-mega; section headings at --t-3xl or larger."
+      },
+      "pictures": {
+        "min": 4,
+        "fullBleed": false,
+        "treatment": "Photographs cut into hard geometric shapes (a circle, a half disc, a tall arch) with clip-path, placed across the edge between two colour fields."
+      },
+      "breaks": [
+        "A photograph or shape straddles the border between two sections, half on each field.",
+        "One section has no heading box at all: one word fills its width."
+      ],
+      "setPieces": [
+        "iris",
+        "tilt",
+        "type-pass"
+      ],
+      "supports": [
+        "words-blur",
+        "count",
+        "magnetic"
+      ],
+      "avoid": "No gradients, no shadows, no thin hairline cards."
+    },
+    {
+      "id": "cinematic-chapters",
+      "name": "Cinematic chapters",
+      "idea": "The page plays like a film in chapters: each chapter is a full-screen photograph that holds while its words arrive, numbered like a scene, with letterbox bars and slow movement.",
+      "scheme": "dark",
+      "moods": [
+        "luxury",
+        "travel",
+        "calm",
+        "heritage",
+        "nature",
+        "warm",
+        "coffee"
+      ],
+      "typeMoods": [
+        "luxury",
+        "calm",
+        "editorial",
+        "heritage",
+        "modern"
+      ],
+      "serif": null,
+      "grounds": {
+        "min": 2,
+        "how": "Dark ground between chapters; each chapter is its photograph edge to edge."
+      },
+      "type": {
+        "minPx": 110,
+        "how": "The h1 at --t-display; chapter numbers at --t-mega in the display face, half transparent over the picture."
+      },
+      "pictures": {
+        "min": 6,
+        "fullBleed": true,
+        "treatment": "Full-screen photographs, each a scene; words on a scrim or a solid band, never on a busy part of the picture."
+      },
+      "breaks": [
+        "Two chapters are pinned (data-pin): the photograph holds still while its lines light up (data-scroll-words=\"pinned\").",
+        "Letterbox bars (top and bottom bands of the ground colour) frame the first screen's photograph."
+      ],
+      "setPieces": [
+        "zoom",
+        "curtain",
+        "split"
+      ],
+      "supports": [
+        "stack",
+        "scroll-words",
+        "words-blur"
+      ],
+      "avoid": "No grid of cards, no icons, no more than two text sizes per chapter."
+    },
+    {
+      "id": "collage-scrapbook",
+      "name": "Collage scrapbook",
+      "idea": "The page is a scrapbook pinned together by hand: photographs at angles that overlap, strips of tape, a sticker, handwritten-feeling notes in the display face, nothing quite square.",
+      "scheme": "light",
+      "moods": [
+        "playful",
+        "craft",
+        "creative",
+        "friendly",
+        "youth",
+        "warm",
+        "food"
+      ],
+      "typeMoods": [
+        "playful",
+        "craft",
+        "friendly",
+        "creative",
+        "retro"
+      ],
+      "serif": null,
+      "grounds": {
+        "min": 2,
+        "how": "Paper ground with one section on the surface colour and one on the accent."
+      },
+      "type": {
+        "minPx": 110,
+        "how": "The h1 at --t-display, one word of it rotated -3deg; labels on taped notes."
+      },
+      "pictures": {
+        "min": 6,
+        "fullBleed": false,
+        "treatment": "Prints with a white border (padding and the surface colour), rotated between -6 and 6 degrees, overlapping by a quarter, a strip of tape (a translucent rectangle) on a corner."
+      },
+      "breaks": [
+        "Pictures overlap each other and the text column; no picture sits square in a grid cell.",
+        "A round sticker (the accent colour, rotated) carries one fact: the price, the year or the hours."
+      ],
+      "setPieces": [
+        "fan",
+        "tilt",
+        "develop"
+      ],
+      "supports": [
+        "reveal-stagger",
+        "magnetic",
+        "words-blur"
+      ],
+      "avoid": "No drop shadows over 16px blur, no glassmorphism, no cards in rows."
+    },
+    {
+      "id": "swiss-grid",
+      "name": "Swiss grid",
+      "idea": "A rigorous typographic page: a visible 12-column grid, flush-left text, hairline rules, giant numerals, one strong accent and nothing decorative.",
+      "scheme": "light",
+      "moods": [
+        "precise",
+        "minimal",
+        "modern",
+        "editorial",
+        "tech"
+      ],
+      "typeMoods": [
+        "precise",
+        "minimal",
+        "modern",
+        "tech",
+        "editorial"
+      ],
+      "serif": false,
+      "grounds": {
+        "min": 2,
+        "how": "Paper ground; one section on the accent field with ink or bg type."
+      },
+      "type": {
+        "minPx": 140,
+        "how": "The h1 at --t-mega, flush left, tight; numerals (hours, prices, steps) set at --t-mega in the display face."
+      },
+      "pictures": {
+        "min": 3,
+        "fullBleed": false,
+        "treatment": "Photographs aligned to grid columns, rectangular, no radius, never centred; one runs from column 5 to the right edge."
+      },
+      "breaks": [
+        "Hairline rules (1px, --c-line) mark the grid columns in at least one section; content snaps to them.",
+        "A giant numeral sits beside each step or fact instead of an icon."
+      ],
+      "setPieces": [
+        "type-pass",
+        "split",
+        "letters"
+      ],
+      "supports": [
+        "count",
+        "scramble",
+        "reveal-stagger"
+      ],
+      "avoid": "No rounded corners over 4px, no shadows, no icons."
+    },
+    {
+      "id": "kinetic-type",
+      "name": "Kinetic type",
+      "idea": "Type is the picture: words fill the screen, move with the scroll, assemble and pass; the few photographs live inside or beside giant letters.",
+      "scheme": "any",
+      "moods": [
+        "bold",
+        "creative",
+        "music",
+        "youth",
+        "energetic"
+      ],
+      "typeMoods": [
+        "bold",
+        "creative",
+        "brutal",
+        "energetic",
+        "fashion"
+      ],
+      "serif": false,
+      "grounds": {
+        "min": 3,
+        "how": "Three grounds at least: bg, ink and accent, each holding one statement."
+      },
+      "type": {
+        "minPx": 160,
+        "how": "The h1 at --t-mega edge to edge; two more statements at --t-mega later on the page."
+      },
+      "pictures": {
+        "min": 3,
+        "fullBleed": false,
+        "treatment": "Photographs as small sharp inserts between words of a statement, or inside the counters of a giant word (background-clip: text on a decorative duplicate)."
+      },
+      "breaks": [
+        "A statement at --t-mega runs wider than the screen and crosses it with the scroll (set piece type-pass).",
+        "One small photograph is set inline inside a headline, at the height of a capital letter."
+      ],
+      "setPieces": [
+        "letters",
+        "type-pass",
+        "iris"
+      ],
+      "supports": [
+        "scroll-words",
+        "words-blur",
+        "scramble"
+      ],
+      "avoid": "No paragraph longer than 40 words, no cards, no stock icons."
+    },
+    {
+      "id": "origin-route",
+      "name": "Origin route",
+      "idea": "One drawn line runs down the whole page: the route from where the thing comes from to the door where you get it. Sections are stops on the route, and the line draws itself as you scroll.",
+      "scheme": "any",
+      "moods": [
+        "travel",
+        "craft",
+        "nature",
+        "culture",
+        "coffee"
+      ],
+      "typeMoods": [
+        "craft",
+        "travel",
+        "culture",
+        "warm",
+        "modern"
+      ],
+      "serif": null,
+      "grounds": {
+        "min": 2,
+        "how": "One ground for the route; the last stop (the door, the action) on the accent field."
+      },
+      "type": {
+        "minPx": 110,
+        "how": "The h1 at --t-display; each stop's name at --t-3xl with its distance, altitude or time set large."
+      },
+      "pictures": {
+        "min": 4,
+        "fullBleed": true,
+        "treatment": "A photograph at each stop, placed on alternating sides of the line; the first or last full bleed."
+      },
+      "breaks": [
+        "An SVG path (svg-craft) runs from the hero to the close; its stroke draws with the scroll (data-scrub and stroke-dashoffset: calc((1 - var(--p)) * <length>)).",
+        "Stops sit left and right of the line in turn, never in a centred column."
+      ],
+      "setPieces": [
+        "split",
+        "develop",
+        "zoom"
+      ],
+      "supports": [
+        "scrub",
+        "count",
+        "mask"
+      ],
+      "avoid": "No map pins from an icon set, no fake map tiles, no grey placeholder map."
+    },
+    {
+      "id": "brutal-raw",
+      "name": "Brutal raw",
+      "idea": "An honest, loud page: visible structure, thick borders, oversized type, hard black and one loud colour, hovers that invert, nothing softened.",
+      "scheme": "any",
+      "moods": [
+        "brutal",
+        "industrial",
+        "bold",
+        "developer",
+        "youth"
+      ],
+      "typeMoods": [
+        "brutal",
+        "industrial",
+        "bold",
+        "developer",
+        "retro"
+      ],
+      "serif": false,
+      "grounds": {
+        "min": 2,
+        "how": "The ground and one section inverted (ink field, bg type)."
+      },
+      "type": {
+        "minPx": 140,
+        "how": "The h1 at --t-mega, uppercase allowed; labels in the mono face."
+      },
+      "pictures": {
+        "min": 3,
+        "fullBleed": false,
+        "treatment": "Photographs in thick-bordered frames (3 to 4px, --c-ink), no radius; hover inverts a frame's caption bar."
+      },
+      "breaks": [
+        "Sections are separated by thick rules and an index number, like a printed form.",
+        "Buttons are blocks with a hard offset shadow (4px 4px 0 var(--c-ink)) that collapses on press."
+      ],
+      "setPieces": [
+        "type-pass",
+        "tilt",
+        "letters"
+      ],
+      "supports": [
+        "marquee",
+        "spotlight",
+        "scramble"
+      ],
+      "avoid": "No gradients, no blur, no soft shadows, no rounded corners."
+    },
+    {
+      "id": "soft-pop",
+      "name": "Soft pop",
+      "idea": "A friendly, saturated page with rounded shapes: photographs in arches and pills, fat type, a sticker or two, and motion with a little bounce.",
+      "scheme": "light",
+      "moods": [
+        "playful",
+        "friendly",
+        "fresh",
+        "youth",
+        "food",
+        "warm"
+      ],
+      "typeMoods": [
+        "playful",
+        "friendly",
+        "youth",
+        "food",
+        "festive"
+      ],
+      "serif": null,
+      "grounds": {
+        "min": 3,
+        "how": "Bg, surface and accent fields in turn; one section on the accent."
+      },
+      "type": {
+        "minPx": 120,
+        "how": "The h1 at --t-display or larger, fat weight."
+      },
+      "pictures": {
+        "min": 5,
+        "fullBleed": false,
+        "treatment": "Photographs masked as arches (border-radius: 999px 999px 0 0), pills and circles, in two or three sizes."
+      },
+      "breaks": [
+        "A photograph in an arch rises behind the headline so the words overlap its lower edge.",
+        "Hover and press use a spring-like overshoot (cubic-bezier(0.34, 1.56, 0.64, 1)) on buttons and pictures only."
+      ],
+      "setPieces": [
+        "fan",
+        "iris",
+        "tilt"
+      ],
+      "supports": [
+        "magnetic",
+        "words-blur",
+        "reveal-stagger"
+      ],
+      "avoid": "No dark mode, no thin type, no square photographs."
+    },
+    {
+      "id": "gallery-rail",
+      "name": "Gallery rail",
+      "idea": "The page is a walk through a gallery: the main story moves sideways through big photographs with captions, framed by a calm first screen and a strong close.",
+      "scheme": "any",
+      "moods": [
+        "culture",
+        "creative",
+        "travel",
+        "fashion",
+        "minimal"
+      ],
+      "typeMoods": [
+        "culture",
+        "minimal",
+        "fashion",
+        "modern",
+        "editorial"
+      ],
+      "serif": null,
+      "grounds": {
+        "min": 2,
+        "how": "The rail runs on the ink field; the rest on the ground."
+      },
+      "type": {
+        "minPx": 110,
+        "how": "The h1 at --t-display; captions at --t-sm with a number."
+      },
+      "pictures": {
+        "min": 7,
+        "fullBleed": true,
+        "treatment": "Large photographs in a sideways rail, each with a numbered caption; one full bleed before the rail."
+      },
+      "breaks": [
+        "The main story is a data-rail of 5 to 7 panels, each a photograph with a caption and one line.",
+        "Captions sit outside the pictures, numbered like a catalogue."
+      ],
+      "setPieces": [
+        "zoom",
+        "develop",
+        "split"
+      ],
+      "supports": [
+        "rail",
+        "parallax",
+        "mask"
+      ],
+      "avoid": "No carousel arrows or dots, no cards, no icons."
+    },
+    {
+      "id": "split-duotone",
+      "name": "Split duotone",
+      "idea": "The screen is split in two: one half holds a duotone photograph in the accent, the other carries the words; halves trade places from section to section.",
+      "scheme": "any",
+      "moods": [
+        "fashion",
+        "bold",
+        "music",
+        "modern",
+        "culture"
+      ],
+      "typeMoods": [
+        "fashion",
+        "modern",
+        "bold",
+        "culture",
+        "precise"
+      ],
+      "serif": null,
+      "grounds": {
+        "min": 3,
+        "how": "Bg, ink and accent halves; never the same pair twice in a row."
+      },
+      "type": {
+        "minPx": 120,
+        "how": "The h1 at --t-display or larger, inside its half."
+      },
+      "pictures": {
+        "min": 5,
+        "fullBleed": false,
+        "treatment": "Duotone photographs: grayscale(1) contrast(1.2) on the image with the accent field behind it and mix-blend-mode: multiply (light) or screen (dark)."
+      },
+      "breaks": [
+        "Halves trade sides every section; one section holds its photograph still (sp-split) while the words scroll.",
+        "A single line of type runs across the split, half on each side."
+      ],
+      "setPieces": [
+        "split",
+        "curtain",
+        "iris"
+      ],
+      "supports": [
+        "mask",
+        "words-blur",
+        "count"
+      ],
+      "avoid": "No centred hero, no cards, no gradient overlays."
+    }
+  ]
+}
