@@ -5,6 +5,9 @@ import { installHelpers } from './helpers.js';
 import {
   probeCss, probeDocument, probeFold, probeInvisible, probeLook, probeMotionState, probeOverflow, probeSticky, probeTargets, probeText,
 } from './probes.js';
+import { probeRichness, probeStickySections } from './probes-richness.js';
+
+const MAX_SCROLL_PAIRS = 10;
 
 const MOTION_RECORDER = `(() => {
   const seen = new Set(); const t0 = performance.now();
@@ -59,11 +62,14 @@ async function alwaysInvisible(s, ys) {
   return [...(common ?? [])];
 }
 
+/** Elements that move with the scroll, sampled in pairs spread over the whole page, and the sections they sit in. */
 async function scrollLinked(s, max, vh) {
   const linked = new Set();
-  const pairs = Math.min(6, Math.floor(max / vh));
+  const sections = new Set();
+  const pairs = Math.min(MAX_SCROLL_PAIRS, Math.floor(max / vh));
+  const step = pairs ? Math.max(vh, (max - vh * 0.5) / pairs) : vh;
   for (let k = 0; k < pairs; k += 1) {
-    const y1 = Math.min(max, Math.round((k + 0.5) * vh));
+    const y1 = Math.min(max, Math.round((k + 0.5) * step));
     const y2 = Math.min(max, y1 + Math.round(vh * 0.5));
     if (y2 <= y1) continue;
     await scrollTo(s, y1); await sleep(320);
@@ -74,9 +80,13 @@ async function scrollLinked(s, max, vh) {
     const a2 = await s.run(probeMotionState);
     const moved = new Set(changed(a, b));
     const stable = new Set(changed(a, a2));
-    for (const i of moved) if (!stable.has(i)) linked.add(a[i][11]);
+    for (const i of moved) {
+      if (stable.has(i)) continue;
+      linked.add(a[i][11]);
+      if (a[i][12] >= 0) sections.add(a[i][12]);
+    }
   }
-  return [...linked];
+  return { linked: [...linked], sections };
 }
 
 export async function normalPass(browser, url, shotsDir) {
@@ -104,9 +114,11 @@ export async function normalPass(browser, url, shotsDir) {
   const before = await s.run(probeMotionState);
   const { max, vh } = await scrollThrough(s, 70);
   const after = await s.run(probeMotionState);
+  facts.richness = await s.run(probeRichness); // after the scroll, so lazy pictures have loaded
   const reveals = changed(before, after, (row) => Number(row[9]) > vh && Number(row[0]) < 0.2).length;
-  const linked = await scrollLinked(s, max, vh);
+  const { linked, sections } = await scrollLinked(s, max, vh);
   const sticky = await s.run(probeSticky);
+  for (const i of await s.run(probeStickySections)) if (i >= 0) sections.add(i);
   const tiles = [];
   for (let k = 1; k <= Math.min(5, Math.floor(max / vh)); k += 1) {
     await scrollTo(s, k * vh);
@@ -125,7 +137,7 @@ export async function normalPass(browser, url, shotsDir) {
   facts.text[390] = await s.run(probeText, { minPx: 12 });
   facts.targets = await s.run(probeTargets);
   shots.push(await shot(s, path.join(shotsDir, '390.png')), ...tiles);
-  facts.motion = { entrance, reveals, scrollLinked: linked.length, linkedExamples: linked.slice(0, 4), sticky };
+  facts.motion = { entrance, reveals, scrollLinked: linked.length, linkedExamples: linked.slice(0, 4), sticky, scenes: sections.size };
   facts.invisible = { scrolled: invisibleScrolled };
   facts.consoleErrors = runtime.consoleErrors;
   facts.network = runtime.network;

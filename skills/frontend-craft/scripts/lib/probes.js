@@ -212,7 +212,7 @@ export function probeMotionState() {
     return [
       Number.parseFloat(cs.opacity).toFixed(2), cs.transform, cs.translate, cs.scale, cs.rotate, cs.clipPath,
       cs.filter, cs.getPropertyValue('--p').trim(), cs.backgroundPosition,
-      Math.round(r.top + scrollY), cs.position === 'sticky' ? 'sticky' : '', C.describe(el).slice(0, 60),
+      Math.round(r.top + scrollY), cs.position === 'sticky' ? 'sticky' : '', C.describe(el).slice(0, 60), C.sectionOf(el),
     ];
   });
 }

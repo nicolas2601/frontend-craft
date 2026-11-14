@@ -19,7 +19,7 @@ import { PERSUADE_KINDS, evaluate } from './lib/rules.mjs';
 import { serve } from './lib/serve.mjs';
 import { craftDir, isMain, parseArgs, readJson, resolveTarget, writeJson } from './lib/state.mjs';
 
-export async function runCheck({ target, kind = 'landing', deal = null, out, quick = false, requireDeal = false }) {
+export async function runCheck({ target, kind = 'landing', deal = null, concept = null, out, quick = false, requireDeal = false }) {
   const shotsDir = path.join(out, 'shots');
   fs.mkdirSync(shotsDir, { recursive: true });
   const server = target.root ? await serve(target.root) : null;
@@ -30,7 +30,7 @@ export async function runCheck({ target, kind = 'landing', deal = null, out, qui
     facts.invisible.reduced = quick ? [] : await reducedPass(browser, url);
     const noJs = quick ? { lost: [], textLength: 1000 } : await noJsPass(browser, url);
     facts.invisible.nojs = noJs.lost;
-    Object.assign(facts, { kind, deal });
+    Object.assign(facts, { kind, deal, concept });
     const findings = evaluate(facts);
     if (requireDeal && !deal && PERSUADE_KINDS.includes(kind)) {
       findings.unshift({ level: 'FAIL', id: 'no-direction', msg: 'no dealt direction for this page (.craft/deal.json is missing)', fix: 'run node <skill>/scripts/start.mjs --kind <kind> --moods <moods> in the project folder and rebuild from its blueprint; use --brand if the project already has its colors and fonts' });
@@ -38,7 +38,7 @@ export async function runCheck({ target, kind = 'landing', deal = null, out, qui
     if (!quick && noJs.textLength < 50 && ['landing', 'product', 'event', 'venue', 'brand', 'campaign'].includes(kind)) {
       findings.push({ level: 'WARN', id: 'nojs-empty', msg: 'the page is empty without JavaScript (client-only render)', fix: 'prerender or SSR the marketing page so crawlers and slow phones get content' });
     }
-    const report = { url, kind, at: new Date().toISOString(), findings, motion: facts.motion, h1: facts.doc.h1, shots };
+    const report = { url, kind, at: new Date().toISOString(), findings, motion: facts.motion, richness: facts.richness, h1: facts.doc.h1, shots };
     writeJson(path.join(out, 'check.json'), report);
     return report;
   } finally {
@@ -57,7 +57,9 @@ export function formatReport(report) {
   }
   if (report.findings.length) lines.push('');
   const m = report.motion;
-  lines.push(`Motion: ${m.entrance} element(s) animate in on load, ${m.scrollLinked} scroll-linked, ${m.reveals} reveal(s), ${m.sticky.length} pinned scene(s)`);
+  lines.push(`Motion: ${m.entrance} element(s) animate in on load, ${m.scrollLinked} scroll-linked in ${m.scenes ?? 0} section(s), ${m.reveals} reveal(s), ${m.sticky.length} pinned scene(s)`);
+  const r = report.richness;
+  if (r) lines.push(`Page: ${r.pictures} photograph(s)${r.fullBleed ? ', one full bleed' : ''}, ${r.grounds.length} sections, set pieces: ${r.setPieces.join(', ') || 'none'}`);
   if (report.h1) lines.push(`Headline: "${report.h1.text.slice(0, 70)}" in ${report.h1.family} ${report.h1.weight}, ${Math.round(report.h1.size)}px`);
   lines.push(`Screens to open and look at: ${report.shots.map((s) => path.relative(process.cwd(), s)).join(', ')}`);
   lines.push('', `RESULT: ${fails.length ? 'FAIL' : 'PASS'}  ${fails.length} FAIL, ${warns.length} WARN`);
@@ -74,8 +76,10 @@ async function main() {
     process.exit(2);
   }
   const deal = args['no-deal'] ? null : readJson(path.resolve(String(args.deal ?? path.join(dir, 'deal.json'))));
+  const conceptFile = path.join(dir, 'concept.md');
   const report = await runCheck({
     target,
+    concept: fs.existsSync(conceptFile) ? fs.readFileSync(conceptFile, 'utf8') : null,
     kind: String(args.kind ?? gate?.kind ?? deal?.kind ?? 'landing'),
     deal,
     requireDeal: !args['no-deal'] && !gate?.kitOnly,

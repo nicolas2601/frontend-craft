@@ -1,6 +1,7 @@
 // Turns probe facts into findings. Pure: no browser, so every rule is unit-testable.
 import { deltaE, hexToRgb, isCream, isTerracotta } from './color.mjs';
 import { lintCopy } from './copy.mjs';
+import { richnessRules } from './rules-richness.mjs';
 
 export const PERSUADE_KINDS = ['landing', 'product', 'portfolio', 'event', 'venue', 'brand', 'campaign'];
 
@@ -138,7 +139,7 @@ function runtimeRules({ consoleErrors, network }) {
 export function evaluate(facts) {
   const out = [
     ...documentRules(facts), ...fontRules(facts), ...lookRules(facts), ...layoutRules(facts),
-    ...visibilityRules(facts), ...motionRules(facts), ...runtimeRules(facts),
+    ...visibilityRules(facts), ...motionRules(facts), ...richnessRules(facts), ...runtimeRules(facts),
     ...lintCopy(`${facts.doc.text}\n${facts.doc.title}\n${facts.doc.description ?? ''}`, facts.doc.ctas),
   ];
   return out.sort((a, b) => (a.level === b.level ? 0 : a.level === 'FAIL' ? -1 : 1));

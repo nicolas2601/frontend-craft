@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Fixture: Tostadero Nocturno, a late coffee bar in Bucaramanga</title>
+  <meta name="description" content="Every set piece of the frontend-craft kit on one dark page, for the checker's end-to-end test.">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <style>
+    @font-face { font-family: 'Fixture Display'; src: local('DejaVu Sans Bold'), local('DejaVuSans-Bold'), local('Liberation Sans Bold'); font-weight: 700; }
+    @font-face { font-family: 'Fixture Text'; src: local('DejaVu Sans'), local('DejaVuSans'), local('Liberation Sans'); font-weight: 400; }
+    :root {
+      --c-bg: #111111; --c-surface: #1d1b19; --c-ink: #f3efe6; --c-muted: #b8b0a2;
+      --c-line: #34302b; --c-accent: #ff5a36; --c-accent-ink: #111111;
+      --f-display: 'Fixture Display', sans-serif; --f-text: 'Fixture Text', sans-serif;
+      --display-weight: 700; --display-tracking: -0.04em; --display-leading: 0.88;
+    }
+  </style>
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/craft.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/layouts.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/set-pieces.css">
+  <style>
+    body { margin: 0; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: var(--s-6) var(--gutter); }
+    header a { color: var(--c-ink); }
+    .hero { display: grid; gap: var(--s-6); padding: var(--s-8) var(--gutter) var(--section); }
+    h1 { font-size: var(--t-mega); margin: 0; max-width: 12ch; }
+    .lede { font-size: var(--t-lg); color: var(--c-muted); max-width: 40ch; margin: 0; }
+    .cta { display: inline-flex; align-items: center; min-height: 48px; padding: 0 var(--s-6); background: var(--c-accent);
+      color: var(--c-accent-ink); text-decoration: none; font-weight: 700; justify-self: start; }
+    section > h2, .pad > h2 { font-family: var(--f-display); font-size: var(--t-3xl); margin: 0 0 var(--s-4); }
+    .pad { padding: var(--section) var(--gutter); }
+    .pad p { max-width: 50ch; color: var(--c-muted); }
+    .sp-letters { font-size: var(--t-display); margin: 0; }
+    .sp-develop, .sp-tilt { max-width: 56rem; }
+    .accent-field { background: var(--c-accent); color: var(--c-accent-ink); }
+    .accent-field p { color: var(--c-accent-ink); }
+    footer { padding: var(--section) var(--gutter); }
+  </style>
+</head>
+<body>
+<header><a href="#visit">Tostadero Nocturno</a><a href="#visit">Find the bar</a></header>
+<main>
+  <section class="hero">
+    <h1 class="craft-display" data-words>Coffee after dark</h1>
+    <p class="lede" data-enter>A late bar in Cabecera that roasts on Thursdays and pours until midnight.</p>
+    <a class="cta" href="#visit" data-enter data-press>Find the bar</a>
+  </section>
+
+  <figure class="sp-zoom" data-scrub>
+    <img src="../../../skills/design-taste-frontend/assets/photos/img/m108358720-1200.webp" alt="Photograph one" width="1200" height="800">
+  </figure>
+
+  <section class="sp-type-pass pad" data-scrub>
+    <p class="sp-type-pass__line" aria-hidden="true">Mesa de los Santos 1,600 m</p>
+    <h2>Where the beans grow</h2>
+    <p>Two farms on the plateau above the canyon send us their lots in April and October.</p>
+  </section>
+
+  <section class="sp-iris" data-pin style="--pin-length: 200svh">
+    <div>
+      <div class="sp-iris__open" data-scrub="pinned" style="--sp-ground: var(--c-accent); --sp-on: var(--c-accent-ink)">
+        <h2 class="craft-display">Roasted on Thursdays</h2>
+        <p>Gone by Sunday, every week.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sp-fan" data-pin style="--pin-length: 220svh">
+    <div class="sp-fan__stage" data-scrub="pinned">
+      <h2 class="craft-display">Four lots this month</h2>
+      <img class="sp-fan__card" style="--x: -125%; --y: -20%; --r: -10deg" src="../../../skills/design-taste-frontend/assets/photos/img/m111881197-1200.webp" alt="Photograph two" width="800" height="1000">
+      <img class="sp-fan__card" style="--x: 120%; --y: -28%; --r: 8deg" src="../../../skills/design-taste-frontend/assets/photos/img/m11317510-1200.webp" alt="Photograph three" width="800" height="1000">
+      <img class="sp-fan__card" style="--x: -95%; --y: 45%; --r: 6deg" src="../../../skills/design-taste-frontend/assets/photos/img/m113462760-1200.webp" alt="Photograph four" width="800" height="1000">
+      <img class="sp-fan__card" style="--x: 105%; --y: 50%; --r: -7deg" src="../../../skills/design-taste-frontend/assets/photos/img/m117663639-1200.webp" alt="Photograph five" width="800" height="1000">
+    </div>
+  </section>
+
+  <section class="sp-curtain" data-pin style="--pin-length: 200svh">
+    <div class="sp-curtain__stage" data-scrub="pinned">
+      <div class="sp-curtain__under">
+        <h2 class="craft-display">Open at seven</h2>
+        <p>Until midnight, Tuesday to Sunday.</p>
+      </div>
+      <img class="sp-curtain__half sp-curtain__half--l" src="../../../skills/design-taste-frontend/assets/photos/img/m130857602-1200.webp" alt="Photograph six" width="1200" height="800">
+      <img class="sp-curtain__half sp-curtain__half--r" src="../../../skills/design-taste-frontend/assets/photos/img/m130857602-1200.webp" alt="" width="1200" height="800">
+    </div>
+  </section>
+
+  <section class="sp-letters-host pad">
+    <h2 class="sp-letters craft-display" data-scrub aria-label="Small batch"><span aria-hidden="true">S</span><span aria-hidden="true">m</span><span aria-hidden="true">a</span><span aria-hidden="true">l</span><span aria-hidden="true">l</span><span aria-hidden="true"> </span><span aria-hidden="true">b</span><span aria-hidden="true">a</span><span aria-hidden="true">t</span><span aria-hidden="true">c</span><span aria-hidden="true">h</span></h2>
+    <p>Twelve kilos a roast, so nothing waits on a shelf.</p>
+  </section>
+
+  <section class="pad accent-field">
+    <h2>The bar</h2>
+    <figure class="sp-develop" data-scrub>
+      <img src="../../../skills/design-taste-frontend/assets/photos/img/m138226685-1200.webp" alt="Photograph seven" width="1200" height="800">
+    </figure>
+    <p>Six stools, one machine, the roaster behind glass.</p>
+  </section>
+
+  <section class="pad">
+    <h2>The menu</h2>
+    <div class="sp-tilt" data-scrub>
+      <img src="../../../skills/design-taste-frontend/assets/photos/img/m138226686-1200.webp" alt="Photograph eight" width="1200" height="800">
+    </div>
+  </section>
+
+  <section class="sp-split">
+    <div class="sp-split__still">
+      <h2 class="craft-display">From cherry to cup</h2>
+      <p>Picked, washed, dried, roasted, poured: five stops, one street.</p>
+    </div>
+    <div class="sp-split__flow">
+      <img src="../../../skills/design-taste-frontend/assets/photos/img/m138547195-1200.webp" alt="Photograph nine" width="1200" height="900" data-parallax="0.08">
+      <img src="../../../skills/design-taste-frontend/assets/photos/img/m147143894-1200.webp" alt="Photograph ten" width="1200" height="900">
+    </div>
+  </section>
+
+  <section class="pad" id="visit">
+    <h2>Visit</h2>
+    <p>Carrera 33 with Calle 48, Cabecera del Llano. Tuesday to Sunday, 7 pm to midnight.</p>
+    <a class="cta" href="#visit" data-press>Find the bar</a>
+  </section>
+</main>
+<footer><p>Photographs: fixture frames from the bundled library.</p></footer>
+<script type="module">
+  import { init } from '../../../skills/frontend-craft/kit/craft-motion.js';
+  init(document);
+</script>
+</body>
+</html>
