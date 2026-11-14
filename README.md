@@ -22,7 +22,7 @@ prompt ──> frontend-craft (router)
 
 | Skill | Job |
 |---|---|
-| [`frontend-craft`](skills/frontend-craft/SKILL.md) | The router and the build run: 12 art directions, 24 palettes, 24 type pairings, 14 compositions, 9 scroll set pieces, a dependency-free motion kit, and `check.mjs` (defects plus a richness floor). |
+| [`frontend-craft`](skills/frontend-craft/SKILL.md) | The router and the build run: 16 art directions, 24 palettes, 24 type pairings, 14 compositions, 14 scroll set pieces, 4 WebGL hero scenes, 43 curated React Bits components, a dependency-free motion kit, and `check.mjs` (defects, a richness floor, the AI tells and impeccable's detector, on every page of a site). |
 | [`craft-motion`](skills/craft-motion/SKILL.md) | Add, fix or trim motion in an interface that already exists. |
 | [`craft-review`](skills/craft-review/SKILL.md) | Strict rendered review: findings as Before, After, Why with exact values. Does not edit. |
 | [`craft-learn`](skills/craft-learn/SKILL.md) | Turn a session's design corrections into testable rules in `DESIGN.md`. |
@@ -91,11 +91,13 @@ node <skill>/scripts/check.mjs       # until RESULT: PASS, then impeccable and r
 
 ### Why two agents no longer build the same page
 
-Two models given the same prompt used to converge: the same palette family, the same hero, the same photographs. Now each build is dealt an **art direction** (night poster, editorial magazine, colour block, cinematic chapters, collage, Swiss grid, kinetic type, origin route, brutal, soft pop, gallery rail, split duotone), each with its own grounds, type scale, photo treatment and two moves that break the template. With `--risk bold` (the default) about 40% of deals come from outside the subject's usual moods on purpose, and a subject that matches only one direction still draws from at least three. Measured over 2,000 deals for a coffee brief (`--moods coffee,warm`), all 12 directions come up and none more than 13% of the time; two independent deals share a direction 9% of the time and the whole hand (direction, palette, type, composition) 0.15% (`tests/deal.test.mjs` asserts under 20% and 2%).
+Two models given the same prompt used to converge: the same palette family, the same hero, the same photographs. Now each build is dealt an **art direction** (night poster, editorial magazine, colour block, cinematic chapters, collage, Swiss grid, kinetic type, origin route, brutal, soft pop, gallery rail, split duotone, bento grid, glass layers, riso print, terminal mono), each with its own grounds, type scale, photo treatment and two moves that break the template. With `--risk bold` (the default) about 40% of deals come from outside the subject's usual moods on purpose, and a subject that matches only one direction still draws from at least three. Measured over 2,000 deals for a coffee brief (`--moods coffee,warm`), all 16 directions come up and none more than 13.1% of the time; two independent deals share a direction 8.7% of the time and the whole hand (direction, palette, type, composition) 0.2%; 39 of the 43 components and all four hero scenes come up (`tests/deal.test.mjs` asserts under 20% and 2%).
 
 ### Set pieces
 
-`kit/set-pieces.css` holds nine scroll scenes on the kit's `data-scrub`: `iris` (the next ground opens through a circle), `type-pass` (a huge line crosses the screen), `zoom` (a full-bleed photograph opens from an inset frame), `curtain` (a photograph parts in two), `fan` (a pile of photographs fans out), `letters` (a heading assembles), `develop` (a photograph comes up from grey), `tilt` and `split`. Each shows its finished state without JavaScript and under reduced motion, and all nine pass the check in Chrome on one page (`tests/fixtures/expressive`). Markup: [set-pieces.md](skills/frontend-craft/references/set-pieces.md).
+`kit/set-pieces.css` holds fourteen scroll scenes on the kit's `data-scrub`: `iris` (the next ground opens through a circle), `type-pass` (a huge line crosses the screen), `zoom` (a full-bleed photograph opens from an inset frame), `curtain` (a photograph parts in two), `fan` (a pile of photographs fans out), `letters` (a heading assembles), `develop` (a photograph comes up from grey), `tilt`, `split`, and the word scroll pieces `word-track` (huge words travel sideways on a pinned screen), `word-swap` (one word of a sentence changes with the scroll), `type-zoom` (the camera flies through a word), `word-mask` (lines rise out of masks) and `bento-assemble`. Each shows its finished state without JavaScript and under reduced motion, and all pass the check in Chrome (`tests/fixtures/expressive`, `tests/fixtures/range`).
+
+The first screen carries one live object, dealt with the direction: `chrome` (liquid metal metaballs), `iridescent` (a pearl ring with thin-film colour), `ink` (the hero photograph in two inks, true colour opening around the pointer) or `dots` (a halftone field that answers the pointer), in plain WebGL and the dealt colours ([scenes.md](skills/frontend-craft/references/scenes.md)). Materials (glass, bento, riso, mono, page transitions) are in `kit/surfaces.css`. Every build is also dealt one React Bits component that fits its direction ([components.md](skills/frontend-craft/references/components.md)). Markup: [set-pieces.md](skills/frontend-craft/references/set-pieces.md).
 
 ## The app run and the kit
 
@@ -120,7 +122,7 @@ Bundled skills are never edited in this repo. Integration lives in the router (`
 
 ## Evals
 
-`evals/cases.json` holds deliberately short prompts; `node scripts/eval.mjs --case <id>` runs one through a real agent CLI and loops the gate's FAIL list back into the session. [docs/evals.md](docs/evals.md) records every run, failures included: the 2.0 kit pages that passed the check but looked flat, and the 2.1 runs where two models routed through `design-taste-frontend` built nearly the same still cafe page, because that engine's house rules fail any scroll motion or effect on a place page. 2.2 is the answer to both; its agent runs will be recorded there.
+`evals/cases.json` holds deliberately short prompts; `node scripts/eval.mjs --case <id>` runs one through a real agent CLI and loops the gate's FAIL list back into the session. [docs/evals.md](docs/evals.md) records every run, failures included: the 2.0 kit pages that passed the check but looked flat, and the 2.1 runs where two models routed through `design-taste-frontend` built nearly the same still cafe page, because that engine's house rules fail any scroll motion or effect on a place page. 2.2 and 2.3 are the answer; their agent runs are recorded there.
 
 ## Develop
 

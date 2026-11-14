@@ -1,5 +1,41 @@
 # Changelog
 
+## 2.3.0 - 2026-11-14
+
+Range: multi-page sites, platforms, a live first screen, library components, and a check that fails the AI tells.
+
+### Why
+The first 2.2 build (a sourdough bakery) passed every check and still read as machine-made: English copy for a
+Colombian audience, slogan-shaped lines, four numbering systems, a tilted round badge, the hero photograph reused,
+a still photograph where premium sites carry a living object, and no component from the libraries already
+installed (the 21st.dev skill pointed at a reference that no longer existed).
+
+### Added
+- Four directions: bento grid, glass layers, riso print, terminal mono. Directions say where they may be dealt
+  (`modes`: persuade, operate) and which hero scenes fit them.
+- Five set pieces: `word-track`, `word-swap`, `type-zoom`, `word-mask`, `bento-assemble` (14 in all), and
+  `kit/surfaces.css` with glass, bento helpers, riso, mono and cross-document page transitions.
+- Hero scenes (`data-scene`, `kit/motion/scene.js`): chrome, iridescent, ink and dots in plain WebGL, in the
+  dealt colours; paused off screen, a still frame under reduced motion, a poster without WebGL.
+- `--kind site --pages /,/menu,...`: two set pieces per page, never the same piece twice; the check runs on every
+  page and judges the direction's breaks across the site.
+- `--kind app` gets a product-UI direction (no set pieces, HeroUI/shadcn controls, Emil's motion rules).
+- `library/components.json`: 43 curated React Bits components generated from the registry by
+  `scripts/sync-components.mjs`; every build is dealt one that fits its direction. `references/components.md`
+  covers React Bits, HeroUI, shadcn and 21st.dev (search and preview only).
+- `--lang`: the check fails a page written or declared in another language (`copy-lang`).
+- New rules: `copy-formula`, `slop-numbering`, `slop-repeat-photo`, `slop-stamp`, `site-transitions`,
+  `deal-break`, `deal-component`, `deal-scene`. The concept gains `# Breaks` (the element of each break) and
+  `# Components`.
+- impeccable's detector runs inside the check on every page (telemetry off); its slop rules fail unless the
+  direction or the deal asks for them.
+- Set pieces, components and scenes used by the last builds are dealt again only when nothing else fits.
+
+### Fixed
+- `data-parallax` measured the element with its own shift applied, so it jittered and the check missed it.
+- The gate did not pass `concept.md` to the check from the Stop hook.
+- CLI tests wrote deal history into the skill folder through a symlink; `history.json` is no longer tracked.
+
 ## 2.2.0 - 2026-11-13
 
 Websites get a dealt art direction, scroll set pieces and real photographs, and fail the check for being flat.

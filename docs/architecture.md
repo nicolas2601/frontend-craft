@@ -1,5 +1,15 @@
 # Architecture and decisions
 
+## 2.3: range and the AI tells
+
+2.3 widens what a deal can be and what the check refuses. Directions carry `modes` (persuade for websites,
+operate for platforms) and `scenes`; `deal()` adds per-page set pieces for `--kind site` (no piece twice), a
+React Bits component from `library/components.json`, a hero scene (`kit/motion/scene.js`, four WebGL shaders),
+and the page language. Recent set pieces, components and scenes are avoided like recent directions. The check
+runs every dealt page, judges the direction's breaks across the site, fails the tells a reviewer called
+machine-made (`rules-slop.mjs`: language, slogan shapes, numbering systems, round badges, a photograph used twice)
+and runs impeccable's detector on each page (`lib/impeccable.mjs`), softening the rules the deal itself chose.
+
 ## 2.2: websites get a dealt direction, set pieces and a richness floor
 
 2.1 sent every website to `design-taste-frontend`. Two real runs on 2026-11-13 (a GPT model in Claude Code and MiniMax then
@@ -17,7 +27,7 @@ distinctive one. 2.2 keeps it bundled and unchanged, and changes the route:
 
 ```
 skills/frontend-craft      router + the build run for every website, app and docs page
-  library/directions.json  12 art directions: grounds, type floor, photo treatment, two template breaks, set pieces
+  library/directions.json  16 art directions (12 in 2.2): grounds, type floor, photo treatment, two template breaks, set pieces
   kit/set-pieces.css       9 scroll scenes on data-scrub (iris, type-pass, zoom, curtain, fan, letters, develop, tilt, split)
   scripts/lib/rules-richness.mjs   the floor a dealt website must clear
 skills/design-taste-frontend  photo library for every website; the run for a quiet site the user asks for
