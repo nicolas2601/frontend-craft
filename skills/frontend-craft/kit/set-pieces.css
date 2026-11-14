@@ -1,0 +1,131 @@
+/*
+  frontend-craft set pieces: scroll scenes built on the kit's data-scrub (--p, 0 to 1).
+  Load after craft.css and layouts.css. Each piece:
+  - shows its finished state without JavaScript (--p unset) and under reduced motion (--p = 1);
+  - moves only transform, opacity, clip-path and filter;
+  - finishes before its element leaves the screen (--q runs 0 to 1 over the first half of --p).
+  Markup for each piece: references/set-pieces.md. MIT.
+*/
+
+/* --q is computed once, on the element that carries data-scrub, and inherited by its parts. */
+:root { --q: 1; }
+[data-scrub] { --q: min(1, calc(var(--p, 1) * 2)); }
+[data-scrub="pinned"] { --q: min(1, calc(var(--p, 1) * 1.25)); }
+
+/* ---------- iris: the next ground opens through a growing circle ---------- */
+.sp-iris__open {
+  min-height: 100svh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  text-align: center;
+  gap: var(--s-6);
+  padding: var(--section) var(--gutter);
+  background: var(--sp-ground, var(--c-ink));
+  color: var(--sp-on, var(--c-bg));
+  clip-path: circle(calc(var(--q) * 75%) at 50% 50%);
+}
+
+/* ---------- type pass: one huge line crosses the screen with the scroll ---------- */
+.sp-type-pass { overflow-x: clip; }
+.sp-type-pass__line {
+  display: block;
+  width: max-content;
+  font-family: var(--f-display);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
+  font-size: clamp(5rem, 1rem + 18vw, 22rem);
+  line-height: 0.85;
+  white-space: nowrap;
+  translate: calc((0.5 - var(--p, 0.5)) * 60%) 0;
+}
+.sp-type-pass__line--back { translate: calc((var(--p, 0.5) - 0.5) * 60%) 0; }
+
+/* ---------- zoom settle: a full-bleed photograph opens from an inset frame ---------- */
+.sp-zoom {
+  margin: 0;
+  overflow: clip;
+  clip-path: inset(calc((1 - var(--q)) * 12%) calc((1 - var(--q)) * 9%) round calc((1 - var(--q)) * 2rem));
+}
+.sp-zoom img, .sp-zoom video {
+  display: block;
+  width: 100%;
+  height: auto;
+  scale: calc(1.25 - var(--q) * 0.25);
+}
+
+/* ---------- curtain: a photograph parts in two and uncovers the words under it ---------- */
+.sp-curtain__stage { position: relative; display: grid; place-items: center; min-height: 100svh; overflow: clip; }
+.sp-curtain__under { max-width: 40rem; padding: var(--gutter); text-align: center; }
+.sp-curtain__half { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sp-curtain__half--l { clip-path: inset(0 50% 0 0); translate: calc(var(--q) * -51%) 0; }
+.sp-curtain__half--r { clip-path: inset(0 0 0 50%); translate: calc(var(--q) * 51%) 0; }
+
+/* ---------- fan: photographs stacked as a pile fan out into a spread ---------- */
+.sp-fan__stage { position: relative; display: grid; place-items: center; min-height: 100svh; overflow: clip; padding: var(--gutter); }
+/* the words sit on a band of the ground so they stay readable over the pile */
+.sp-fan__stage > :is(h2, p, .sp-fan__words) { position: relative; z-index: 2; background: var(--sp-ground, var(--c-bg)); padding: var(--s-2) var(--s-4); }
+.sp-fan__card {
+  position: absolute;
+  width: clamp(9rem, 4rem + 16vw, 20rem);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-2);
+  translate: calc(var(--x, 0%) * var(--q)) calc(var(--y, 0%) * var(--q));
+  rotate: calc(var(--r, 0deg) * var(--q));
+}
+@media (max-width: 640px) {
+  .sp-fan__stage { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); align-content: center; }
+  .sp-fan__stage > :is(h2, p, .sp-fan__words) { grid-column: 1 / -1; }
+  .sp-fan__card { position: static; width: 100%; translate: none; rotate: calc(var(--r, 0deg) * var(--q) * 0.3); }
+}
+
+/* ---------- letters: a heading assembles from scattered letters ---------- */
+.sp-letters { overflow-wrap: normal; }
+.sp-letters > span {
+  display: inline-block;
+  white-space: pre;
+  translate: calc((1 - var(--q)) * var(--dx, 0px)) calc((1 - var(--q)) * var(--dy, 0px));
+  rotate: calc((1 - var(--q)) * var(--dr, 0deg));
+  opacity: calc(0.15 + var(--q) * 0.85);
+}
+.sp-letters > span:nth-child(5n + 1) { --dx: -18vw; --dy: 22svh; --dr: -28deg; }
+.sp-letters > span:nth-child(5n + 2) { --dx: 9vw; --dy: -16svh; --dr: 18deg; }
+.sp-letters > span:nth-child(5n + 3) { --dx: -6vw; --dy: 30svh; --dr: 40deg; }
+.sp-letters > span:nth-child(5n + 4) { --dx: 16vw; --dy: 12svh; --dr: -14deg; }
+.sp-letters > span:nth-child(5n + 5) { --dx: 4vw; --dy: -24svh; --dr: 24deg; }
+.sp-letters-host { overflow-x: clip; }
+
+/* ---------- develop: a photograph comes up from grey and soft to full colour ---------- */
+.sp-develop { margin: 0; overflow: clip; }
+.sp-develop img, .sp-develop video {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: grayscale(calc(1 - var(--q))) blur(calc((1 - var(--q)) * 6px));
+  scale: calc(1.08 - var(--q) * 0.08);
+}
+
+/* ---------- tilt: a picture or panel rises from a tilted plane ---------- */
+.sp-tilt { perspective: 1400px; }
+.sp-tilt > * {
+  transform-origin: 50% 100%;
+  transform: rotateX(calc((1 - var(--q)) * 26deg)) translateY(calc((1 - var(--q)) * 6svh));
+}
+
+/* ---------- split: one half holds still while the other scrolls past it ---------- */
+.sp-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-12); padding-inline: var(--gutter); }
+.sp-split__still { position: sticky; top: 0; height: 100svh; display: grid; align-content: center; gap: var(--s-6); }
+.sp-split__flow { display: grid; gap: var(--s-12); padding-block: 30svh; }
+.sp-split__flow img { width: 100%; height: auto; border-radius: var(--r-sm); }
+@media (max-width: 760px) {
+  .sp-split { grid-template-columns: minmax(0, 1fr); }
+  .sp-split__still { position: static; height: auto; padding-block: var(--section) 0; }
+  .sp-split__flow { padding-block: var(--s-8) var(--section); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-scrub] { --q: 1; }
+  .sp-type-pass__line, .sp-type-pass__line--back { translate: none; }
+}
