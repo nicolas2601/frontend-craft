@@ -11,9 +11,10 @@ try { input = JSON.parse(fs.readFileSync(0, 'utf8') || '{}'); } catch { /* no in
 const prompt = String(input.prompt ?? '');
 
 if (WEB.test(prompt) && !NOT_UI.test(prompt)) {
-  const context = 'frontend-craft: this is web page work. Load the frontend-craft skill and follow its route: '
-    + 'a website or landing page builds with design-taste-frontend (its deal, photographs, moments, checker and gate.mjs until GATE: PASS), '
-    + 'then the impeccable and review-animations finish passes; an app screen or docs uses the frontend-craft run (start.mjs, kit, check.mjs). '
+  const context = 'frontend-craft: this is web page work. Load the frontend-craft skill and follow its run: '
+    + 'start.mjs deals a website an art direction, palette, type, composition and two scroll set pieces; write .craft/concept.md, '
+    + 'fetch real photographs with the photos.mjs commands in the brief, build from the blueprint, then check.mjs until RESULT: PASS '
+    + 'and the impeccable and review-animations finish passes. A quiet, sober site the user asks for builds with design-taste-frontend. '
     + 'For motion on an existing page use craft-motion; for a review, craft-review.';
   process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: 'UserPromptSubmit', additionalContext: context } }));
 }
