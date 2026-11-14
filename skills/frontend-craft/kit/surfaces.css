@@ -136,3 +136,11 @@
   .craft-mono--term::after { animation: none; }
   ::view-transition-old(*), ::view-transition-new(*), ::view-transition-group(*) { animation: none; }
 }
+
+/* ---------- hero scenes (data-scene, kit/motion/scene.js): a live WebGL object over a poster ---------- */
+.craft-scene { position: relative; overflow: clip; min-height: 60svh; }
+.craft-scene > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.craft-scene__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* the poster stays for no-JS and for a missing WebGL; the ink scene draws the poster itself */
+.craft-scene[data-scene-on]:not([data-scene-off]) > img { opacity: 0; }
+.craft-scene[data-scene-off] > .craft-scene__canvas { display: none; }

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Escenas del kit</title>
+  <meta name="description" content="Las cuatro escenas WebGL del kit de frontend-craft, una por cuadro.">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/craft.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/surfaces.css">
+  <style>
+    :root { --c-bg: #0f1412; --c-surface: #18201d; --c-ink: #f1efe6; --c-muted: #a7ada6; --c-line: #2a332f; --c-accent: #d9ff5b; --c-accent-ink: #0f1412; }
+    html, body { margin: 0; background: var(--c-bg); color: var(--c-ink); font: 18px/1.5 system-ui, sans-serif; }
+    main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 12px; }
+    .cell { position: relative; }
+    .cell h2 { position: absolute; left: 20px; bottom: 12px; margin: 0; font-size: 22px; z-index: 2; background: var(--c-bg); padding: 4px 10px; }
+    .craft-scene { min-height: 46svh; border-radius: 12px; background: var(--c-surface); }
+    h1 { margin: 24px 12px 0; font-size: 40px; }
+  </style>
+</head>
+<body>
+<h1>Escenas</h1>
+<main>
+  <div class="cell"><div class="craft-scene" data-scene="chrome"></div><h2>chrome</h2></div>
+  <div class="cell"><div class="craft-scene" data-scene="iridescent"></div><h2>iridescent</h2></div>
+  <div class="cell"><div class="craft-scene" data-scene="ink"><img src="../../../skills/design-taste-frontend/assets/photos/img/m21913761-1200.webp" alt="Una hogaza de masa madre sobre la mesa" width="1200" height="800"></div><h2>ink</h2></div>
+  <div class="cell"><div class="craft-scene" data-scene="dots"></div><h2>dots</h2></div>
+</main>
+<script type="module">import { init } from '../../../skills/frontend-craft/kit/craft-motion.js'; init(document);</script>
+</body>
+</html>

@@ -13,8 +13,9 @@ import { entrance } from './motion/entrance.js';
 import { scroll } from './motion/scroll.js';
 import { pointer } from './motion/pointer.js';
 import { text } from './motion/text.js';
+import { scene } from './motion/scene.js';
 
-const EFFECTS = { ...entrance, ...scroll, ...pointer, ...text };
+const EFFECTS = { ...entrance, ...scroll, ...pointer, ...text, scene };
 const active = new WeakMap();
 
 /** Names of every data attribute the kit understands (data-<name>). */
