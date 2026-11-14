@@ -1,5 +1,5 @@
 {
-  "$comment": "Art directions for websites. start.mjs deals one per build (never one of the last four), sometimes on purpose outside the subject's usual moods, so two agents given the same prompt build two different pages. A direction decides what a palette and a composition cannot: how the grounds change, how big the type goes, how the photographs are treated, two layout moves that break the template, and the scroll set pieces (kit/set-pieces.css, references/set-pieces.md). modes says where a direction may be dealt: persuade (websites) and operate (apps and platforms, without set pieces). The check measures grounds, picture count, full-bleed and headline size against these numbers.",
+  "$comment": "Art directions for websites. start.mjs deals one per build (never one of the last four), sometimes on purpose outside the subject's usual moods, so two agents given the same prompt build two different pages. A direction decides what a palette and a composition cannot: how the grounds change, how big the type goes, how the photographs are treated, two layout moves that break the template, and the scroll set pieces (kit/set-pieces.css, references/set-pieces.md). scenes are the live WebGL objects (kit/motion/scene.js) the first screen may carry. modes says where a direction may be dealt: persuade (websites) and operate (apps and platforms, without set pieces). The check measures grounds, picture count, full-bleed and headline size against these numbers.",
   "directions": [
     {
       "id": "night-poster",
@@ -52,6 +52,10 @@
       "avoid": "No cream, no beige, no italic serif word, no rounded cards in a row.",
       "modes": [
         "persuade"
+      ],
+      "scenes": [
+        "ink",
+        "dots"
       ]
     },
     {
@@ -107,6 +111,9 @@
       "avoid": "No cards, no icons in circles, no centred section headings.",
       "modes": [
         "persuade"
+      ],
+      "scenes": [
+        "ink"
       ]
     },
     {
@@ -160,6 +167,10 @@
       "avoid": "No gradients, no shadows, no thin hairline cards.",
       "modes": [
         "persuade"
+      ],
+      "scenes": [
+        "chrome",
+        "dots"
       ]
     },
     {
@@ -215,6 +226,9 @@
       "avoid": "No grid of cards, no icons, no more than two text sizes per chapter.",
       "modes": [
         "persuade"
+      ],
+      "scenes": [
+        "ink"
       ]
     },
     {
@@ -270,6 +284,9 @@
       "avoid": "No drop shadows over 16px blur, no glassmorphism, no cards in rows.",
       "modes": [
         "persuade"
+      ],
+      "scenes": [
+        "ink"
       ]
     },
     {
@@ -324,6 +341,9 @@
       "modes": [
         "persuade",
         "operate"
+      ],
+      "scenes": [
+        "dots"
       ]
     },
     {
@@ -379,6 +399,10 @@
       "avoid": "No paragraph longer than 40 words, no cards, no stock icons.",
       "modes": [
         "persuade"
+      ],
+      "scenes": [
+        "dots",
+        "chrome"
       ]
     },
     {
@@ -432,6 +456,10 @@
       "avoid": "No map pins from an icon set, no fake map tiles, no grey placeholder map.",
       "modes": [
         "persuade"
+      ],
+      "scenes": [
+        "ink",
+        "dots"
       ]
     },
     {
@@ -485,6 +513,9 @@
       "avoid": "No gradients, no blur, no soft shadows, no rounded corners.",
       "modes": [
         "persuade"
+      ],
+      "scenes": [
+        "dots"
       ]
     },
     {
@@ -539,6 +570,10 @@
       "avoid": "No dark mode, no thin type, no square photographs.",
       "modes": [
         "persuade"
+      ],
+      "scenes": [
+        "chrome",
+        "iridescent"
       ]
     },
     {
@@ -592,6 +627,9 @@
       "avoid": "No carousel arrows or dots, no cards, no icons.",
       "modes": [
         "persuade"
+      ],
+      "scenes": [
+        "ink"
       ]
     },
     {
@@ -645,6 +683,10 @@
       "avoid": "No centred hero, no cards, no gradient overlays.",
       "modes": [
         "persuade"
+      ],
+      "scenes": [
+        "ink",
+        "chrome"
       ]
     },
     {
@@ -702,7 +744,11 @@
         "reveal-stagger",
         "magnetic"
       ],
-      "avoid": "No three equal cards in a row, no icon in a tinted circle on every tile, no gradient-border glow on every card."
+      "avoid": "No three equal cards in a row, no icon in a tinted circle on every tile, no gradient-border glow on every card.",
+      "scenes": [
+        "dots",
+        "iridescent"
+      ]
     },
     {
       "id": "glass-layers",
@@ -759,7 +805,11 @@
         "spotlight",
         "mask"
       ],
-      "avoid": "No glass over a flat ground, no purple-blue gradient blobs behind the glass, no glass on every element."
+      "avoid": "No glass over a flat ground, no purple-blue gradient blobs behind the glass, no glass on every element.",
+      "scenes": [
+        "iridescent",
+        "chrome"
+      ]
     },
     {
       "id": "riso-print",
@@ -814,7 +864,11 @@
         "reveal-stagger",
         "magnetic"
       ],
-      "avoid": "No smooth gradients, no drop shadows, no rounded cards, no full-colour untreated photographs."
+      "avoid": "No smooth gradients, no drop shadows, no rounded cards, no full-colour untreated photographs.",
+      "scenes": [
+        "ink",
+        "dots"
+      ]
     },
     {
       "id": "terminal-mono",
@@ -869,7 +923,10 @@
         "reveal-stagger",
         "spotlight"
       ],
-      "avoid": "No fake terminal chrome with three coloured dots, no matrix rain, no green-on-black cliche unless the brand is green."
+      "avoid": "No fake terminal chrome with three coloured dots, no matrix rain, no green-on-black cliche unless the brand is green.",
+      "scenes": [
+        "dots"
+      ]
     }
   ]
 }

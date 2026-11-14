@@ -1,5 +1,5 @@
 // Turn a deal into files: tokens.css, font loading snippets and the direction brief.
-import { componentBlock, finishBlock, languageBlock, pagesBlock, platformBlock, referencesBlock, tellsBlock } from './brief-blocks.mjs';
+import { componentBlock, finishBlock, languageBlock, pagesBlock, platformBlock, referencesBlock, sceneBlock, tellsBlock } from './brief-blocks.mjs';
 
 const plus = (family) => family.replace(/ /g, '+');
 const fallback = (face) => (face.serif ? 'Georgia, serif' : 'system-ui, sans-serif');
@@ -148,7 +148,7 @@ function conceptBlock(d) {
     '# Components', `The dealt library component${d.motion.component ? ` (${d.motion.component.id})` : ''} and any other library piece you used: where it sits, what you changed, its source.`, '```', ''];
 }
 
-export function briefMd(d, { kitDir, checkCmd, taste = null, setPiecesRef = 'references/set-pieces.md', componentsRef = 'references/components.md', surfacesRef = 'references/surfaces.md' }) {
+export function briefMd(d, { kitDir, checkCmd, taste = null, setPiecesRef = 'references/set-pieces.md', componentsRef = 'references/components.md', surfacesRef = 'references/surfaces.md', scenesRef = 'references/scenes.md' }) {
   const lines = [`# Direction for this build (${d.kind}; moods: ${d.moods.join(', ') || 'none given'})`, '', ...directionBlock(d), ...languageBlock(d)];
   if (d.palette) {
     const r = d.palette.roles;
@@ -171,7 +171,7 @@ export function briefMd(d, { kitDir, checkCmd, taste = null, setPiecesRef = 'ref
   lines.push('## Motion', motionBlock(d, setPiecesRef),
     '- Entrance: data-enter on 3-6 first-screen elements in reading order (nav, headline, line, action, visual); done by 1.5 s.',
     '- Press feedback: data-press on every button and button-like link.', '');
-  lines.push(...componentBlock(d, { componentsRef }), ...tellsBlock());
+  lines.push(...sceneBlock(d, { scenesRef }), ...componentBlock(d, { componentsRef }), ...tellsBlock());
   lines.push('## Start from the blueprint',
     `${kitDir}/blueprint.html is this composition as a working page: layout, scale, sticky scenes and kit attributes already wired. Copy its structure into your page or components, replace every {{...}} (the check fails on any left), and build every .visual for real. Restyle details freely; keep the skeleton and the scale.`, '',
     '## Files', `Kit copied to ${kitDir}: tokens.css, craft.css, layouts.css, set-pieces.css, surfaces.css, craft-motion.js (+ motion/), blueprint.html. Load tokens.css, craft.css, layouts.css, set-pieces.css, surfaces.css in that order, then call init(document) once. Glass, bento, riso, mono and page transitions: ${surfacesRef}.`, '',

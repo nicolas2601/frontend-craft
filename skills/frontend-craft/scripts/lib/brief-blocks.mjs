@@ -35,6 +35,25 @@ export function componentBlock(d, { componentsRef }) {
     `- Restyle it with the dealt tokens; check it under reduced motion, at 390 px and with the keyboard. Name it under # Components in .craft/concept.md, with where it sits. How to choose, add and adapt library pieces (React Bits, HeroUI, shadcn, 21st.dev): ${componentsRef}.`, ''];
 }
 
+const SCENE_JOBS = {
+  chrome: 'liquid chrome: metaballs that merge and follow the pointer, reflecting the palette like a studio',
+  iridescent: 'an iridescent ring whose colour shifts with the angle of view, pearl rather than rainbow',
+  ink: 'the hero photograph printed in two inks; its true colour opens around the pointer and the ink breathes',
+  dots: 'a halftone field of dots that swells around the pointer, in ink with the accent where the pointer is',
+};
+
+export function sceneBlock(d, { scenesRef }) {
+  const s = d.motion.scene;
+  if (!s) return [];
+  const markup = s === 'ink'
+    ? `<div class="craft-scene" data-scene="ink"><img src="assets/hero.webp" alt="..." width="1600" height="1000"></div>`
+    : `<div class="craft-scene" data-scene="${s}" aria-hidden="true"></div>`;
+  return [`## Hero scene: ${s}`, `The first screen carries one live object: ${SCENE_JOBS[s]}. It is the page's signature image, not a background behind body text.`, '',
+    '```html', markup, '```', '',
+    `- Give it real room (at least half the first screen) beside or under the headline; the words sit on solid ground or strong contrast, never on the busiest part. Kit: \`surfaces.css\` (.craft-scene) and \`craft-motion.js\` (data-scene). It pauses off screen, renders a still under reduced motion and keeps its poster without WebGL. Rules and variants: ${scenesRef}.`,
+    '- Pair it with huge type and one or two real facts set as HTML on top of the scene (a weight, a time, a count), not decorative labels.', ''];
+}
+
 export function referencesBlock(d) {
   if (!d.direction) return [];
   return ['## References (optional, 10 minutes)',

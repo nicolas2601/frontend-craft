@@ -205,3 +205,12 @@ test('the deal carries the page language and summarize records the pieces for th
   assert.deepEqual(sum.setPieces, d.motion.setPieces);
   assert.equal(sum.component, d.motion.component.id);
 });
+
+test('websites are dealt a hero scene from their direction, never the one the last build had', () => {
+  for (let s = 1; s <= 40; s += 1) {
+    const d = deal({ lib, kind: 'landing', moods: ['food'], rng: rngFrom(s), history: [{ scene: 'ink' }] });
+    assert.ok(d.direction.scenes.includes(d.motion.scene), `${d.motion.scene} from ${d.direction.id}`);
+    if (d.direction.scenes.length > 1) assert.notEqual(d.motion.scene, 'ink');
+    assert.equal(deal({ lib, kind: 'app', moods: ['tech'], rng: rngFrom(s) }).motion.scene, null, 'apps get no scene');
+  }
+});

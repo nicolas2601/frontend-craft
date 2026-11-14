@@ -90,3 +90,13 @@ test('every direction is complete and only names set pieces and supports that ex
     if (d.scheme !== 'any') assert.ok(lib.palettes.some((p) => p.scheme === d.scheme), `${d.id} has palettes in its scheme`);
   }
 });
+
+test('every direction names hero scenes the kit can draw', async () => {
+  const { SCENES } = await import('../skills/frontend-craft/kit/motion/shaders.js');
+  const doc = fs.readFileSync(path.join(SKILL_DIR, 'references', 'scenes.md'), 'utf8');
+  for (const d of loadLibrary().directions) {
+    assert.ok(d.scenes?.length, `${d.id} has scenes`);
+    for (const id of d.scenes) assert.ok(SCENES.includes(id), `${d.id}: ${id}`);
+  }
+  for (const id of SCENES) assert.match(doc, new RegExp(`\`${id}\``), `scenes.md documents ${id}`);
+});

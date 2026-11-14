@@ -7,7 +7,7 @@
     node <skill>/scripts/start.mjs --kind app --moods tech,precise --lang en                   # a platform or app UI
         [--url http://localhost:5173 | --root dist | --file index.html]
         [--risk safe|bold|wild] [--redeal] [--seed 42]
-        [--pin direction=id,palette=id,type=id,composition=id,signature=id,component=Id] [--brand] [--kit-only] [--list]
+        [--pin direction=id,palette=id,type=id,composition=id,signature=id,component=Id,scene=id] [--brand] [--kit-only] [--list]
 
   Websites (every kind but app and docs) are dealt an art direction as well: grounds, type scale,
   picture treatment, two template breaks and two scroll set pieces per page (never the same piece on
@@ -155,7 +155,7 @@ export function run(argv, cwd = process.cwd()) {
   const rel = path.relative(cwd, script);
   const checkCmd = `node ${rel.startsWith('..') ? script : rel}`;
   const ref = (f) => path.join(SKILL, 'references', f);
-  const brief = briefMd(current, { kitDir, checkCmd, taste: tasteSkill(), setPiecesRef: ref('set-pieces.md'), componentsRef: ref('components.md'), surfacesRef: ref('surfaces.md') });
+  const brief = briefMd(current, { kitDir, checkCmd, taste: tasteSkill(), setPiecesRef: ref('set-pieces.md'), componentsRef: ref('components.md'), surfacesRef: ref('surfaces.md'), scenesRef: ref('scenes.md') });
   fs.writeFileSync(path.join(dir, 'brief.md'), brief);
   const tail = target ? `Gate armed on ${target.url ?? target.root}.`
     : 'No target yet: once the dev server runs, re-run start.mjs with --url <dev url> (the deal is kept), or pass --root <build folder>.';

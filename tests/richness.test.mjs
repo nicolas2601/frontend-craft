@@ -65,3 +65,10 @@ test('a concept with breaks but no element, or without the dealt component, fail
 test('apps and docs are not held to the photograph floor', () => {
   assert.deepEqual(richnessRules({ ...rich, richness: { ...rich.richness, pictures: 0 }, kind: 'app' }), []);
 });
+
+test('a dealt hero scene must be on the page and running', () => {
+  const dealt = { ...rich.deal, motion: { ...rich.deal.motion, scene: 'chrome' } };
+  assert.deepEqual(ids(richnessRules({ ...rich, deal: dealt })), ['deal-scene']);
+  assert.deepEqual(ids(richnessRules({ ...rich, deal: dealt, richness: { ...rich.richness, scenes: [{ id: 'chrome', on: false }] } })), ['scene-off']);
+  assert.deepEqual(richnessRules({ ...rich, deal: dealt, richness: { ...rich.richness, scenes: [{ id: 'chrome', on: true }] } }), []);
+});

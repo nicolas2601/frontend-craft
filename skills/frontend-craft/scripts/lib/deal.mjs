@@ -144,6 +144,7 @@ export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = f
   const sitePages = kind === 'site' ? normalizePages(pages) : [];
   const perPage = persuade && direction ? dealSetPieces(direction, { rng, history, pages: Math.max(1, sitePages.length) }) : [[]];
   const component = pickComponent(lib.components ?? [], { direction, mode, rng, history, pin: pins.component });
+  const scene = persuade && direction?.scenes?.length ? pickScene(direction, { rng, history, pin: pins.scene }) : null;
   return {
     version: 3,
     kind,
@@ -157,7 +158,7 @@ export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = f
     type,
     composition,
     pages: sitePages.map((p, i) => ({ path: p, setPieces: perPage[i] })),
-    motion: { signature: sig(signature), supports: supports.map(sig), setPieces: perPage[0], component },
+    motion: { signature: sig(signature), supports: supports.map(sig), setPieces: perPage[0], component, scene },
   };
 }
 
@@ -182,6 +183,15 @@ export function dealSetPieces(direction, { rng, history = [], pages = 1 }) {
   return Array.from({ length: pages }, () => [queue.shift(), queue.shift()].filter(Boolean));
 }
 
+/** The live first-screen object (kit/motion/scene.js) from the direction's list, not the one the last build had. */
+export function pickScene(direction, { rng, history = [], pin }) {
+  if (pin && direction.scenes.includes(pin)) return pin;
+  const recent = recentIds(history, 'scene', 1);
+  const fresh = direction.scenes.filter((id) => !recent.has(id));
+  const from = fresh.length ? fresh : direction.scenes;
+  return from[Math.floor(rng() * from.length)];
+}
+
 /** One library component that fits the direction (or the mode when there is none), not one of the last few. */
 export function pickComponent(components, { direction, mode, rng, history = [], pin }) {
   const pinned = components.find((c) => c.id === pin);
@@ -203,5 +213,5 @@ export function historyFile() {
 
 export function summarize(d) {
   const setPieces = d.pages?.length ? d.pages.flatMap((p) => p.setPieces) : d.motion.setPieces ?? [];
-  return { direction: d.direction?.id, palette: d.palette?.id, type: d.type?.id, composition: d.composition.id, signature: d.motion.signature.id, setPieces, component: d.motion.component?.id };
+  return { direction: d.direction?.id, palette: d.palette?.id, type: d.type?.id, composition: d.composition.id, signature: d.motion.signature.id, setPieces, component: d.motion.component?.id, scene: d.motion.scene ?? undefined };
 }

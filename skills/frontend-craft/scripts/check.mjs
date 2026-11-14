@@ -101,7 +101,8 @@ export async function runCheck({ target, pages = null, kind = 'landing', deal = 
       const shotsDir = page && list.length > 1 ? path.join(out, 'shots', slug(page)) : path.join(out, 'shots');
       fs.mkdirSync(shotsDir, { recursive: true });
       const own = deal?.pages?.find((p) => p.path === page);
-      const pageDeal = own ? { ...deal, motion: { ...deal.motion, setPieces: own.setPieces } } : deal;
+      // the hero scene belongs to the first page of a site
+      const pageDeal = own ? { ...deal, motion: { ...deal.motion, setPieces: own.setPieces, scene: page === list[0] ? deal.motion.scene : null } } : deal;
       results.push({ page: page ?? '/', url, ...await checkPage(browser, { url, shotsDir, kind, deal: pageDeal, concept, quick, requireDeal, detector }) });
     }
     if (results.length > 1) siteBreaks(results, { deal, kind, concept });

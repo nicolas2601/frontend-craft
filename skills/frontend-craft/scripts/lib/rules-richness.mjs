@@ -65,6 +65,9 @@ export function richnessRules({ richness, doc, motion, deal, concept = null, kin
   if (doc.h1 && doc.h1.size < x.type.minPx) out.push(f('FAIL', 'rich-type', `the h1 is ${Math.round(doc.h1.size)}px at 1440; the ${x.id} direction asks for ${x.type.minPx}px or more`, x.type.how));
   if ((motion.scenes ?? 0) < MIN_SCENES) out.push(f('FAIL', 'rich-scenes', `scroll-linked motion in ${motion.scenes ?? 0} section(s)`, `build the dealt set pieces (${deal.motion.setPieces.join(', ')}) in two different sections`));
   const missing = (deal.motion.setPieces ?? []).filter((id) => !(richness.setPieces ?? []).includes(id));
+  const scene = deal.motion.scene;
+  if (scene && !(richness.scenes ?? []).some((s) => s.id === scene)) out.push(f('FAIL', 'deal-scene', `the dealt hero scene ${scene} is not on the page`, `put <div class="craft-scene" data-scene="${scene}"> in the first screen (references/scenes.md) and load surfaces.css and craft-motion.js`));
+  else if (scene && !(richness.scenes ?? []).some((s) => s.id === scene && s.on)) out.push(f('WARN', 'scene-off', `the ${scene} scene shows its poster: WebGL did not start`, 'open the console; the scene needs craft-motion.js init() and, for ink, a same-origin poster image'));
   if (missing.length) out.push(f('FAIL', 'deal-set-piece', `dealt set piece(s) not on the page: ${missing.map((id) => `sp-${id}`).join(', ')}`, 'build them from references/set-pieces.md with their sp- classes and data-scrub'));
   return [...out, ...conceptRules(concept, deal)];
 }

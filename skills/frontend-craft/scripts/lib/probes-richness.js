@@ -63,7 +63,10 @@ export function probeRichness() {
   for (const el of document.querySelectorAll('[class*="sp-"]')) {
     for (const c of el.classList) if (/^sp-[a-z-]+$/.test(c) && !c.endsWith('-host')) setPieces.add(c.slice(3));
   }
+  const scenes = [...document.querySelectorAll('[data-scene]')].filter((el) => C.visible(el))
+    .map((el) => ({ id: el.dataset.scene, on: el.hasAttribute('data-scene-on') && !el.hasAttribute('data-scene-off') }));
   return {
+    scenes,
     setPieces: [...setPieces],
     pictures: list.length,
     fullBleed: list.some((p) => p.w >= vw * 0.95),

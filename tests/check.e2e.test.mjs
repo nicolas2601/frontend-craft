@@ -77,3 +77,9 @@ test('the AI tells fail: wrong language, slogans, two numbering systems, a tilte
   const ids = new Set(r.findings.filter((x) => x.level === 'FAIL').map((x) => x.id));
   for (const id of ['copy-lang', 'copy-formula', 'slop-numbering', 'slop-stamp', 'slop-repeat-photo']) assert.ok(ids.has(id), `missing ${id}; got ${[...ids].join(', ')}`);
 });
+
+test('the four hero scenes start in headless Chrome without console errors', { skip: !chrome, timeout: 200000 }, async () => {
+  const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/scenes/index.html' }, kind: 'app', out: out(), quick: true, detector: false });
+  assert.deepEqual(r.richness.scenes.map((s) => `${s.id}:${s.on}`).sort(), ['chrome:true', 'dots:true', 'ink:true', 'iridescent:true']);
+  assert.ok(!r.findings.some((x) => x.id === 'console'), r.findings.map((x) => x.id).join(', '));
+});
