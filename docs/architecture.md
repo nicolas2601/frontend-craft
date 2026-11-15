@@ -1,5 +1,19 @@
 # Architecture and decisions
 
+## 2.6: loops that move, without a GPU
+
+A hero loop generated from one still with the same first and last frame barely moves, and the free Hugging Face
+quota allows a few GPU runs a day. So the default loop is made on the machine: `parallax.mjs` asks a small depth
+model (Depth Anything V2 Small, ONNX on the CPU through `lib/depth.py`) where each pixel sits, then renders a
+periodic camera move by inverse mapping: each output pixel samples the still at a position shifted by its depth
+(near things move more, the dolly magnifies them more), with a base zoom computed so no sample ever leaves the
+picture. Periodic means frame n is frame 0, so the loop is exact at any length; the encode goes through `video.mjs`
+with no seam. Scene motion (wind, water) still needs a generated clip; two keyframes (the still and a camera-moved
+edit of it) give Wan a real path, and `video.mjs` joins A to B and B to A before the seam.
+
+Measuring a seam: compare the last-to-first step with the steps around it, not with zero. An encoded loop shows a
+small refresh at every codec keyframe, the seam included; the same step inside the clip measures the same.
+
 ## 2.5: the subject decides, reviewers look
 
 The deal used to buy variety with colour: a wildcard direction brought its own moods, so a heritage guesthouse could
