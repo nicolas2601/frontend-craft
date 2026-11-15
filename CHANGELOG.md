@@ -26,6 +26,15 @@ cannot be paused, or shows a blank box before it loads.
 - `references/motion.md` documents `data-scene` and `data-loop`; `references/checks.md` gains the scene and
   video rows that 2.3 left out.
 
+### Fixed (found watching a GPT build of the hostal loop)
+- `video.mjs` printed the markup with bare file names (`hero.webm`), which 404s when the files sit in
+  `assets/`; it now prints the path from the project root (from the site root under `public/`).
+- `.craft-riso` filtered only `img`, so a hero loop stayed full colour on a riso page; it now covers `video`,
+  and the loop's pause button sits above the riso grain. `hero-video.md` says how a loop takes each
+  direction's picture treatment.
+- Check: `token-undefined` (FAIL) catches a design token read with no fallback and never defined (the model
+  wrote `--s-10` and `--s-20` on a scale that has neither, and the spacing silently became 0).
+
 ## 2.3.0 - 2026-11-14
 
 Range: multi-page sites, platforms, a live first screen, library components, and a check that fails the AI tells.
