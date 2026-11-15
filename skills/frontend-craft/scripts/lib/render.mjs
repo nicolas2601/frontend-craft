@@ -1,4 +1,5 @@
 // Turn a deal into files: tokens.css, font loading snippets and the direction brief.
+import { hexToRgb, luminance } from './color.mjs';
 import { PHOTO_LED } from './deal.mjs';
 import { componentBlock, finishBlock, languageBlock, pagesBlock, platformBlock, referencesBlock, sceneBlock, tellsBlock } from './brief-blocks.mjs';
 
@@ -47,6 +48,9 @@ export function nextFont(type) {
   ].join('\n');
 }
 
+/** The darker of two hex colours. */
+const darker = (a, b) => (luminance(hexToRgb(a)) <= luminance(hexToRgb(b)) ? a : b);
+
 export function tokensCss(d) {
   const { palette, type } = d;
   const r = palette.roles;
@@ -62,6 +66,9 @@ export function tokensCss(d) {
     `  --c-line: ${r.line};`,
     `  --c-accent: ${r.accent};`,
     `  --c-accent-ink: ${r.accentInk};`,
+    // Words over a photograph sit on the darker of the two grounds whatever the scheme: a scrim is always dark.
+    `  --c-scrim: ${darker(r.bg, r.ink)};`,
+    `  --c-on-scrim: ${darker(r.bg, r.ink) === r.bg ? r.ink : r.bg};`,
     `  --f-display: var(--next-display, '${type.display.family}'), ${fallback(type.display)};`,
     `  --f-text: var(--next-text, '${type.text.family}'), ${fallback(type.text)};`,
     type.mono ? `  --f-mono: var(--next-mono, '${type.mono.family}'), ui-monospace, monospace;` : '  --f-mono: ui-monospace, monospace;',
