@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    },
+    "hf-mcp-server": {
+      "type": "http",
+      "url": "https://huggingface.co/mcp?login"
+    }
+  }
+}
