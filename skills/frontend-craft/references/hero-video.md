@@ -26,18 +26,19 @@ Every route starts from the best picture of the subject: the client's photograph
 - make three or four with different seeds and keep the best; look at each full size for melted shapes, people, a photographer's shadow, lettering, a warped horizon;
 - leave calm ground where the headline will sit (sky, a plain wall), on the side the layout puts it.
 
-## Four free routes
+## Five free routes
 
 | Route | Tools | Cost | Good for |
 |---|---|---|---|
 | Parallax from the still | `scripts/parallax.mjs`: a depth map on the CPU, then a slow periodic camera move | $0, on this machine, no quota, any length | The default for places, rooms, landscapes, products on a set. Camera motion only: nothing in the scene moves |
 | Generated motion | Hugging Face MCP: Z-Image Turbo (the still), Qwen-Image-Edit-Angles (the same still with the camera moved), Wan 2.2 first-last-frame (A to B, then B to A) | $0 on a free account, but its ZeroGPU quota allows only a few runs a day: one loop needs 1 edit and 2 video runs | Wind in plants, water, steam, light moving across a wall |
+| Generated motion on Kaggle | The `kaggle-video` skill: Wan 2.2 TI2V-5B (Apache-2.0) in a private Kaggle kernel on a T4 | $0 with a phone-verified Kaggle account: 30 GPU hours a week, no daily quota | Wind, water, light, a slow camera move, when the Hugging Face quota is spent; one way, so the seam is a crossfade |
 | Coded | HTML rendered frame by frame: HyperFrames (`npx hyperframes`) or the bang-motion skill (`scripts/export-frames.mjs`) | $0, local | Kinetic type, product UI, diagrams, brand marks |
 | Footage | The client's own clip, or a free-licence stock clip (Pexels, Coverr) noted in `SOURCES.txt` | $0 | Real people and real places the client owns |
 
 Paid generators cost credits: Google Flow (Veo), Higgsfield, fal, Runway, Kling, and Hugging Face PRO for more ZeroGPU time. Use one only when the person asks for it and accepts the cost. Never use one by default.
 
-When the quota runs out (`ZeroGPU quota exceeded`), stop: never retry in a loop and never switch to a paid provider. Build with the parallax loop now and say in the report that a generated loop can replace it after the quota resets.
+When the quota runs out (`ZeroGPU quota exceeded`), stop: never retry in a loop and never switch to a paid provider. Build with the parallax loop now; with a Kaggle account, generate the motion there (`kaggle-video`); otherwise say in the report that a generated loop can replace it after the quota resets.
 
 ## Route 1: parallax from the still (verified 2026-11-15)
 
