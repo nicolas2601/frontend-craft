@@ -3,7 +3,7 @@
   Turn a short clip into a hero loop for the web: a seamless loop, smooth frame rate, the page's size,
   an H.264 mp4, a VP9 webm and a poster. Needs ffmpeg and ffprobe on the PATH. Free and local.
 
-    node video.mjs <clip.mp4> [--out assets/hero] [--seam crossfade|pingpong|none]
+    node video.mjs <clip.mp4> [more clips] [--out assets/hero] [--seam crossfade|pingpong|none]
                    [--fade 0.4] [--width 1280] [--aspect 16:9|source] [--fps 30] [--start 0] [--end 3]
                    [--grain 0] [--crf 24]
     node video.mjs --doctor        what is installed and what to install
@@ -11,8 +11,10 @@
   Seams: crossfade (default) dissolves the tail into the head; it is clean on a clip generated with the
   same first and last frame, and ghosts on a one-way clip whose end looks unlike its start. pingpong plays
   forward then back, for slow sways (wrong for smoke, water or anything that flows one way). none keeps
-  a clip that already loops (a coded film rendered as an exact loop). How to make the clip for
-  free and the markup: references/hero-video.md.
+  a clip that already loops (a coded film rendered as an exact loop). Several clips are joined in order
+  first (A to B, then B to A: a longer loop with real motion); each later clip drops its first frame,
+  which repeats the previous clip's last. How to make the clips for free and the markup:
+  references/hero-video.md. A loop from one still with no GPU: parallax.mjs.
 */
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -33,7 +35,7 @@ const num = (v, name) => {
 
 /** Options from argv, validated, with defaults. */
 export function options(args) {
-  const o = { ...DEFAULTS, out: args.out ?? 'assets/hero', input: args._[0] };
+  const o = { ...DEFAULTS, out: args.out ?? 'assets/hero', input: args._[0], inputs: args._.length ? [...args._] : [] };
   for (const k of ['fade', 'width', 'fps', 'grain', 'crf']) if (args[k] !== undefined) o[k] = num(args[k], k);
   for (const k of ['start', 'end']) if (args[k] !== undefined) o[k] = num(args[k], k);
   if (args.seam !== undefined) o.seam = String(args.seam);
@@ -50,8 +52,20 @@ export function sizeFor(meta, o) {
   return { w: even(o.width), h: even(o.width / ratio) };
 }
 
-/** The ffmpeg filter graph from [0:v] to [v], and the loop's length in seconds. Pure, so it is testable. */
-export function plan(meta, o) {
+/**
+ * Several clips as one: each later clip drops its first frame (the previous clip's last) and is brought to the
+ * first clip's size and frame rate. Returns the graph prefix ending in [cat] and the joined clip's meta.
+ */
+export function join(metas) {
+  const [first] = metas;
+  const norm = (m, i) => `[${i}:v]${i ? 'trim=start_frame=1,' : ''}setpts=PTS-STARTPTS,fps=${first.fps},scale=${first.width}:${first.height}:flags=lanczos,setsar=1[j${i}]`;
+  const frames = metas.reduce((n, m, i) => n + Math.round((m.frames / m.fps) * first.fps) - (i ? 1 : 0), 0);
+  const graph = `${metas.map(norm).join(';')};${metas.map((_, i) => `[j${i}]`).join('')}concat=n=${metas.length}:v=1:a=0[cat];`;
+  return { graph, meta: { width: first.width, height: first.height, fps: first.fps, frames, duration: frames / first.fps } };
+}
+
+/** The ffmpeg filter graph from [0:v] (or the joined [cat]) to [v], and the loop's length in seconds. Pure, so it is testable. */
+export function plan(meta, o, src = '[0:v]', prefix = '') {
   const start = o.start ?? 0;
   const end = Math.min(o.end ?? meta.duration, meta.duration);
   const trimmed = o.start !== undefined || o.end !== undefined;
@@ -65,15 +79,15 @@ export function plan(meta, o) {
     // after the frame-rate change, so the last frame of the fade is one 1/fps step from the first frame
     if (last <= 2 * o.fade) throw new Error(`the clip (${last.toFixed(2)} s) must be longer than twice --fade (${o.fade} s)`);
     const offset = +(last - 2 * o.fade).toFixed(3);
-    seam = `[0:v]${pre}${rate},split[a][b];[a]trim=start=${o.fade},setpts=PTS-STARTPTS[body];[b]trim=end=${o.fade},setpts=PTS-STARTPTS[head];`
+    seam = `${prefix}${src}${pre}${rate},split[a][b];[a]trim=start=${o.fade},setpts=PTS-STARTPTS[body];[b]trim=end=${o.fade},setpts=PTS-STARTPTS[head];`
       + `[body][head]xfade=transition=fade:duration=${o.fade}:offset=${offset}[s]`;
     duration = last - o.fade;
   } else if (o.seam === 'pingpong') {
     // forward, then back without repeating either end frame; the turn is interpolated like any other step
-    seam = `[0:v]${pre}split[a][b];[b]reverse,trim=start_frame=1:end_frame=${frames - 1},setpts=PTS-STARTPTS[r];[a][r]concat=n=2:v=1:a=0,${rate}[s]`;
+    seam = `${prefix}${src}${pre}split[a][b];[b]reverse,trim=start_frame=1:end_frame=${frames - 1},setpts=PTS-STARTPTS[r];[a][r]concat=n=2:v=1:a=0,${rate}[s]`;
     duration = (2 * frames - 2) / meta.fps;
   } else {
-    seam = `[0:v]${pre}${rate}[s]`;
+    seam = `${prefix}${src}${pre}${rate}[s]`;
     duration = frames / meta.fps;
   }
   const { w, h } = sizeFor(meta, o);
@@ -100,12 +114,15 @@ const ffmpeg = (args) => execFileSync('ffmpeg', ['-v', 'error', '-y', ...args], 
 
 /** Encode the loop: mp4 (H.264), webm (VP9) and a webp poster from its first frame. */
 export function encode(o) {
-  if (!o.input || !fs.existsSync(o.input)) throw new Error(`no clip at "${o.input ?? ''}"; pass the path of an mp4, webm or mov`);
-  const meta = probe(o.input);
-  const p = plan(meta, o);
+  const inputs = o.inputs?.length ? o.inputs : [o.input];
+  for (const f of inputs) if (!f || !fs.existsSync(f)) throw new Error(`no clip at "${f ?? ''}"; pass the path of an mp4, webm or mov`);
+  const metas = inputs.map(probe);
+  const joined = metas.length > 1 ? join(metas) : null;
+  const meta = joined ? joined.meta : metas[0];
+  const p = joined ? plan(meta, o, '[cat]', joined.graph) : plan(meta, o);
   fs.mkdirSync(path.dirname(path.resolve(o.out)), { recursive: true });
   const files = { mp4: `${o.out}.mp4`, webm: `${o.out}.webm`, poster: `${o.out}-poster.webp` };
-  ffmpeg(['-i', o.input, '-filter_complex', p.graph, '-map', '[v]', '-an', '-c:v', 'libx264', '-preset', 'slow', '-crf', String(o.crf),
+  ffmpeg([...inputs.flatMap((f) => ['-i', f]), '-filter_complex', p.graph, '-map', '[v]', '-an', '-c:v', 'libx264', '-preset', 'slow', '-crf', String(o.crf),
     '-pix_fmt', 'yuv420p', '-movflags', '+faststart', files.mp4]);
   ffmpeg(['-i', files.mp4, '-an', '-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', String(Math.round(o.crf + 12)), '-row-mt', '1',
     '-deadline', 'good', '-cpu-used', '2', files.webm]);
