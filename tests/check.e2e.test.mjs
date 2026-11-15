@@ -137,5 +137,9 @@ test('a kit hero loop plays on screen, can be paused, and holds its poster under
 test('autoplaying videos without a poster, a pause control or a reduced-motion stop are caught', { skip: !chrome, timeout: 200000 }, async () => {
   const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/loop/bad.html' }, kind: 'app', out: out(), detector: false });
   const got = new Set(r.findings.map((x) => `${x.level}:${x.id}`));
-  for (const id of ['FAIL:video-reduced', 'FAIL:video-muted', 'WARN:video-pause', 'WARN:video-poster']) assert.ok(got.has(id), `missing ${id}; got ${[...got].join(', ')}`);
+  for (const id of ['FAIL:video-reduced', 'FAIL:video-muted', 'WARN:video-pause', 'WARN:video-poster', 'FAIL:token-undefined']) assert.ok(got.has(id), `missing ${id}; got ${[...got].join(', ')}`);
+  const token = r.findings.find((x) => x.id === 'token-undefined');
+  assert.match(token.msg, /--s-20/);
+  assert.doesNotMatch(token.msg, /--s-8\b/);
+  assert.match(token.fix, /--s-8/, 'the fix lists the defined steps of the same scale');
 });

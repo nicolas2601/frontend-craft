@@ -107,6 +107,12 @@ function layoutRules({ text, overflow, targets, css, fold = {} }) {
   if (css.transitionAll.length) out.push(f('FAIL', 'transition-all', `transition: all on ${css.transitionAll.slice(0, 3).join('; ')}`, 'list the properties: transition: transform 160ms var(--ease-out), opacity 160ms'));
   if (css.easeIn.length) out.push(f('WARN', 'ease-in', `ease-in timing on ${css.easeIn.slice(0, 2).join('; ')}`, 'use var(--ease-out) for anything that enters or responds'));
   if (css.vh100.length) out.push(f('WARN', 'vh-unit', `100vh in ${css.vh100[0]}`, 'use 100svh or 100dvh so mobile browser bars do not crop it'));
+  const tokens = css.undefinedTokens ?? [];
+  if (tokens.length) {
+    const scale = [...new Set(tokens.flatMap((t) => t.scale))];
+    out.push(f('FAIL', 'token-undefined', `design token(s) used but never defined: ${tokens.map((t) => `\`${t.name}\``).join(', ')}; each property falls back to its initial value (a padding or gap of 0, a transparent colour)`,
+      `use a step the tokens define${scale.length ? ` (${scale.join(', ')})` : ''}, or define the token in tokens.css`));
+  }
   return out;
 }
 

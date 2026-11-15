@@ -242,15 +242,27 @@ export function probeCss() {
     if (/(^|,\s*)ease-in(\s*,|$)/.test(cs.transitionTimingFunction) && cs.transitionDuration !== '0s') easeIn.push(window.__craft.describe(el));
     if (all.length >= 6) break;
   }
-  for (const sheet of document.styleSheets) {
-    let rules;
-    try { rules = sheet.cssRules; } catch { continue; }
+  // Design tokens (--s-, --t-, --c-, --r-, --f-) read with no fallback but never defined: the property silently drops to its initial value.
+  const declared = new Set();
+  const used = new Set();
+  const TOKEN = /var\(\s*(--(?:s|t|c|r|f)-[\w-]+)\s*\)/g;
+  const walk = (rules) => {
     for (const rule of rules ?? []) {
       const css = rule.cssText ?? '';
       if (/(min-)?height:\s*100vh/.test(css)) vh100.push(css.slice(0, 80));
+      for (const prop of rule.style ?? []) if (prop.startsWith('--')) declared.add(prop);
+      for (const m of css.matchAll(TOKEN)) used.add(m[1]);
+      if (rule.cssRules) walk(rule.cssRules);
     }
+  };
+  for (const sheet of document.styleSheets) {
+    try { walk(sheet.cssRules); } catch { /* a cross-origin sheet cannot be read */ }
   }
-  return { transitionAll: all, easeIn: easeIn.slice(0, 4), vh100: vh100.slice(0, 4) };
+  for (const el of document.querySelectorAll('[style]')) for (const prop of el.style) if (prop.startsWith('--')) declared.add(prop);
+  const undefinedTokens = [...used].filter((name) => !declared.has(name)).slice(0, 8).map((name) => ({
+    name, scale: [...declared].filter((d) => d.startsWith(name.slice(0, 4))).slice(0, 14),
+  }));
+  return { transitionAll: all, easeIn: easeIn.slice(0, 4), vh100: vh100.slice(0, 4), undefinedTokens };
 }
 
 /** The hero's own action (not the nav's) must sit fully inside the first screen. */

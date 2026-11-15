@@ -20,6 +20,7 @@
 | `contrast` | FAIL | Text under WCAG AA (4.5:1, or 3:1 at 24 px+) | Muted text on surface tints, text on accent without `--c-accent-ink`, opacity on text |
 | `target-tiny` | FAIL | A control under 24 px at 390 | Icon buttons without padding; give 44x44 px |
 | `transition-all` | FAIL | `transition: all` (or Tailwind `transition-all`) | List the properties |
+| `token-undefined` | FAIL | A design token (`--s-`, `--t-`, `--c-`, `--r-`, `--f-`) read with no fallback and never defined, such as `--s-20` on a scale that stops at `--s-16`; the property silently drops to 0 or transparent | Use a step the tokens define (the finding lists them) or define it |
 | `content-invisible` | FAIL | Text never becomes visible after scrolling the whole page | A reveal that never fires, or an element hidden by CSS with no script to show it |
 | `reduced-invisible` | FAIL | With reduced motion, text stays hidden | Custom animations that only reach the visible state by animating |
 | `nojs-invisible` | FAIL | Without JavaScript, text is hidden | Hidden initial states not scoped to `html.craft-js` |
