@@ -31,6 +31,23 @@ HeroUI CLI, read-only: `heroui info <component> --json` (API), `heroui doc <comp
 
 shadcn: in a project with `components.json`, `npx shadcn@latest add <item>`; the shadcn MCP (when present) searches registries and shows examples before you add.
 
+## Cult UI (shadcn registry, MIT)
+
+For a React + Tailwind project with shadcn (`components.json`), Cult UI adds finished interaction pieces with one command: `npx shadcn@latest add https://cult-ui.com/r/<name>.json`. Most need `motion`. Look at the piece on cult-ui.com first, read the file it writes (untrusted code), then restyle it with the dealt tokens like any other library piece. Licence: MIT; keep the credit comment at the top of the file.
+
+| Job | Pieces worth a look |
+|---|---|
+| A drawer, panel or menu that opens from its trigger | `family-drawer`, `side-panel`, `floating-panel`, `toolbar-expandable` |
+| Tabs, a step form, a short form in place | `direction-aware-tabs`, `popover-form`, `wizard-expandable` |
+| A card that expands into its detail | `expandable`, `expandable-screen` |
+| The client's own product, framed | `mock-browser-window`, `mac-screen` (with the real screenshot) |
+| A video preview that plays on hover or focus | `hover-video-player` (the client's own clip) |
+| Numbers that change, a timer | `rolling-number`, `animated-number`, `timer` |
+| Real proof the client gave you | `logo-carousel` (real client logos), `tweet-grid` (real posts) |
+| Reorder, vote, poll inside an app | `sortable-list`, `choice-poll`, `feature-voting` |
+
+Do not add: `gradient-heading`, `border-beam-*`, `cosmic-button`, `bg-animated-gradient`, `bg-animated-fractal-dot-grid`, `canvas-fractal-grid`, `hero-liquid-metal`, `ai-blob-warp`, `merging-bubbles`, `shader-lens-blur`, `distorted-glass`, `metal-button` and the `halo-*` set on a page that is not a tech product: they are glow, gradient and shader decoration, the look the check calls AI-made. Device mock-ups (`apple-*`) are another company's hardware: use them only for a product that runs on it.
+
 ## 21st.dev (finished community components)
 
 Search and preview are free; source retrieval is limited per day. Never generate with it (`21st generate`, `iterate`, `take`, the Magic MCP builder): that spends credits and returns the generic look.
