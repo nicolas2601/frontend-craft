@@ -30,6 +30,7 @@
 | `empty-box` | WARN, FAIL at 3 | A card, tile or panel with its own ground, at least 4% of the screen, that is tall and holds almost nothing, or has a void inside it over 40% of its height (a title at the top and one number at the bottom) | Fit the box to its content (no `min-height`, `align-content: start`), or give it what the subject has: a photograph, a short list of facts, a drawn detail |
 | `footer-missing`, `footer-thin` | FAIL | No footer, or one with under three links and no way to reach the business | The blueprint's `.site-footer`: the name, contact as links (`tel:`, `mailto:`, WhatsApp, a map), hours or the last facts, the section links, one credits line |
 | `magnetic-button` | WARN | A button follows the cursor (`data-magnetic`) | Remove it: `data-press` and a hover colour are the feedback a button needs |
+| `look-pending` | FAIL | The colours and type were never chosen: `tokens.css` still holds the neutral stand-ins | Choose them (`references/color-type.md`) and run `design.mjs set` |
 | `content-invisible` | FAIL | Text never becomes visible after scrolling the whole page | A reveal that never fires, or an element hidden by CSS with no script to show it |
 | `reduced-invisible` | FAIL | With reduced motion, text stays hidden | Custom animations that only reach the visible state by animating |
 | `nojs-invisible` | FAIL | Without JavaScript, text is hidden | Hidden initial states not scoped to `html.craft-js` |
