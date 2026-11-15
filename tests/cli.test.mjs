@@ -115,3 +115,28 @@ test('the plugin hook points web-page prompts at frontend-craft and stays silent
   }
   for (const p of ['fix the failing migration', 'write a web scraper for prices']) assert.equal(ask(p), '', p);
 });
+
+test('start.mjs --palette-from takes the colours from the subject picture and keeps the rest of the deal', { skip: spawnSync('ffmpeg', ['-version']).status !== 0 }, () => {
+  const { dir, link } = linkedSkill();
+  const project = path.join(dir, 'hostal');
+  fs.mkdirSync(project);
+  const env = { XDG_STATE_HOME: path.join(dir, 'state') };
+  const start = (...args) => node([path.join(link, 'scripts', 'start.mjs'), ...args], project, env);
+  assert.equal(start('--kind', 'landing', '--moods', 'hospitality,heritage,warm', '--lang', 'es', '--seed', '9').status, 0);
+  const before = JSON.parse(fs.readFileSync(path.join(project, '.craft', 'deal.json'), 'utf8'));
+  const still = path.join(project, 'still.png');
+  spawnSync('ffmpeg', ['-v', 'error', '-nostdin', '-f', 'lavfi', '-i', 'color=c=0xefe8da:s=160x90,drawbox=x=0:y=40:w=160:h=34:color=0xa4502f:t=fill,drawbox=x=0:y=74:w=160:h=16:color=0x4f7a3a:t=fill', '-frames:v', '1', still]);
+  const res = start('--palette-from', 'still.png');
+  assert.equal(res.status, 0, res.stderr);
+  const after = JSON.parse(fs.readFileSync(path.join(project, '.craft', 'deal.json'), 'utf8'));
+  assert.equal(after.palette.id, 'from-photo');
+  assert.equal(after.direction.id, before.direction.id, 'the direction is kept');
+  assert.equal(after.composition.id, before.composition.id, 'the composition is kept');
+  assert.match(fs.readFileSync(path.join(project, 'craft', 'tokens.css'), 'utf8'), /palette from-photo \(still\.png\)/);
+  assert.match(res.stdout, /## Palette: from-photo/);
+  assert.match(res.stdout, /Other accents in the picture/);
+  const bad = start('--palette-from', 'missing.webp');
+  assert.equal(bad.status, 2);
+  assert.match(bad.stderr, /no picture at "missing\.webp"/);
+  fs.rmSync(dir, { recursive: true, force: true });
+});

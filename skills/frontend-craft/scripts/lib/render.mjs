@@ -1,4 +1,5 @@
 // Turn a deal into files: tokens.css, font loading snippets and the direction brief.
+import { PHOTO_LED } from './deal.mjs';
 import { componentBlock, finishBlock, languageBlock, pagesBlock, platformBlock, referencesBlock, sceneBlock, tellsBlock } from './brief-blocks.mjs';
 
 const plus = (family) => family.replace(/ /g, '+');
@@ -50,7 +51,7 @@ export function tokensCss(d) {
   const { palette, type } = d;
   const r = palette.roles;
   const lines = [
-    `/* Dealt by frontend-craft: palette ${palette.id}, type ${type.id}, composition ${d.composition.id}. */`,
+    `/* Dealt by frontend-craft: palette ${palette.id}${d.paletteFrom ? ` (${d.paletteFrom})` : ''}, type ${type.id}, composition ${d.composition.id}. */`,
     '/* Re-deal: node <skill>/scripts/start.mjs --redeal. Do not hand-pick other colors or fonts. */',
     ':root {',
     `  color-scheme: ${palette.scheme};`,
@@ -155,6 +156,13 @@ export function briefMd(d, { kitDir, checkCmd, taste = null, setPiecesRef = 'ref
     lines.push(`## Palette: ${d.palette.id} (${d.palette.scheme})`, d.palette.note, '',
       `bg ${r.bg} · surface ${r.surface} · ink ${r.ink} · muted ${r.muted} · line ${r.line} · accent ${r.accent} (text on accent ${r.accentInk})`,
       'Large fields use bg, surface, ink or accent only. The accent marks the primary action and at most one other thing per screen.', '');
+    const alt = d.palette.accents ?? [];
+    if (alt.length > 1) {
+      lines.push(`Other accents in the picture: ${alt.map((a, i) => `${i + 1}. ${a.hex} (${a.share}%)`).join(' · ')}. Another one: \`start.mjs --palette-from ${d.paletteFrom} --accent <n>\`.`, '');
+    }
+    if (!d.paletteFrom && d.moods.some((m) => PHOTO_LED.includes(m))) {
+      lines.push('This subject is sold by its photographs: once the hero picture is chosen (the client\'s photograph or the hero still), take the colours from it with `start.mjs --palette-from <file>`. The deal keeps everything else.', '');
+    }
   }
   if (d.type) {
     const t = d.type;
