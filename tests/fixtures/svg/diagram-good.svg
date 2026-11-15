@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" role="img"><title>Hub with two branches</title>
+<circle cx="200" cy="100" r="30" fill="#2b2622"/>
+<line x1="230" y1="100" x2="320" y2="60" stroke="#2b2622" stroke-width="2"/>
+<circle cx="320" cy="60" r="6" fill="#895b17"/>
+<path d="M170 100 L80 140" fill="none" stroke="#2b2622" stroke-width="2"/>
+<circle cx="80" cy="140" r="4" fill="#895b17"/>
+<text x="20" y="160" font-family="Inter, sans-serif" font-size="14" fill="#2b2622">Kitchen</text>
+<text x="300" y="40" font-family="Inter, sans-serif" font-size="14" fill="#2b2622">Patio</text>
+</svg>
