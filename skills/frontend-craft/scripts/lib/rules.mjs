@@ -2,6 +2,7 @@
 import { deltaE, hexToRgb, isCream, isTerracotta } from './color.mjs';
 import { lintCopy } from './copy.mjs';
 import { parseConcept, richnessRules } from './rules-richness.mjs';
+import { finishRules } from './rules-finish.mjs';
 import { breakRules, slopRules } from './rules-slop.mjs';
 import { videoRules } from './rules-video.mjs';
 import { PHOTO_LED } from './deal.mjs';
@@ -179,7 +180,7 @@ function runtimeRules({ consoleErrors, network }) {
 export function evaluate(facts) {
   const out = [
     ...documentRules(facts), ...fontRules(facts), ...lookRules(facts), ...layoutRules(facts),
-    ...visibilityRules(facts), ...motionRules(facts), ...lateRules(facts), ...mobileRules(facts), ...photoColourRules(facts), ...richnessRules(facts), ...runtimeRules(facts), ...slopRules(facts), ...videoRules(facts),
+    ...visibilityRules(facts), ...motionRules(facts), ...lateRules(facts), ...mobileRules(facts), ...photoColourRules(facts), ...richnessRules(facts), ...runtimeRules(facts), ...slopRules(facts), ...videoRules(facts), ...finishRules(facts),
     ...(facts.deal?.direction && PERSUADE_KINDS.includes(facts.kind) ? breakRules({ slop: facts.slop, concept: parseConcept(facts.concept) }) : []),
     ...lintCopy(`${facts.doc.text}\n${facts.doc.title}\n${facts.doc.description ?? ''}`, facts.doc.ctas),
   ];

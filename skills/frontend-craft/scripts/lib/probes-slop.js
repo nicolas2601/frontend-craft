@@ -72,5 +72,6 @@ export function probeSlop(selectors = []) {
     if (viewTransition) break;
   }
 
-  return { photoRepeats, numbering, numberingExamples, stamps, selectors: found, viewTransition };
+  const magnetic = document.querySelectorAll('[data-magnetic]').length;
+  return { photoRepeats, numbering, numberingExamples, stamps, selectors: found, viewTransition, magnetic };
 }
