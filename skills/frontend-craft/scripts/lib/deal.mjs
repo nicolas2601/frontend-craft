@@ -160,7 +160,8 @@ export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = f
   const type = brand ? null : (byId(lib.pairings, pins.type)
     ?? pick(lib.pairings, { moods: typeMoods, rng, recent: recentIds(history, 'type'), allow: (p) => typeFits(p, palette, creamBg) && serifOk(p) }));
   const composition = byId(lib.compositions, pins.composition)
-    ?? pick(lib.compositions, { rng, recent: recentIds(history, 'composition'), allow: (c) => c.kinds.includes(kind === 'site' ? 'landing' : kind) });
+    // A composition that needs a kind of subject (a product interface, one object on a plinth) only goes to one.
+    ?? pick(lib.compositions, { rng, recent: recentIds(history, 'composition'), allow: (c) => c.kinds.includes(kind === 'site' ? 'landing' : kind) && (!c.needs || c.needs.some((m) => moods.includes(m))) });
 
   const candidates = composition.signatures;
   const recentSig = recentIds(history, 'signature');

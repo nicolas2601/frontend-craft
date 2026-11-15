@@ -254,3 +254,14 @@ test('a palette taken from the subject replaces the dealt one and keeps type off
     assert.match(tokensCss(d), /--c-accent: #895b17;/);
   }
 });
+
+test('a hostel is never dealt a product-interface or single-object composition', () => {
+  const needs = Object.fromEntries(lib.compositions.filter((c) => c.needs).map((c) => [c.id, c.needs]));
+  assert.ok(needs['interface-hero'] && needs['object-center'], Object.keys(needs).join(','));
+  const comps = new Set();
+  for (let s = 1; s <= 120; s += 1) comps.add(deal({ lib, kind: 'landing', moods: PLACE, rng: rngFrom(s) }).composition.id);
+  assert.ok(!comps.has('interface-hero') && !comps.has('object-center'), [...comps].join(','));
+  assert.ok(comps.size >= 4, `still varied: ${[...comps].join(',')}`);
+  const tech = new Set(Array.from({ length: 80 }, (_, s) => deal({ lib, kind: 'landing', moods: ['tech', 'developer'], rng: rngFrom(s + 1) }).composition.id));
+  assert.ok(tech.has('interface-hero'), [...tech].join(','));
+});
