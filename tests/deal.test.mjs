@@ -272,7 +272,7 @@ test('a hostel is never dealt a product-interface or single-object composition',
   const comps = new Set();
   for (let s = 1; s <= 120; s += 1) comps.add(deal({ lib, kind: 'landing', moods: PLACE, rng: rngFrom(s) }).composition.id);
   assert.ok(!comps.has('interface-hero') && !comps.has('object-center'), [...comps].join(','));
-  assert.ok(comps.size >= 4, `still varied: ${[...comps].join(',')}`);
+  assert.ok(comps.size >= 4 && [...comps].every((id) => lib.compositions.find((c) => c.id === id).photoFirst), `varied and photo-first: ${[...comps].join(',')}`);
   const tech = new Set(Array.from({ length: 80 }, (_, s) => deal({ lib, kind: 'landing', moods: ['tech', 'developer'], rng: rngFrom(s + 1) }).composition.id));
   assert.ok(tech.has('interface-hero'), [...tech].join(','));
 });

@@ -61,7 +61,7 @@ Reveals are supports, never the scroll story: fade-ins alone fail the check.
 
 | Attribute | Does | Options |
 |---|---|---|
-| `data-magnetic` | The element leans toward the cursor within 40 px and springs back | strength `0.1`-`0.6` (default 0.3); use on one primary action |
+| `data-magnetic` | The element leans toward the cursor within 40 px and springs back | Not dealt and not recommended: a button that chases the cursor reads as a template trick (the check warns, `magnetic-button`). Only when the user asks for it, on one playful action |
 | `data-spotlight` | A soft accent light follows the cursor over a surface | `--spot-size` (420px) |
 | `data-press` | `scale(0.97)` on press, 140 ms (CSS only) | every button |
 | `data-lift` | Rises 3 px with a shadow on hover (CSS only) | cards that are links |
