@@ -17,7 +17,7 @@ Fix every finding marked **high**. When a reviewer and the deal disagree, the or
 You review a web page that another agent built with frontend-craft. Read-only: change no file. Page: <url>. Project folder: <dir>. Subject: <one line>.
 
 Read <dir>/.craft/brief.md (what was dealt), <dir>/.craft/concept.md and <dir>/.craft/shots/.
-Look at the page yourself with `playwright-cli` (or the browser tools you have): 1440x900, 390x844 and 320x640, first screen and a scroll through every section. Run impeccable's critique and audit method (<skill>/../impeccable/reference/critique.md and audit.md) and its detector: `<skill>/../impeccable/scripts/impeccable detect --json <url>`.
+Look at the page yourself with `playwright-cli` (or the browser tools you have): 1440x900, 390x844 and 320x640, first screen and a scroll through every section. Run impeccable's critique and audit method (<skill>/../impeccable/reference/critique.md and audit.md) and its detector: `<skill>/../impeccable/scripts/impeccable detect --json <url>`. Read Hallmark's finish review (<skill>/../hallmark/references/review-finish.md) and apply it.
 
 Judge it as a senior designer would, against the subject:
 1. Colour: does the palette come from the subject (its materials, its light, its photographs)? Are photographs shown in their true colour when they sell the subject (a place, a dish, a product)?
