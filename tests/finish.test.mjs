@@ -45,3 +45,11 @@ test('a photo-led subject is dealt only photo-first compositions, and no deal us
   const tech = new Set(Array.from({ length: 30 }, (_, s) => deal({ lib, kind: 'landing', moods: ['tech', 'precise'], rng: rngFrom(s + 1) }).composition.id));
   assert.ok([...tech].some((id) => !lib.compositions.find((c) => c.id === id).photoFirst), 'other subjects keep the whole range');
 });
+
+test('a page whose look the model never chose fails; a dealt or brand look is not judged here', async () => {
+  const { lookRules } = await import('../skills/frontend-craft/scripts/lib/rules-finish.mjs');
+  assert.deepEqual(ids(lookRules({ deal: { look: 'model' } })), ['FAIL:look-pending']);
+  assert.deepEqual(lookRules({ deal: { look: 'model', design: { set: true } } }), []);
+  assert.deepEqual(lookRules({ deal: { look: 'deal' } }), []);
+  assert.deepEqual(lookRules({ deal: { look: 'brand' } }), []);
+});

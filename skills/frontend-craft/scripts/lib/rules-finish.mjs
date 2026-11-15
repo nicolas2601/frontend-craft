@@ -45,6 +45,12 @@ export function magneticRules({ slop }) {
   return [f('WARN', 'magnetic-button', `${n} element(s) follow the cursor (data-magnetic)`, 'remove data-magnetic: press feedback (data-press) and a hover colour are the feedback a button needs')];
 }
 
+/** The model chooses the look (design.mjs set); a page built on the neutral stand-ins was never designed. */
+export function lookRules({ deal }) {
+  if (deal?.look !== 'model' || deal.design?.set) return [];
+  return [f('FAIL', 'look-pending', 'the colours and type were never chosen: the page runs on the neutral stand-ins', 'choose them as references/color-type.md says (ui-ux-pro-max for candidates, the subject for the reasons), then run design.mjs set')];
+}
+
 export function finishRules(facts) {
-  return [...heroPictureRules(facts), ...emptyBoxRules(facts), ...footerRules(facts), ...magneticRules(facts)];
+  return [...heroPictureRules(facts), ...emptyBoxRules(facts), ...footerRules(facts), ...magneticRules(facts), ...lookRules(facts)];
 }

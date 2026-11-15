@@ -36,7 +36,7 @@ test('start.mjs deals into a fresh folder and writes a page for plain HTML', () 
   const { dir, link } = linkedSkill();
   const project = path.join(dir, 'site');
   fs.mkdirSync(project);
-  const res = node([path.join(link, 'scripts', 'start.mjs'), '--kind', 'event', '--moods', 'music,festive', '--seed', '3'], project, { XDG_STATE_HOME: path.join(dir, 'state') });
+  const res = node([path.join(link, 'scripts', 'start.mjs'), '--kind', 'event', '--moods', 'music,festive', '--seed', '3', '--composition', 'poster-headline', '--direction', 'night-poster'], project, { XDG_STATE_HOME: path.join(dir, 'state') });
   assert.equal(res.status, 0, res.stderr);
   for (const f of ['.craft/deal.json', '.craft/brief.md', '.craft/gate.json', 'craft/tokens.css', 'craft/layouts.css', 'craft/blueprint.html', 'index.html']) {
     assert.ok(fs.existsSync(path.join(project, f)), f);
@@ -49,7 +49,7 @@ test('start.mjs deals websites an art direction, set pieces, photographs and a c
   const { dir, link } = linkedSkill();
   const project = path.join(dir, 'site');
   fs.mkdirSync(project);
-  const site = node([path.join(link, 'scripts', 'start.mjs'), '--kind', 'landing', '--moods', 'warm,coffee', '--risk', 'wild', '--seed', '11'], project, { XDG_STATE_HOME: path.join(dir, 'state') });
+  const site = node([path.join(link, 'scripts', 'start.mjs'), '--kind', 'landing', '--moods', 'warm,coffee', '--seed', '11', '--composition', 'poster-headline', '--direction', 'origin-route'], project, { XDG_STATE_HOME: path.join(dir, 'state') });
   assert.equal(site.status, 0, site.stderr);
   const deal = JSON.parse(fs.readFileSync(path.join(project, '.craft', 'deal.json'), 'utf8'));
   assert.ok(deal.direction?.id, 'a direction is dealt');
@@ -65,7 +65,7 @@ test('start.mjs deals websites an art direction, set pieces, photographs and a c
   assert.match(site.stdout, /## Library component: \w+ \(React Bits\)/);
   assert.match(site.stdout, /npx shadcn@latest add https:\/\/reactbits\.dev\/r\/\w+-TS-TW/);
   assert.match(site.stdout, /## Finish/);
-  const app = node([path.join(link, 'scripts', 'start.mjs'), '--kind', 'app', '--moods', 'calm,precise', '--seed', '5', '--redeal'], project, { XDG_STATE_HOME: path.join(dir, 'state') });
+  const app = node([path.join(link, 'scripts', 'start.mjs'), '--kind', 'app', '--moods', 'calm,precise', '--seed', '5', '--redeal', '--direction', 'bento-grid'], project, { XDG_STATE_HOME: path.join(dir, 'state') });
   assert.equal(app.status, 0, app.stderr);
   const appDeal = JSON.parse(fs.readFileSync(path.join(project, '.craft', 'deal.json'), 'utf8'));
   assert.ok(appDeal.direction.modes.includes('operate'), 'an app gets a direction made for product UI');
@@ -80,7 +80,7 @@ test('start.mjs deals a multi-page site its pages, a language and keeps the deal
   const project = path.join(dir, 'site');
   fs.mkdirSync(project);
   const start = (...args) => node([path.join(link, 'scripts', 'start.mjs'), ...args], project, { XDG_STATE_HOME: path.join(dir, 'state') });
-  const first = start('--kind', 'site', '--pages', '/,menu,/visit', '--moods', 'food,warm', '--lang', 'es', '--seed', '3');
+  const first = start('--kind', 'site', '--pages', '/,menu,/visit', '--moods', 'food,warm', '--lang', 'es', '--seed', '3', '--composition', 'poster-headline', '--direction', 'editorial-magazine');
   assert.equal(first.status, 0, first.stderr);
   const read = (f) => JSON.parse(fs.readFileSync(path.join(project, '.craft', f), 'utf8'));
   const deal = read('deal.json');
@@ -122,7 +122,7 @@ test('start.mjs --palette-from takes the colours from the subject picture and ke
   fs.mkdirSync(project);
   const env = { XDG_STATE_HOME: path.join(dir, 'state') };
   const start = (...args) => node([path.join(link, 'scripts', 'start.mjs'), ...args], project, env);
-  assert.equal(start('--kind', 'landing', '--moods', 'hospitality,heritage,warm', '--lang', 'es', '--seed', '9').status, 0);
+  assert.equal(start('--kind', 'landing', '--moods', 'hospitality,heritage,warm', '--lang', 'es', '--seed', '9', '--composition', 'photo-full', '--direction', 'cinematic-chapters', '--deal-look').status, 0);
   const before = JSON.parse(fs.readFileSync(path.join(project, '.craft', 'deal.json'), 'utf8'));
   const still = path.join(project, 'still.png');
   spawnSync('ffmpeg', ['-v', 'error', '-nostdin', '-f', 'lavfi', '-i', 'color=c=0xefe8da:s=160x90,drawbox=x=0:y=40:w=160:h=34:color=0xa4502f:t=fill,drawbox=x=0:y=74:w=160:h=16:color=0x4f7a3a:t=fill', '-frames:v', '1', still]);
@@ -138,5 +138,43 @@ test('start.mjs --palette-from takes the colours from the subject picture and ke
   const bad = start('--palette-from', 'missing.webp');
   assert.equal(bad.status, 2);
   assert.match(bad.stderr, /no picture at "missing\.webp"/);
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('start.mjs asks the model for the structure and the direction, then leaves the look pending for design.mjs', () => {
+  const { dir, link } = linkedSkill();
+  const project = path.join(dir, 'hostal');
+  fs.mkdirSync(project);
+  const env = { XDG_STATE_HOME: path.join(dir, 'state') };
+  const start = (...args) => node([path.join(link, 'scripts', 'start.mjs'), ...args], project, env);
+  const menu = start('--kind', 'landing', '--moods', 'hospitality,heritage,warm', '--lang', 'es');
+  assert.equal(menu.status, 3);
+  assert.match(menu.stdout, /# Choose the structure first/);
+  assert.match(menu.stdout, /\*\*photo-full\*\*/);
+  assert.doesNotMatch(menu.stdout, /\*\*bento-dominant\*\*/, 'a photo-led subject is offered photo-first structures only');
+  assert.match(menu.stdout, /# Choose the art direction/);
+  assert.ok(!fs.existsSync(path.join(project, '.craft', 'deal.json')), 'nothing is written before the choice');
+  const res = start('--kind', 'landing', '--moods', 'hospitality,heritage,warm', '--lang', 'es', '--composition', 'photo-full', '--direction', 'cinematic-chapters');
+  assert.equal(res.status, 0, res.stderr);
+  const deal = JSON.parse(fs.readFileSync(path.join(project, '.craft', 'deal.json'), 'utf8'));
+  assert.deepEqual([deal.composition.id, deal.direction.id, deal.look, deal.palette, deal.type], ['photo-full', 'cinematic-chapters', 'model', null, null]);
+  assert.match(res.stdout, /## Colour and type: you choose them/);
+  assert.match(fs.readFileSync(path.join(project, 'craft', 'tokens.css'), 'utf8'), /PENDING/);
+  const design = (...args) => node([path.join(link, 'scripts', 'design.mjs'), ...args], project, env);
+  const bad = design('set', '--bg', '#f6f1e7', '--ink', '#231e18', '--accent', '#7c3aed', '--display', 'Fraunces', '--text', 'Inter', '--why', 'a test of the refusals');
+  assert.equal(bad.status, 1);
+  assert.match(bad.stdout, /FAIL accent-violet/);
+  assert.match(bad.stdout, /FAIL ground-tinted/);
+  assert.match(fs.readFileSync(path.join(project, 'craft', 'tokens.css'), 'utf8'), /PENDING/, 'a refused choice writes nothing');
+  const good = design('set', '--bg', '#fbfaf7', '--ink', '#151413', '--accent', '#9a4a2c', '--display', 'Fraunces', '--text', 'Instrument Sans', '--why', 'accent from the roof tiles in the patio photograph');
+  assert.equal(good.status, 0, good.stdout + good.stderr);
+  const tokens = fs.readFileSync(path.join(project, 'craft', 'tokens.css'), 'utf8');
+  assert.match(tokens, /--c-accent: #9a4a2c;/);
+  assert.match(tokens, /--f-display: var\(--next-display, 'Fraunces'\)/);
+  const after = JSON.parse(fs.readFileSync(path.join(project, '.craft', 'deal.json'), 'utf8'));
+  assert.equal(after.design.set, true);
+  const again = start('--kind', 'landing', '--moods', 'hospitality,heritage,warm', '--lang', 'es', '--url', 'http://127.0.0.1:5173/');
+  assert.equal(again.status, 0, again.stderr);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(project, '.craft', 'deal.json'), 'utf8')).palette.roles.accent, '#9a4a2c', 'the chosen look is kept');
   fs.rmSync(dir, { recursive: true, force: true });
 });

@@ -5,6 +5,8 @@ import { componentBlock, finishBlock, languageBlock, pagesBlock, platformBlock, 
 
 const plus = (family) => family.replace(/ /g, '+');
 const fallback = (face) => (face.serif ? 'Georgia, serif' : 'system-ui, sans-serif');
+// A generic family (the pending stand-in) is a keyword, never a quoted name.
+const family = (face) => (face.family === 'system-ui' ? 'system-ui' : `'${face.family}'`);
 
 function faces(type) {
   return [['display', type.display], ['text', type.text], ['mono', type.mono]].filter(([, f]) => f);
@@ -51,12 +53,23 @@ export function nextFont(type) {
 /** The darker of two hex colours. */
 const darker = (a, b) => (luminance(hexToRgb(a)) <= luminance(hexToRgb(b)) ? a : b);
 
+/** Neutral stand-ins until the model chooses (design.mjs set): white, near-black, the system face. */
+export const PENDING_LOOK = {
+  palette: { id: 'pending', scheme: 'light', roles: { bg: '#ffffff', surface: '#f4f4f3', ink: '#141414', muted: '#5f5f5d', line: '#e3e3e1', accent: '#141414', accentInk: '#ffffff' } },
+  type: { id: 'pending', display: { family: 'system-ui', weights: [700], tracking: '-0.02em', leading: 1, case: 'none', serif: false }, text: { family: 'system-ui', weights: [400, 600] } },
+};
+
 export function tokensCss(d) {
-  const { palette, type } = d;
+  const pending = !d.palette || !d.type;
+  const { palette, type } = pending ? { palette: d.palette ?? PENDING_LOOK.palette, type: d.type ?? PENDING_LOOK.type } : d;
   const r = palette.roles;
   const lines = [
-    `/* Dealt by frontend-craft: palette ${palette.id}${d.paletteFrom ? ` (${d.paletteFrom})` : ''}, type ${type.id}, composition ${d.composition.id}. */`,
-    '/* Re-deal: node <skill>/scripts/start.mjs --redeal. Do not hand-pick other colors or fonts. */',
+    ...(pending
+      ? ['/* PENDING: neutral stand-ins. Choose the colours and type (references/color-type.md), then run design.mjs set. */']
+      : d.design?.set
+        ? [`/* Chosen with design.mjs set: ${d.design.why ?? ''}. Change it with design.mjs set, not by hand. */`]
+        : [`/* Dealt by frontend-craft: palette ${palette.id}${d.paletteFrom ? ` (${d.paletteFrom})` : ''}, type ${type.id}, composition ${d.composition.id}. */`,
+          '/* Re-deal: node <skill>/scripts/start.mjs --redeal. Do not hand-pick other colors or fonts. */']),
     ':root {',
     `  color-scheme: ${palette.scheme};`,
     `  --c-bg: ${r.bg};`,
@@ -69,8 +82,8 @@ export function tokensCss(d) {
     // Words over a photograph sit on the darker of the two grounds whatever the scheme: a scrim is always dark.
     `  --c-scrim: ${darker(r.bg, r.ink)};`,
     `  --c-on-scrim: ${darker(r.bg, r.ink) === r.bg ? r.ink : r.bg};`,
-    `  --f-display: var(--next-display, '${type.display.family}'), ${fallback(type.display)};`,
-    `  --f-text: var(--next-text, '${type.text.family}'), ${fallback(type.text)};`,
+    `  --f-display: var(--next-display, ${family(type.display)}), ${fallback(type.display)};`,
+    `  --f-text: var(--next-text, ${family(type.text)}), ${fallback(type.text)};`,
     type.mono ? `  --f-mono: var(--next-mono, '${type.mono.family}'), ui-monospace, monospace;` : '  --f-mono: ui-monospace, monospace;',
     `  --display-weight: ${Math.max(...type.display.weights)};`,
     `  --display-tracking: ${type.display.tracking};`,
@@ -156,7 +169,23 @@ function conceptBlock(d) {
     '# Components', `The dealt library component${d.motion.component ? ` (${d.motion.component.id})` : ''} and any other library piece you used: where it sits, what you changed, its source.`, '```', ''];
 }
 
-export function briefMd(d, { kitDir, checkCmd, taste = null, setPiecesRef = 'references/set-pieces.md', componentsRef = 'references/components.md', surfacesRef = 'references/surfaces.md', scenesRef = 'references/scenes.md' }) {
+/** The model chooses the colours and type: the method, where candidates come from, and the command that checks the choice. */
+function lookBlock(d, { uupm = '<skill>/../ui-ux-pro-max', design = '<skill>/scripts/design.mjs', colorRef = 'references/color-type.md' } = {}) {
+  const subject = d.moods.join(' ') || '<the subject in 3-5 words>';
+  const photo = d.moods.some((m) => PHOTO_LED.includes(m));
+  return ['## Colour and type: you choose them',
+    `Nothing here is dealt: you decide, as the designer, from the subject. Read ${colorRef} first (a white or near-white ground, a near-black ink, one accent with life taken from the subject; how much of each; which faces).`, '',
+    '1. Candidates (data, not orders; refuse glass styles, default blues, purple, gradients and carousels it suggests):', '', '```sh',
+    `python3 ${uupm}/scripts/search.py "<what is sold> ${subject}" --design-system`,
+    `python3 ${uupm}/scripts/search.py "<the subject's character in 2-4 words>" --domain typography -n 6`,
+    `python3 ${uupm}/scripts/search.py "<the headline face's feel>" --domain google-fonts -n 8`, '```', '',
+    ...(photo ? [`2. The accent from the subject's own picture: \`node ${design} accents <hero photograph>\` lists the colours in it; the strongest material colour usually gives the page its life.`, ''] : []),
+    `${photo ? 3 : 2}. Decide and check (it writes tokens.css, or says what breaks the method and writes nothing):`, '', '```sh',
+    `node ${design} set --bg "#fbfaf7" --ink "#151413" --accent "<hex>" --display "<headline face>" --text "<text face>" --why "<one line: where the accent and the faces come from>"`, '```', '',
+    `${photo ? 4 : 3}. Write the choice and its reasons under \`# Look\` in .craft/concept.md. The check fails while the look is pending.`, ''];
+}
+
+export function briefMd(d, { kitDir, checkCmd, taste = null, setPiecesRef = 'references/set-pieces.md', componentsRef = 'references/components.md', surfacesRef = 'references/surfaces.md', scenesRef = 'references/scenes.md', tools = {} }) {
   const lines = [`# Direction for this build (${d.kind}; moods: ${d.moods.join(', ') || 'none given'})`, '', ...directionBlock(d), ...languageBlock(d)];
   if (d.palette) {
     const r = d.palette.roles;
@@ -167,7 +196,7 @@ export function briefMd(d, { kitDir, checkCmd, taste = null, setPiecesRef = 'ref
     if (alt.length > 1) {
       lines.push(`Other accents in the picture: ${alt.map((a, i) => `${i + 1}. ${a.hex} (${a.share}%)`).join(' · ')}. Another one: \`start.mjs --palette-from ${d.paletteFrom} --accent <n>\`.`, '');
     }
-    if (!d.paletteFrom && d.moods.some((m) => PHOTO_LED.includes(m))) {
+    if (!d.paletteFrom && !d.design?.set && d.moods.some((m) => PHOTO_LED.includes(m))) {
       lines.push('This subject is sold by its photographs: once the hero picture is chosen (the client\'s photograph or the hero still), take the colours from it with `start.mjs --palette-from <file>`. The deal keeps everything else.', '');
     }
   }
@@ -179,6 +208,7 @@ export function briefMd(d, { kitDir, checkCmd, taste = null, setPiecesRef = 'ref
       'Load the fonts (pick one):', '', '```html', fontLinks(t), '```', '', '```ts', nextFont(t), '```', '');
   }
   if (d.brand) lines.push('## Brand mode', 'Palette and type come from the project. Map them onto --c-* and --f-* in your own tokens file.', '');
+  if (d.look === 'model' && !d.design?.set) lines.push(...lookBlock(d, tools));
   const c = d.composition;
   lines.push(`## Composition: ${c.id}`, c.idea, '', `First screen: ${c.firstScreen}`, '',
     'Sections, in order (rename them for the subject; keep the pacing):', ...c.sections.map((s, i) => `${i + 1}. ${s}`), '');
