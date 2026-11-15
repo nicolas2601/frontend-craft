@@ -16,6 +16,29 @@ export function probeStickySections() {
  * What makes a page rich rather than flat: the ground of each top-level section, the photographs
  * (raster pictures at least 160x120 laid out, counted once per source) and whether one runs full bleed.
  */
+/**
+ * Photographs and videos shown recoloured: a grey, sepia, hue-shifted or washed-out filter on them or a parent,
+ * a riso wrapper, or a blend mode on the media itself. A place or a dish sold in false colour reads as a template.
+ */
+export function probePhotoColour() {
+  const C = window.__craft;
+  const media = [...document.querySelectorAll('img, video')].filter((el) => {
+    const r = el.getBoundingClientRect();
+    return C.visible(el) && r.width >= 200 && r.height >= 150 && !/\.svg(\?|#|$)/i.test(el.currentSrc || el.src || '');
+  });
+  const greys = (filter) => {
+    const amount = (name) => { const m = new RegExp(`${name}\\(([\\d.]+)(%?)\\)`).exec(filter); return m ? Number(m[1]) / (m[2] ? 100 : 1) : null; };
+    return (amount('grayscale') ?? 0) >= 0.5 || (amount('sepia') ?? 0) >= 0.5 || /hue-rotate\((?!0deg)/.test(filter) || (amount('saturate') ?? 1) < 0.6;
+  };
+  const treated = media.filter((el) => {
+    if (el.closest('.craft-riso')) return true;
+    if (getComputedStyle(el).mixBlendMode !== 'normal') return true;
+    for (let a = el; a && a !== document.body; a = a.parentElement) if (greys(getComputedStyle(a).filter)) return true;
+    return false;
+  });
+  return { total: media.length, treated: treated.slice(0, 6).map((el) => C.describe(el).slice(0, 60)), count: treated.length };
+}
+
 export function probeRichness() {
   const C = window.__craft;
   const vw = document.documentElement.clientWidth;

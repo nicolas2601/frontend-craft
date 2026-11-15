@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Casa de Piedra</title>
+  <meta name="description" content="Un menú que desaparece en el teléfono y un botón con letra diminuta, para probar las reglas de móvil.">
+  <style>
+    html, body { margin: 0; background: #f6f1e7; color: #221c17; font: 18px/1.5 system-ui, sans-serif; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; }
+    header nav { display: flex; gap: 24px; }
+    header nav a { color: inherit; min-height: 44px; display: inline-flex; align-items: center; }
+    @media (max-width: 700px) { header nav { display: none; } }
+    section { min-height: 100svh; padding: 24px; }
+    .book { font-size: 12px; min-height: 44px; padding: 0 16px; }
+  </style>
+</head>
+<body>
+<header><a href="#top">Casa de Piedra</a><nav aria-label="Secciones"><a href="#casa">La casa</a><a href="#pueblo">El pueblo</a><a href="#llegar">Cómo llegar</a></nav></header>
+<main>
+  <section id="top"><h1>Casa de Piedra en Barichara</h1><button class="book" type="button">Consultar fechas</button></section>
+  <section id="casa"><h2>La casa</h2><p>Seis habitaciones alrededor del patio.</p></section>
+  <section id="pueblo"><h2>El pueblo</h2><p>Calles de piedra y el Camino Real.</p></section>
+  <section id="llegar"><h2>Cómo llegar</h2><p>Desde San Gil, por la vía a Barichara.</p></section>
+</main>
+</body>
+</html>

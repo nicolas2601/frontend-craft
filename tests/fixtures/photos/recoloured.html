@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Patio en gris</title>
+  <meta name="description" content="Tres fotos de un patio mostradas en gris, para probar que un lugar se muestra en su color real.">
+  <style>
+    html, body { margin: 0; background: #f6f1e7; color: #221c17; font: 18px/1.5 system-ui, sans-serif; }
+    main { display: grid; gap: 24px; padding: 24px; }
+    img { display: block; width: 480px; height: 270px; object-fit: cover; }
+    .grey img { filter: grayscale(1) contrast(1.2); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Patio en Barichara</h1>
+  <div class="grey"><img src="../loop/assets/courtyard-poster.webp" alt="El patio con la hamaca" width="480" height="270"></div>
+  <div class="grey"><img src="../loop/assets/courtyard-poster.webp?b" alt="La hamaca de cerca" width="480" height="270"></div>
+  <img src="../loop/assets/courtyard-poster.webp?c" alt="El patio al atardecer" width="480" height="270">
+</main>
+</body>
+</html>
