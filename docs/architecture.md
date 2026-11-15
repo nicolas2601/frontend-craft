@@ -1,5 +1,23 @@
 # Architecture and decisions
 
+## 2.5: the subject decides, reviewers look
+
+The deal used to buy variety with colour: a wildcard direction brought its own moods, so a heritage guesthouse could
+be dealt a riso palette and every photograph tinted to match. Variety now lives in layout, type scale and motion;
+the subject keeps its colours (palettes chosen on its moods only, or taken from its hero picture by
+`lib/palette-from.mjs`: OKLab k-means for grounds and ink, hue bins for the accent, lightness walked until every
+role passes contrast) and its photographs stay in true colour (`PHOTO_LED` subjects never get a direction marked
+`recolours`; `photo-recoloured` fails the page). Compositions can require a kind of subject (`needs`).
+
+Motion is judged by where it happens, not only whether it happens. `data-scrub` maps progress to a readable window
+(top 10% into the screen to centre at 40%), and `scrub-late` re-measures every scroll-linked element at two
+positions (centre at 35% and at 10%) to catch any code, the kit's or the model's, still animating as it leaves.
+Parts of a scrubbed element are placed by their scrub host, and pinned or sticky scenes are left to their own range.
+
+What a script cannot judge goes to two reviewers who did not build the page (`references/review.md`): a design
+critic and a motion and mobile auditor, run in parallel. The plugin ships them as agents generated from the same
+briefs (`scripts/review-agents.mjs`, checked by a test), so Claude Code and every other harness get the same text.
+
 ## 2.4: hero loops
 
 A first screen can carry footage instead of a shader when the subject is real (`references/hero-video.md`).
