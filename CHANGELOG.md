@@ -1,5 +1,36 @@
 # Changelog
 
+## 3.0.0 - 2026-11-15
+
+The model designs. Structure, art direction, colours and faces are the model's choices, made with candidates in front
+of it and checked by scripts; Hallmark joins the bundle.
+
+### Why
+The DeepSeek build of the Barichara hostel showed that a random deal imposes decisions a designer would not take (a
+bento grid for a guesthouse, a wildcard palette), and that the model followed them without judgment. The owner wants
+sober pages (white, black, one colour with life) and a model that decides with the skills, not a dealer.
+
+### Changed (breaking)
+- `start.mjs` prints the compositions and art directions that fit the subject and starts only with `--composition`
+  and `--direction`. Set pieces, motion and the component are still dealt from the chosen direction.
+  `--deal-look --deal-direction` keep the old behaviour for tests and quick drafts.
+- Palette and type are no longer dealt. `tokens.css` starts on neutral stand-ins and the check fails
+  (`look-pending`) until the model runs `design.mjs set`.
+
+### Added
+- `scripts/design.mjs`: `set` checks and writes the model's look (contrast, the sober method: a white or near-white
+  ground, a near-black ink, one accent with chroma; refuses cream grounds, brown or navy ink, violet, neon, warns on
+  framework-default accents and the headline faces every generated page uses; fonts checked against Google Fonts);
+  `theme <slug>` takes a Hallmark theme whole; `accents <photo>` lists the colours in the subject's picture.
+- `references/color-type.md`: how to choose the palette, how much of each colour, how to pair faces, how to read
+  ui-ux-pro-max as candidates (its design system proposed Liquid Glass and navy for a colonial guesthouse).
+- Hallmark (nutlope/hallmark, MIT) bundled: its sloplint runs inside the check on the page's own files (universal
+  tells fail, its house conventions and the kit's files warn), its fifty themes are a look the model may take, its
+  755-photo library is offered in the brief, its hero-first and finish reviews join the run, and `/hallmark` routes
+  to its own run.
+- The kit: `overflow-x: clip` on html and body, disabled states, labels in sentence case.
+- README rewritten as a professional install and use guide, with the design flow and prompts to start with.
+
 ## 2.6.0 - 2026-11-15
 
 Hero loops that are long and visibly alive, the three integrations the 2.5 research recommended, and OpenCode
