@@ -18,6 +18,7 @@ import path from 'node:path';
 import { launch } from './lib/chrome.mjs';
 import { noJsPass, normalPass, reducedPass } from './lib/passes.mjs';
 import { runDetector } from './lib/impeccable.mjs';
+import { pageFiles, runSloplint } from './lib/sloplint.mjs';
 import { PERSUADE_KINDS, evaluate } from './lib/rules.mjs';
 import { parseConcept } from './lib/rules-richness.mjs';
 import { breakRules } from './lib/rules-slop.mjs';
@@ -105,7 +106,14 @@ export async function runCheck({ target, pages = null, kind = 'landing', deal = 
       const own = deal?.pages?.find((p) => p.path === page);
       // the hero scene belongs to the first page of a site
       const pageDeal = own ? { ...deal, motion: { ...deal.motion, setPieces: own.setPieces, scene: page === list[0] ? deal.motion.scene : null } } : deal;
-      results.push({ page: page ?? '/', url, ...await checkPage(browser, { url, shotsDir, kind, deal: pageDeal, concept, quick, requireDeal, detector }) });
+      const result = { page: page ?? '/', url, ...await checkPage(browser, { url, shotsDir, kind, deal: pageDeal, concept, quick, requireDeal, detector }) };
+      if (detector && !quick && target.root) {
+        const kitDir = deal?.kitDir ?? 'craft';
+        const lint = await runSloplint(pageFiles(target.root, page ?? target.page, kitDir), { kit: path.resolve(target.root, kitDir) });
+        result.findings = [...result.findings, ...lint.findings];
+        if (lint.note) result.detectorNote = [result.detectorNote, lint.note].filter(Boolean).join('; ');
+      }
+      results.push(result);
     }
     if (results.length > 1) siteBreaks(results, { deal, kind, concept });
     const first = results[0];

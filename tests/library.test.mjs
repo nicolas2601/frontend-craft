@@ -130,4 +130,19 @@ test('the plugin reviewer agents are generated from review.md and carry its brie
     assert.match(body, /playwright-cli/);
     assert.match(body, /Verdict: ship/);
   }
+  const opencode = agentFiles(undefined, 'opencode');
+  for (const [f, body] of Object.entries(opencode)) {
+    assert.equal(fs.readFileSync(path.join(SKILL_DIR, '..', '..', 'integrations', 'opencode', 'agents', f), 'utf8'), body, `integrations/opencode/agents/${f} is stale`);
+    assert.match(body, /^---\ndescription: >-\n[^\n]+\nmode: subagent\npermissions:\n  - action: edit\n    resource: "\*"\n    effect: deny\n---\n/);
+    assert.equal(body.split('---\n').slice(2).join('---\n'), files[f].split('---\n').slice(2).join('---\n'), 'same brief in both hosts');
+  }
+});
+
+test('landing-patterns.json is generated from ui-ux-pro-max landing.csv, without its colour and effect columns', async () => {
+  const { landingDoc, parseCsv } = await import('../scripts/sync-landing.mjs');
+  const csv = fs.readFileSync(path.join(SKILL_DIR, '..', 'ui-ux-pro-max', 'data', 'landing.csv'), 'utf8');
+  assert.equal(fs.readFileSync(path.join(SKILL_DIR, 'library', 'landing-patterns.json'), 'utf8'), landingDoc(csv), 'stale: run node scripts/sync-landing.mjs');
+  const patterns = JSON.parse(landingDoc(csv)).patterns;
+  assert.ok(patterns.every((p) => !('color' in p) && !('effects' in p)));
+  assert.deepEqual(parseCsv('a,"b, ""c"""\n1,2\n'), [['a', 'b, "c"'], ['1', '2']]);
 });

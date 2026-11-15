@@ -74,6 +74,12 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Nothing ever scrolls sideways; clip (not hidden) keeps sticky and pinned scenes working. */
+html, body { overflow-x: clip; }
+
+/* A control that cannot be used says so, without shifting. */
+:is(button, .btn, input, select, textarea):disabled, [aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+
 body {
   margin: 0;
   background: var(--c-bg);

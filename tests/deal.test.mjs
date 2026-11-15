@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { hexToRgb, isCream } from '../skills/frontend-craft/scripts/lib/color.mjs';
 import {
-  RECENT, RECENT_DIRECTIONS, SCROLL_STORIES, SET_PIECES, deal, dealSetPieces, loadLibrary, normalizePages, pickComponent, rngFrom, summarize,
+  RECENT, RECENT_DIRECTIONS, SCROLL_STORIES, SET_PIECES, deal, dealSetPieces, landingFor, loadLibrary, normalizePages, pickComponent, rngFrom, summarize,
 } from '../skills/frontend-craft/scripts/lib/deal.mjs';
 import { googleFontsUrl, nextFont, tokensCss } from '../skills/frontend-craft/scripts/lib/render.mjs';
 
@@ -272,7 +272,18 @@ test('a hostel is never dealt a product-interface or single-object composition',
   const comps = new Set();
   for (let s = 1; s <= 120; s += 1) comps.add(deal({ lib, kind: 'landing', moods: PLACE, rng: rngFrom(s) }).composition.id);
   assert.ok(!comps.has('interface-hero') && !comps.has('object-center'), [...comps].join(','));
-  assert.ok(comps.size >= 4, `still varied: ${[...comps].join(',')}`);
+  assert.ok(comps.size >= 4 && [...comps].every((id) => lib.compositions.find((c) => c.id === id).photoFirst), `varied and photo-first: ${[...comps].join(',')}`);
   const tech = new Set(Array.from({ length: 80 }, (_, s) => deal({ lib, kind: 'landing', moods: ['tech', 'developer'], rng: rngFrom(s + 1) }).composition.id));
   assert.ok(tech.has('interface-hero'), [...tech].join(','));
+});
+
+test('each kind of page gets the reading order a visitor expects, from the ui-ux-pro-max patterns', () => {
+  assert.equal(landingFor(lib.landing, 'venue', ['hospitality', 'heritage']).id, 'hero-centric-design');
+  assert.equal(landingFor(lib.landing, 'landing', ['hospitality', 'warm']).id, 'hero-centric-design');
+  assert.equal(landingFor(lib.landing, 'landing', ['tech', 'precise']).id, 'feature-rich-showcase');
+  assert.equal(landingFor(lib.landing, 'event', ['music']).id, 'event-conference-landing');
+  assert.equal(landingFor(lib.landing, 'app', ['tech']), null);
+  const d = deal({ lib, kind: 'venue', moods: ['hospitality', 'heritage'], rng: rngFrom(3) });
+  assert.equal(d.landing.id, 'hero-centric-design');
+  assert.ok(d.landing.order.length >= 3 && d.landing.cta);
 });

@@ -11,7 +11,7 @@ The caller gives you the page URL, the project folder, the subject and `<skill>`
 You review a web page that another agent built with frontend-craft. Read-only: change no file. Page: <url>. Project folder: <dir>. Subject: <one line>.
 
 Read <dir>/.craft/brief.md (what was dealt), <dir>/.craft/concept.md and <dir>/.craft/shots/.
-Look at the page yourself with `playwright-cli` (or the browser tools you have): 1440x900, 390x844 and 320x640, first screen and a scroll through every section. Run impeccable's critique and audit method (<skill>/../impeccable/reference/critique.md and audit.md) and its detector: `<skill>/../impeccable/scripts/impeccable detect --json <url>`.
+Look at the page yourself with `playwright-cli` (or the browser tools you have): 1440x900, 390x844 and 320x640, first screen and a scroll through every section. Run impeccable's critique and audit method (<skill>/../impeccable/reference/critique.md and audit.md) and its detector: `<skill>/../impeccable/scripts/impeccable detect --json <url>`. Read Hallmark's finish review (<skill>/../hallmark/references/review-finish.md) and apply it.
 
 Judge it as a senior designer would, against the subject:
 1. Colour: does the palette come from the subject (its materials, its light, its photographs)? Are photographs shown in their true colour when they sell the subject (a place, a dish, a product)?
@@ -19,6 +19,8 @@ Judge it as a senior designer would, against the subject:
 3. Type: does the display face suit the subject's register (a colonial guesthouse is not a snack brand)? Sizes, line length, widows at 390 px.
 4. Composition and rhythm: one idea per section, varied structure, nothing generic (three equal cards, a centred hero over a stock photo, eyebrow labels on every heading).
 5. Copy: facts only this business has; no slogans or invented claims.
-6. What a strong designer would change first.
+6. Finish and detail: scroll the whole page at 1440 and 390 looking for blank areas (half a screen with nothing, a hero with an empty half, a big card holding one number or two lines), sections that say one thing in one line where the subject has more to show (a second photograph, a list of facts, a drawn detail), and the footer (the name, contact as links, hours or last facts, the section links; never one grey line). Name each blank area with its screenshot and what should fill it.
+7. Gimmicks: a button that follows the cursor, a custom cursor, text that scrambles for no reason, decoration that moves while you read. Each one is a finding.
+8. What a strong designer would change first.
 
 Answer with at most 12 findings, most severe first, as a table: severity (high, medium, low) | where (section, width) | what is wrong, with evidence (a screenshot path, a measured value) | the fix, concrete (a token, a property, a layout move). End with one line: "Verdict: ship" or "Verdict: fix first".

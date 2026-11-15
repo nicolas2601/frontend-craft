@@ -35,7 +35,25 @@ export function loadLibrary(dir = LIB) {
     signatures: read('signatures.json').signatures,
     directions: read('directions.json').directions,
     components: fs.existsSync(path.join(dir, 'components.json')) ? read('components.json').components : [],
+    landing: fs.existsSync(path.join(dir, 'landing-patterns.json')) ? read('landing-patterns.json').patterns : [],
   };
+}
+
+/**
+ * The compositions that fit a page: its kind, the kind of subject a composition needs (a product interface only for
+ * software, one object on a plinth only for a product), and for a subject sold by its photographs only those that
+ * open on a photograph, when its kind has one. The model chooses among them.
+ */
+export function compositionsFor(lib, kind, moods = []) {
+  const fits = (c) => c.kinds.includes(kind === 'site' ? 'landing' : kind) && (!c.needs || c.needs.some((m) => moods.includes(m)));
+  const all = lib.compositions.filter(fits);
+  const photo = all.filter((c) => c.photoFirst);
+  return moods.some((m) => PHOTO_LED.includes(m)) && photo.length ? photo : all;
+}
+
+/** The reading order a buyer expects for this kind of page (ui-ux-pro-max landing patterns): the first that fits, or null. */
+export function landingFor(patterns, kind, moods = []) {
+  return patterns.find((p) => p.kinds.includes(kind) && (!p.moods.length || p.moods.some((m) => moods.includes(m)))) ?? null;
 }
 
 export function moodsOf(lib) {
@@ -111,6 +129,15 @@ function shuffled(list, rng) {
   return out;
 }
 
+/** The art directions a page can take, those on the subject's moods first, for the model to choose from. */
+export function directionsFor(lib, kind, moods = []) {
+  const mode = OPERATE_KINDS.includes(kind) ? 'operate' : 'persuade';
+  const photoLed = moods.some((m) => PHOTO_LED.includes(m));
+  const usable = lib.directions.filter((d) => (d.modes ?? ['persuade']).includes(mode) && !(photoLed && d.recolours));
+  const onMood = (d) => d.moods.some((m) => moods.includes(m));
+  return { near: usable.filter(onMood), far: usable.filter((d) => !onMood(d)) };
+}
+
 /**
  * The art direction. With probability RISK[risk] it is taken from outside the subject's moods, so
  * the same brief does not always land on the same look; the last few directions are never repeated.
@@ -142,7 +169,9 @@ export function pickDirection(directions, { moods = [], history = [], rng, risk 
 /**
  * @param {{ lib, kind:string, moods:string[], history?:object[], rng:() => number, pins?:object, brand?:boolean }} o
  */
-export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = false, risk = 'bold', lang = null, pages = [] }) {
+export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = false, look = 'deal', risk = 'bold', lang = null, pages = [] }) {
+  // look: 'deal' picks palette and type from the library; 'model' leaves them to the model (design.mjs set).
+  const ownLook = brand || look === 'model';
   const byId = (list, id) => list.find((x) => x.id === id) ?? null;
   const persuade = !OPERATE_KINDS.includes(kind);
   const mode = persuade ? 'persuade' : 'operate';
@@ -161,15 +190,15 @@ export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = f
   // A subject sold by its photographs keeps its own type register too; the wildcard changes layout and motion.
   const typeMoods = photoLed ? moods : lead(direction?.typeMoods);
   const scheme = direction && direction.scheme !== 'any' ? direction.scheme : null;
-  const palette = brand ? null : (byId(lib.palettes, pins.palette)
+  const palette = ownLook ? null : (byId(lib.palettes, pins.palette)
     ?? pick(lib.palettes, { moods: paletteMoods, rng, recent: recentIds(history, 'palette'), allow: (p) => !scheme || p.scheme === scheme, strict: moods.some((m) => PHOTO_LED.includes(m)) }));
   const creamBg = palette && isCream(hexToRgb(palette.roles.bg)) && !moods.some((m) => SERIF_ON_CREAM.includes(m));
   const serifOk = (p) => direction?.serif == null || p.display.serif === direction.serif;
-  const type = brand ? null : (byId(lib.pairings, pins.type)
+  const type = ownLook ? null : (byId(lib.pairings, pins.type)
     ?? pick(lib.pairings, { moods: typeMoods, rng, recent: recentIds(history, 'type'), allow: (p) => typeFits(p, palette, creamBg, photoLed ? moods : []) && serifOk(p), strict: photoLed }));
+  const shortlist = new Set(compositionsFor(lib, kind, moods).map((c) => c.id));
   const composition = byId(lib.compositions, pins.composition)
-    // A composition that needs a kind of subject (a product interface, one object on a plinth) only goes to one.
-    ?? pick(lib.compositions, { rng, recent: recentIds(history, 'composition'), allow: (c) => c.kinds.includes(kind === 'site' ? 'landing' : kind) && (!c.needs || c.needs.some((m) => moods.includes(m))) });
+    ?? pick(lib.compositions, { rng, recent: recentIds(history, 'composition'), allow: (c) => shortlist.has(c.id) });
 
   const candidates = composition.signatures;
   const recentSig = recentIds(history, 'signature');
@@ -190,12 +219,14 @@ export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = f
     moods,
     lang,
     brand,
+    look: brand ? 'brand' : look,
     risk: direction ? risk : null,
     direction,
     wildcard,
     palette,
     type,
     composition,
+    landing: landingFor(lib.landing ?? [], kind, moods),
     pages: sitePages.map((p, i) => ({ path: p, setPieces: perPage[i] })),
     motion: { signature: sig(signature), supports: supports.map(sig), setPieces: perPage[0], component, scene },
   };

@@ -169,3 +169,14 @@ test('a place shown in grey photographs fails; the same page for a print subject
   const zine = await run(['print', 'music']);
   assert.ok(!zine.findings.some((x) => x.id === 'photo-recoloured'));
 });
+
+test('an unfinished page fails: a text-only first screen for a place, empty tiles and cards, a one-line footer, a magnetic button', { skip: !chrome, timeout: 200000 }, async () => {
+  const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/finish/bad.html' }, kind: 'landing', deal: { version: 3, kind: 'landing', lang: 'es', moods: ['hospitality', 'heritage'], direction: null, palette: null, type: null, motion: { setPieces: [] } }, out: out(), detector: false });
+  const by = (id) => r.findings.find((x) => x.id === id);
+  assert.ok(by('hero-picture'), `missing hero-picture; got ${r.findings.map((x) => x.id).join(', ')}`);
+  assert.equal(by('hero-picture').level, 'FAIL');
+  assert.equal(by('empty-box')?.level, 'FAIL');
+  assert.match(by('empty-box').msg, /3 card/);
+  assert.equal(by('footer-thin')?.level, 'FAIL');
+  assert.equal(by('magnetic-button')?.level, 'WARN');
+});

@@ -1,5 +1,89 @@
 # Changelog
 
+## 3.0.0 - 2026-11-15
+
+The model designs. Structure, art direction, colours and faces are the model's choices, made with candidates in front
+of it and checked by scripts; Hallmark joins the bundle.
+
+### Why
+The DeepSeek build of the Barichara hostel showed that a random deal imposes decisions a designer would not take (a
+bento grid for a guesthouse, a wildcard palette), and that the model followed them without judgment. The owner wants
+sober pages (white, black, one colour with life) and a model that decides with the skills, not a dealer.
+
+### Changed (breaking)
+- `start.mjs` prints the compositions and art directions that fit the subject and starts only with `--composition`
+  and `--direction`. Set pieces, motion and the component are still dealt from the chosen direction.
+  `--deal-look --deal-direction` keep the old behaviour for tests and quick drafts.
+- Palette and type are no longer dealt. `tokens.css` starts on neutral stand-ins and the check fails
+  (`look-pending`) until the model runs `design.mjs set`.
+
+### Added
+- `scripts/design.mjs`: `set` checks and writes the model's look (contrast, the sober method: a white or near-white
+  ground, a near-black ink, one accent with chroma; refuses cream grounds, brown or navy ink, violet, neon, warns on
+  framework-default accents and the headline faces every generated page uses; fonts checked against Google Fonts);
+  `theme <slug>` takes a Hallmark theme whole; `accents <photo>` lists the colours in the subject's picture.
+- `references/color-type.md`: how to choose the palette, how much of each colour, how to pair faces, how to read
+  ui-ux-pro-max as candidates (its design system proposed Liquid Glass and navy for a colonial guesthouse).
+- Hallmark (nutlope/hallmark, MIT) bundled: its sloplint runs inside the check on the page's own files (universal
+  tells fail, its house conventions and the kit's files warn), its fifty themes are a look the model may take, its
+  755-photo library is offered in the brief, its hero-first and finish reviews join the run, and `/hallmark` routes
+  to its own run.
+- The kit: `overflow-x: clip` on html and body, disabled states, labels in sentence case.
+- README rewritten as a professional install and use guide, with the design flow and prompts to start with.
+
+## 2.6.0 - 2026-11-15
+
+Hero loops that are long and visibly alive, the three integrations the 2.5 research recommended, and OpenCode
+set up like Claude Code.
+
+### Why
+The 2.4 hero loop was 2.6 s with almost no motion: the same still as first and last frame makes Wan return to the
+start, so it barely moves. The free Hugging Face quota also ran out after one still and one edit attempt, so a route
+that needs several GPU runs cannot be the only one.
+
+### Fixed (from the DeepSeek build of the Barichara hostel)
+The page passed the check and still read as a template: the deal gave a hostel the `bento-dominant` composition, so
+the first screen was a headline over a grid with the patio below the fold and a tall tile holding one number; every
+blueprint put `data-magnetic` on its main button and ended in a one-line footer placeholder; rail panels, chapter
+cards and bento tiles were big fixed boxes with `align-content: space-between`, which leaves voids. Nothing measured
+any of it.
+- Check: `hero-picture` fails a photo-led subject whose picture covers under 35% of the first screen at 1440 (30% at
+  390); `empty-box` warns on a tall box that holds almost nothing or has a void over 40% of its height (fails at
+  three); `footer-missing` and `footer-thin` fail a footer with under three links and no contact; `magnetic-button`
+  warns. The DeepSeek page now fails on the first three.
+- Deal: photo-led subjects are dealt only photo-first compositions; `magnetic` is no longer dealt by any composition
+  or direction.
+- New composition `photo-full`: the photograph or loop full bleed with the headline on a scrim, then the facts
+  beside a second photograph, a mosaic of five, how to get there. Tokens gain `--c-scrim` and `--c-on-scrim`,
+  always the darker and lighter of ground and ink.
+- Blueprints: a real `.site-footer` (name, contact links, hours, section links, credits), pictures in bento tiles,
+  rail panels and chapters, tiles that start at the top instead of spreading their content apart.
+- The design critic's brief now looks for blank areas, one-line sections, the footer and gimmicks.
+- `kaggle-video`: image-to-video with Wan 2.2 TI2V-5B on Kaggle's free T4s, as a private script kernel.
+
+### Added
+- `scripts/parallax.mjs`: a hero loop from one still with no GPU and no quota. Depth Anything V2 Small (Apache-2.0)
+  estimates depth on the CPU (`scripts/lib/depth.py`, numpy + onnxruntime; the model downloads once), then a slow
+  periodic camera move (`drift`, `dolly`, `pan`) renders an exact loop of 4 to 30 s. Verified on the Barichara
+  courtyard: 12 s, seam equal to any inner step (51.1 dB on the rendered frames), motion score 7.4 against 5.6
+  for the 2.4 loop, 944 KB mp4 at 1280x720.
+- `video.mjs` joins several clips in order before the seam (A to B, then B to A), dropping the frame they share.
+- `references/hero-video.md`: four routes (parallax, generated motion from two keyframes with Qwen-Image-Edit-Angles
+  and Wan 2.2 first-last-frame, coded, footage), a still-photograph prompt that leaves calm ground for the headline,
+  what to do when the quota runs out, and the seam numbers measured again (the 2.4 crossfade seam is 32.6 dB against
+  a 32.4 dB neighbouring step; the doc said 39). `hf-asset-generate` follows.
+- `setup.mjs` reports numpy + onnxruntime.
+- Cult UI in `references/components.md`: the pieces worth a look by job, and the glow and shader pieces to refuse.
+- svg-craft `lint.mjs` measures geometry, after anatomy's audit: labels that overlap, text cut by the viewBox (an
+  error) and leaders that end in empty space.
+- `library/landing-patterns.json`, generated by `scripts/sync-landing.mjs` from ui-ux-pro-max's `landing.csv` (order
+  and main-action placement only, never its colours or effects): the brief prints the reading order a visitor
+  expects for the page's kind (a guesthouse: full-bleed hero, one value line, proof, the action).
+- OpenCode: `integrations/opencode/agents/` gains the two reviewers as subagents (generated from `review.md`, file
+  edits denied), the `frontend` agent follows the 2.5 run (subject first, palette from the hero picture, both
+  reviewers), and `docs/installation.md` lists the MCP servers (Playwright, Hugging Face, Awwwards) and
+  playwright-cli.
+
 ## 2.5.0 - 2026-11-15
 
 Design judgment: the subject decides colour, photographs and composition; motion finishes while it can be read;

@@ -136,6 +136,8 @@
   font-size: var(--t-mega);
   line-height: 0.9;
 }
+/* words travel as separate spans with air between them, never joined by dots */
+.sp-word-track__line span + span { margin-left: 0.5em; }
 /* the travel needs JavaScript (craft-js); without it the words wrap and stay readable */
 .craft-js .sp-word-track__line {
   width: max-content;

@@ -46,8 +46,7 @@
       ],
       "supports": [
         "marquee",
-        "words-blur",
-        "magnetic"
+        "words-blur"
       ],
       "avoid": "No cream, no beige, no italic serif word, no rounded cards in a row.",
       "modes": [
@@ -161,8 +160,7 @@
       ],
       "supports": [
         "words-blur",
-        "count",
-        "magnetic"
+        "count"
       ],
       "avoid": "No gradients, no shadows, no thin hairline cards.",
       "modes": [
@@ -278,7 +276,6 @@
       ],
       "supports": [
         "reveal-stagger",
-        "magnetic",
         "words-blur"
       ],
       "avoid": "No drop shadows over 16px blur, no glassmorphism, no cards in rows.",
@@ -563,7 +560,6 @@
         "word-swap"
       ],
       "supports": [
-        "magnetic",
         "words-blur",
         "reveal-stagger"
       ],
@@ -742,8 +738,7 @@
       "supports": [
         "spotlight",
         "count",
-        "reveal-stagger",
-        "magnetic"
+        "reveal-stagger"
       ],
       "avoid": "No three equal cards in a row, no icon in a tinted circle on every tile, no gradient-border glow on every card.",
       "scenes": [
@@ -863,8 +858,7 @@
       ],
       "supports": [
         "marquee",
-        "reveal-stagger",
-        "magnetic"
+        "reveal-stagger"
       ],
       "avoid": "No smooth gradients, no drop shadows, no rounded cards, no full-colour untreated photographs.",
       "scenes": [

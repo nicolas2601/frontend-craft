@@ -1,5 +1,36 @@
 # Architecture and decisions
 
+## 3.0: the model designs, scripts check
+
+From 2.2 to 2.6 the deal chose the palette, the type and the composition at random within the subject's moods, so
+two models would not converge on the same page. It worked for variety and failed for judgment: a guesthouse got a
+bento grid, a coffee page a riso palette, and the model built what it was dealt. 3.0 moves every design decision to
+the model and keeps the scripts as the floor:
+
+- `start.mjs` lists the compositions and art directions that fit (photo-first structures only for subjects sold by
+  their photographs) and refuses to start until the model names one of each. Variety now comes from the model's
+  reading of the subject, the direction's set pieces (still dealt) and the history the lists exclude.
+- `design.mjs` takes the model's look (or a Hallmark theme), derives the quiet roles, and refuses what breaks the
+  method in `references/color-type.md`. The check fails while the look is pending, so a page cannot ship on the
+  stand-ins.
+- Hallmark's sloplint runs on the page's own files only: the kit's files follow frontend-craft's token conventions,
+  which Hallmark's gates read differently, so findings there stay warnings and the kit was fixed where its tells were
+  real (tracked-caps labels, sideways overflow, disabled states).
+
+## 2.6: loops that move, without a GPU
+
+A hero loop generated from one still with the same first and last frame barely moves, and the free Hugging Face
+quota allows a few GPU runs a day. So the default loop is made on the machine: `parallax.mjs` asks a small depth
+model (Depth Anything V2 Small, ONNX on the CPU through `lib/depth.py`) where each pixel sits, then renders a
+periodic camera move by inverse mapping: each output pixel samples the still at a position shifted by its depth
+(near things move more, the dolly magnifies them more), with a base zoom computed so no sample ever leaves the
+picture. Periodic means frame n is frame 0, so the loop is exact at any length; the encode goes through `video.mjs`
+with no seam. Scene motion (wind, water) still needs a generated clip; two keyframes (the still and a camera-moved
+edit of it) give Wan a real path, and `video.mjs` joins A to B and B to A before the seam.
+
+Measuring a seam: compare the last-to-first step with the steps around it, not with zero. An encoded loop shows a
+small refresh at every codec keyframe, the seam included; the same step inside the clip measures the same.
+
 ## 2.5: the subject decides, reviewers look
 
 The deal used to buy variety with colour: a wildcard direction brought its own moods, so a heritage guesthouse could

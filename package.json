@@ -1,8 +1,8 @@
 {
   "name": "frontend-craft",
-  "version": "2.5.0",
+  "version": "3.0.0",
   "private": true,
-  "description": "Frontend skills for any coding agent: dealt art directions, scroll set pieces and real photographs for websites, a browser gate that fails flat pages, polish and motion skills",
+  "description": "A professional frontend design skill set for coding agents: the model chooses structure, direction, colours and faces with real candidates and scripts that check them, real photographs, timed motion, free hero loops, and a browser check (with impeccable and Hallmark) that refuses the generated look",
   "scripts": {
     "test": "node --test \"tests/*.test.mjs\"",
     "test:unit": "node --test tests/library.test.mjs tests/deal.test.mjs tests/rules.test.mjs tests/gate.test.mjs",

@@ -24,6 +24,10 @@
     "microsoft/playwright-cli": {
       "ref": "b21724888b8100b05ef8dee3a92f2bb03bf4dcde",
       "license": "Apache-2.0"
+    },
+    "nutlope/hallmark": {
+      "ref": "04977e15f3dfd6ee4b74c887dac3eb52665d6c92",
+      "license": "MIT"
     }
   },
   "skills": [
@@ -186,6 +190,14 @@
       "role": "looking at and measuring the rendered page from the shell: screenshots, scroll, reduced motion, the reviewers",
       "hash": "41a0cac9c007e3862357707b133b1786fc9472683be0d6b09360ac15329ab50d",
       "files": 12
+    },
+    {
+      "name": "hallmark",
+      "repo": "nutlope/hallmark",
+      "path": "skills/hallmark",
+      "role": "anti-slop floor and sloplint, fifty finished themes as looks to choose from, a 755-photo Wikimedia library, a hero-first review",
+      "hash": "8b04437dcbf40dd457fca3109f3cfb453d1aee0d668867607053501b560d5d86",
+      "files": 187
     }
   ]
 }

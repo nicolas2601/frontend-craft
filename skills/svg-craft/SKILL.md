@@ -36,7 +36,7 @@ Where does it live (hero, 16 px favicon, deck, README, Figma)? Light, dark or bo
 ```bash
 T=<this skill>/tools                           # node >= 20
 [ -d "$T/node_modules" ] || npm ci --prefix "$T"   # once per install: svgo and playwright-core (no browser download)
-node $T/lint.mjs asset.svg                    # structure, ids, refs, a11y, fonts, safety, motion, budget
+node $T/lint.mjs asset.svg                    # structure, ids, refs, a11y, fonts, safety, motion, budget; geometry: overlapping labels, text cut by the edge, leaders that end in nothing
 node $T/render.mjs asset.svg --out r --sizes 512,64,32,16 --bg both --sheet     # then READ r/asset.sheet.png
 node $T/render.mjs asset.svg --out r --sizes 128,32,16 --bg light --mono --sheet   # silhouette test for marks
 node $T/render.mjs anim.svg --out r --sizes 600 --bg dark --frames 0,1,2,3.5,7     # frame strip for motion

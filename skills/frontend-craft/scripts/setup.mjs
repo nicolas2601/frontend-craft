@@ -2,7 +2,7 @@
 /*
   What frontend-craft needs on this machine, and how to get it. Free tools only; nothing secret is written.
 
-    node <skill>/scripts/setup.mjs             report: Node, a browser, ffmpeg, Python, playwright-cli, the sibling skills, the MCP servers
+    node <skill>/scripts/setup.mjs             report: Node, a browser, ffmpeg, Python (and numpy + onnxruntime), playwright-cli, the sibling skills, the MCP servers
     node <skill>/scripts/setup.mjs --install   also install what is missing and can be installed without sudo:
                                                playwright-cli (npm -g) and, in Claude Code, the Playwright and Hugging Face MCP servers
     node <skill>/scripts/setup.mjs --json      the report as JSON
@@ -18,7 +18,7 @@ import { isMain, parseArgs } from './lib/state.mjs';
 
 const SKILL = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 /** The skills frontend-craft routes to; they must sit next to it. */
-export const SIBLINGS = ['design-taste-frontend', 'impeccable', 'emil-design-eng', 'review-animations', 'craft-motion', 'craft-review', 'craft-learn', 'svg-craft', 'ui-ux-pro-max', 'hf-asset-generate', 'playwright-cli'];
+export const SIBLINGS = ['design-taste-frontend', 'impeccable', 'emil-design-eng', 'review-animations', 'craft-motion', 'craft-review', 'craft-learn', 'svg-craft', 'ui-ux-pro-max', 'hf-asset-generate', 'kaggle-video', 'hallmark', 'playwright-cli'];
 const MIN_NODE = 22;
 export const MCP = {
   playwright: { test: /^(?:plugin:[^:\s]+:)?playwright:/m, add: ['mcp', 'add', 'playwright', '-s', 'user', '--', 'npx', '-y', '@playwright/mcp@latest'] },
@@ -27,6 +27,7 @@ export const MCP = {
 const SYSTEM = {
   ffmpeg: 'Arch: sudo pacman -S ffmpeg · Debian/Ubuntu: sudo apt install ffmpeg · macOS: brew install ffmpeg · Windows: winget install Gyan.FFmpeg',
   python3: 'Arch: sudo pacman -S python · Debian/Ubuntu: sudo apt install python3 · macOS: brew install python · Windows: winget install Python.Python.3.12',
+  depth: 'python3 -m pip install --user numpy onnxruntime (blocked pip: a venv, or Arch sudo pacman -S python-numpy python-onnxruntime-cpu)',
   browser: 'any Chrome, Chromium or Edge (or set CHROME_PATH); `npx playwright install chromium` also works',
 };
 const OTHER_HARNESSES = [
@@ -49,6 +50,7 @@ export function report({ run = defaultRun, skillsDir = path.dirname(SKILL), chro
     browser: { ok: !!browser, path: browser },
     ffmpeg: { ok: run('ffmpeg', ['-version']) !== null },
     python3: { ok: run('python3', ['--version']) !== null },
+    depth: { ok: run('python3', ['-c', 'import numpy, onnxruntime']) !== null },
     playwrightCli: { ok: run('playwright-cli', ['--version']) !== null },
     siblings: Object.fromEntries(SIBLINGS.map((s) => [s, fs.existsSync(path.join(skillsDir, s, 'SKILL.md'))])),
     claude,
@@ -71,6 +73,7 @@ function text(r) {
     `${mark(r.browser.ok)} browser ${r.browser.path ?? `- ${SYSTEM.browser}`}`,
     `${mark(r.ffmpeg.ok)} ffmpeg${r.ffmpeg.ok ? '' : ` - ${SYSTEM.ffmpeg}`} (hero loops, palettes from a photograph)`,
     `${mark(r.python3.ok)} python3${r.python3.ok ? '' : ` - ${SYSTEM.python3}`} (ui-ux-pro-max search)`,
+    `${mark(r.depth.ok)} numpy + onnxruntime${r.depth.ok ? '' : ` - ${SYSTEM.depth}`} (parallax hero loops from a still)`,
     `${mark(r.playwrightCli.ok)} playwright-cli${r.playwrightCli.ok ? '' : ' - npm install -g @playwright/cli@latest (or --install)'} (looking at the page, the reviewers)`,
     ...Object.entries(r.siblings).map(([s, ok]) => `${mark(ok)} skill ${s}${ok ? '' : ' - install every skill of the repo as siblings: npx skills@latest add nicolas2601/frontend-craft --all'}`),
   ];

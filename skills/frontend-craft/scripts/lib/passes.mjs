@@ -7,6 +7,7 @@ import {
 } from './probes.js';
 import { probePhotoColour, probeRichness, probeStickySections } from './probes-richness.js';
 import { probeSlop } from './probes-slop.js';
+import { probeEmptyBoxes, probeFooter, probeHeroPicture } from './probes-finish.js';
 
 const MAX_SCROLL_PAIRS = 10;
 
@@ -130,6 +131,7 @@ export async function normalPass(browser, url, shotsDir, { selectors = [] } = {}
     overflow: { 1440: await s.run(probeOverflow) },
     fold: { 1440: await s.run(probeFold) },
     nav: { 1440: await s.run(probeNav) },
+    heroPicture: { 1440: await s.run(probeHeroPicture) },
   };
   shots.push(await shot(s, path.join(shotsDir, '1440.png')));
   const before = await s.run(probeMotionState);
@@ -138,6 +140,8 @@ export async function normalPass(browser, url, shotsDir, { selectors = [] } = {}
   facts.richness = await s.run(probeRichness); // after the scroll, so lazy pictures have loaded
   facts.photoColour = await s.run(probePhotoColour);
   facts.slop = await s.run(probeSlop, selectors);
+  facts.emptyBoxes = await s.run(probeEmptyBoxes);
+  facts.footer = await s.run(probeFooter);
   const reveals = changed(before, after, (row) => Number(row[9]) > vh && Number(row[0]) < 0.2).length;
   const { linked, sections, indices } = await scrollLinked(s, max, vh);
   const late = await lateScrub(s, indices, vh);
@@ -158,6 +162,7 @@ export async function normalPass(browser, url, shotsDir, { selectors = [] } = {}
   }
   await sleep(500);
   facts.fold[390] = await s.run(probeFold);
+  facts.heroPicture[390] = await s.run(probeHeroPicture);
   facts.text[390] = await s.run(probeText, { minPx: 12 });
   facts.targets = await s.run(probeTargets);
   facts.nav[390] = await s.run(probeNav);

@@ -52,7 +52,7 @@ export function sceneBlock(d, { scenesRef }) {
     '```html', markup, '```', '',
     `- Give it real room (at least half the first screen) beside or under the headline; the words sit on solid ground or strong contrast, never on the busiest part. Kit: \`surfaces.css\` (.craft-scene) and \`craft-motion.js\` (data-scene). It pauses off screen, renders a still under reduced motion and keeps its poster without WebGL. Rules and variants: ${scenesRef}.`,
     '- Pair it with huge type and one or two real facts set as HTML on top of the scene (a weight, a time, a count), not decorative labels.',
-    '- A real subject in real light (a place, a dish, a product, steam, cloth) can take a hero loop instead: a seamless muted clip made free from a still with the Hugging Face MCP (Z-Image Turbo, then Wan 2.2 first-last-frame) and `scripts/video.mjs`. Markup, install and rules: references/hero-video.md.', ''];
+    '- A real subject in real light (a place, a dish, a product, steam, cloth) can take a hero loop instead, 8 to 15 s and visibly alive: `scripts/parallax.mjs <still>` (a camera drift with real depth, on this machine, no quota), or generated motion from two keyframes with the Hugging Face MCP (Z-Image Turbo, Qwen-Image-Edit-Angles, Wan 2.2 first-last-frame A to B and B to A) joined by `scripts/video.mjs`. Steps, markup and rules: references/hero-video.md.', ''];
 }
 
 export function referencesBlock(d) {
@@ -74,5 +74,6 @@ export function finishBlock() {
   return ['## Finish (after the check passes)',
     '1. impeccable: run its `critique` on the page, then `audit`; fix what they find, then `polish`. Re-run the check.',
     '2. Motion review with Emil\'s rules (skills emil-design-eng or review-animations when installed): for each animation say why it moves; write the fixes as a Before | After | Why table in the report.',
-    '3. Look at every screenshot the check lists, at 1440 and 390, and at one frame in the middle of each set piece.', ''];
+    '3. Look at every screenshot the check lists, at 1440 and 390, and at one frame in the middle of each set piece.',
+    '4. Detail and finish: no screen with a blank half and no card that holds one number (`empty-box`); every section shows the subject twice over, a picture and its facts (a list, a ledger, a drawn detail); the footer is the blueprint\'s `.site-footer` filled for real (name, contact links, hours or last facts, sections, credits). No button that follows the cursor.', ''];
 }

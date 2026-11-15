@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hostal de prueba en Barichara</title>
+  <meta name="description" content="Una página de prueba con el primer pantallazo solo de texto, tarjetas vacías y un pie de página mínimo.">
+  <style>
+    html, body { margin: 0; background: #f6f1e7; color: #221c17; font: 18px/1.5 system-ui, sans-serif; }
+    main { display: grid; gap: 32px; padding: 32px; }
+    h1 { font-size: 96px; line-height: 1; margin: 120px 0 24px; max-width: 12ch; }
+    .btn { display: inline-flex; min-height: 48px; align-items: center; padding: 0 20px; background: #8c3c2e; color: #fff; text-decoration: none; }
+    .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-top: 360px; }
+    .grid img { width: 100%; height: 540px; object-fit: cover; display: block; }
+    .tile, .price { background: #fffaf2; border-radius: 16px; padding: 32px; display: grid; align-content: space-between; min-height: 476px; }
+    .price { min-height: 360px; max-width: 900px; margin-bottom: 16px; }
+    .tile strong { font-size: 72px; }
+    footer { padding: 24px 32px; color: #6b625a; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Seis cuartos junto al Camino Real</h1>
+  <p>Casa de tapia y piedra con un patio de 240 m² a nueve kilómetros de Guane.</p>
+  <p><a class="btn" href="#precios" data-magnetic data-press>Reservar habitación</a></p>
+  <div class="grid">
+    <img src="../loop/assets/courtyard-poster.webp" alt="El patio con la hamaca" width="960" height="540">
+    <article class="tile"><h3>Metros sobre el mar</h3><strong>1.336</strong></article>
+  </div>
+  <section id="precios">
+    <h2>Lo que cuesta dormir aquí</h2>
+    <article class="price"><h3>Cuarto del patio</h3><p>$180.000 la noche</p></article>
+    <article class="price"><h3>Cuarto del balcón</h3><p>$220.000 la noche</p></article>
+  </section>
+</main>
+<footer>Hostal de prueba · Barichara · fotografías de prueba</footer>
+</body>
+</html>

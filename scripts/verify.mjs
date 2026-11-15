@@ -8,7 +8,7 @@ import { checkAll, readManifest } from './vendor.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SKILLS = path.join(ROOT, 'skills');
-const OWN = ['frontend-craft', 'craft-motion', 'craft-review', 'craft-learn', 'hf-asset-generate'];
+const OWN = ['frontend-craft', 'craft-motion', 'craft-review', 'craft-learn', 'hf-asset-generate', 'kaggle-video'];
 const OWN_PACKS = ['svg-craft'];
 const BODY_WORDS = { 'frontend-craft': 1900, default: 900 };
 const ALLOWED_KEYS = new Set(['name', 'description', 'hooks', 'license', 'metadata', 'allowed-tools']);

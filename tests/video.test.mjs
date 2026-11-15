@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
-import { encode, markup, options, plan, sizeFor } from '../skills/frontend-craft/scripts/video.mjs';
+import { encode, join, markup, options, plan, sizeFor } from '../skills/frontend-craft/scripts/video.mjs';
 import { richnessRules } from '../skills/frontend-craft/scripts/lib/rules-richness.mjs';
 import { videoRules } from '../skills/frontend-craft/scripts/lib/rules-video.mjs';
 
@@ -87,4 +87,28 @@ test('a real encode writes mp4, webm and poster at the planned length', { skip: 
   assert.ok(Math.abs(seconds - r.duration) < 0.1, `${seconds} s against ${r.duration} s planned`);
   assert.deepEqual([r.w, r.h], [320, 180]);
   assert.deepEqual(r.over, []);
+});
+
+test('two clips (A to B, B to A) join into one longer loop: the second drops its repeated first frame', () => {
+  const j = join([WAN, { ...WAN, width: 832 }]);
+  assert.match(j.graph, /^\[0:v\]setpts=PTS-STARTPTS,fps=16,scale=848:480:flags=lanczos,setsar=1\[j0\];\[1:v\]trim=start_frame=1,setpts=PTS-STARTPTS,fps=16,scale=848:480/);
+  assert.match(j.graph, /\[j0\]\[j1\]concat=n=2:v=1:a=0\[cat\];$/);
+  assert.equal(j.meta.frames, 97);
+  const p = plan(j.meta, opts(), '[cat]', j.graph);
+  assert.match(p.graph, /concat=n=2:v=1:a=0\[cat\];\[cat\]minterpolate=fps=30/);
+  assert.equal(p.duration, 5.6); // last frame at 6.0 s, minus the 0.4 s fade
+  assert.deepEqual(opts().inputs, ['clip.mp4']);
+});
+
+test('a real encode of two joined clips is as long as both, minus the shared frame and the fade', { skip: !ffmpeg, timeout: 120000 }, () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fc-join-'));
+  const clip = (name, colour) => {
+    const f = path.join(dir, name);
+    execFileSync('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', `color=c=${colour}:s=320x180:r=16:d=2`, '-vf', 'drawbox=x=t*60:y=40:w=40:h=40:c=white:t=fill', '-pix_fmt', 'yuv420p', f]);
+    return f;
+  };
+  const r = encode(options({ _: [clip('ab.mp4', 'navy'), clip('ba.mp4', 'maroon')], out: path.join(dir, 'hero'), width: '320', fade: '0.4' }));
+  const secs = Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', r.files.mp4], { encoding: 'utf8' }));
+  assert.ok(Math.abs(secs - r.duration) < 0.1, `encoded ${secs} s, planned ${r.duration} s`);
+  assert.ok(r.duration > 3, 'two 2 s clips make a loop longer than either one');
 });
