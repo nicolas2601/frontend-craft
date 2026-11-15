@@ -19,6 +19,8 @@ Judge it as a senior designer would, against the subject:
 3. Type: does the display face suit the subject's register (a colonial guesthouse is not a snack brand)? Sizes, line length, widows at 390 px.
 4. Composition and rhythm: one idea per section, varied structure, nothing generic (three equal cards, a centred hero over a stock photo, eyebrow labels on every heading).
 5. Copy: facts only this business has; no slogans or invented claims.
-6. What a strong designer would change first.
+6. Finish and detail: scroll the whole page at 1440 and 390 looking for blank areas (half a screen with nothing, a hero with an empty half, a big card holding one number or two lines), sections that say one thing in one line where the subject has more to show (a second photograph, a list of facts, a drawn detail), and the footer (the name, contact as links, hours or last facts, the section links; never one grey line). Name each blank area with its screenshot and what should fill it.
+7. Gimmicks: a button that follows the cursor, a custom cursor, text that scrambles for no reason, decoration that moves while you read. Each one is a finding.
+8. What a strong designer would change first.
 
 Answer with at most 12 findings, most severe first, as a table: severity (high, medium, low) | where (section, width) | what is wrong, with evidence (a screenshot path, a measured value) | the fix, concrete (a token, a property, a layout move). End with one line: "Verdict: ship" or "Verdict: fix first".

@@ -39,7 +39,7 @@ The user gives the subject; you supply the design judgment through the skills th
 | Icon, logo, illustration, diagram | `svg-craft` |
 | End of a session with design corrections | `craft-learn` |
 
-Bundled tools run from their own folder (`<skill>/../<name>`), never from the project: `ui-ux-pro-max` search is `python3 <its folder>/scripts/search.py "<query>" --design-system`; `impeccable` is `<its folder>/scripts/impeccable <verb>` (`impeccable.cmd` on Windows), which downloads its ~23 MB engine once on first run; `design-taste-frontend/scripts/photos.mjs` supplies licensed photographs (the brief prints the commands).
+Bundled tools run from their own folder (`<skill>/../<name>`): `ui-ux-pro-max` search is `python3 <its folder>/scripts/search.py "<query>" --design-system`; `impeccable` is `<its folder>/scripts/impeccable <verb>` (`impeccable.cmd` on Windows), which downloads its engine once; `design-taste-frontend/scripts/photos.mjs` supplies licensed photographs (the brief prints the commands).
 
 Order when advice conflicts: the user, then accessibility, then the subject (its place, materials and photographs), then the deal (direction, type, set pieces), then `impeccable` and the Emil skills, then defaults. Another skill's house rules (a place page that must stay still, words never over a photograph) do not apply to a dealt website.
 
@@ -74,7 +74,7 @@ Order when advice conflicts: the user, then accessibility, then the subject (its
 
 **Color.** Only `var(--c-*)`; never a new hex value. Large fields use bg, surface, ink or accent (an ink field takes `--c-bg` text). The accent marks the primary action and at most one other thing per screen. No gradients beyond two dealt colors, no glow blobs, no purple unless dealt.
 
-**Layout.** The first screen at 1440x900 and 390x844 shows the headline, the line, the primary action and the composition's first-screen visual. Spacing from `--s-*`; sections use `padding-block: var(--section)` and `padding-inline: var(--gutter)`. Never a row of 3+ identical cards: one dominant item, unequal sizes, or a list. No horizontal scroll at any width: `min-width: 0` on grid and flex children.
+**Layout.** The first screen at 1440x900 and 390x844 shows the headline, the line, the primary action and the composition's first-screen visual. Spacing from `--s-*`; sections use `padding-block: var(--section)` and `padding-inline: var(--gutter)`. Never a row of 3+ identical cards, nor a big card holding one number: one dominant item, unequal sizes, or a list. The footer is the blueprint's `.site-footer`, filled for real. No horizontal scroll at any width: `min-width: 0` on grid and flex children.
 
 **Motion.** Websites must have:
 - an entrance: `data-enter` on 3-6 first-screen elements in reading order, or `data-words` on the h1 plus `data-enter` on the rest; finished by about 1.5 s;
@@ -95,7 +95,7 @@ Load `tokens.css`, then `craft.css`, then `layouts.css`, then `set-pieces.css`, 
 | HTML | `<link>` the CSS files; `<script type="module">import { init } from './craft/craft-motion.js'; init(document);</script>` before `</body>` |
 | React, Next.js, Vue, Svelte, Astro, Tailwind v4 | `references/frameworks.md`: import the CSS once, call `init(document)` after mount (Next.js: a `'use client'` component keyed on the pathname), map the tokens into `@theme inline` |
 
-Elements with `data-words`, `data-scroll-words`, `data-count` or `data-scramble` must hold static text, not state that re-renders.
+Elements with `data-words`, `data-scroll-words`, `data-count` or `data-scramble` hold static text.
 
 ## Report
 

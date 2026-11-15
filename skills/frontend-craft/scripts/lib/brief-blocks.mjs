@@ -74,5 +74,6 @@ export function finishBlock() {
   return ['## Finish (after the check passes)',
     '1. impeccable: run its `critique` on the page, then `audit`; fix what they find, then `polish`. Re-run the check.',
     '2. Motion review with Emil\'s rules (skills emil-design-eng or review-animations when installed): for each animation say why it moves; write the fixes as a Before | After | Why table in the report.',
-    '3. Look at every screenshot the check lists, at 1440 and 390, and at one frame in the middle of each set piece.', ''];
+    '3. Look at every screenshot the check lists, at 1440 and 390, and at one frame in the middle of each set piece.',
+    '4. Detail and finish: no screen with a blank half and no card that holds one number (`empty-box`); every section shows the subject twice over, a picture and its facts (a list, a ledger, a drawn detail); the footer is the blueprint\'s `.site-footer` filled for real (name, contact links, hours or last facts, sections, credits). No button that follows the cursor.', ''];
 }
