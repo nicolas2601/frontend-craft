@@ -111,3 +111,11 @@ test('the hero loop is wired: kit effect, attribute docs and every video rule in
     assert.match(read('hero-video.md'), new RegExp(`\`${id}\``), `hero-video.md: ${id}`);
   }
 });
+
+test('a hero loop takes the riso treatment like a photograph, and its pause button stays above the inks', () => {
+  const css = fs.readFileSync(path.join(SKILL_DIR, 'kit', 'surfaces.css'), 'utf8');
+  assert.match(css, /\.craft-riso :is\(img, video\)\s*\{\s*filter: grayscale/, 'riso filter must cover video');
+  const z = (re) => Number(css.match(re)?.[1]);
+  assert.ok(z(/\.craft-loop \[data-loop-toggle\][^{]*\{[^}]*z-index: (\d+)/) > z(/\.craft-riso::after \{[^}]*z-index: (\d+)/), 'toggle above the riso grain');
+  assert.match(fs.readFileSync(path.join(SKILL_DIR, 'references', 'hero-video.md'), 'utf8'), /picture treatment/);
+});

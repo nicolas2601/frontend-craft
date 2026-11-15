@@ -100,6 +100,8 @@ Load `surfaces.css` and call the kit's `init(document)`. Leave out the `autoplay
 
 **The button.** It is required: motion that lasts more than five seconds must be pausable (WCAG 2.2.2). Write its label in the page's language ("Pausar"). The kit sets `aria-pressed`, so the label stays the same.
 
+**The direction's picture treatment.** The loop is a photograph that moves, so it takes the same treatment as the page's photographs. Riso: `class="craft-loop craft-riso"` (the grey filter, the second ink and the grain cover the video; the button stays above them). Duotone or mono: the same `filter` and `mix-blend-mode` the direction gives its images, on the `video`. A full-colour loop on a page whose photographs are all treated reads as stock footage pasted in.
+
 **aria-hidden.** Keep it on a decorative loop. If the clip carries meaning, remove it and put a text alternative next to the clip, either as a caption or as `role="img"` with `aria-label` on the wrapper.
 
 **Without the kit:** use an IntersectionObserver to play and pause, check `matchMedia('(prefers-reduced-motion: reduce)')`, and keep the same button.
