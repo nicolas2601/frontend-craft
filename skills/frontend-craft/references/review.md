@@ -3,6 +3,7 @@
 The check measures what a script can measure. Taste, fit to the subject and how the motion feels need a second pair of eyes that did not build the page. After `RESULT: PASS`, run two reviewers **in parallel**:
 
 - in Claude Code, the plugin's agents `craft-design-critic` and `craft-motion-auditor`;
+- in OpenCode, the same two as subagents (copied from the repo's `integrations/opencode/agents/` to `~/.config/opencode/agents/`), started with the subagent tool;
 - in another harness with subagents, a subagent each, with the brief below pasted as its prompt;
 - with no subagents, run them one after the other in this thread, starting each one from a fresh look at the screenshots, not from your memory of building the page.
 
