@@ -109,9 +109,9 @@ test('a pinned direction wins', () => {
   assert.equal(d.wildcard, false);
 });
 
-test('a cream background is never paired with a serif display face', () => {
+test('a cream background is never paired with a serif display face, outside heritage and luxury subjects', () => {
   for (let s = 1; s <= 200; s += 1) {
-    const d = deal({ lib, kind: 'landing', moods: ['warm', 'heritage', 'editorial'], rng: rngFrom(s) });
+    const d = deal({ lib, kind: 'landing', moods: ['warm', 'coffee', 'editorial'], rng: rngFrom(s) });
     if (isCream(hexToRgb(d.palette.roles.bg))) assert.ok(!d.type.display.serif, `${d.palette.id} + ${d.type.id}`);
   }
 });
@@ -243,15 +243,26 @@ test('a subject sold by its photographs is never dealt a direction that recolour
   assert.ok(zine.includes('riso-print'), 'riso stays available for subjects that are not sold by photographs');
 });
 
-test('a palette taken from the subject replaces the dealt one and keeps type off the cream-and-serif cliche', async () => {
+test('a palette taken from the subject replaces the dealt one; cream and serif stay out of a cafe but fit a heritage house', async () => {
   const { applyPalette } = await import('../skills/frontend-craft/scripts/lib/deal.mjs');
   const photo = { id: 'from-photo', scheme: 'light', moods: [], note: 'Taken from the courtyard.', roles: { bg: '#fbf2e5', surface: '#fffaf4', ink: '#231e18', muted: '#68625b', line: '#e3d7c5', accent: '#895b17', accentInk: '#fdfbf9' } };
+  let heritageSerif = 0;
   for (let s = 1; s <= 30; s += 1) {
-    const d = applyPalette(deal({ lib, kind: 'landing', moods: PLACE, rng: rngFrom(s) }), photo, lib);
-    assert.equal(d.palette.id, 'from-photo');
-    assert.equal(d.palette.roles.accent, '#895b17');
-    assert.ok(!d.type.display.serif, `seed ${s}: ${d.type.id} is a serif display on a cream ground`);
-    assert.match(tokensCss(d), /--c-accent: #895b17;/);
+    const cafe = applyPalette(deal({ lib, kind: 'landing', moods: ['coffee', 'warm'], rng: rngFrom(s) }), photo, lib);
+    assert.equal(cafe.palette.id, 'from-photo');
+    assert.ok(!cafe.type.display.serif, `seed ${s}: ${cafe.type.id} is a serif display on a cream ground for a cafe`);
+    assert.match(tokensCss(cafe), /--c-accent: #895b17;/);
+    const house = applyPalette(deal({ lib, kind: 'landing', moods: PLACE, rng: rngFrom(s) }), photo, lib);
+    assert.ok(house.type.moods.some((m) => PLACE.includes(m)), `seed ${s}: ${house.type.id} is off the subject's register`);
+    if (house.type.display.serif) heritageSerif += 1;
+  }
+  assert.ok(heritageSerif > 0, 'a heritage house may take a serif on its lime-wash');
+});
+
+test('a photo-led subject keeps its own type register under a wildcard', () => {
+  for (let s = 1; s <= 60; s += 1) {
+    const d = deal({ lib, kind: 'landing', moods: PLACE, rng: rngFrom(s), risk: 'wild' });
+    assert.ok(d.type.moods.some((m) => PLACE.includes(m)), `seed ${s}: ${d.direction.id} dealt ${d.type.id}`);
   }
 });
 

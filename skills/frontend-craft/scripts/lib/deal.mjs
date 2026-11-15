@@ -16,6 +16,8 @@ export const SET_PIECES = ['iris', 'type-pass', 'zoom', 'curtain', 'fan', 'lette
  * Subjects sold by how they look in photographs: a place, a dish, a drink, a body, a garment, a landscape. Their
  * colours come from the subject, and a direction that recolours photographs (riso, duotone) is never dealt to them.
  */
+/** Subjects whose own register is a serif on a warm pale ground: there it is the subject's voice, not the cafe cliche. */
+export const SERIF_ON_CREAM = ['heritage', 'luxury'];
 export const PHOTO_LED = ['hospitality', 'heritage', 'travel', 'food', 'coffee', 'tea', 'beauty', 'wellness', 'nature', 'organic', 'fashion'];
 /** Set pieces and components used by the last few builds are dealt again only when nothing else fits. */
 export const RECENT_PIECES = 3;
@@ -70,10 +72,13 @@ function pick(items, { moods = [], recent = new Set(), rng, allow = () => true, 
   return pool.at(-1).it;
 }
 
-/** Type must speak the palette's language: share a mood with it, and no serif display on a cream ground. */
-export function typeFits(pairing, palette, creamBg) {
+/**
+ * Type must speak the palette's language (share a mood with it) or the subject's own (`subject`, for a subject sold
+ * by its photographs), and no serif display on a cream ground.
+ */
+export function typeFits(pairing, palette, creamBg, subject = []) {
   if (creamBg && pairing.display.serif) return false;
-  return !palette || !palette.moods?.length || pairing.moods.some((m) => palette.moods.includes(m));
+  return !palette || !palette.moods?.length || pairing.moods.some((m) => palette.moods.includes(m) || subject.includes(m));
 }
 
 /**
@@ -81,14 +86,15 @@ export function typeFits(pairing, palette, creamBg) {
  * dealt again, from the same seed, only when it no longer fits: a serif display on a cream ground.
  */
 export function applyPalette(d, palette, lib) {
-  const creamBg = isCream(hexToRgb(palette.roles.bg));
+  const creamBg = isCream(hexToRgb(palette.roles.bg)) && !(d.moods ?? []).some((m) => SERIF_ON_CREAM.includes(m));
   const next = { ...d, palette };
-  if (!d.type || typeFits(d.type, palette, creamBg)) return next;
+  if (!d.type || typeFits(d.type, palette, creamBg, (d.moods ?? []).some((m) => PHOTO_LED.includes(m)) ? d.moods : [])) return next;
   const serifOk = (p) => d.direction?.serif == null || p.display.serif === d.direction.serif;
-  const moods = d.wildcard ? d.direction?.typeMoods ?? d.moods : d.moods;
-  const fits = lib.pairings.filter((p) => typeFits(p, palette, creamBg) && serifOk(p));
-  const pool = fits.length ? fits : lib.pairings.filter((p) => typeFits(p, palette, creamBg));
-  next.type = pick(pool, { moods, rng: rngFrom((d.seed ?? 1) + 1) });
+  const moods = d.wildcard && !(d.moods ?? []).some((m) => PHOTO_LED.includes(m)) ? d.direction?.typeMoods ?? d.moods : d.moods;
+  const subject = (d.moods ?? []).some((m) => PHOTO_LED.includes(m)) ? d.moods : [];
+  const fits = lib.pairings.filter((p) => typeFits(p, palette, creamBg, subject) && serifOk(p));
+  const pool = fits.length ? fits : lib.pairings.filter((p) => typeFits(p, palette, creamBg, subject));
+  next.type = pick(pool, { moods, rng: rngFrom((d.seed ?? 1) + 1), strict: subject.length > 0 });
   return next;
 }
 
@@ -151,14 +157,16 @@ export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = f
   // Colour always comes from the subject: a wildcard never recolours it.
   const lead = (own) => (wildcard ? own : moods.length ? moods : own ?? moods);
   const paletteMoods = moods.length ? moods : direction?.moods ?? [];
-  const typeMoods = lead(direction?.typeMoods);
+  const photoLed = moods.some((m) => PHOTO_LED.includes(m));
+  // A subject sold by its photographs keeps its own type register too; the wildcard changes layout and motion.
+  const typeMoods = photoLed ? moods : lead(direction?.typeMoods);
   const scheme = direction && direction.scheme !== 'any' ? direction.scheme : null;
   const palette = brand ? null : (byId(lib.palettes, pins.palette)
     ?? pick(lib.palettes, { moods: paletteMoods, rng, recent: recentIds(history, 'palette'), allow: (p) => !scheme || p.scheme === scheme, strict: moods.some((m) => PHOTO_LED.includes(m)) }));
-  const creamBg = palette && isCream(hexToRgb(palette.roles.bg));
+  const creamBg = palette && isCream(hexToRgb(palette.roles.bg)) && !moods.some((m) => SERIF_ON_CREAM.includes(m));
   const serifOk = (p) => direction?.serif == null || p.display.serif === direction.serif;
   const type = brand ? null : (byId(lib.pairings, pins.type)
-    ?? pick(lib.pairings, { moods: typeMoods, rng, recent: recentIds(history, 'type'), allow: (p) => typeFits(p, palette, creamBg) && serifOk(p) }));
+    ?? pick(lib.pairings, { moods: typeMoods, rng, recent: recentIds(history, 'type'), allow: (p) => typeFits(p, palette, creamBg, photoLed ? moods : []) && serifOk(p), strict: photoLed }));
   const composition = byId(lib.compositions, pins.composition)
     // A composition that needs a kind of subject (a product interface, one object on a plinth) only goes to one.
     ?? pick(lib.compositions, { rng, recent: recentIds(history, 'composition'), allow: (c) => c.kinds.includes(kind === 'site' ? 'landing' : kind) && (!c.needs || c.needs.some((m) => moods.includes(m))) });
