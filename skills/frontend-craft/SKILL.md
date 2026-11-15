@@ -41,20 +41,20 @@ The user gives the subject; you supply the design judgment through the skills th
 
 Bundled tools run from their own folder (`<skill>/../<name>`), never from the project: `ui-ux-pro-max` search is `python3 <its folder>/scripts/search.py "<query>" --design-system`; `impeccable` is `<its folder>/scripts/impeccable <verb>` (`impeccable.cmd` on Windows), which downloads its ~23 MB engine once on first run; `design-taste-frontend/scripts/photos.mjs` supplies licensed photographs (the brief prints the commands).
 
-Order when advice conflicts: the user, then accessibility, then the deal (direction, palette, type, set pieces), then `impeccable` and the Emil skills, then defaults. Another skill's house rules (a place page that must stay still, words never over a photograph) do not apply to a dealt website.
+Order when advice conflicts: the user, then accessibility, then the subject (its place, materials and photographs), then the deal (direction, type, set pieces), then `impeccable` and the Emil skills, then defaults. Another skill's house rules (a place page that must stay still, words never over a photograph) do not apply to a dealt website.
 
 ## The run
 
 1. **Read the project.** `package.json`, framework, existing `DESIGN.md`, tokens and components. Preserve what exists. If the brand already has colors and fonts, add `--brand` in step 3. A new project goes in a new folder inside the current working directory; run every script from that folder.
 2. **Pick the kind, 2-3 moods and the language.** Kinds: landing, site, product, portfolio, event, venue, brand, campaign, app, docs. Site is several pages; app is a platform or product UI. The language is the one the user wrote in and the audience reads (`es`, `en`, `pt-BR`). Moods: beauty, bold, brutal, calm, coffee, craft, creative, culture, developer, editorial, energetic, fashion, festive, finance, food, fresh, friendly, health, heritage, hospitality, industrial, luxury, minimal, modern, music, nature, nightlife, organic, playful, precise, print, retro, science, sport, tea, tech, travel, warm, wellness, youth.
 3. **Deal.** `node <skill>/scripts/start.mjs --kind landing --moods warm,craft,coffee --lang es` (a site: `--kind site --pages /,/menu,/visit`)
-   Websites are dealt an **art direction** (grounds, type scale, photo treatment, two template breaks), a palette, a pairing, a composition, motion, **two set pieces per page** and **one library component** (React Bits). Set pieces and components the last builds used are dealt again only when nothing else fits. `--risk bold` (default) takes the direction from outside the subject's usual moods about 40% of the time on purpose; `--risk wild` more, `--risk safe` never. It copies the kit into the project (`src/craft/`, `app/craft/` or `craft/`), writes `tokens.css`, and prints the brief (also `.craft/brief.md`). The brief is binding: do not swap its direction, palette or type for your preference; `--redeal` gives a new hand.
+   Websites are dealt an **art direction** (grounds, type scale, photo treatment, two template breaks), a palette, a pairing, a composition, motion, **two set pieces per page** and **one library component** (React Bits). `--risk bold` (default) sometimes deals a direction from outside the subject's moods: it changes layout, type and motion, never the subject's colours (`--risk wild` more often, `safe` never). It copies the kit into the project (`src/craft/`, `app/craft/` or `craft/`), writes `tokens.css`, and prints the brief (also `.craft/brief.md`). The brief is binding: do not swap its direction, palette or type for your preference; `--redeal` gives a new hand.
 4. **Concept, then copy.** Write `.craft/concept.md` (Idea, Signature, Rejected, Breaks, Components; template in the brief) before any markup. Then write the copy (rules below) in the dealt language. Optional: two Awwwards references for structural moves.
-5. **Photographs.** Real photographs carry a website. Use the client's files; otherwise run the brief's `photos.mjs` commands (search, pick, fetch, credits), look at each frame full size, and keep only the ones that fit the direction's treatment.
+5. **Photographs and colour.** Real photographs carry a website. Use the client's files; otherwise run the brief's `photos.mjs` commands (search, pick, fetch, credits) and look at each frame full size. A subject sold by its photographs (a place, food, travel, beauty) shows them in true colour and takes its palette from its hero picture: `start.mjs --palette-from <file>` (the brief lists other accents in it).
 6. **Build from the blueprint.** `<kit>/blueprint.html` is the dealt composition as a working page. Move its structure into your page, replace every `{{...}}`, and apply the direction on top: grounds, type scale, photo treatment and both breaks. Build both set pieces (`references/set-pieces.md`) in two different sections, put the dealt hero scene in the first screen (`references/scenes.md`; real subjects get a loop, `references/hero-video.md`), add the dealt component (`references/components.md`), use library controls rather than hand-rolled ones, and take materials (glass, bento, riso, mono, page transitions) from `references/surfaces.md`. Wire the kit (table below).
-7. **Check.** Start the dev server or build, then once: `node <skill>/scripts/start.mjs --url http://localhost:5173 --lang <same>` (or `--root dist`). Then `node <skill>/scripts/check.mjs` (every dealt page of a site). It also measures the direction's floor, the AI tells (language, slogan copy, numbering, badges, a photograph used twice) and runs `impeccable detect`: its slop rules fail too.
-8. **Fix and look.** Fix every FAIL (`references/checks.md`). Open every screenshot in `.craft/shots/`: is the direction visible on the first screen, do the set pieces read at 390 px, where is the action. Fix the three weakest things you see. Re-run until `RESULT: PASS`.
-9. **Finish passes.** `impeccable` critique, audit, then polish; then the motion review with Emil's rules (`emil-design-eng` or `review-animations`), written as a Before | After | Why table. Take the fixes that sharpen the direction; refuse the ones that tame it back to a default (removing the set pieces, flattening the grounds, shrinking the type). Run the check again; it must still pass.
+7. **Check.** Start the dev server or build, then once: `node <skill>/scripts/start.mjs --url http://localhost:5173 --lang <same>` (or `--root dist`). Then `node <skill>/scripts/check.mjs` (every dealt page of a site). It also measures the direction's floor and the AI tells, and runs `impeccable detect`.
+8. **Fix and look.** Fix every FAIL (`references/checks.md`). Open every screenshot in `.craft/shots/`, then look yourself with `playwright-cli` (or a browser tool) at 1440, 390 and 320 px, scrolling and with reduced motion: is the subject seen first, do the set pieces read at 390 px, where is the action. Fix the three weakest. Re-run until `RESULT: PASS`.
+9. **Design review.** Two independent reviewers in parallel, a design critic and a motion and mobile auditor (`references/review.md`: the plugin's agents, subagents with its briefs, or one after the other). Fix every high finding; the subject outranks the deal, and a fix that only tames the page to a default is refused. Then `impeccable` polish and the Emil motion review as a Before | After | Why table. Run the check again; it must still pass.
 10. **Report** in the format at the end. In Claude Code the Stop hook runs the check for you; elsewhere run `node <skill>/scripts/gate.mjs` and do not stop while it exits 1.
 
 ## Copy rules
@@ -80,11 +80,11 @@ Order when advice conflicts: the user, then accessibility, then the deal (direct
 - an entrance: `data-enter` on 3-6 first-screen elements in reading order, or `data-words` on the h1 plus `data-enter` on the rest; finished by about 1.5 s;
 - the two dealt set pieces (`sp-*` classes, `references/set-pieces.md`) in two different sections, plus the dealt signature and supports;
 - `data-press` on every button and button-like link.
-At most 4 moving effects in one viewport and one pinned or scrubbed scene per screen. Your own CSS motion animates only `transform`, `opacity`, `clip-path` and `filter`, 150-300 ms for UI, `var(--ease-out)`; never `transition: all`, never `ease-in` on entrances, never `scale(0)`. Things the user does often (nav links, tabs, inputs) get at most a 150 ms color or opacity change. Kit attributes and options: `references/motion.md`.
+At most 2 moving effects in one viewport and one pinned or scrubbed scene per screen; scroll-driven motion uses `var(--p)` and is finished while its element can be read. Your own CSS motion animates only `transform`, `opacity`, `clip-path` and `filter`, 150-300 ms for UI, `var(--ease-out)`; never `transition: all`, never `ease-in` on entrances, never `scale(0)`. Things the user does often (nav links, tabs, inputs) get at most a 150 ms color or opacity change. Kit attributes and options: `references/motion.md`.
 
 **Media.** Never invent or hotlink image or video URLs. Use supplied files, the licensed frames the brief's `photos.mjs` commands fetch (with credits), or Unsplash/Pexels stand-ins with a `SOURCES.txt`; say in the report which are samples. Build illustrations in SVG or canvas (`svg-craft`), never as empty boxes. Every `img` has `alt` and `width`/`height` or `aspect-ratio`.
 
-**Access.** One `h1`; `header`, `main`, `footer`; `lang`, `title`, meta description, a viewport meta that allows zoom; targets of 44x44 px; text over images gets a scrim. Focus rings and reduced motion come with the kit; do not remove them.
+**Access.** One `h1`; `header`, `main`, `footer`; `lang`, `title`, meta description, a viewport meta that allows zoom; targets of 44x44 px; control and label text 14 px or more; the navigation reachable at 390 px (visible links or a menu button); text over images gets a scrim. Focus rings and reduced motion come with the kit; do not remove them.
 
 ## Wiring the kit
 
@@ -93,14 +93,9 @@ Load `tokens.css`, then `craft.css`, then `layouts.css`, then `set-pieces.css`, 
 | Stack | Wiring |
 |---|---|
 | HTML | `<link>` the CSS files; `<script type="module">import { init } from './craft/craft-motion.js'; init(document);</script>` before `</body>` |
-| React + Vite | import the CSS files in `main.tsx`; in `App`: `useEffect(() => init(document), [])` |
-| Next.js (App Router) | import the CSS files in `app/layout.tsx`; a `'use client'` `CraftMotion` component with `useEffect(() => init(document), [pathname])` rendered in the layout; use the printed `next/font` snippet on `<html>` |
-| Vue | `onMounted(() => { stop = init(document) })`, `onBeforeUnmount(() => stop())` |
-| Svelte | `onMount(() => init(document))` |
-| Astro | `<script>import { init } from '../craft/craft-motion.js'; init(document);</script>` in the layout |
-| Tailwind v4 | after the imports: `@theme inline { --color-bg: var(--c-bg); --color-ink: var(--c-ink); --color-accent: var(--c-accent); --font-display: var(--f-display); --font-sans: var(--f-text); }` |
+| React, Next.js, Vue, Svelte, Astro, Tailwind v4 | `references/frameworks.md`: import the CSS once, call `init(document)` after mount (Next.js: a `'use client'` component keyed on the pathname), map the tokens into `@theme inline` |
 
-Elements with `data-words`, `data-scroll-words`, `data-count` or `data-scramble` must hold static text, not state that re-renders. Full examples per framework: `references/frameworks.md`.
+Elements with `data-words`, `data-scroll-words`, `data-count` or `data-scramble` must hold static text, not state that re-renders.
 
 ## Report
 
@@ -109,6 +104,7 @@ Ship: yes | yes, with fixes | no
 Direction: <direction> (wildcard: yes|no) / <palette> / <type> / <composition> / set pieces <a>, <b> / component <id> (dealt, seed <n>)
 Idea: <the concept's idea in one line>
 Pages: <each page and its set pieces> (sites only)
+Review: <critic and auditor verdicts, the high findings fixed>
 Motion review: <Before | After | Why rows, or "none needed">
 Ran: <commands> -> RESULT: PASS, <n> WARN
 Looked at: <screenshot files> - <one sentence on what the first screen and 390 px show>

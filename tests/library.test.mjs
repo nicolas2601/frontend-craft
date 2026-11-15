@@ -119,3 +119,15 @@ test('a hero loop takes the riso treatment like a photograph, and its pause butt
   assert.ok(z(/\.craft-loop \[data-loop-toggle\][^{]*\{[^}]*z-index: (\d+)/) > z(/\.craft-riso::after \{[^}]*z-index: (\d+)/), 'toggle above the riso grain');
   assert.match(fs.readFileSync(path.join(SKILL_DIR, 'references', 'hero-video.md'), 'utf8'), /picture treatment/);
 });
+
+test('the plugin reviewer agents are generated from review.md and carry its briefs', async () => {
+  const { agentFiles } = await import('../scripts/review-agents.mjs');
+  const files = agentFiles();
+  assert.deepEqual(Object.keys(files).sort(), ['craft-design-critic.md', 'craft-motion-auditor.md']);
+  for (const [f, body] of Object.entries(files)) {
+    assert.equal(fs.readFileSync(path.join(SKILL_DIR, '..', '..', 'agents', f), 'utf8'), body, `agents/${f} is stale: run node scripts/review-agents.mjs`);
+    assert.match(body, /Read-only: change no file/);
+    assert.match(body, /playwright-cli/);
+    assert.match(body, /Verdict: ship/);
+  }
+});

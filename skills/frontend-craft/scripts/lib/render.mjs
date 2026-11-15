@@ -107,7 +107,7 @@ function motionBlock(d, setPiecesRef) {
 function directionBlock(d) {
   const x = d.direction;
   if (!x) return [];
-  const why = d.wildcard ? ' (dealt outside the subject\'s usual moods on purpose: commit to it, do not soften it back to the default)' : '';
+  const why = d.wildcard ? ' (dealt from outside the subject\'s usual moods: it sets layout, scale, type and motion; the colours and the photographs stay the subject\'s)' : '';
   if (['app', 'docs'].includes(d.kind)) {
     return [`## Direction: ${x.id}${why}`, x.idea, '', `- Surfaces: ${x.grounds.how}`, `- Type: ${x.type.how}`, `- Avoid: ${x.avoid}`, '',
       'For a product interface the direction is the material (surfaces, type, colour); the work itself (tables, forms, navigation) stays clear and dense.', ''];
