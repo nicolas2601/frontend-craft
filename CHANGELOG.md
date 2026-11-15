@@ -10,6 +10,26 @@ The 2.4 hero loop was 2.6 s with almost no motion: the same still as first and l
 start, so it barely moves. The free Hugging Face quota also ran out after one still and one edit attempt, so a route
 that needs several GPU runs cannot be the only one.
 
+### Fixed (from the DeepSeek build of the Barichara hostel)
+The page passed the check and still read as a template: the deal gave a hostel the `bento-dominant` composition, so
+the first screen was a headline over a grid with the patio below the fold and a tall tile holding one number; every
+blueprint put `data-magnetic` on its main button and ended in a one-line footer placeholder; rail panels, chapter
+cards and bento tiles were big fixed boxes with `align-content: space-between`, which leaves voids. Nothing measured
+any of it.
+- Check: `hero-picture` fails a photo-led subject whose picture covers under 35% of the first screen at 1440 (30% at
+  390); `empty-box` warns on a tall box that holds almost nothing or has a void over 40% of its height (fails at
+  three); `footer-missing` and `footer-thin` fail a footer with under three links and no contact; `magnetic-button`
+  warns. The DeepSeek page now fails on the first three.
+- Deal: photo-led subjects are dealt only photo-first compositions; `magnetic` is no longer dealt by any composition
+  or direction.
+- New composition `photo-full`: the photograph or loop full bleed with the headline on a scrim, then the facts
+  beside a second photograph, a mosaic of five, how to get there. Tokens gain `--c-scrim` and `--c-on-scrim`,
+  always the darker and lighter of ground and ink.
+- Blueprints: a real `.site-footer` (name, contact links, hours, section links, credits), pictures in bento tiles,
+  rail panels and chapters, tiles that start at the top instead of spreading their content apart.
+- The design critic's brief now looks for blank areas, one-line sections, the footer and gimmicks.
+- `kaggle-video`: image-to-video with Wan 2.2 TI2V-5B on Kaggle's free T4s, as a private script kernel.
+
 ### Added
 - `scripts/parallax.mjs`: a hero loop from one still with no GPU and no quota. Depth Anything V2 Small (Apache-2.0)
   estimates depth on the CPU (`scripts/lib/depth.py`, numpy + onnxruntime; the model downloads once), then a slow
