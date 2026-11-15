@@ -131,3 +131,12 @@ test('the plugin reviewer agents are generated from review.md and carry its brie
     assert.match(body, /Verdict: ship/);
   }
 });
+
+test('landing-patterns.json is generated from ui-ux-pro-max landing.csv, without its colour and effect columns', async () => {
+  const { landingDoc, parseCsv } = await import('../scripts/sync-landing.mjs');
+  const csv = fs.readFileSync(path.join(SKILL_DIR, '..', 'ui-ux-pro-max', 'data', 'landing.csv'), 'utf8');
+  assert.equal(fs.readFileSync(path.join(SKILL_DIR, 'library', 'landing-patterns.json'), 'utf8'), landingDoc(csv), 'stale: run node scripts/sync-landing.mjs');
+  const patterns = JSON.parse(landingDoc(csv)).patterns;
+  assert.ok(patterns.every((p) => !('color' in p) && !('effects' in p)));
+  assert.deepEqual(parseCsv('a,"b, ""c"""\n1,2\n'), [['a', 'b, "c"'], ['1', '2']]);
+});

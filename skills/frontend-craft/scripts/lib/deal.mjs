@@ -35,7 +35,13 @@ export function loadLibrary(dir = LIB) {
     signatures: read('signatures.json').signatures,
     directions: read('directions.json').directions,
     components: fs.existsSync(path.join(dir, 'components.json')) ? read('components.json').components : [],
+    landing: fs.existsSync(path.join(dir, 'landing-patterns.json')) ? read('landing-patterns.json').patterns : [],
   };
+}
+
+/** The reading order a buyer expects for this kind of page (ui-ux-pro-max landing patterns): the first that fits, or null. */
+export function landingFor(patterns, kind, moods = []) {
+  return patterns.find((p) => p.kinds.includes(kind) && (!p.moods.length || p.moods.some((m) => moods.includes(m)))) ?? null;
 }
 
 export function moodsOf(lib) {
@@ -196,6 +202,7 @@ export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = f
     palette,
     type,
     composition,
+    landing: landingFor(lib.landing ?? [], kind, moods),
     pages: sitePages.map((p, i) => ({ path: p, setPieces: perPage[i] })),
     motion: { signature: sig(signature), supports: supports.map(sig), setPieces: perPage[0], component, scene },
   };

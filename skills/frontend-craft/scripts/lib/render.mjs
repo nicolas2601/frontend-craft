@@ -175,6 +175,7 @@ export function briefMd(d, { kitDir, checkCmd, taste = null, setPiecesRef = 'ref
   const c = d.composition;
   lines.push(`## Composition: ${c.id}`, c.idea, '', `First screen: ${c.firstScreen}`, '',
     'Sections, in order (rename them for the subject; keep the pacing):', ...c.sections.map((s, i) => `${i + 1}. ${s}`), '');
+  if (d.landing) lines.push(`Reading order a visitor expects on this kind of page (ui-ux-pro-max, ${d.landing.id}): ${d.landing.order.join(' > ')}. Main action: ${d.landing.cta}. Lay the sections above along it; where they differ, the composition's pacing wins. Proof means what the client gave you, never invented.`, '');
   lines.push(...conceptBlock(d), ...pagesBlock(d, { setPiecesRef }), ...platformBlock(d), ...referencesBlock(d), ...photosBlock(d, { taste }));
   lines.push('## Motion', motionBlock(d, setPiecesRef),
     '- Entrance: data-enter on 3-6 first-screen elements in reading order (nav, headline, line, action, visual); done by 1.5 s.',
