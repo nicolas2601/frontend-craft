@@ -12,6 +12,11 @@ const MIN_NEAR = 3;
 /** How often a website is dealt a direction outside the subject's usual moods, on purpose. */
 export const RISK = { safe: 0, bold: 0.4, wild: 0.8 };
 export const SET_PIECES = ['iris', 'type-pass', 'zoom', 'curtain', 'fan', 'letters', 'develop', 'tilt', 'split', 'word-track', 'word-swap', 'type-zoom', 'word-mask', 'bento-assemble'];
+/**
+ * Subjects sold by how they look in photographs: a place, a dish, a drink, a body, a garment, a landscape. Their
+ * colours come from the subject, and a direction that recolours photographs (riso, duotone) is never dealt to them.
+ */
+export const PHOTO_LED = ['hospitality', 'heritage', 'travel', 'food', 'coffee', 'tea', 'beauty', 'wellness', 'nature', 'organic', 'fashion'];
 /** Set pieces and components used by the last few builds are dealt again only when nothing else fits. */
 export const RECENT_PIECES = 3;
 export const SCROLL_STORIES = ['scroll-words', 'stack', 'scrub', 'rail'];
@@ -48,7 +53,7 @@ export function rngFrom(seed) {
 }
 
 /** Weighted pick: score by overlap, drop recently used ids unless nothing else is left. */
-function pick(items, { moods = [], recent = new Set(), rng, allow = () => true }) {
+function pick(items, { moods = [], recent = new Set(), rng, allow = () => true, strict = false }) {
   const allowed = items.filter(allow);
   const pool0 = allowed.length ? allowed : items;
   const scored = pool0.map((it) => ({ it, w: 1 + 3 * (it.moods ?? []).filter((m) => moods.includes(m)).length }));
@@ -57,7 +62,8 @@ function pick(items, { moods = [], recent = new Set(), rng, allow = () => true }
   // whole list (mood still weighs in) before ever repeating a recent pick.
   const freshMatching = matching.filter((s) => !recent.has(s.it.id));
   const freshAll = scored.filter((s) => !recent.has(s.it.id));
-  const pool = freshMatching.length ? freshMatching : freshAll.length ? freshAll : scored;
+  // strict (palettes): the subject's moods outrank novelty, so repeat an on-mood item before leaving the mood.
+  const pool = freshMatching.length ? freshMatching : strict && matching.length ? matching : freshAll.length ? freshAll : scored;
   const total = pool.reduce((n, s) => n + s.w, 0);
   let r = rng() * total;
   for (const s of pool) { r -= s.w; if (r <= 0) return s.it; }
@@ -67,7 +73,23 @@ function pick(items, { moods = [], recent = new Set(), rng, allow = () => true }
 /** Type must speak the palette's language: share a mood with it, and no serif display on a cream ground. */
 export function typeFits(pairing, palette, creamBg) {
   if (creamBg && pairing.display.serif) return false;
-  return !palette || pairing.moods.some((m) => palette.moods.includes(m));
+  return !palette || !palette.moods?.length || pairing.moods.some((m) => palette.moods.includes(m));
+}
+
+/**
+ * Put a palette taken from the subject's picture (palette-from.mjs) in place of the dealt one. The type is
+ * dealt again, from the same seed, only when it no longer fits: a serif display on a cream ground.
+ */
+export function applyPalette(d, palette, lib) {
+  const creamBg = isCream(hexToRgb(palette.roles.bg));
+  const next = { ...d, palette };
+  if (!d.type || typeFits(d.type, palette, creamBg)) return next;
+  const serifOk = (p) => d.direction?.serif == null || p.display.serif === d.direction.serif;
+  const moods = d.wildcard ? d.direction?.typeMoods ?? d.moods : d.moods;
+  const fits = lib.pairings.filter((p) => typeFits(p, palette, creamBg) && serifOk(p));
+  const pool = fits.length ? fits : lib.pairings.filter((p) => typeFits(p, palette, creamBg));
+  next.type = pick(pool, { moods, rng: rngFrom((d.seed ?? 1) + 1) });
+  return next;
 }
 
 function recentIds(history, key, n = RECENT) {
@@ -87,11 +109,16 @@ function shuffled(list, rng) {
  * The art direction. With probability RISK[risk] it is taken from outside the subject's moods, so
  * the same brief does not always land on the same look; the last few directions are never repeated.
  */
-export function pickDirection(directions, { moods = [], history = [], rng, risk = 'bold', pin, mode = 'persuade' }) {
+export function pickDirection(directions, { moods = [], history = [], rng, risk = 'bold', pin, mode = 'persuade', schemes = null }) {
   const pinned = directions.find((d) => d.id === pin);
   if (pinned) return { direction: pinned, wildcard: false };
   const recent = recentIds(history, 'direction', RECENT_DIRECTIONS);
-  const usable = directions.filter((d) => (d.modes ?? ['persuade']).includes(mode));
+  const photoLed = moods.some((m) => PHOTO_LED.includes(m));
+  // A wildcard changes layout, type and motion, never the subject's colours: only directions whose scheme the
+  // subject's palettes can serve, and none that recolours the photographs of a subject sold by them.
+  const fits = (d) => !(photoLed && d.recolours) && (!schemes || d.scheme === 'any' || schemes.has(d.scheme));
+  const usable0 = directions.filter((d) => (d.modes ?? ['persuade']).includes(mode));
+  const usable = usable0.filter(fits).length ? usable0.filter(fits) : usable0;
   const fresh = usable.filter((d) => !recent.has(d.id));
   const pool = fresh.length ? fresh : usable;
   const onMood = (d) => d.moods.some((m) => moods.includes(m));
@@ -113,18 +140,21 @@ export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = f
   const byId = (list, id) => list.find((x) => x.id === id) ?? null;
   const persuade = !OPERATE_KINDS.includes(kind);
   const mode = persuade ? 'persuade' : 'operate';
+  const onSubject = lib.palettes.filter((p) => p.moods.some((m) => moods.includes(m)));
+  const schemes = brand || pins.palette || !onSubject.length ? null : new Set(onSubject.map((p) => p.scheme));
   const dealt = kind !== 'docs' && lib.directions?.length
     // A product interface stays on the subject's moods unless the risk is wild.
-    ? pickDirection(lib.directions, { moods, history, rng, risk: persuade ? risk : risk === 'wild' ? 'bold' : 'safe', pin: pins.direction, mode })
+    ? pickDirection(lib.directions, { moods, history, rng, risk: persuade ? risk : risk === 'wild' ? 'bold' : 'safe', pin: pins.direction, mode, schemes })
     : { direction: null, wildcard: false };
   const { direction, wildcard } = dealt;
-  // A wildcard direction brings its own moods; otherwise the subject's moods lead (the direction's when none are given).
+  // A wildcard direction brings its own type moods; otherwise the subject's moods lead (the direction's when none are given).
+  // Colour always comes from the subject: a wildcard never recolours it.
   const lead = (own) => (wildcard ? own : moods.length ? moods : own ?? moods);
-  const paletteMoods = lead(direction?.moods);
+  const paletteMoods = moods.length ? moods : direction?.moods ?? [];
   const typeMoods = lead(direction?.typeMoods);
   const scheme = direction && direction.scheme !== 'any' ? direction.scheme : null;
   const palette = brand ? null : (byId(lib.palettes, pins.palette)
-    ?? pick(lib.palettes, { moods: paletteMoods, rng, recent: recentIds(history, 'palette'), allow: (p) => !scheme || p.scheme === scheme }));
+    ?? pick(lib.palettes, { moods: paletteMoods, rng, recent: recentIds(history, 'palette'), allow: (p) => !scheme || p.scheme === scheme, strict: moods.some((m) => PHOTO_LED.includes(m)) }));
   const creamBg = palette && isCream(hexToRgb(palette.roles.bg));
   const serifOk = (p) => direction?.serif == null || p.display.serif === direction.serif;
   const type = brand ? null : (byId(lib.pairings, pins.type)

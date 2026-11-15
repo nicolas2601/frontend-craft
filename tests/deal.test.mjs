@@ -214,3 +214,43 @@ test('websites are dealt a hero scene from their direction, never the one the la
     assert.equal(deal({ lib, kind: 'app', moods: ['tech'], rng: rngFrom(s) }).motion.scene, null, 'apps get no scene');
   }
 });
+
+const PLACE = ['hospitality', 'heritage', 'warm'];
+
+test('the palette follows the subject even when the direction is a wildcard', () => {
+  let wild = 0;
+  for (let s = 1; s <= 80; s += 1) {
+    for (const risk of ['bold', 'wild']) {
+      const d = deal({ lib, kind: 'landing', moods: PLACE, rng: rngFrom(s), risk });
+      if (d.wildcard) wild += 1;
+      assert.ok(d.palette.moods.some((m) => PLACE.includes(m)), `${risk} seed ${s}: ${d.direction.id} dealt ${d.palette.id}`);
+      if (d.direction.scheme !== 'any') assert.equal(d.palette.scheme, d.direction.scheme, `${d.direction.id} on ${d.palette.id}`);
+    }
+  }
+  assert.ok(wild > 20, `wildcards still happen for layout and type (${wild})`);
+});
+
+test('a subject sold by its photographs is never dealt a direction that recolours them', () => {
+  const recolouring = lib.directions.filter((d) => d.recolours).map((d) => d.id);
+  assert.ok(recolouring.includes('riso-print') && recolouring.includes('split-duotone'), recolouring.join(','));
+  for (const moods of [PLACE, ['food', 'warm'], ['travel', 'fresh'], ['coffee', 'craft']]) {
+    for (let s = 1; s <= 60; s += 1) {
+      const d = deal({ lib, kind: 'landing', moods, rng: rngFrom(s), risk: 'wild' });
+      assert.ok(!d.direction.recolours, `${moods} seed ${s}: ${d.direction.id}`);
+    }
+  }
+  const zine = Array.from({ length: 60 }, (_, s) => deal({ lib, kind: 'landing', moods: ['print', 'music'], rng: rngFrom(s + 1) }).direction.id);
+  assert.ok(zine.includes('riso-print'), 'riso stays available for subjects that are not sold by photographs');
+});
+
+test('a palette taken from the subject replaces the dealt one and keeps type off the cream-and-serif cliche', async () => {
+  const { applyPalette } = await import('../skills/frontend-craft/scripts/lib/deal.mjs');
+  const photo = { id: 'from-photo', scheme: 'light', moods: [], note: 'Taken from the courtyard.', roles: { bg: '#fbf2e5', surface: '#fffaf4', ink: '#231e18', muted: '#68625b', line: '#e3d7c5', accent: '#895b17', accentInk: '#fdfbf9' } };
+  for (let s = 1; s <= 30; s += 1) {
+    const d = applyPalette(deal({ lib, kind: 'landing', moods: PLACE, rng: rngFrom(s) }), photo, lib);
+    assert.equal(d.palette.id, 'from-photo');
+    assert.equal(d.palette.roles.accent, '#895b17');
+    assert.ok(!d.type.display.serif, `seed ${s}: ${d.type.id} is a serif display on a cream ground`);
+    assert.match(tokensCss(d), /--c-accent: #895b17;/);
+  }
+});
