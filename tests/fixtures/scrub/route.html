@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ruta a Guane</title>
+  <meta name="description" content="Dos líneas de ruta dibujadas con el scroll: una con el kit, que termina a la vista, y otra con su propio código, que termina al salir.">
+  <style>
+    html, body { margin: 0; background: #f6f1e7; color: #221c17; font: 18px/1.5 system-ui, sans-serif; }
+    section { min-height: 100svh; padding: 48px; }
+    h1 { font-size: 56px; margin: 0; }
+    svg { display: block; width: 640px; height: 320px; }
+    path { fill: none; stroke: #8a4b1e; stroke-width: 4; stroke-dasharray: 1; }
+    .kit path { stroke-dashoffset: calc(1 - var(--p, 1)); }
+  </style>
+</head>
+<body>
+<section><h1>Camino Real a Guane</h1><p>Baja la página para ver las dos rutas.</p></section>
+<section>
+  <figure class="kit" id="kit-route" data-scrub><svg viewBox="0 0 640 320" aria-hidden="true"><path pathLength="1" d="M20 300 C 200 280 260 40 620 20"/></svg><figcaption>Con el kit</figcaption></figure>
+</section>
+<section>
+  <figure class="own" id="own-route"><svg viewBox="0 0 640 320" aria-hidden="true"><path pathLength="1" d="M20 300 C 200 280 260 40 620 20"/></svg><figcaption>Con su propio código</figcaption></figure>
+</section>
+<section><p>Fin del camino.</p></section>
+<script>
+  // The classic mistake: progress over the whole pass, from entering at the bottom to leaving at the top.
+  const own = document.getElementById('own-route');
+  const path = own.querySelector('path');
+  const draw = () => {
+    const r = own.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height)));
+    path.style.strokeDashoffset = String(1 - p);
+  };
+  addEventListener('scroll', draw, { passive: true });
+  draw();
+</script>
+<script type="module">import { init } from '../../../skills/frontend-craft/kit/craft-motion.js'; init(document);</script>
+</body>
+</html>

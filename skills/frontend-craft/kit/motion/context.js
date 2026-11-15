@@ -8,6 +8,15 @@ export function travel(el, vh) {
   return clamp((vh - r.top) / (vh + r.height));
 }
 
+/**
+ * Progress while the element is readable: 0 when its top is 10% into the viewport, 1 when its centre reaches 40%
+ * of the viewport height. Scroll-driven motion is finished before the reader moves past it, never as it leaves.
+ */
+export function view(el, vh) {
+  const r = el.getBoundingClientRect();
+  return clamp((0.9 * vh - r.top) / (0.5 * vh + r.height / 2));
+}
+
 /** Progress through a tall section whose first child is sticky: 0 at its top, 1 at its end. */
 export function pinned(el, vh) {
   const r = el.getBoundingClientRect();
