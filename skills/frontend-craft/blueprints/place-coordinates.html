@@ -27,7 +27,7 @@
       <p class="lede" data-enter>{{one sentence: what you find there and when}}</p>
       <div class="actions" data-enter><a class="btn" href="#action" data-magnetic data-press>{{primary action}}</a><a class="btn ghost" href="#s3" data-press>{{how to get there}}</a></div>
     </div>
-    <figure class="visual" data-mask="up" data-scrub aria-label="{{map of the area}}">{{visual: an SVG map of the real streets around the place; draw the route with stroke-dashoffset: calc(LENGTH * (1 - var(--p)))}}</figure>
+    <figure class="visual" data-mask="up">{{visual: the place's best photograph in true colour (an img with alt, width and height), or its hero loop; a map belongs further down, traced from real coordinates, its line drawn with var(--p)}}</figure>
   </section>
   <ol class="index" id="s2" data-reveal="stagger" aria-label="{{what you find there}}">
     <li><span class="n">01</span><span class="name">{{offer 1}}</span><span class="note muted">{{one line}}</span><span class="meta">{{price 1}}</span></li>
@@ -43,6 +43,10 @@
       <div><dt>{{label 3}}</dt><dd>{{value 3}}</dd></div>
       <div><dt>{{label 4}}</dt><dd>{{value 4}}</dd></div>
     </dl>
+  </section>
+  <section class="section" id="getting-there">
+    <h2 class="h-section craft-display" data-reveal>{{how to get there}}</h2>
+    <figure class="visual" data-scrub aria-label="{{the way in, from the nearest town}}">{{visual: a map traced from real coordinates (OpenStreetMap; name the source in data-source on the svg); its route drawn with stroke-dashoffset: calc(1 - var(--p)) and pathLength="1", so it is finished while it can be read; the distance and travel time as text beside it}}</figure>
   </section>
   <section class="section" id="action">
     <h2 class="h-display craft-display" data-reveal>{{closing line that repeats the promise}}</h2>

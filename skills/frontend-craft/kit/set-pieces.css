@@ -3,13 +3,13 @@
   Load after craft.css and layouts.css. Each piece:
   - shows its finished state without JavaScript (--p unset) and under reduced motion (--p = 1);
   - moves only transform, opacity, clip-path and filter;
-  - finishes before its element leaves the screen (--q runs 0 to 1 over the first half of --p).
+  - finishes while its element can be read (--p reaches 1 when the element's centre is at 40% of the screen).
   Markup for each piece: references/set-pieces.md. MIT.
 */
 
 /* --q is computed once, on the element that carries data-scrub, and inherited by its parts. */
 :root { --q: 1; }
-[data-scrub] { --q: min(1, calc(var(--p, 1) * 2)); }
+[data-scrub] { --q: var(--p, 1); }
 [data-scrub="pinned"] { --q: min(1, calc(var(--p, 1) * 1.25)); }
 
 /* ---------- iris: the next ground opens through a growing circle ---------- */

@@ -6,7 +6,7 @@
       "license": "MIT"
     },
     "pbakaus/impeccable": {
-      "ref": "c4cd1924c389f68d37c687d9c2bbf13f12547c41",
+      "ref": "2b86d9c07b97d4bed7de23583e1bd1e58dd2baae",
       "license": "Apache-2.0"
     },
     "emilkowalski/skills": {
@@ -14,12 +14,16 @@
       "license": "MIT"
     },
     "nextlevelbuilder/ui-ux-pro-max-skill": {
-      "ref": "6ae86f61f520d6ca229d2f40e070410638c908c5",
+      "ref": "d643997c82e94742dd3bee43210b0198e8bbba3d",
       "license": "MIT"
     },
     "mblode/agent-skills": {
-      "ref": "402a666823ddf9b8cd9be76c3314b1119078ff01",
+      "ref": "7df4b7edff1dc1c991331061373d4ba42ecacdbe",
       "license": "MIT"
+    },
+    "microsoft/playwright-cli": {
+      "ref": "b21724888b8100b05ef8dee3a92f2bb03bf4dcde",
+      "license": "Apache-2.0"
     }
   },
   "skills": [
@@ -36,8 +40,8 @@
       "repo": "pbakaus/impeccable",
       "path": ".agents/skills/impeccable",
       "role": "critique, audit and polish passes",
-      "hash": "b8e2e5a876f8b1360d88fefcc4e813da0756aebf7b138065504d25c99c492ab0",
-      "files": 65
+      "hash": "7b826da13126c02c747dc3dbee4c0611b1a8dae2b9bc6755c5d18846b69ff679",
+      "files": 71
     },
     {
       "name": "emil-design-eng",
@@ -174,6 +178,14 @@
       "role": "springs, curve fitting from recordings, interface sound",
       "hash": "806b43bb194724e5819e3ea4c1350cb0c1616b642ad26760ac2864ef6d7ea86a",
       "files": 26
+    },
+    {
+      "name": "playwright-cli",
+      "repo": "microsoft/playwright-cli",
+      "path": "skills/playwright-cli",
+      "role": "looking at and measuring the rendered page from the shell: screenshots, scroll, reduced motion, the reviewers",
+      "hash": "41a0cac9c007e3862357707b133b1786fc9472683be0d6b09360ac15329ab50d",
+      "files": 12
     }
   ]
 }

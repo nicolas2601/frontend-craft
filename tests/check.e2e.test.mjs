@@ -143,3 +143,29 @@ test('autoplaying videos without a poster, a pause control or a reduced-motion s
   assert.doesNotMatch(token.msg, /--s-8\b/);
   assert.match(token.fix, /--s-8/, 'the fix lists the defined steps of the same scale');
 });
+
+test('scroll-driven drawing that is still running as its element leaves the screen fails; the kit window passes', { skip: !chrome, timeout: 200000 }, async () => {
+  const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/scrub/route.html' }, kind: 'app', out: out(), detector: false });
+  const late = r.findings.find((x) => x.id === 'scrub-late');
+  assert.ok(late, `missing scrub-late; got ${r.findings.map((x) => x.id).join(', ')}`);
+  assert.equal(late.level, 'FAIL');
+  assert.match(late.msg, /own-route/);
+  assert.doesNotMatch(late.msg, /kit-route/);
+});
+
+test('a phone that loses the navigation or gets tiny control text fails', { skip: !chrome, timeout: 200000 }, async () => {
+  const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/mobile/bad.html' }, kind: 'app', out: out(), detector: false });
+  const got = new Set(r.findings.map((x) => `${x.level}:${x.id}`));
+  for (const id of ['FAIL:nav-mobile', 'FAIL:control-text-small']) assert.ok(got.has(id), `missing ${id}; got ${[...got].join(', ')}`);
+  assert.match(r.findings.find((x) => x.id === 'nav-mobile').msg, /0 of its 3/);
+});
+
+test('a place shown in grey photographs fails; the same page for a print subject does not', { skip: !chrome, timeout: 200000 }, async () => {
+  const run = (moods) => runCheck({ target: { root: ROOT, page: 'tests/fixtures/photos/recoloured.html' }, kind: 'app', deal: { version: 3, kind: 'app', moods, direction: null, palette: null, type: null, motion: { setPieces: [] } }, out: out(), detector: false });
+  const place = await run(['hospitality', 'heritage']);
+  const hit = place.findings.find((x) => x.id === 'photo-recoloured');
+  assert.ok(hit, `missing photo-recoloured; got ${place.findings.map((x) => x.id).join(', ')}`);
+  assert.match(hit.msg, /2 of 3/);
+  const zine = await run(['print', 'music']);
+  assert.ok(!zine.findings.some((x) => x.id === 'photo-recoloured'));
+});

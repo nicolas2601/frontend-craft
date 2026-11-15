@@ -4,6 +4,7 @@ import { visualLayer } from './split.js';
 const COUNT_MS = 1400;
 const SCRAMBLE_MS = 650;
 const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+=';
+const MAX_MARQUEE_PX_PER_S = 120;
 const DEFAULT_MARQUEE_PX_PER_S = 60;
 
 /** Parse "1.280", "12,5 %", "+40k" into parts that can be re-rendered with the same format. */
@@ -87,7 +88,8 @@ function scramble(el, ctx) {
   return () => { stop(); if (raf) cancelAnimationFrame(raf); layer.restore(); };
 }
 
-// Endless band. data-marquee="60" sets the speed in px/s. Pauses off screen and on hover.
+// Endless band. data-marquee="60" sets the speed in px/s (at most 120, so words stay readable). Pauses off screen
+// and on hover; a button with data-marquee-toggle right after it (or aria-controls naming its id) pauses and resumes it (WCAG 2.2.2), and that pause sticks.
 function marquee(el, ctx) {
   if (ctx.reduced) return null;
   const original = [...el.childNodes];
@@ -107,15 +109,27 @@ function marquee(el, ctx) {
   }
   const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
   const distance = unit + gap;
-  const speed = Number.parseFloat(el.dataset.marquee) || DEFAULT_MARQUEE_PX_PER_S;
+  const speed = Math.min(MAX_MARQUEE_PX_PER_S, Number.parseFloat(el.dataset.marquee) || DEFAULT_MARQUEE_PX_PER_S);
   const anim = track.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${-distance}px)` }],
     { duration: (distance / speed) * 1000, iterations: Infinity, easing: 'linear' });
-  const pause = () => anim.pause();
-  const resume = () => anim.play();
-  const stopWatch = ctx.watch(el, (visible) => (visible ? resume() : pause()), { margin: '10% 0px' });
+  const next = el.nextElementSibling;
+  const toggle = next?.matches('[data-marquee-toggle]') ? next : el.id ? document.querySelector(`[data-marquee-toggle][aria-controls="${el.id}"]`) : null;
+  let held = false;
+  let visible = false;
+  let hovered = false;
+  const sync = () => {
+    if (visible && !held && !hovered) anim.play(); else anim.pause();
+    toggle?.setAttribute('aria-pressed', String(held));
+  };
+  const pause = () => { hovered = true; sync(); };
+  const resume = () => { hovered = false; sync(); };
+  const onToggle = () => { held = !held; sync(); };
+  toggle?.addEventListener('click', onToggle);
+  const stopWatch = ctx.watch(el, (v) => { visible = v; sync(); }, { margin: '10% 0px' });
   if (ctx.fine) { el.addEventListener('pointerenter', pause); el.addEventListener('pointerleave', resume); }
   return () => {
     stopWatch();
+    toggle?.removeEventListener('click', onToggle);
     anim.cancel();
     el.removeEventListener('pointerenter', pause);
     el.removeEventListener('pointerleave', resume);

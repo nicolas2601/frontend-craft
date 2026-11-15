@@ -57,8 +57,8 @@ export function sceneBlock(d, { scenesRef }) {
 
 export function referencesBlock(d) {
   if (!d.direction) return [];
-  return ['## References (optional, 10 minutes)',
-    'If an Awwwards tool is available (MCP awwwards: search_sites with tags or award=sotd), look at two or three award sites that share the direction\'s idea, not the subject\'s trade. Under # Rejected or # Signature, note the one structural move you take from each (how a section changes ground, how a gallery moves). Take moves, never a look: no copied colours, type or copy.', ''];
+  return ['## Look before you design (10 minutes)',
+    'Before the concept, look at good work for the parts you will build: references/inspiration.md says where (land-book and the Awwwards MCP for the page, supahero for the first screen, navbar.gallery for the phone menu, pricingpages for rates) and what premium places do. Look at two or three, including award sites in the subject\'s own trade. Under # Signature or # Rejected, note the one move you take from each and where it came from. Take moves, never a look: no copied colours, type or copy.', ''];
 }
 
 export function tellsBlock() {

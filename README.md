@@ -2,13 +2,13 @@
 
 One install that gives a coding agent a complete frontend toolset: dealt art directions with scroll set pieces and real photographs for websites, a richness and defect check in a real browser, critique and polish passes, motion rules, a motion kit, SVG authoring, and a router that sends each task to the right one. Works in any harness that reads Agent Skills (Claude Code, Codex, OpenCode, Gemini CLI, Cursor, pi) and in any framework.
 
-Ask a model for "a landing page for a coffee shop" and most of them return the same flat page: cream background, a serif headline, a terracotta accent, three equal cards, no photographs and almost no motion. Ask two different models and you get nearly the same page twice. Rules in a prompt do not fix it, because the model falls back to its defaults whenever a decision is left open. The skills here close those decisions with scripts the model runs: a deal that changes from build to build (sometimes on purpose outside the subject's usual look), and a gate that fails a page for being flat, not only for being broken.
+Ask a model for "a landing page for a coffee shop" and most of them return the same flat page: cream background, a serif headline, a terracotta accent, three equal cards, no photographs and almost no motion. Ask two different models and you get nearly the same page twice. Rules in a prompt do not fix it, because the model falls back to its defaults whenever a decision is left open. The skills here close those decisions with scripts the model runs: a deal that changes from build to build (sometimes on purpose outside the subject's usual layout and type, never its colours or photographs), a palette taken from the subject's own picture, a gate that fails a page for being flat or careless, not only for being broken, and two independent reviewers who look at the result.
 
 ```
 prompt ──> frontend-craft (router)
              ├─ website / landing ──> start.mjs deal: art direction + palette + type + composition + 2 set pieces
              │                          concept.md ─ real photographs ─ build ─ check.mjs (defects + richness)
-             │                          then impeccable critique + review-animations, check again
+             │                          then two reviewers in parallel (design critic, motion + mobile auditor), check again
              ├─ quiet, sober site (asked for) ──> design-taste-frontend run and its gate
              ├─ app / dashboard / docs ──> start.mjs deal: tokens + motion kit + check.mjs (restraint)
              ├─ motion on existing UI ──> craft-motion + animate / choreograph / animation-performance
@@ -27,6 +27,9 @@ prompt ──> frontend-craft (router)
 | [`craft-review`](skills/craft-review/SKILL.md) | Strict rendered review: findings as Before, After, Why with exact values. Does not edit. |
 | [`craft-learn`](skills/craft-learn/SKILL.md) | Turn a session's design corrections into testable rules in `DESIGN.md`. |
 | [`svg-craft`](skills/svg-craft/SKILL.md) | Icons, logos, illustrations, diagrams and animated SVG, with a render-and-look loop. |
+| [`hf-asset-generate`](skills/hf-asset-generate/SKILL.md) | Free images, edits, short clips and voice through the Hugging Face MCP server (hero stills and loops). |
+
+**Reviewer agents** (Claude Code plugin, generated from [`references/review.md`](skills/frontend-craft/references/review.md)): `craft-design-critic` and `craft-motion-auditor`, spawned in parallel at the end of every build. Other harnesses paste the same briefs into subagents.
 
 **Bundled skills**, copied unchanged from upstream at a pinned commit ([vendor.json](vendor.json), licences in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)):
 
@@ -37,12 +40,18 @@ prompt ──> frontend-craft (router)
 | `emil-design-eng`, `animate`, `choreograph`, `animation-performance`, `animation-vocabulary`, `review-animations`, `improve-animations`, `remove-animations`, `find-animation-opportunities`, `gestures`, `break-ui`, `pick-ui-library`, `prototype`, `apple-design`, `learn-taste` | [emilkowalski/skills](https://github.com/emilkowalski/skills), MIT | Motion and interaction craft |
 | [`ui-ux-pro-max`](skills/ui-ux-pro-max/SKILL.md) | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill), MIT | Searchable styles, palettes, font pairings and UX rules (Python 3) |
 | [`ui-animation`](skills/ui-animation/SKILL.md) | [mblode/agent-skills](https://github.com/mblode/agent-skills), MIT | Springs, easing fitted from recordings, interface sound |
+| [`playwright-cli`](skills/playwright-cli/SKILL.md) | [microsoft/playwright-cli](https://github.com/microsoft/playwright-cli), Apache-2.0 | Looking at and measuring the page from the shell: widths, scroll, reduced motion |
 
 Every bundled skill arrives with its assets, scripts, references and licence file. `npm run verify` fails if any of them differs by one byte from the pinned upstream commit.
 
 ## Install
 
-Requirements: Node 22 or later and Chrome, Chromium or Edge (set `CHROME_PATH` for anything else). Python 3 for `ui-ux-pro-max`; ffmpeg is optional (photo crops).
+Requirements: Node 22 or later and Chrome, Chromium or Edge (set `CHROME_PATH` for anything else). Python 3 for `ui-ux-pro-max`; ffmpeg for hero loops and palettes from a photograph. After installing, run the setup report: it lists what is missing and, with `--install`, adds `playwright-cli` and (in Claude Code) the Playwright and Hugging Face MCP servers. Nothing secret is written; Hugging Face logs in with OAuth.
+
+```sh
+node <skills folder>/frontend-craft/scripts/setup.mjs            # report
+node <skills folder>/frontend-craft/scripts/setup.mjs --install  # user-level installs, never sudo
+```
 
 **Any harness that reads Agent Skills.** Install every skill in the repo, so the router finds its siblings:
 
@@ -51,7 +60,7 @@ npx skills@latest add nicolas2601/frontend-craft --all          # every skill, e
 npx skills@latest add nicolas2601/frontend-craft -g -a claude-code -s '*' -y   # one agent, global
 ```
 
-**Claude Code plugin.** Brings every skill, the two Stop-hook gates (each skill's own) and a prompt hook that points web-page requests at the router:
+**Claude Code plugin.** Brings every skill, the two reviewer agents, the Playwright and Hugging Face MCP servers (`.mcp.json`), the two Stop-hook gates (each skill's own) and a prompt hook that points web-page requests at the router:
 
 ```sh
 /plugin marketplace add nicolas2601/frontend-craft

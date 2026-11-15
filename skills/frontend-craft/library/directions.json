@@ -1,5 +1,5 @@
 {
-  "$comment": "Art directions for websites. start.mjs deals one per build (never one of the last four), sometimes on purpose outside the subject's usual moods, so two agents given the same prompt build two different pages. A direction decides what a palette and a composition cannot: how the grounds change, how big the type goes, how the photographs are treated, two layout moves that break the template, and the scroll set pieces (kit/set-pieces.css, references/set-pieces.md). scenes are the live WebGL objects (kit/motion/scene.js) the first screen may carry. modes says where a direction may be dealt: persuade (websites) and operate (apps and platforms, without set pieces). The check measures grounds, picture count, full-bleed and headline size against these numbers.",
+  "$comment": "Art directions for websites. start.mjs deals one per build (never one of the last four), sometimes on purpose outside the subject's usual moods, so two agents given the same prompt build two different pages. A direction decides what a palette and a composition cannot: how the grounds change, how big the type goes, how the photographs are treated, two layout moves that break the template, and the scroll set pieces (kit/set-pieces.css, references/set-pieces.md). scenes are the live WebGL objects (kit/motion/scene.js) the first screen may carry. modes says where a direction may be dealt: persuade (websites) and operate (apps and platforms, without set pieces). recolours marks a direction that recolours photographs (riso, duotone); it is never dealt to a subject sold by its photographs (deal.mjs PHOTO_LED), and a wildcard never changes the subject's palette. The check measures grounds, picture count, full-bleed and headline size against these numbers.",
   "directions": [
     {
       "id": "night-poster",
@@ -634,6 +634,7 @@
     },
     {
       "id": "split-duotone",
+      "recolours": true,
       "name": "Split duotone",
       "idea": "The screen is split in two: one half holds a duotone photograph in the accent, the other carries the words; halves trade places from section to section.",
       "scheme": "any",
@@ -813,6 +814,7 @@
     },
     {
       "id": "riso-print",
+      "recolours": true,
       "name": "Riso print",
       "idea": "The page looks printed on a risograph: two inks, grain, slightly off-register photographs, chunky type and paper colour, like a zine or a market poster.",
       "scheme": "light",

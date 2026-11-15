@@ -20,6 +20,11 @@
 | `contrast` | FAIL | Text under WCAG AA (4.5:1, or 3:1 at 24 px+) | Muted text on surface tints, text on accent without `--c-accent-ink`, opacity on text |
 | `target-tiny` | FAIL | A control under 24 px at 390 | Icon buttons without padding; give 44x44 px |
 | `transition-all` | FAIL | `transition: all` (or Tailwind `transition-all`) | List the properties |
+| `photo-recoloured` | FAIL | A subject sold by its photographs (hospitality, heritage, travel, food, coffee, tea, beauty, wellness, nature, organic, fashion) shows more than a third of its photographs or videos grey, sepia, hue-shifted, under riso or with a blend mode | True colour, and the palette from the hero picture (`start.mjs --palette-from`) |
+| `nav-mobile` | FAIL | At 390 px the header's nav shows fewer links than at 1440 and there is no menu button (`aria-expanded`) | Keep the links as a row (the kit's `.nav` wraps and scrolls them) or add a menu button |
+| `control-text-small` | FAIL | A button, field or label under 14 px at 390 | `var(--t-sm)` or larger |
+| `marquee-pause` | WARN | A `data-marquee` band with no `data-marquee-toggle` button beside it | Add the button (WCAG 2.2.2) |
+| `scrub-late` | FAIL | Scroll-driven motion (a `--p`, an opacity, a clip, a line being drawn) still changing between the element's centre at 35% and at 10% of the screen: it finishes as the reader leaves it | `data-scrub` and `var(--p)` (it reaches 1 at 40%), or map your own progress the same way |
 | `token-undefined` | FAIL | A design token (`--s-`, `--t-`, `--c-`, `--r-`, `--f-`) read with no fallback and never defined, such as `--s-20` on a scale that stops at `--s-16`; the property silently drops to 0 or transparent | Use a step the tokens define (the finding lists them) or define it |
 | `content-invisible` | FAIL | Text never becomes visible after scrolling the whole page | A reveal that never fires, or an element hidden by CSS with no script to show it |
 | `reduced-invisible` | FAIL | With reduced motion, text stays hidden | Custom animations that only reach the visible state by animating |

@@ -6,9 +6,10 @@ carries the upstream licence file (and NOTICE where the upstream has one). Gener
 | Upstream | Licence | Commit | Skills |
 |---|---|---|---|
 | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) | MIT | `f6b76575f949` | `design-taste-frontend` |
-| [pbakaus/impeccable](https://github.com/pbakaus/impeccable) | Apache-2.0 | `c4cd1924c389` | `impeccable` |
+| [pbakaus/impeccable](https://github.com/pbakaus/impeccable) | Apache-2.0 | `2b86d9c07b97` | `impeccable` |
 | [emilkowalski/skills](https://github.com/emilkowalski/skills) | MIT | `0f2e23b32bb1` | `emil-design-eng`, `animate`, `choreograph`, `animation-performance`, `animation-vocabulary`, `review-animations`, `improve-animations`, `remove-animations`, `find-animation-opportunities`, `gestures`, `break-ui`, `pick-ui-library`, `prototype`, `apple-design`, `learn-taste` |
-| [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | MIT | `6ae86f61f520` | `ui-ux-pro-max` |
-| [mblode/agent-skills](https://github.com/mblode/agent-skills) | MIT | `402a666823dd` | `ui-animation` |
+| [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | MIT | `d643997c82e9` | `ui-ux-pro-max` |
+| [mblode/agent-skills](https://github.com/mblode/agent-skills) | MIT | `7df4b7edff1d` | `ui-animation` |
+| [microsoft/playwright-cli](https://github.com/microsoft/playwright-cli) | Apache-2.0 | `b21724888b81` | `playwright-cli` |
 
 `svg-craft` (own) vendors MIT packs whose notices are in `skills/svg-craft/packs/*/LICENSE-*`.

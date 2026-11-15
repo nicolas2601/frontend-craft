@@ -8,6 +8,7 @@
         [--url http://localhost:5173 | --root dist | --file index.html]
         [--risk safe|bold|wild] [--redeal] [--seed 42]
         [--pin direction=id,palette=id,type=id,composition=id,signature=id,component=Id,scene=id] [--brand] [--kit-only] [--list]
+        [--palette-from assets/hero-still.webp [--accent 2]]   # the colours from the subject's own picture
 
   Websites (every kind but app and docs) are dealt an art direction as well: grounds, type scale,
   picture treatment, two template breaks and two scroll set pieces per page (never the same piece on
@@ -24,7 +25,8 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { KINDS, RISK, deal, historyFile, loadLibrary, moodsOf, normalizePages, rngFrom, summarize } from './lib/deal.mjs';
+import { KINDS, RISK, applyPalette, deal, historyFile, loadLibrary, moodsOf, normalizePages, rngFrom, summarize } from './lib/deal.mjs';
+import { derivePalette, samplePixels } from './lib/palette-from.mjs';
 import { briefMd, tokensCss } from './lib/render.mjs';
 import { craftDir, isMain, parseArgs, readJson, resolveTarget, writeJson } from './lib/state.mjs';
 
@@ -99,6 +101,17 @@ function kitOnly(args, cwd, dir, kind) {
   return { text: `Kit copied to ${kitDir} (craft.css, craft-motion.js, motion/). No deal: keep the project's tokens; map them to --c-* and --f-* if you use craft.css defaults.\n${target ? `Gate armed on ${target.url ?? target.root}.` : 'Pass --url or --root to arm the gate on a target.'}` };
 }
 
+/** The palette taken from the subject's picture (the hero still, the client's photograph); the rest of the deal stays. */
+function withPictureColours(current, args, cwd, lib) {
+  const file = String(args['palette-from']);
+  if (!fs.existsSync(path.resolve(cwd, file))) throw new Error(`no picture at "${file}": pass the hero still or the client's photograph`);
+  const own = current.direction?.scheme;
+  const scheme = own && own !== 'any' ? own : args.scheme === 'dark' ? 'dark' : 'light';
+  const accent = Number.parseInt(args.accent, 10) || 1;
+  const palette = derivePalette(samplePixels(path.resolve(cwd, file)), { scheme, source: file, accent });
+  return { ...applyPalette(current, palette, lib), paletteFrom: file };
+}
+
 export function run(argv, cwd = process.cwd()) {
   const args = parseArgs(argv);
   const lib = loadLibrary();
@@ -135,6 +148,8 @@ export function run(argv, cwd = process.cwd()) {
     current = { seed, ...deal({ lib, kind, moods, history, rng: rngFrom(seed), pins: parsePins(args.pin), brand: !!args.brand, risk, lang, pages }), at: new Date().toISOString() };
     writeJson(hFile, [...history, { at: current.at, kind, ...summarize(current) }].slice(-HISTORY_MAX));
   }
+
+  if (args['palette-from'] && args['palette-from'] !== true) current = withPictureColours(current, args, cwd, lib);
 
   const kitDir = String(args.kit ?? current.kitDir ?? defaultKitDir(cwd));
   let createdPage = null;

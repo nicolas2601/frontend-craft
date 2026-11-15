@@ -1,6 +1,6 @@
 # Set pieces
 
-Scroll scenes from `kit/set-pieces.css`, driven by the kit's `data-scrub` (it writes `--p`, 0 to 1, on its element; the CSS turns that into `--q`, which reaches 1 by the time the scene is fully on screen). Every piece shows its finished state without JavaScript and under reduced motion, and moves only transform, opacity, clip-path and filter. Load `set-pieces.css` after `craft.css` and `layouts.css`.
+Scroll scenes from `kit/set-pieces.css`, driven by the kit's `data-scrub` (it writes `--p`, 0 to 1, on its element, reaching 1 when the element's centre is at 40% of the screen; the CSS reads it as `--q`). Your own scroll drawing (a route, a line, a count) uses `--p` too, never the whole pass: the check fails motion still running as its element leaves (`scrub-late`). Every piece shows its finished state without JavaScript and under reduced motion, and moves only transform, opacity, clip-path and filter. Load `set-pieces.css` after `craft.css` and `layouts.css`.
 
 A pinned piece (`data-pin` on the section, `data-scrub="pinned"` inside) holds the screen for `--pin-length` (default 260svh; 180 to 240svh is enough for most). Use at most one pinned scene per screen and two pinned scenes per page. Replace the sample words and pictures with the subject's own.
 

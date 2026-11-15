@@ -1,5 +1,5 @@
 {
-  "$comment": "Organizing ideas for a page. A composition decides what the first screen shows and how the sections are paced, so two pages with the same content still differ in structure, not just in color. kinds: where it fits; signatures: motion that serves it.",
+  "$comment": "Organizing ideas for a page. A composition decides what the first screen shows and how the sections are paced, so two pages with the same content still differ in structure, not just in color. kinds: where it fits; needs: moods the subject must have (a product interface only for software, one object on a plinth only for a product); signatures: motion that serves it.",
   "compositions": [
     { "id": "poster-headline", "kinds": ["landing", "event", "brand", "campaign", "venue"],
       "idea": "The headline is the hero image: type at --t-mega, set tight, allowed to touch or crop at the viewport edge, with one object overlapping it.",
@@ -17,6 +17,7 @@
       "sections": ["the index (menu, origins, projects, services)", "one expanded row told in depth", "facts or hours as a ledger", "action"],
       "signatures": ["reveal-stagger", "mask", "scramble", "spotlight"] },
     { "id": "object-center", "kinds": ["product", "landing", "brand"],
+      "needs": ["tech", "fashion", "beauty", "coffee", "tea", "food", "sport", "industrial", "craft", "luxury"],
       "idea": "One object sits in the center of the first screen with labels on leader lines; scrolling turns, opens or explodes it.",
       "firstScreen": "The object at 55-70% of the viewport height, 2-4 short labels around it, headline small above or below.",
       "sections": ["the object coming apart or turning (scroll-scrubbed)", "each part explained in one line", "proof: numbers that count up", "action"],
@@ -47,8 +48,8 @@
       "sections": ["manifesto passage 1 (pinned, lit word by word)", "one huge number that counts", "manifesto passage 2", "action"],
       "signatures": ["scroll-words", "count", "progress", "marquee"] },
     { "id": "place-coordinates", "kinds": ["venue", "event", "landing", "brand"],
-      "idea": "The page is organised around a place: coordinates, distances, a drawn map line, opening hours as a ledger.",
-      "firstScreen": "The place name as headline, coordinates and the neighborhood in small type, a drawn route or street grid in SVG.",
+      "idea": "The page is organised around a place: its best photograph, real coordinates and distances, opening hours as a ledger. A map only from real coordinates (an outline traced from OpenStreetMap, data-source on the SVG naming it), never a decorative squiggle.",
+      "firstScreen": "The place name as headline beside its best photograph in true colour; coordinates and the neighbourhood in small type.",
       "sections": ["what you find there (3-5 items)", "hours and address ledger", "how to get there", "action"],
       "signatures": ["mask", "scrub", "scramble", "reveal-stagger"] },
     { "id": "specimen-sheet", "kinds": ["product", "brand", "portfolio", "venue"],
@@ -67,6 +68,7 @@
       "sections": ["feature story in two columns", "pull quote at display size", "sidebar of facts", "action"],
       "signatures": ["mask", "parallax", "reveal-stagger", "scroll-words"] },
     { "id": "interface-hero", "kinds": ["product", "landing"],
+      "needs": ["tech", "developer", "finance", "science", "precise"],
       "idea": "The hero is the product interface itself, built in HTML with real states, not a screenshot.",
       "firstScreen": "Headline left or above; the interface at 60% width doing its main job with one live state change.",
       "sections": ["three workflows, each shown as the interface in that state", "numbers that count", "pricing or plans as a table", "action"],
