@@ -25,7 +25,7 @@ One line set huge crosses the screen as the reader scrolls. The line is decorati
 
 ```html
 <section class="sp-type-pass" data-scrub>
-  <p class="sp-type-pass__line" aria-hidden="true">Mesa de los Santos · 1,600 m</p>
+  <p class="sp-type-pass__line" aria-hidden="true">Mesa de los Santos, 1,600 m</p>
   <h2>Where the beans grow</h2>
   <p>…</p>
 </section>
@@ -132,7 +132,7 @@ One long line of huge words crosses the screen as the reader scrolls. Use it as 
 <section class="sp-word-track" data-pin style="--pin-length: 240svh">
   <div class="sp-word-track__stage" data-scrub="pinned">
     <h2>Tostado, molido, servido</h2>
-    <p class="sp-word-track__line" aria-hidden="true">Masa madre · Horneado · Vitrina · Mesa · Masa madre · Horneado · </p>
+    <p class="sp-word-track__line" aria-hidden="true"><span>Masa madre</span> <span>Horneado</span> <span>Vitrina</span> <span>Mesa</span> <span>Masa madre</span> <span>Horneado</span></p>
   </div>
 </section>
 ```

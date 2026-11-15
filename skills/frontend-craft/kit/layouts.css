@@ -98,7 +98,7 @@
 .ticket .main { padding: var(--s-12); display: grid; gap: var(--s-6); }
 .ticket .stub { padding: var(--s-12) var(--s-8); border-left: 2px dashed var(--c-line); display: grid; align-content: space-between; gap: var(--s-8); }
 .fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--s-6); }
-.fields dt { font-family: var(--f-mono); font-size: var(--t-xs); color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.fields dt { font-size: var(--t-sm); color: var(--c-muted); }
 .fields dd { margin: var(--s-1) 0 0; font-size: var(--t-lg); font-weight: 600; }
 .receipt { list-style: none; margin: 0; padding: 0; font-variant-numeric: tabular-nums; }
 .receipt li { display: flex; gap: var(--s-3); align-items: baseline; padding: var(--s-3) 0; font-size: var(--t-lg); }
