@@ -114,6 +114,19 @@ export function encode(o) {
   return { source: meta, ...p, files, sizes, over: Object.keys(files).filter((k) => k !== 'poster' && sizes[k] > BUDGET_BYTES) };
 }
 
+/** The page's URL for a file written from the project root: as written, or from the site root when it sits under public/. */
+const url = (f) => {
+  const rel = path.relative(process.cwd(), path.resolve(f)).split(path.sep).join('/');
+  return rel.startsWith('public/') ? rel.slice('public'.length) : rel;
+};
+
+/** The markup to paste, pointing at the files the encode wrote. */
+export function markup(files, { w, h }) {
+  return `<div class="craft-loop">\n  <video data-loop muted playsinline preload="metadata" poster="${url(files.poster)}" width="${w}" height="${h}" aria-hidden="true">\n`
+    + `    <source src="${url(files.webm)}" type="video/webm">\n    <source src="${url(files.mp4)}" type="video/mp4">\n  </video>\n`
+    + '  <button type="button" data-loop-toggle aria-pressed="false">Pause</button>\n</div>';
+}
+
 function has(list, names) {
   return Object.fromEntries(names.map((n) => [n, new RegExp(`\\s${n}\\s`).test(list)]));
 }
@@ -150,10 +163,7 @@ function main() {
   console.log(`Loop: ${r.duration} s at ${r.w}x${r.h} from ${r.source.width}x${r.source.height} ${r.source.fps.toFixed(2)} fps`);
   for (const [k, f] of Object.entries(r.files)) console.log(`  ${k.padEnd(6)} ${f}  ${kb(r.sizes[k])}`);
   if (r.over.length) console.log(`WARN ${r.over.join(', ')} over ${kb(BUDGET_BYTES)}: shorten the loop, lower --width, or raise --crf`);
-  const rel = (f) => path.basename(f);
-  console.log(`\n<div class="craft-loop">\n  <video data-loop muted playsinline preload="metadata" poster="${rel(r.files.poster)}" width="${r.w}" height="${r.h}" aria-hidden="true">\n`
-    + `    <source src="${rel(r.files.webm)}" type="video/webm">\n    <source src="${rel(r.files.mp4)}" type="video/mp4">\n  </video>\n`
-    + '  <button type="button" data-loop-toggle aria-pressed="false">Pause</button>\n</div>');
+  console.log(`\nMarkup (paths from where you ran this; write the button label in the page's language):\n${markup(r.files, r)}`);
 }
 
 if (isMain(import.meta.url)) {

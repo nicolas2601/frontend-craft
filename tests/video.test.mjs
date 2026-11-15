@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
-import { encode, options, plan, sizeFor } from '../skills/frontend-craft/scripts/video.mjs';
+import { encode, markup, options, plan, sizeFor } from '../skills/frontend-craft/scripts/video.mjs';
 import { richnessRules } from '../skills/frontend-craft/scripts/lib/rules-richness.mjs';
 import { videoRules } from '../skills/frontend-craft/scripts/lib/rules-video.mjs';
 
@@ -45,6 +45,17 @@ test('pingpong drops both repeated ends; none keeps the clip; a 30 fps source is
   assert.doesNotMatch(none.graph, /unsharp/);
   const cut = plan(WAN, opts({ start: '0.5', end: '2.5' }));
   assert.match(cut.graph, /trim=start=0\.5:end=2\.5,setpts=PTS-STARTPTS,minterpolate/);
+});
+
+test('the printed markup points at the files from the page, not by bare name', () => {
+  const files = { mp4: 'assets/hero.mp4', webm: 'assets/hero.webm', poster: 'assets/hero-poster.webp' };
+  const html = markup(files, { w: 1280, h: 720 });
+  assert.match(html, /poster="assets\/hero-poster\.webp"/);
+  assert.match(html, /src="assets\/hero\.webm"/);
+  assert.match(html, /src="assets\/hero\.mp4"/);
+  assert.match(html, /width="1280" height="720"/);
+  const vite = markup({ mp4: 'public/media/hero.mp4', webm: 'public/media/hero.webm', poster: 'public/media/hero-poster.webp' }, { w: 1280, h: 720 });
+  assert.match(vite, /src="\/media\/hero\.webm"/, 'files under public/ are served from the site root');
 });
 
 test('video rules: playing under reduced motion and sound fail; no pause control and no poster warn', () => {
