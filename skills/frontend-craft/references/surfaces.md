@@ -51,7 +51,7 @@ A two-ink print look for one photograph: the image goes grey, the accent colour 
 Set `--riso-shift` (default 3px) for the misregistration. Keep the alt text: the treatment is visual only.
 
 - Use: a photograph in an editorial or poster-like section, a single image as an accent.
-- Do not: treat a product photo whose colour is the sale, or every image on a page.
+- Do not: treat a photograph whose true colour is the sale (a place, a dish, a product); the deal never gives riso to those subjects and the check fails it (`photo-recoloured`).
 
 ## mono
 
@@ -81,6 +81,21 @@ On the page that leaves and on the page that arrives, give the shared element th
 Each name must appear once per page. `::view-transition-group(hero)` sets the duration of that element (380ms). Under reduced motion every transition is turned off, so navigation is an instant swap.
 
 This is cross-document (MPA) only. A single-page app (one document that swaps its content) must use `document.startViewTransition(() => update())` instead; the CSS `@view-transition` rule does nothing there.
+
+## texture
+
+A quiet material under a section's content, so a flat ground reads as made: `<section class="craft-texture" data-texture="paper">`. The layer sits behind the content, uses the section's own colours (`currentColor`, the palette), never moves, and stays at low opacity (`--texture-opacity`).
+
+| `data-texture` | Fits | Wrong for |
+|---|---|---|
+| `paper` | heritage, print, craft, food on a light ground | glass UI, clinical, tech |
+| `grain` | any flat or two-colour ground that looks digital | text-heavy reading sections at high opacity |
+| `glow` | warm or modern brands; two of the palette's colours with grain | a third colour, glowing orbs, anything on a dark tech hero |
+| `dots` | data, developer tools, science | heritage, hospitality, food |
+| `grid` | architecture, engineering, precise subjects | warm hospitality, food |
+| `fluted` | spa, wellness, calm luxury, behind a short statement | dense body text |
+
+One texture per page at most, on one or two sections, never under the hero photograph. Check contrast after adding it. Other grounds from the "less flat" list (contour lines, halftone, dithered images, single-hue landscapes, cloud sky, pixel mosaics, ASCII) are built for a subject that has them (a map, a print shop, a game, a developer tool) with `svg-craft` or canvas, never as decoration; anything that moves needs a reduced-motion state.
 
 ## Rules
 

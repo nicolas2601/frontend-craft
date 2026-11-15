@@ -48,7 +48,7 @@ Reveals are supports, never the scroll story: fade-ins alone fail the check.
 |---|---|---|
 | `data-count` | Counts from 0 to the number already written, 1.4 s, when in view | keeps the page's format: `1.280`, `1,280.50`, `12,5 %`, `+40k` |
 | `data-scramble` | Letters resolve from noise when in view | `data-scramble="hover"`; short text without child elements |
-| `data-marquee` | An endless band, pauses off screen and on hover | `data-marquee="60"` px per second; `--marquee-gap` |
+| `data-marquee` | An endless band, pauses off screen and on hover; a `<button class="craft-pause" data-marquee-toggle aria-pressed="false">` right after it pauses it (required: it moves for more than 5 s) | `data-marquee="60"` px per second, at most 120; `--marquee-gap` |
 
 ## Hero objects (one per page, first screen)
 

@@ -26,7 +26,15 @@
 .nav .links { display: flex; gap: var(--s-6); }
 .nav .links a { color: var(--c-muted); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; transition: color var(--dur-ui) var(--ease-out); }
 .nav .links a:hover { color: var(--c-ink); }
-@media (max-width: 760px) { .nav .links { display: none; } }
+/* On a phone the links stay, on the same row as the brand: they scroll sideways when they run out of room, and
+   fade at the edge so the scroll reads. No second row, so the first screen keeps its height. */
+@media (max-width: 760px) {
+  .nav { gap: var(--s-4); }
+  .nav .brand { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav .links { min-width: 0; gap: var(--s-4); overflow-x: auto; scrollbar-width: none; mask-image: linear-gradient(90deg, #000 82%, transparent); }
+  .nav .links::-webkit-scrollbar { display: none; }
+  .nav .links a { flex: none; }
+}
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
