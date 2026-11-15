@@ -1,0 +1,158 @@
+/*
+  frontend-craft surfaces: material utilities an art direction can call for.
+  Load after craft.css and layouts.css (set-pieces.css is independent). Each block
+  states its fallback: glass goes solid without backdrop-filter, motion stops under
+  prefers-reduced-motion. Markup and when-not-to: references/surfaces.md. MIT.
+*/
+
+/* ---------- glass: a translucent panel over a photograph or a colour field ---------- */
+:root {
+  --glass-tint: color-mix(in oklab, var(--c-bg) 30%, transparent);
+  --glass-blur: 18px;
+}
+.craft-glass {
+  position: relative;
+  isolation: isolate;
+  color: var(--c-ink);
+  background: var(--glass-tint);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
+  border-radius: var(--r-lg);
+  padding: var(--s-8);
+}
+/* 1px highlight edge: a gradient painted only on the border ring */
+.craft-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(160deg, rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.04) 45%, rgb(255 255 255 / 0.22));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+.craft-glass--strong {
+  --glass-tint: color-mix(in oklab, var(--c-bg) 62%, transparent);
+  --glass-blur: 28px;
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .craft-glass { background: var(--c-surface); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .craft-glass { background: var(--c-surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+
+/* ---------- bento: tile spans and a press/hover feel on top of layouts.css .bento ---------- */
+.craft-bento > .t-2x2 { grid-column: span 6; grid-row: span 2; }
+.craft-bento > .t-wide { grid-column: span 7; }
+.craft-bento > .t-tall { grid-column: span 4; grid-row: span 2; }
+.craft-bento > * {
+  transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .craft-bento > *:hover { transform: translateY(-3px); }
+}
+.craft-bento > *:active { transform: scale(0.98); }
+
+/* ---------- riso: a two-ink print look for one photograph or a hero loop ---------- */
+.craft-riso {
+  --riso-shift: 3px;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+.craft-riso :is(img, video) { filter: grayscale(1) contrast(1.25); }
+/* ink two: the accent, multiplied over the grey image and slightly off register */
+.craft-riso::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--c-accent);
+  mix-blend-mode: multiply;
+  translate: var(--riso-shift) calc(var(--riso-shift) * -0.5);
+  pointer-events: none;
+}
+/* grain: fine noise at low opacity */
+.craft-riso::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- mono: a monospace block, optionally a terminal with a blinking caret ---------- */
+.craft-mono {
+  font-family: var(--f-mono, ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace);
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  padding: var(--s-6);
+  border-radius: var(--r-sm);
+  background: var(--c-surface);
+  color: var(--c-ink);
+}
+.craft-mono--term::after {
+  content: "";
+  display: inline-block;
+  width: 0.6em;
+  height: 1.1em;
+  margin-left: 0.15em;
+  vertical-align: text-bottom;
+  background: currentColor;
+  animation: craft-caret 1.06s steps(1, end) infinite;
+}
+@keyframes craft-caret {
+  50% { opacity: 0; }
+}
+
+/* ---------- view transitions (multi-page sites: cross-document) ---------- */
+@view-transition { navigation: auto; }
+@keyframes craft-vt-out {
+  to { opacity: 0; translate: 0 -12px; }
+}
+@keyframes craft-vt-in {
+  from { opacity: 0; translate: 0 12px; }
+}
+::view-transition-old(root) { animation: craft-vt-out 250ms ease-out both; }
+::view-transition-new(root) { animation: craft-vt-in 320ms ease-out both; }
+/* a shared element: give each one a name with --vt-name, the same name on both pages */
+.vt-hero { view-transition-name: var(--vt-name, hero); }
+::view-transition-group(hero) { animation-duration: 380ms; animation-timing-function: ease-out; }
+
+/* ---------- reduced motion: the finished state, nothing moves or blinks ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .craft-bento > * { transition: none; }
+  .craft-bento > *:hover, .craft-bento > *:active { transform: none; }
+  .craft-mono--term::after { animation: none; }
+  ::view-transition-old(*), ::view-transition-new(*), ::view-transition-group(*) { animation: none; }
+}
+
+/* ---------- hero scenes (data-scene, kit/motion/scene.js): a live WebGL object over a poster ---------- */
+.craft-scene { position: relative; overflow: clip; min-height: 60svh; }
+.craft-scene > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.craft-scene__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* the poster stays for no-JS and for a missing WebGL; the ink scene draws the poster itself */
+.craft-scene[data-scene-on]:not([data-scene-off]) > img { opacity: 0; }
+.craft-scene[data-scene-off] > .craft-scene__canvas { display: none; }
+
+/* Hero loop (data-loop on a video; references/hero-video.md). The poster shows until the clip plays. */
+.craft-loop { position: relative; overflow: clip; min-height: 60svh; }
+.craft-loop > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.craft-loop [data-loop-toggle] {
+  position: absolute; right: 16px; bottom: 16px; z-index: 3; min-width: 44px; min-height: 44px; padding: 0 14px;
+  border: 1px solid color-mix(in oklab, var(--c-ink, #111) 30%, transparent); border-radius: 999px;
+  background: color-mix(in oklab, var(--c-bg, #fff) 78%, transparent); color: var(--c-ink, #111);
+  font: inherit; font-size: 14px; cursor: pointer; transition: transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.craft-loop [data-loop-toggle]:active { transform: scale(0.97); }
+.craft-loop [data-loop-toggle]:focus-visible { outline: 2px solid var(--c-accent, currentColor); outline-offset: 3px; }

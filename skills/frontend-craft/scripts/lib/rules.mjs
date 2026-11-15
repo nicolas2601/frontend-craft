@@ -1,8 +1,11 @@
 // Turns probe facts into findings. Pure: no browser, so every rule is unit-testable.
 import { deltaE, hexToRgb, isCream, isTerracotta } from './color.mjs';
 import { lintCopy } from './copy.mjs';
+import { parseConcept, richnessRules } from './rules-richness.mjs';
+import { breakRules, slopRules } from './rules-slop.mjs';
+import { videoRules } from './rules-video.mjs';
 
-export const PERSUADE_KINDS = ['landing', 'product', 'portfolio', 'event', 'venue', 'brand', 'campaign'];
+export const PERSUADE_KINDS = ['landing', 'site', 'product', 'portfolio', 'event', 'venue', 'brand', 'campaign'];
 
 const SYSTEM_FONTS = ['serif', 'sans-serif', 'monospace', 'system-ui', 'ui-sans-serif', 'ui-serif', '-apple-system',
   'blinkmacsystemfont', 'segoe ui', 'arial', 'helvetica', 'helvetica neue', 'times new roman', 'times', 'georgia', 'verdana'];
@@ -104,6 +107,12 @@ function layoutRules({ text, overflow, targets, css, fold = {} }) {
   if (css.transitionAll.length) out.push(f('FAIL', 'transition-all', `transition: all on ${css.transitionAll.slice(0, 3).join('; ')}`, 'list the properties: transition: transform 160ms var(--ease-out), opacity 160ms'));
   if (css.easeIn.length) out.push(f('WARN', 'ease-in', `ease-in timing on ${css.easeIn.slice(0, 2).join('; ')}`, 'use var(--ease-out) for anything that enters or responds'));
   if (css.vh100.length) out.push(f('WARN', 'vh-unit', `100vh in ${css.vh100[0]}`, 'use 100svh or 100dvh so mobile browser bars do not crop it'));
+  const tokens = css.undefinedTokens ?? [];
+  if (tokens.length) {
+    const scale = [...new Set(tokens.flatMap((t) => t.scale))];
+    out.push(f('FAIL', 'token-undefined', `design token(s) used but never defined: ${tokens.map((t) => `\`${t.name}\``).join(', ')}; each property falls back to its initial value (a padding or gap of 0, a transparent colour)`,
+      `use a step the tokens define${scale.length ? ` (${scale.join(', ')})` : ''}, or define the token in tokens.css`));
+  }
   return out;
 }
 
@@ -138,7 +147,8 @@ function runtimeRules({ consoleErrors, network }) {
 export function evaluate(facts) {
   const out = [
     ...documentRules(facts), ...fontRules(facts), ...lookRules(facts), ...layoutRules(facts),
-    ...visibilityRules(facts), ...motionRules(facts), ...runtimeRules(facts),
+    ...visibilityRules(facts), ...motionRules(facts), ...richnessRules(facts), ...runtimeRules(facts), ...slopRules(facts), ...videoRules(facts),
+    ...(facts.deal?.direction && PERSUADE_KINDS.includes(facts.kind) ? breakRules({ slop: facts.slop, concept: parseConcept(facts.concept) }) : []),
     ...lintCopy(`${facts.doc.text}\n${facts.doc.title}\n${facts.doc.description ?? ''}`, facts.doc.ctas),
   ];
   return out.sort((a, b) => (a.level === b.level ? 0 : a.level === 'FAIL' ? -1 : 1));

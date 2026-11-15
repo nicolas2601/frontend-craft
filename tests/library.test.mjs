@@ -1,7 +1,13 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { contrast, hexToRgb } from '../skills/frontend-craft/scripts/lib/color.mjs';
-import { KINDS, loadLibrary, typeFits } from '../skills/frontend-craft/scripts/lib/deal.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { KINDS, SET_PIECES, loadLibrary, typeFits } from '../skills/frontend-craft/scripts/lib/deal.mjs';
+import { SET_PIECE_JOBS } from '../skills/frontend-craft/scripts/lib/render.mjs';
+
+const SKILL_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'skills', 'frontend-craft');
 import { isCream } from '../skills/frontend-craft/scripts/lib/color.mjs';
 
 const lib = loadLibrary();
@@ -60,4 +66,56 @@ test('every palette has at least three type pairings that fit it', () => {
     const fits = lib.pairings.filter((p) => typeFits(p, pal, isCream(hexToRgb(pal.roles.bg))));
     assert.ok(fits.length >= 3, `${pal.id}: ${fits.map((p) => p.id).join(', ')}`);
   }
+});
+
+test('every direction is complete and only names set pieces and supports that exist', () => {
+  const lib = loadLibrary();
+  const css = fs.readFileSync(path.join(SKILL_DIR, 'kit', 'set-pieces.css'), 'utf8');
+  const doc = fs.readFileSync(path.join(SKILL_DIR, 'references', 'set-pieces.md'), 'utf8');
+  for (const id of SET_PIECES) {
+    assert.match(css, new RegExp(`\\.sp-${id}(?![a-z-])`), `set-pieces.css styles sp-${id}`);
+    assert.match(doc, new RegExp(`^## ${id}$`, 'm'), `set-pieces.md documents ${id}`);
+    assert.ok(SET_PIECE_JOBS[id], `the brief describes ${id}`);
+  }
+  const signatures = new Set(lib.signatures.map((s) => s.id));
+  assert.ok(lib.directions.length >= 10);
+  for (const d of lib.directions) {
+    for (const k of ['id', 'name', 'idea', 'avoid']) assert.ok(typeof d[k] === 'string' && d[k].length > 3, `${d.id}.${k}`);
+    assert.ok(['dark', 'light', 'any'].includes(d.scheme), `${d.id}.scheme`);
+    assert.ok(d.moods.length >= 3 && d.typeMoods.length >= 3, `${d.id} moods`);
+    assert.ok(d.grounds.min >= 2 && d.type.minPx >= 96 && d.pictures.min >= 2, `${d.id} floor`);
+    assert.equal(d.breaks.length, 2, `${d.id} has two breaks`);
+    assert.ok(d.setPieces.length >= 2 && d.setPieces.every((s) => SET_PIECES.includes(s)), `${d.id} set pieces`);
+    assert.ok(d.supports.every((s) => signatures.has(s)), `${d.id} supports`);
+    if (d.scheme !== 'any') assert.ok(lib.palettes.some((p) => p.scheme === d.scheme), `${d.id} has palettes in its scheme`);
+  }
+});
+
+test('every direction names hero scenes the kit can draw', async () => {
+  const { SCENES } = await import('../skills/frontend-craft/kit/motion/shaders.js');
+  const doc = fs.readFileSync(path.join(SKILL_DIR, 'references', 'scenes.md'), 'utf8');
+  for (const d of loadLibrary().directions) {
+    assert.ok(d.scenes?.length, `${d.id} has scenes`);
+    for (const id of d.scenes) assert.ok(SCENES.includes(id), `${d.id}: ${id}`);
+  }
+  for (const id of SCENES) assert.match(doc, new RegExp(`\`${id}\``), `scenes.md documents ${id}`);
+});
+
+test('the hero loop is wired: kit effect, attribute docs and every video rule in checks.md and hero-video.md', async () => {
+  const { effects } = await import('../skills/frontend-craft/kit/craft-motion.js');
+  assert.ok(effects.includes('loop') && effects.includes('scene'));
+  const read = (f) => fs.readFileSync(path.join(SKILL_DIR, 'references', f), 'utf8');
+  assert.match(read('motion.md'), /`data-loop`/);
+  for (const id of ['video-reduced', 'video-muted', 'video-pause', 'video-poster']) {
+    assert.match(read('checks.md'), new RegExp(`\`${id}\``), `checks.md: ${id}`);
+    assert.match(read('hero-video.md'), new RegExp(`\`${id}\``), `hero-video.md: ${id}`);
+  }
+});
+
+test('a hero loop takes the riso treatment like a photograph, and its pause button stays above the inks', () => {
+  const css = fs.readFileSync(path.join(SKILL_DIR, 'kit', 'surfaces.css'), 'utf8');
+  assert.match(css, /\.craft-riso :is\(img, video\)\s*\{\s*filter: grayscale/, 'riso filter must cover video');
+  const z = (re) => Number(css.match(re)?.[1]);
+  assert.ok(z(/\.craft-loop \[data-loop-toggle\][^{]*\{[^}]*z-index: (\d+)/) > z(/\.craft-riso::after \{[^}]*z-index: (\d+)/), 'toggle above the riso grain');
+  assert.match(fs.readFileSync(path.join(SKILL_DIR, 'references', 'hero-video.md'), 'utf8'), /picture treatment/);
 });

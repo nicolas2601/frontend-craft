@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Carta, Horno Lunar</title>
+  <meta name="description" content="La carta de Horno Lunar esta semana. Fixture for the range of the frontend-craft kit.">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <style>
+    @font-face { font-family: 'Fixture Display'; src: local('DejaVu Sans Bold'), local('DejaVuSans-Bold'), local('Liberation Sans Bold'); font-weight: 700; }
+    @font-face { font-family: 'Fixture Text'; src: local('DejaVu Sans'), local('DejaVuSans'), local('Liberation Sans'); font-weight: 400; }
+    :root {
+      --c-bg: #e8ebe4; --c-surface: #dde2d8; --c-ink: #1d1b17; --c-muted: #5b554b;
+      --c-line: #d6cdbb; --c-accent: #c8462b; --c-accent-ink: #fbf7ef;
+      --f-display: 'Fixture Display', sans-serif; --f-text: 'Fixture Text', sans-serif;
+      --display-weight: 700; --display-tracking: -0.04em; --display-leading: 0.9;
+    }
+  </style>
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/craft.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/layouts.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/set-pieces.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/surfaces.css">
+  <style>
+    body { margin: 0; }
+    header { display: flex; justify-content: space-between; align-items: center; gap: var(--s-6); padding: var(--s-6) var(--gutter); }
+    header p { margin: 0; font-family: var(--f-display); font-weight: 700; }
+    header nav { display: flex; gap: var(--s-6); }
+    header a { color: var(--c-ink); display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+    header a[aria-current="page"] { text-decoration: underline; text-underline-offset: 4px; }
+    .pad { padding: var(--section) var(--gutter); }
+    .pad > h2 { font-family: var(--f-display); font-size: var(--t-3xl); margin: 0 0 var(--s-6); }
+    .pad p { max-width: 52ch; color: var(--c-muted); }
+    .menu-head { padding: var(--s-16) var(--gutter) var(--s-8); }
+    .menu-head h1 { font-size: var(--t-display); margin: 0; max-width: 14ch; }
+    .plate { margin: 0; max-width: 56rem; }
+    .plate img { width: 100%; height: auto; border-radius: var(--r-md); }
+    .plate figcaption { color: var(--c-muted); font-size: var(--t-sm); margin-top: var(--s-3); }
+    .riso-block { max-width: 40rem; }
+    .riso-block img { width: 100%; height: auto; border-radius: var(--r-md); }
+    .receipt { max-width: 40rem; font-size: var(--t-base); }
+    .pad { min-height: 80svh; }
+    .pad.on-ink { background: var(--c-ink); color: var(--c-bg); }
+    .pad.on-ink p { color: var(--c-bg); }
+    footer { padding: var(--section) var(--gutter); border-top: 1px solid var(--c-line); }
+    footer p { margin: 0; color: var(--c-muted); }
+  </style>
+</head>
+<body>
+<header>
+  <p>Horno Lunar</p>
+  <nav aria-label="Principal">
+    <a href="index.html">Inicio</a>
+    <a href="menu.html" aria-current="page">Carta</a>
+    <a href="index.html#visita">Visítanos</a>
+  </nav>
+</header>
+<main>
+  <section class="menu-head">
+    <h1 class="sp-word-mask craft-display" data-scrub aria-label="Lo que sale del horno hoy">
+      <span class="sp-word-mask__line" style="--i: 0" aria-hidden="true"><span>Lo que sale</span></span>
+      <span class="sp-word-mask__line" style="--i: 1" aria-hidden="true"><span>del horno hoy</span></span>
+    </h1>
+  </section>
+
+  <section class="pad">
+    <figure class="plate vt-hero" style="--vt-name: hero">
+      <img data-parallax="0.12" src="../../../skills/design-taste-frontend/assets/photos/img/m21913761-1200.webp" alt="Pan de masa madre recién sacado del horno" width="1200" height="800">
+      <figcaption>Hogaza de masa madre, 900 g, tres días de fermento.</figcaption>
+    </figure>
+  </section>
+
+  <section class="pad">
+    <h2>Del horno de las cinco</h2>
+    <figure class="plate sp-develop" data-scrub>
+      <img src="../../../skills/design-taste-frontend/assets/photos/img/m108358720-1200.webp" alt="Tabla con dos panes de centeno y un cuchillo" width="1200" height="800">
+    </figure>
+    <p>Centeno con semillas de girasol y miel de la vereda. Sale una vez al día.</p>
+  </section>
+
+  <section class="pad">
+    <h2>Del tostador de barrio</h2>
+    <div class="craft-riso riso-block">
+      <img src="../../../skills/design-taste-frontend/assets/photos/img/m111881197-1200.webp" alt="Taza de café junto a una ventana" width="1200" height="800">
+    </div>
+    <p>Café de filtro, tostado los jueves y servido hasta el mediodía.</p>
+  </section>
+
+  <section class="pad on-ink">
+    <h2>Recibo de la semana</h2>
+    <div class="craft-mono craft-mono--term receipt" role="group" aria-label="Pedido de ejemplo">pedido 0412
+masa madre 900 g ........ 18.000
+centeno semillas ........ 16.500
+café de filtro 250 g .... 24.000
+total ................... 58.500</div>
+  </section>
+</main>
+<footer>
+  <p>Horno Lunar, Carrera 33 con Calle 48, Cabecera del Llano.</p>
+  <p>Fotografías de la biblioteca de muestra del kit.</p>
+</footer>
+<script type="module">
+  import { init } from '../../../skills/frontend-craft/kit/craft-motion.js';
+  init(document);
+</script>
+</body>
+</html>

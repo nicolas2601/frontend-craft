@@ -1,8 +1,8 @@
 {
   "name": "frontend-craft",
-  "version": "2.1.0",
+  "version": "2.4.0",
   "private": true,
-  "description": "Frontend skills for any coding agent: a router, a bundled website engine with real photographs and a browser gate, polish and motion skills",
+  "description": "Frontend skills for any coding agent: dealt art directions, scroll set pieces and real photographs for websites, a browser gate that fails flat pages, polish and motion skills",
   "scripts": {
     "test": "node --test \"tests/*.test.mjs\"",
     "test:unit": "node --test tests/library.test.mjs tests/deal.test.mjs tests/rules.test.mjs tests/gate.test.mjs",

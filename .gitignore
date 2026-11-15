@@ -21,3 +21,7 @@ tools/opencode-observer/verification*.json
 .impeccable/
 .craft/
 skills/*/history.json
+
+# Claude Code agent worktrees
+.claude/worktrees/
+.playwright-mcp/

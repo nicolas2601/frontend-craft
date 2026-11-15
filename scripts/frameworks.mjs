@@ -59,14 +59,14 @@ for (const name of only) {
   const fw = FRAMEWORKS[name];
   const dir = path.join(base, name);
   scaffold(dir, fw);
-  start(['--kind', 'landing', '--fallback', '--pin', `composition=${composition}`, '--seed', '11', '--kit', 'src/craft'], dir);
+  start(['--kind', 'landing', '--pin', `composition=${composition}`, '--seed', '11', '--kit', 'src/craft'], dir);
   const deal = readJson(path.join(dir, '.craft', 'deal.json'));
   const body = blueprintBody(fs.readFileSync(path.join(dir, 'src', 'craft', 'blueprint.html'), 'utf8'));
   fs.writeFileSync(path.join(dir, 'src', fw.file), fw.app(body));
   fs.writeFileSync(path.join(dir, 'index.html'), `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n  <title>Northwind Studio: ${name} kit check</title>\n  <meta name="description" content="A ${name} build of the ${composition} blueprint with the frontend-craft kit.">\n  <script>document.documentElement.classList.add('craft-js')</script>\n  ${fontLinks(deal.type).replace(/\n/g, '\n  ')}\n</head>\n<body>\n  <div id="app"></div>\n  <script type="module" src="/src/main.js"></script>\n</body>\n</html>\n`);
   execFileSync('npm', ['install', '--no-audit', '--no-fund', '--loglevel=error'], { cwd: dir, stdio: 'inherit' });
   execFileSync('npm', ['run', 'build', '--silent'], { cwd: dir, stdio: 'inherit' });
-  const report = await runCheck({ target: { root: path.join(dir, 'dist') }, kind: 'landing', deal, out: path.join(dir, '.craft'), requireDeal: true });
+  const report = await runCheck({ target: { root: path.join(dir, 'dist') }, kind: 'landing', deal: { ...deal, direction: null }, out: path.join(dir, '.craft'), requireDeal: true });
   const fails = report.findings.filter((x) => x.level === 'FAIL');
   if (fails.length) failed += 1;
   console.log(`${fails.length ? 'FAIL' : 'PASS'} ${name.padEnd(8)} ${composition}: enter ${report.motion.entrance}, linked ${report.motion.scrollLinked}, pinned ${report.motion.sticky.length}${fails.length ? `\n     ${fails.map((x) => `${x.id}: ${x.msg.slice(0, 110)}`).join('\n     ')}` : ''}`);

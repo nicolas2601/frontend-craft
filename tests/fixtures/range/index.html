@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Horno Lunar, panadería de masa madre en Cabecera</title>
+  <meta name="description" content="Pan de masa madre, horneado de noche en Cabecera del Llano, Bucaramanga. Fixture for the range of the frontend-craft kit.">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <style>
+    @font-face { font-family: 'Fixture Display'; src: local('DejaVu Sans Bold'), local('DejaVuSans-Bold'), local('Liberation Sans Bold'); font-weight: 700; }
+    @font-face { font-family: 'Fixture Text'; src: local('DejaVu Sans'), local('DejaVuSans'), local('Liberation Sans'); font-weight: 400; }
+    :root {
+      --c-bg: #e8ebe4; --c-surface: #dde2d8; --c-ink: #1d1b17; --c-muted: #5b554b;
+      --c-line: #d6cdbb; --c-accent: #c8462b; --c-accent-ink: #fbf7ef;
+      --f-display: 'Fixture Display', sans-serif; --f-text: 'Fixture Text', sans-serif;
+      --display-weight: 700; --display-tracking: -0.04em; --display-leading: 0.9;
+    }
+  </style>
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/craft.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/layouts.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/set-pieces.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/surfaces.css">
+  <style>
+    body { margin: 0; }
+    header { display: flex; justify-content: space-between; align-items: center; gap: var(--s-6); padding: var(--s-6) var(--gutter); }
+    header p { margin: 0; font-family: var(--f-display); font-weight: 700; }
+    header nav { display: flex; gap: var(--s-6); }
+    header a { color: var(--c-ink); display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+    header a[aria-current="page"] { text-decoration: underline; text-underline-offset: 4px; }
+    section > h2, .pad > h2 { font-family: var(--f-display); font-size: var(--t-3xl); margin: 0 0 var(--s-4); }
+    .pad { padding: var(--section) var(--gutter); }
+    .pad p { max-width: 52ch; color: var(--c-muted); }
+    .lede { font-size: var(--t-lg); max-width: 40ch; color: var(--c-muted); margin: var(--s-6) 0 0; }
+    .cta { display: inline-flex; align-items: center; min-height: 48px; padding: 0 var(--s-6); margin-top: var(--s-8);
+      background: var(--c-ink); color: var(--c-bg); text-decoration: none; font-weight: 700; }
+    .swap-line { padding: var(--section) var(--gutter); }
+    .sp-word-swap { max-width: 22ch; color: var(--c-ink); }
+    .glass-section { position: relative; isolation: isolate; min-height: 90svh; display: grid; align-content: center; padding: var(--section) var(--gutter); }
+    .glass-section > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+    .glass-section .craft-glass { max-width: 36rem; --glass-tint: color-mix(in oklab, var(--c-bg) 72%, transparent); }
+    .glass-section p { color: var(--c-ink); }
+    .zoom-section .sp-type-zoom__content h2 { font-size: var(--t-3xl); margin: 0 0 var(--s-4); }
+    .zoom-section .sp-type-zoom__content p { color: var(--c-muted); }
+    .bento-section { padding: var(--s-16) 0 0; }
+    .bento-section > h2 { padding: 0 var(--gutter); }
+    .bento-grid { padding: var(--s-8) var(--gutter) var(--section); }
+    .bento-grid h3 { font-family: var(--f-display); font-size: var(--t-xl); margin: 0; }
+    .bento-grid p { margin: 0; color: var(--c-muted); }
+    .bento-grid .sp-bento-assemble__lead { color: var(--c-bg); }
+    .bento-grid .sp-bento-assemble__lead p { color: var(--c-bg); opacity: 0.85; }
+    .bento-grid figure { margin: 0; }
+    .bento-grid figure img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--r-md); min-height: 14rem; }
+    footer { padding: var(--section) var(--gutter); border-top: 1px solid var(--c-line); }
+    footer p { margin: 0; color: var(--c-muted); }
+  </style>
+</head>
+<body>
+<header>
+  <p>Horno Lunar</p>
+  <nav aria-label="Principal">
+    <a href="index.html" aria-current="page">Inicio</a>
+    <a href="menu.html">Carta</a>
+    <a href="#visita">Visítanos</a>
+  </nav>
+</header>
+<main>
+  <section class="sp-word-track" data-pin style="--pin-length: 240svh">
+    <div class="sp-word-track__stage" data-scrub="pinned">
+      <h1>Pan de masa madre, horneado de noche</h1>
+      <a class="cta" href="menu.html">Ver la carta</a>
+      <p class="sp-word-track__line" aria-hidden="true">Masa madre · Horneado · Vitrina · Mesa · Masa madre · Horneado · </p>
+    </div>
+  </section>
+
+  <section class="swap-line">
+    <p class="sp-word-swap" data-scrub style="--n: 3"><span class="sp-word-swap__sr">Pan para el desayuno, para compartir o para el domingo.</span><span aria-hidden="true">Pan para </span><span class="sp-word-swap__slot" aria-hidden="true"><span style="--i: 0">el desayuno</span><span style="--i: 1">compartir</span><span style="--i: 2">el domingo</span></span></p>
+    <p class="lede">Hacemos la masa el día anterior y la dejamos fermentar despacio en la nevera.</p>
+  </section>
+
+  <section class="glass-section">
+    <img src="../../../skills/design-taste-frontend/assets/photos/img/m179564041-1200.webp" alt="" width="1200" height="800">
+    <div class="craft-glass craft-glass--strong">
+      <h2 class="craft-display">Entramos a las once</h2>
+      <p>El horno se enciende a medianoche y el primer pan sale a las cinco. Puedes llegar a ver la masa en la mesa antes de que se hornee.</p>
+      <a class="cta" href="#visita">Cómo llegar</a>
+    </div>
+  </section>
+
+  <section class="sp-type-zoom zoom-section" data-pin style="--pin-length: 220svh">
+    <div class="sp-type-zoom__stage" data-scrub="pinned" style="--zoom-x: 40%; --zoom-y: 46%">
+      <div class="sp-type-zoom__content">
+        <h2 class="craft-display">Cuarenta horas de fermento</h2>
+        <p>Cada hogaza empieza el martes y sale del horno el jueves con la corteza que pide la receta.</p>
+      </div>
+      <p class="sp-type-zoom__word" aria-hidden="true">Pan</p>
+    </div>
+  </section>
+
+  <section class="bento-section">
+    <h2 class="craft-display">Lo que hay en la mesa</h2>
+    <div class="sp-bento-assemble bento-grid" data-scrub>
+      <article class="sp-bento-assemble__tile sp-bento-assemble__lead">
+        <figure class="vt-hero" style="--vt-name: hero">
+          <img src="../../../skills/design-taste-frontend/assets/photos/img/m21913761-1200.webp" alt="Pan de masa madre recién sacado del horno" width="1200" height="800">
+        </figure>
+        <h3>Masa madre</h3>
+        <p>Una hogaza de corteza gruesa y miga abierta, con sal de la costa.</p>
+      </article>
+      <article class="sp-bento-assemble__tile sp-bento-assemble__tall">
+        <figure>
+          <img src="../../../skills/design-taste-frontend/assets/photos/img/m187311853-1200.webp" alt="Pan de centeno cortado sobre una tabla" width="1200" height="800">
+        </figure>
+        <h3>Centeno</h3>
+        <p>Dos días de fermento para el pan oscuro de los sábados.</p>
+      </article>
+      <article class="sp-bento-assemble__tile sp-bento-assemble__wide">
+        <h3>Croissant de mantequilla</h3>
+        <p>Laminado a mano en la madrugada, con mantequilla de Santander.</p>
+      </article>
+      <article class="sp-bento-assemble__tile sp-bento-assemble__small">
+        <h3>Café de filtro</h3>
+        <p>Del mismo tostador de barrio desde 2019.</p>
+      </article>
+      <article class="sp-bento-assemble__tile sp-bento-assemble__tall">
+        <figure>
+          <img src="../../../skills/design-taste-frontend/assets/photos/img/m164989354-1200.webp" alt="Mesa con panes y tazas de café" width="1200" height="800">
+        </figure>
+        <h3>Mesa larga</h3>
+        <p>Ocho puestos junto a la ventana, sin reserva.</p>
+      </article>
+    </div>
+  </section>
+</main>
+<footer id="visita">
+  <h2 class="craft-display">Visítanos</h2>
+  <p>Carrera 33 con Calle 48, Cabecera del Llano. Martes a domingo, de 7 a. m. a 12 m.</p>
+  <p>Fotografías de la biblioteca de muestra del kit.</p>
+</footer>
+<script type="module">
+  import { init } from '../../../skills/frontend-craft/kit/craft-motion.js';
+  init(document);
+</script>
+</body>
+</html>

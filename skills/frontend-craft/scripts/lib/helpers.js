@@ -77,6 +77,13 @@ export function installHelpers() {
     const text = (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 40);
     return `${el.tagName.toLowerCase()}${el.id ? `#${el.id}` : ''}${cls}${text ? ` "${text}"` : ''}`;
   };
-  window.__craft = { rgba, lum, contrast, hsl, visible, srOnly, hiddenFromAT, opacity, ownText, textEls, bgOf, firstFamily, describe };
+  // The page's top-level sections: children of <main> (or <body>), descending through single wrappers.
+  const sections = () => {
+    let root = document.querySelector('main') || document.body;
+    while (root.children.length === 1 && root.firstElementChild.offsetHeight > innerHeight * 0.9) root = root.firstElementChild;
+    return [...root.children].filter((el) => !['SCRIPT', 'STYLE', 'TEMPLATE'].includes(el.tagName) && el.offsetHeight >= innerHeight * 0.3 && visible(el));
+  };
+  const sectionOf = (el) => sections().findIndex((sec) => sec === el || sec.contains(el));
+  window.__craft = { rgba, lum, contrast, hsl, visible, srOnly, hiddenFromAT, opacity, ownText, textEls, bgOf, firstFamily, describe, sections, sectionOf };
   return true;
 }

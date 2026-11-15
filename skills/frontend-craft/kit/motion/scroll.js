@@ -56,8 +56,10 @@ function parallax(el, ctx) {
   if (ctx.reduced) return null;
   const speed = clamp(Number.parseFloat(el.dataset.parallax) || 0.15, -1, 1);
   const stop = ctx.scrub(el, (vh) => {
+    // Measure where the element sits without its own shift, or the shift feeds back into itself and jitters.
     const r = el.getBoundingClientRect();
-    const offset = (r.top + r.height / 2 - vh / 2) * -speed;
+    const shift = Number.parseFloat(String(el.style.translate || '0 0').split(' ')[1]) || 0;
+    const offset = (r.top - shift + r.height / 2 - vh / 2) * -speed;
     el.style.translate = `0 ${clamp(offset, -PARALLAX_MAX_PX, PARALLAX_MAX_PX).toFixed(1)}px`;
   });
   return () => { stop(); el.style.removeProperty('translate'); };

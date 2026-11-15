@@ -50,6 +50,13 @@ Reveals are supports, never the scroll story: fade-ins alone fail the check.
 | `data-scramble` | Letters resolve from noise when in view | `data-scramble="hover"`; short text without child elements |
 | `data-marquee` | An endless band, pauses off screen and on hover | `data-marquee="60"` px per second; `--marquee-gap` |
 
+## Hero objects (one per page, first screen)
+
+| Attribute | Does | Notes |
+|---|---|---|
+| `data-scene` | A live WebGL object in the page's colours: `chrome`, `iridescent`, `ink`, `dots` | on `.craft-scene`; a still frame under reduced motion; `scenes.md` |
+| `data-loop` | Plays a muted `<video>` loop only while on screen; holds on its poster under reduced motion and Save-Data | a `data-loop-toggle` button beside it pauses and resumes; no `autoplay` attribute; `hero-video.md` |
+
 ## Pointer (fine pointers that hover only)
 
 | Attribute | Does | Options |

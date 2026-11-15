@@ -2,13 +2,19 @@
 /*
   frontend-craft start: deal a direction, copy the kit into the project and arm the gate.
 
-    node <skill>/scripts/start.mjs --kind landing --moods warm,craft,coffee [--kit src/craft]
+    node <skill>/scripts/start.mjs --kind landing --moods warm,craft,coffee --lang es [--kit src/craft]
+    node <skill>/scripts/start.mjs --kind site --pages /,/menu,/visit --moods ... --lang es     # a multi-page site
+    node <skill>/scripts/start.mjs --kind app --moods tech,precise --lang en                   # a platform or app UI
         [--url http://localhost:5173 | --root dist | --file index.html]
-        [--redeal] [--seed 42] [--pin palette=id,type=id,composition=id,signature=id] [--brand] [--kit-only] [--list]
-        [--fallback]
+        [--risk safe|bold|wild] [--redeal] [--seed 42]
+        [--pin direction=id,palette=id,type=id,composition=id,signature=id,component=Id,scene=id] [--brand] [--kit-only] [--list]
 
-  Website kinds (every kind but app and docs) are built by the design-taste-frontend skill when it is installed:
-  start.mjs then stops and points there, unless --fallback says that skill cannot run here.
+  Websites (every kind but app and docs) are dealt an art direction as well: grounds, type scale,
+  picture treatment, two template breaks and two scroll set pieces per page (never the same piece on
+  two pages). --risk sets how often that direction comes from outside the subject's usual moods
+  (safe never, bold 40%, wild 80%). Apps get a direction that works for product UI, without set pieces.
+  Every build is dealt one library component (React Bits) that fits the direction. --lang is the
+  language the page is written in; the check holds the page to it.
 
   Writes .craft/deal.json, .craft/brief.md and .craft/gate.json, copies the kit (craft.css,
   craft-motion.js, motion/) plus a dealt tokens.css into --kit, and prints the brief.
@@ -18,14 +24,13 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { KINDS, deal, historyFile, loadLibrary, moodsOf, rngFrom, summarize } from './lib/deal.mjs';
+import { KINDS, RISK, deal, historyFile, loadLibrary, moodsOf, normalizePages, rngFrom, summarize } from './lib/deal.mjs';
 import { briefMd, tokensCss } from './lib/render.mjs';
 import { craftDir, isMain, parseArgs, readJson, resolveTarget, writeJson } from './lib/state.mjs';
 
 const SKILL = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const KIT = path.join(SKILL, 'kit');
 const HISTORY_MAX = 40;
-const OWN_KINDS = ['app', 'docs'];
 const HOME = process.env.HOME ?? process.env.USERPROFILE ?? '';
 const TASTE = [
   path.join(SKILL, '..', 'design-taste-frontend'),
@@ -34,7 +39,7 @@ const TASTE = [
   path.join(HOME, '.config', 'opencode', 'skills', 'design-taste-frontend'),
 ];
 
-/** The website engine's folder when it is installed next to this skill or in a known skills folder. */
+/** design-taste-frontend's folder (its photo library) when it is installed next to this skill or in a known skills folder. */
 export function tasteSkill() {
   return TASTE.find((dir) => fs.existsSync(path.join(dir, 'scripts', 'gate.mjs'))) ?? null;
 }
@@ -73,11 +78,14 @@ function parsePins(raw) {
 function listVocabulary(lib) {
   return [
     `kinds: ${KINDS.join(', ')}`,
+    `risk: ${Object.keys(RISK).join(', ')}`,
+    `directions: ${lib.directions.map((d) => d.id).join(', ')}`,
     `moods: ${moodsOf(lib).join(', ')}`,
     `palettes: ${lib.palettes.map((p) => p.id).join(', ')}`,
     `type: ${lib.pairings.map((p) => p.id).join(', ')}`,
     `compositions: ${lib.compositions.map((c) => c.id).join(', ')}`,
     `signatures: ${lib.signatures.map((s) => s.id).join(', ')}`,
+    `components: ${lib.components.map((c) => c.id).join(', ')}`,
   ].join('\n');
 }
 
@@ -103,23 +111,28 @@ export function run(argv, cwd = process.cwd()) {
   const kind = String(args.kind ?? 'landing');
   if (!KINDS.includes(kind)) throw new Error(`unknown --kind "${kind}". Use one of: ${KINDS.join(', ')}`);
   if (args['kit-only']) return kitOnly(args, cwd, dir, kind);
-  const taste = OWN_KINDS.includes(kind) || args.fallback ? null : tasteSkill();
-  if (taste) {
-    throw new Error(`a ${kind} is a website: build it with the design-taste-frontend skill (${taste}), following its SKILL.md run from start.mjs deal to gate.mjs. `
-      + 'Use this deal for a website only when that skill cannot run here: add --fallback and say so in the report.');
-  }
+  const risk = args.risk && args.risk !== true ? String(args.risk) : 'bold';
+  if (!(risk in RISK)) throw new Error(`unknown --risk "${risk}". Use one of: ${Object.keys(RISK).join(', ')}`);
   const vocabulary = moodsOf(lib);
   const moods = args.moods && args.moods !== true ? String(args.moods).split(',').map((m) => m.trim().toLowerCase()).filter(Boolean) : [];
   const unknown = moods.filter((m) => !vocabulary.includes(m));
   if (unknown.length) throw new Error(`unknown mood(s): ${unknown.join(', ')}. Pick 2-3 of: ${vocabulary.join(', ')}`);
 
+  const lang = args.lang && args.lang !== true ? String(args.lang).trim() : null;
+  if (lang && !/^[a-z]{2,3}(-[A-Za-z]{2,4})?$/.test(lang)) throw new Error(`--lang "${lang}" is not a language tag. Use the page's language: es, en, pt-BR ...`);
+  const pages = args.pages && args.pages !== true ? String(args.pages) : '';
+  if (pages && kind !== 'site') throw new Error('--pages is for --kind site (a multi-page website)');
+
   const existing = readJson(path.join(dir, 'deal.json'));
   let current = existing;
-  if (!existing || args.redeal || args.pin || args.seed || existing.kind !== kind) {
+  // --lang and --pages redeal only when they change; re-running with the same flags (to add --url) keeps the deal.
+  const samePages = (d) => !pages || JSON.stringify(normalizePages(pages)) === JSON.stringify((d.pages ?? []).map((p) => p.path));
+  const asked = args.redeal || args.pin || args.seed || args.risk || (existing && ((lang && lang !== existing.lang) || !samePages(existing)));
+  if (!existing || asked || existing.kind !== kind || existing.version !== 3) {
     const seed = Number.parseInt(args.seed, 10) || crypto.randomInt(1, 2 ** 31);
     const hFile = historyFile();
     const history = readJson(hFile, []);
-    current = { seed, ...deal({ lib, kind, moods, history, rng: rngFrom(seed), pins: parsePins(args.pin), brand: !!args.brand }), at: new Date().toISOString() };
+    current = { seed, ...deal({ lib, kind, moods, history, rng: rngFrom(seed), pins: parsePins(args.pin), brand: !!args.brand, risk, lang, pages }), at: new Date().toISOString() };
     writeJson(hFile, [...history, { at: current.at, kind, ...summarize(current) }].slice(-HISTORY_MAX));
   }
 
@@ -135,12 +148,14 @@ export function run(argv, cwd = process.cwd()) {
 
   const gate = readJson(path.join(dir, 'gate.json'), {});
   const target = resolveTarget(args, gate) ?? null;
-  writeJson(path.join(dir, 'gate.json'), { ...gate, armed: true, off: false, kind, target, blocks: gate.blocks ?? 0, startedAt: gate.startedAt ?? new Date().toISOString() });
+  const sitePages = current.pages?.length ? current.pages.map((p) => p.path) : undefined;
+  writeJson(path.join(dir, 'gate.json'), { ...gate, armed: true, off: false, kind, target, pages: sitePages, blocks: gate.blocks ?? 0, startedAt: gate.startedAt ?? new Date().toISOString() });
 
   const script = path.join(SKILL, 'scripts', 'check.mjs');
   const rel = path.relative(cwd, script);
   const checkCmd = `node ${rel.startsWith('..') ? script : rel}`;
-  const brief = briefMd(current, { kitDir, checkCmd });
+  const ref = (f) => path.join(SKILL, 'references', f);
+  const brief = briefMd(current, { kitDir, checkCmd, taste: tasteSkill(), setPiecesRef: ref('set-pieces.md'), componentsRef: ref('components.md'), surfacesRef: ref('surfaces.md'), scenesRef: ref('scenes.md') });
   fs.writeFileSync(path.join(dir, 'brief.md'), brief);
   const tail = target ? `Gate armed on ${target.url ?? target.root}.`
     : 'No target yet: once the dev server runs, re-run start.mjs with --url <dev url> (the deal is kept), or pass --root <build folder>.';

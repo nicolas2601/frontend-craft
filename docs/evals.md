@@ -2,13 +2,36 @@
 
 Each case is a deliberately short prompt in `evals/cases.json`. `node scripts/eval.mjs --case <id>` runs it through a real agent CLI in a fresh folder, scores the result with `check.mjs`, and sends the FAIL list back into the same session up to three times. A case passes when the gate passes and the agent followed its deal. The screenshots are part of the result: the check measures defects, not taste.
 
-## Status in 2.1
+## Status in 2.2
 
-The runs below measured the 2.0 website path (frontend-craft's own deal, blueprints and kit), which is now the
+Three verdicts shaped 2.2. The 2.0 kit pages passed the check and looked flat (sections below). The two 2.1 runs
+through `design-taste-frontend` (next section) looked alike and still. 2.2 deals websites an art direction and
+two scroll set pieces, takes real photographs from the bundled library, and fails a page for being flat. What is
+measured so far without an agent: the deal's divergence (`tests/deal.test.mjs`) and all nine set pieces passing
+the check in Chrome on one page (`tests/check.e2e.test.mjs`). No agent run of 2.2 is recorded yet; until one is,
+nothing here shows that 2.2 produces better pages.
+
+## 2026-11-13: two models, one cafe prompt, the 2.1 route (design-taste-frontend)
+
+| | GPT (gpt-6.1-sol-fast) in Claude Code | OpenCode 2.2.7: MiniMax M3.1 Flash (first turn), then LongCat 2.5 (free) |
+|---|---|---|
+| Prompt | a premium, animated cafe page with parallax, React + Vite + Bun, "use everything frontend-craft has" | a premium page for a specialty cafe in Bucaramanga |
+| Route followed | Yes: `gate.mjs --start --kind place`, layout `deal.mjs`, `start.mjs deal --trade cafe`, `moments.mjs pick` | Yes: `start.mjs deal`, `css`, `moments.mjs pick`, `photos.mjs pick/fetch/credits`, `consistency.mjs` |
+| Dealt | palette `clay-pine`, Bricolage, one moment | palette `offwhite-bottle-yellow`, Nunito, one moment |
+| Gate | not run (a local rule kept browser work to Playwright MCP) | FAILs fixed in rounds; final line not recorded |
+| User verdict | "very basic, looks AI-made, flat, no animation or transitions, nothing different" | nearly the same page as the GPT one |
+
+Cause, read from the engine itself: for a place page its hero is printed (Recipe 3), its cafe palettes are all a
+light warm ground with one accent, its cafe photographs come from one pool of 18 frames, and its checker fails any
+effect (`effect-kind`) and any scroll-linked motion (`scroll`: "on a place, shop or service page the page scrolls
+plainly and the parts sit still"). Both models obeyed it, so both pages converged and neither could move. The
+decision and the fix are in [architecture.md](architecture.md#22-websites-get-a-dealt-direction-set-pieces-and-a-richness-floor).
+
+## Status in 2.1 (superseded)
+
+The runs below measured the 2.0 website path (frontend-craft's own deal, blueprints and kit), which 2.1 made the
 fallback. They passed the check, and the user judged all three pages visually flat and template-like: the check
-measured defects, not richness. That verdict is why websites now route to the bundled `design-taste-frontend`
-engine. Runs of the 2.1 route will be added here, failures included; until then nothing in this file shows that
-2.1 produces better pages.
+measured defects, not richness.
 
 ## 2026-11-13: cafe-bucaramanga, DeepSeek V4.1 Flash in OpenCode 2.2.7
 
