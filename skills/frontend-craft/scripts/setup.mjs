@@ -18,7 +18,7 @@ import { isMain, parseArgs } from './lib/state.mjs';
 
 const SKILL = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 /** The skills frontend-craft routes to; they must sit next to it. */
-export const SIBLINGS = ['design-taste-frontend', 'impeccable', 'emil-design-eng', 'review-animations', 'craft-motion', 'craft-review', 'craft-learn', 'svg-craft', 'ui-ux-pro-max', 'hf-asset-generate', 'kaggle-video', 'playwright-cli'];
+export const SIBLINGS = ['design-taste-frontend', 'impeccable', 'emil-design-eng', 'review-animations', 'craft-motion', 'craft-review', 'craft-learn', 'svg-craft', 'ui-ux-pro-max', 'hf-asset-generate', 'kaggle-video', 'hallmark', 'playwright-cli'];
 const MIN_NODE = 22;
 export const MCP = {
   playwright: { test: /^(?:plugin:[^:\s]+:)?playwright:/m, add: ['mcp', 'add', 'playwright', '-s', 'user', '--', 'npx', '-y', '@playwright/mcp@latest'] },

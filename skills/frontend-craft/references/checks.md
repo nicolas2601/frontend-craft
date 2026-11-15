@@ -31,6 +31,7 @@
 | `footer-missing`, `footer-thin` | FAIL | No footer, or one with under three links and no way to reach the business | The blueprint's `.site-footer`: the name, contact as links (`tel:`, `mailto:`, WhatsApp, a map), hours or the last facts, the section links, one credits line |
 | `magnetic-button` | WARN | A button follows the cursor (`data-magnetic`) | Remove it: `data-press` and a hover colour are the feedback a button needs |
 | `look-pending` | FAIL | The colours and type were never chosen: `tokens.css` still holds the neutral stand-ins | Choose them (`references/color-type.md`) and run `design.mjs set` |
+| `hallmark/<gate>` | FAIL or WARN | Hallmark's `sloplint` on the page's own files (not the kit). Gates any page should pass fail: middle-dot meta strings, eyebrows and tracked-caps labels, an italic word in a heading, em dashes and stock words in copy, purple gradients, a card in a card, emoji icons, drawn browser windows, invented proof, a fake send, motion without a reduced-motion fallback. Its other gates and reflexes warn | Each line names the gate; `skills/hallmark/references/gates.md` explains it and its fix |
 | `content-invisible` | FAIL | Text never becomes visible after scrolling the whole page | A reveal that never fires, or an element hidden by CSS with no script to show it |
 | `reduced-invisible` | FAIL | With reduced motion, text stays hidden | Custom animations that only reach the visible state by animating |
 | `nojs-invisible` | FAIL | Without JavaScript, text is hidden | Hidden initial states not scoped to `html.craft-js` |
