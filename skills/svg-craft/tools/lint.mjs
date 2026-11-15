@@ -93,7 +93,76 @@ const report = await page.evaluate((src) => {
   const unclosedRound = all.filter((e) => e.getAttribute('stroke-width') === '0').length; if (unclosedRound) W('stroke-width="0" elements (dead weight)');
   return out;
 }, text);
+if (!report.errors.some((m) => m.startsWith('XML parse error') || m.startsWith('root element'))) {
+  await page.setContent(`<!doctype html><body style="margin:0">${text}</body>`);
+  const geo = await page.evaluate(geometry);
+  if (geo) {
+    report.info.labelOverlaps = geo.overlaps.length;
+    report.info.textCut = geo.cut.length;
+    report.info.looseEnds = geo.loose.length;
+    if (geo.overlaps.length) report.warns.push(`${geo.overlaps.length} label pair(s) overlap: ${geo.overlaps.slice(0, 4).join('; ')}`);
+    if (geo.cut.length) report.errors.push(`text cut by the viewBox edge: ${geo.cut.slice(0, 4).join('; ')}`);
+    if (geo.loose.length) report.warns.push(`${geo.loose.length} leader(s) end in empty space (a line from a label must end on the shape it names, or on a dot): ${geo.loose.slice(0, 4).join('; ')}`);
+  }
+}
 await browser.close();
+
+/**
+ * Geometry a screenshot can hide (the idea of anatomy's audit, for flat figures): labels that overlap,
+ * text cut by the viewBox, and leaders (an open line starting at a label) whose far end touches nothing.
+ * Runs in the page on the rendered SVG, sized so one user unit is one CSS pixel.
+ */
+function geometry() {
+  const svg = document.querySelector('body > svg');
+  const vb = svg?.viewBox?.baseVal;
+  if (!svg || !vb || !vb.width || !vb.height) return null;
+  svg.style.width = `${vb.width}px`;
+  svg.style.height = `${vb.height}px`;
+  const hidden = (el) => el.closest('defs, clipPath, mask, symbol, marker, pattern') || getComputedStyle(el).display === 'none' || getComputedStyle(el).visibility === 'hidden';
+  const name = (el) => `<${el.localName}${el.id ? ` id="${el.id}"` : ''}>${el.localName === 'text' ? ` "${el.textContent.trim().slice(0, 24)}"` : ''}`;
+  const box = svg.getBoundingClientRect();
+  const texts = [...svg.querySelectorAll('text')].filter((t) => !hidden(t) && t.textContent.trim());
+  const rects = texts.map((t) => t.getBoundingClientRect());
+  const out = { overlaps: [], cut: [], loose: [] };
+  const EDGE = 0.5, SHARE = 0.15, NEAR = 1.5, MIN_LINE = 24, LEADER = 24;
+  for (let i = 0; i < texts.length; i++) {
+    const a = rects[i];
+    if (a.left < box.left - EDGE || a.top < box.top - EDGE || a.right > box.right + EDGE || a.bottom > box.bottom + EDGE) out.cut.push(name(texts[i]));
+    for (let j = i + 1; j < texts.length; j++) {
+      const b = rects[j];
+      const w = Math.min(a.right, b.right) - Math.max(a.left, b.left), h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+      if (w <= 0 || h <= 0) continue;
+      const small = Math.min(a.width * a.height, b.width * b.height) || 1;
+      if ((w * h) / small > SHARE) out.overlaps.push(`${name(texts[i])} and ${name(texts[j])}`);
+    }
+  }
+  if (!texts.length) return out;
+  const shapes = [...svg.querySelectorAll('path, line, polyline, polygon, rect, circle, ellipse')].filter((el) => !hidden(el)).slice(0, 2000);
+  const open = shapes.filter((el) => {
+    const cs = getComputedStyle(el);
+    if (cs.stroke === 'none' || (cs.fill !== 'none' && el.localName !== 'line')) return false;
+    if (el.localName === 'path' && /z\s*$/i.test(el.getAttribute('d') || '')) return false;
+    return ['path', 'line', 'polyline'].includes(el.localName) && el.getTotalLength() >= MIN_LINE;
+  });
+  const toScreen = (el, p) => { const m = el.getScreenCTM(); return new DOMPoint(p.x, p.y).matrixTransform(m); };
+  const touches = (el, s) => {
+    const local = s.matrixTransform(el.getScreenCTM().inverse());
+    return el.isPointInFill(local) || el.isPointInStroke(local);
+  };
+  const ring = (s) => [[0, 0], [NEAR, 0], [-NEAR, 0], [0, NEAR], [0, -NEAR]].map(([dx, dy]) => new DOMPoint(s.x + dx, s.y + dy));
+  const nearLabel = (s, d) => rects.some((r) => s.x >= r.left - d && s.x <= r.right + d && s.y >= r.top - d && s.y <= r.bottom + d);
+  // A leader starts at a label and must end on the thing it names; other open strokes are drawing, not checked.
+  for (const el of open) {
+    const len = el.getTotalLength();
+    const [a, b] = [el.getPointAtLength(0), el.getPointAtLength(len)].map((p) => toScreen(el, p));
+    const [la, lb] = [nearLabel(a, LEADER), nearLabel(b, LEADER)];
+    if (la === lb) continue;
+    const far = la ? b : a;
+    const held = shapes.some((o) => o !== el && ring(far).some((p) => touches(o, p)));
+    if (!held) out.loose.push(`${name(el)} at ${Math.round(far.x - box.left)},${Math.round(far.y - box.top)}`);
+  }
+  return out;
+}
 report.info.kb = +(bytes / 1024).toFixed(1);
 if (report.info.kb > maxKb) report.warns.push(`file is ${report.info.kb} kB (> ${maxKb} kB budget): run optimize.mjs or simplify`);
 if (args.includes('--json')) console.log(JSON.stringify(report, null, 1));

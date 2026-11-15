@@ -33,7 +33,7 @@
       </div>
       <div class="stub">
         <p class="lede">{{one line: why go or why buy}}</p>
-        <a class="btn" href="#action" data-magnetic data-press>{{primary action}}</a>
+        <a class="btn" href="#action" data-press>{{primary action}}</a>
       </div>
     </article>
   </section>
@@ -43,6 +43,7 @@
     <span>{{band item 3}}</span>
     <span>{{band item 4}}</span>
   </div>
+  <button type="button" class="craft-pause" data-marquee-toggle aria-pressed="false" data-press>{{pause label, in the page language}}</button>
   <section class="section" id="s2">
     <h2 class="h-section craft-display">{{program, menu or contents}}</h2>
     <ul class="receipt" data-reveal="stagger">
@@ -59,10 +60,43 @@
   </section>
   <section class="section" id="action">
     <h2 class="h-display craft-display" data-reveal>{{closing line that repeats the promise}}</h2>
-    <div class="actions" data-reveal><a class="btn" href="{{real link: form, booking, WhatsApp, store}}" data-magnetic data-press>{{primary action}}</a></div>
+    <div class="actions" data-reveal><a class="btn" href="{{real link: form, booking, WhatsApp, store}}" data-press>{{primary action}}</a></div>
   </section>
 </main>
-<footer class="section muted">{{address, hours or contact}}</footer>
+<footer class="site-footer">
+  <div class="site-footer__top">
+    <p class="site-footer__name">{{brand name}}</p>
+    <p class="site-footer__line muted">{{one sentence: what it is and where}}</p>
+    <a class="btn" href="#action" data-press>{{primary action}}</a>
+  </div>
+  <div class="site-footer__cols">
+    <div class="site-footer__col">
+      <p class="site-footer__h">{{label: where}}</p>
+      <address>{{street and district}}<br>{{town and region}}</address>
+      <a href="{{map link: OpenStreetMap or Google Maps for the address}}">{{see it on the map}}</a>
+    </div>
+    <div class="site-footer__col">
+      <p class="site-footer__h">{{label: contact}}</p>
+      <a href="tel:{{phone, digits only}}">{{phone}}</a>
+      <a href="mailto:{{email}}">{{email}}</a>
+      <a href="{{WhatsApp (https://wa.me/...) or booking link}}">{{WhatsApp or booking}}</a>
+    </div>
+    <div class="site-footer__col">
+      <p class="site-footer__h">{{label: hours, or what a buyer checks last (shipping, support)}}</p>
+      <dl class="site-footer__hours">
+        <div><dt>{{days 1}}</dt><dd>{{hours 1}}</dd></div>
+        <div><dt>{{days 2}}</dt><dd>{{hours 2}}</dd></div>
+      </dl>
+    </div>
+    <nav class="site-footer__col" aria-label="{{label: sections}}">
+      <p class="site-footer__h">{{label: sections}}</p>
+      <a href="#s2">{{section 2 label}}</a>
+      <a href="#s3">{{section 3 label}}</a>
+      <a href="#action">{{primary action}}</a>
+    </nav>
+  </div>
+  <p class="site-footer__fine muted"><span>{{credits: photographs and licences, one line}}</span><a href="#top">{{back to top}}</a></p>
+</footer>
 <script type="module">import { init } from './craft/craft-motion.js'; init(document);</script>
 </body>
 </html>

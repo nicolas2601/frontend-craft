@@ -212,9 +212,63 @@ export function probeMotionState() {
     return [
       Number.parseFloat(cs.opacity).toFixed(2), cs.transform, cs.translate, cs.scale, cs.rotate, cs.clipPath,
       cs.filter, cs.getPropertyValue('--p').trim(), cs.backgroundPosition,
-      Math.round(r.top + scrollY), cs.position === 'sticky' ? 'sticky' : '', C.describe(el).slice(0, 60),
+      Math.round(r.top + scrollY), cs.position === 'sticky' ? 'sticky' : '', C.describe(el).slice(0, 60), C.sectionOf(el),
+      cs.strokeDashoffset,
     ];
   });
+}
+
+/**
+ * The scroll-driven state of one element (by its index in the motion probe): --p, opacity, clip-path, filter and a
+ * stroke being drawn. Compared at two scroll positions to tell whether its motion is still running as it leaves.
+ */
+export function probeScrubState(i) {
+  const el = window.__craftEls?.[i];
+  if (!el) return null;
+  const cs = getComputedStyle(el);
+  const line = el.matches('path, line, polyline, circle') ? el : el.querySelector('path, polyline, line');
+  const host = el.closest('[id]');
+  // Inside a pinned or sticky scene the element holds still on screen while the scroll drives it: its own range rules.
+  let held = !!el.closest('[data-pin]');
+  for (let a = el; a && !held; a = a.parentElement) held = ['sticky', 'fixed'].includes(getComputedStyle(a).position);
+  if (held) return null;
+  // A part of a data-scrub element is driven by that element's progress, so it is placed and named by it.
+  const scrubber = el.closest('[data-scrub]') ?? el;
+  const r = scrubber.getBoundingClientRect();
+  const id = scrubber.id ? scrubber : host;
+  const name = scrubber.id ? `#${scrubber.id}` : id ? `${window.__craft.describe(scrubber).slice(0, 40)} in #${id.id}` : window.__craft.describe(scrubber).slice(0, 60);
+  return {
+    top: r.top + scrollY,
+    h: r.height,
+    name,
+    state: [scrubber.style.getPropertyValue('--p').trim(), Number.parseFloat(cs.opacity).toFixed(2), cs.clipPath, cs.filter, line ? getComputedStyle(line).strokeDashoffset : ''].join('|'),
+  };
+}
+
+/** Navigation a visitor can reach: visible links inside the header's nav, and a menu button that opens the rest. */
+export function probeNav() {
+  const C = window.__craft;
+  const navs = [...document.querySelectorAll('header nav, header [role="navigation"], body > nav')];
+  const links = navs.flatMap((n) => [...n.querySelectorAll('a[href]')]).filter(C.visible);
+  const toggle = [...document.querySelectorAll('header button[aria-expanded], header [aria-controls][aria-expanded], header details > summary')].some(C.visible);
+  return { navs: navs.length, links: new Set(links.map((a) => a.getAttribute('href'))).size, toggle };
+}
+
+/** Endless bands (data-marquee) with no pause button beside them. */
+export function probeMarquees() {
+  const hasToggle = (el) => el.nextElementSibling?.matches('[data-marquee-toggle]') || (el.id && document.querySelector(`[data-marquee-toggle][aria-controls="${el.id}"]`));
+  return [...document.querySelectorAll('[data-marquee]')].filter((el) => !hasToggle(el))
+    .slice(0, 4).map((el) => window.__craft.describe(el).slice(0, 60));
+}
+
+/** Buttons, form fields and their labels set under 14px. */
+export function probeControlText() {
+  const C = window.__craft;
+  return [...document.querySelectorAll('button, input:not([type="hidden"]), select, textarea, label, [role="button"], summary')]
+    .filter(C.visible)
+    .filter((el) => Number.parseFloat(getComputedStyle(el).fontSize) < 14)
+    .slice(0, 6)
+    .map((el) => `${C.describe(el).slice(0, 50)} (${getComputedStyle(el).fontSize})`);
 }
 
 export function probeSticky() {
@@ -242,15 +296,27 @@ export function probeCss() {
     if (/(^|,\s*)ease-in(\s*,|$)/.test(cs.transitionTimingFunction) && cs.transitionDuration !== '0s') easeIn.push(window.__craft.describe(el));
     if (all.length >= 6) break;
   }
-  for (const sheet of document.styleSheets) {
-    let rules;
-    try { rules = sheet.cssRules; } catch { continue; }
+  // Design tokens (--s-, --t-, --c-, --r-, --f-) read with no fallback but never defined: the property silently drops to its initial value.
+  const declared = new Set();
+  const used = new Set();
+  const TOKEN = /var\(\s*(--(?:s|t|c|r|f)-[\w-]+)\s*\)/g;
+  const walk = (rules) => {
     for (const rule of rules ?? []) {
       const css = rule.cssText ?? '';
       if (/(min-)?height:\s*100vh/.test(css)) vh100.push(css.slice(0, 80));
+      for (const prop of rule.style ?? []) if (prop.startsWith('--')) declared.add(prop);
+      for (const m of css.matchAll(TOKEN)) used.add(m[1]);
+      if (rule.cssRules) walk(rule.cssRules);
     }
+  };
+  for (const sheet of document.styleSheets) {
+    try { walk(sheet.cssRules); } catch { /* a cross-origin sheet cannot be read */ }
   }
-  return { transitionAll: all, easeIn: easeIn.slice(0, 4), vh100: vh100.slice(0, 4) };
+  for (const el of document.querySelectorAll('[style]')) for (const prop of el.style) if (prop.startsWith('--')) declared.add(prop);
+  const undefinedTokens = [...used].filter((name) => !declared.has(name)).slice(0, 8).map((name) => ({
+    name, scale: [...declared].filter((d) => d.startsWith(name.slice(0, 4))).slice(0, 14),
+  }));
+  return { transitionAll: all, easeIn: easeIn.slice(0, 4), vh100: vh100.slice(0, 4), undefinedTokens };
 }
 
 /** The hero's own action (not the nav's) must sit fully inside the first screen. */

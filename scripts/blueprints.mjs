@@ -22,12 +22,14 @@ for (const comp of lib.compositions.filter((c) => !only || only.includes(c.id)))
   const dir = path.join(base, comp.id);
   fs.rmSync(dir, { recursive: true, force: true });
   fs.mkdirSync(dir, { recursive: true });
-  start(['--kind', comp.kinds[0], '--fallback', '--pin', `composition=${comp.id}`, '--seed', '7', '--file', 'index.html'], dir);
+  start(['--kind', comp.kinds[0], '--pin', `composition=${comp.id}`, '--seed', '7', '--file', 'index.html', '--deal-look', '--deal-direction'], dir);
   const deal = readJson(path.join(dir, '.craft', 'deal.json'));
   const page = path.join(dir, 'index.html');
   const html = fill(fs.readFileSync(page, 'utf8')).replace('<!-- paste the font <link> tags from .craft/brief.md here -->', fontLinks(deal.type));
   fs.writeFileSync(page, html);
-  const report = await runCheck({ target: { root: dir, page: 'index.html' }, kind: comp.kinds[0], deal, out: path.join(dir, '.craft') });
+  // A blueprint is the skeleton only: its photographs, set pieces and concept come with a real build,
+  // so the direction's richness floor is not judged here.
+  const report = await runCheck({ target: { root: dir, page: 'index.html' }, kind: comp.kinds[0], deal: { ...deal, direction: null }, out: path.join(dir, '.craft') });
   const fails = report.findings.filter((x) => x.level === 'FAIL');
   rows.push({ id: comp.id, fails: fails.map((x) => `${x.id}: ${x.msg.slice(0, 90)}`), motion: report.motion });
   console.log(`${fails.length ? 'FAIL' : 'PASS'} ${comp.id.padEnd(20)} enter ${report.motion.entrance}, linked ${report.motion.scrollLinked}, pinned ${report.motion.sticky.length}${fails.length ? `\n     ${fails.map((x) => `${x.id}: ${x.msg.slice(0, 110)}`).join('\n     ')}` : ''}`);

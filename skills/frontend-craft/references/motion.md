@@ -26,7 +26,7 @@ Reveals are supports, never the scroll story: fade-ins alone fail the check.
 |---|---|---|
 | `data-pin` | A tall section whose first child sticks for `--pin-length` (default 260svh) | `<section data-pin><div>…</div></section>` |
 | `data-scroll-words` | Words light from 16% to full opacity as the reader scrolls | inside a pin: `data-scroll-words="pinned"` |
-| `data-scrub` | Writes `--p` from 0 to 1 while the element crosses the viewport | `data-scrub="pinned"` follows the nearest `data-pin`; `data-scrub-reduced="0.5"` sets the reduced-motion value (default 1) |
+| `data-scrub` | Writes `--p` from 0 (its top 10% into the screen) to 1 (its centre at 40% of the screen), so whatever it draws is finished while it can be read; `--travel` is the whole pass, for depth that keeps moving | `data-scrub="pinned"` follows the nearest `data-pin`; `data-scrub-reduced="0.5"` sets the reduced-motion value (default 1) |
 | `data-stack` | Children stick and shrink 6% as the next one covers them | `--stack-top` (12svh), `--stack-gap` (1.25rem) |
 | `data-rail` | A pinned row that moves sideways while the page scrolls down | `<section data-rail><div data-rail-track>panels</div></section>`; at 640 px and below it becomes a native swipe row with snap |
 | `data-parallax` | Drifts at a fraction of scroll speed, capped at 160 px | `0.05` to `0.3`; negative moves the other way |
@@ -48,13 +48,20 @@ Reveals are supports, never the scroll story: fade-ins alone fail the check.
 |---|---|---|
 | `data-count` | Counts from 0 to the number already written, 1.4 s, when in view | keeps the page's format: `1.280`, `1,280.50`, `12,5 %`, `+40k` |
 | `data-scramble` | Letters resolve from noise when in view | `data-scramble="hover"`; short text without child elements |
-| `data-marquee` | An endless band, pauses off screen and on hover | `data-marquee="60"` px per second; `--marquee-gap` |
+| `data-marquee` | An endless band, pauses off screen and on hover; a `<button class="craft-pause" data-marquee-toggle aria-pressed="false">` right after it pauses it (required: it moves for more than 5 s) | `data-marquee="60"` px per second, at most 120; `--marquee-gap` |
+
+## Hero objects (one per page, first screen)
+
+| Attribute | Does | Notes |
+|---|---|---|
+| `data-scene` | A live WebGL object in the page's colours: `chrome`, `iridescent`, `ink`, `dots` | on `.craft-scene`; a still frame under reduced motion; `scenes.md` |
+| `data-loop` | Plays a muted `<video>` loop only while on screen; holds on its poster under reduced motion and Save-Data | a `data-loop-toggle` button beside it pauses and resumes; no `autoplay` attribute; `hero-video.md` |
 
 ## Pointer (fine pointers that hover only)
 
 | Attribute | Does | Options |
 |---|---|---|
-| `data-magnetic` | The element leans toward the cursor within 40 px and springs back | strength `0.1`-`0.6` (default 0.3); use on one primary action |
+| `data-magnetic` | The element leans toward the cursor within 40 px and springs back | Not dealt and not recommended: a button that chases the cursor reads as a template trick (the check warns, `magnetic-button`). Only when the user asks for it, on one playful action |
 | `data-spotlight` | A soft accent light follows the cursor over a surface | `--spot-size` (420px) |
 | `data-press` | `scale(0.97)` on press, 140 ms (CSS only) | every button |
 | `data-lift` | Rises 3 px with a shadow on hover (CSS only) | cards that are links |

@@ -1,0 +1,253 @@
+/*
+  frontend-craft set pieces: scroll scenes built on the kit's data-scrub (--p, 0 to 1).
+  Load after craft.css and layouts.css. Each piece:
+  - shows its finished state without JavaScript (--p unset) and under reduced motion (--p = 1);
+  - moves only transform, opacity, clip-path and filter;
+  - finishes while its element can be read (--p reaches 1 when the element's centre is at 40% of the screen).
+  Markup for each piece: references/set-pieces.md. MIT.
+*/
+
+/* --q is computed once, on the element that carries data-scrub, and inherited by its parts. */
+:root { --q: 1; }
+[data-scrub] { --q: var(--p, 1); }
+[data-scrub="pinned"] { --q: min(1, calc(var(--p, 1) * 1.25)); }
+
+/* ---------- iris: the next ground opens through a growing circle ---------- */
+.sp-iris__open {
+  min-height: 100svh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  text-align: center;
+  gap: var(--s-6);
+  padding: var(--section) var(--gutter);
+  background: var(--sp-ground, var(--c-ink));
+  color: var(--sp-on, var(--c-bg));
+  clip-path: circle(calc(var(--q) * 75%) at 50% 50%);
+}
+
+/* ---------- type pass: one huge line crosses the screen with the scroll ---------- */
+.sp-type-pass { overflow-x: clip; }
+.sp-type-pass__line {
+  display: block;
+  width: max-content;
+  font-family: var(--f-display);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
+  font-size: clamp(5rem, 1rem + 18vw, 22rem);
+  line-height: 0.85;
+  white-space: nowrap;
+  translate: calc((0.5 - var(--p, 0.5)) * 60%) 0;
+}
+.sp-type-pass__line--back { translate: calc((var(--p, 0.5) - 0.5) * 60%) 0; }
+
+/* ---------- zoom settle: a full-bleed photograph opens from an inset frame ---------- */
+.sp-zoom {
+  margin: 0;
+  overflow: clip;
+  clip-path: inset(calc((1 - var(--q)) * 12%) calc((1 - var(--q)) * 9%) round calc((1 - var(--q)) * 2rem));
+}
+.sp-zoom img, .sp-zoom video {
+  display: block;
+  width: 100%;
+  height: auto;
+  scale: calc(1.25 - var(--q) * 0.25);
+}
+
+/* ---------- curtain: a photograph parts in two and uncovers the words under it ---------- */
+.sp-curtain__stage { position: relative; display: grid; place-items: center; min-height: 100svh; overflow: clip; }
+.sp-curtain__under { max-width: 40rem; padding: var(--gutter); text-align: center; }
+.sp-curtain__half { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sp-curtain__half--l { clip-path: inset(0 50% 0 0); translate: calc(var(--q) * -51%) 0; }
+.sp-curtain__half--r { clip-path: inset(0 0 0 50%); translate: calc(var(--q) * 51%) 0; }
+
+/* ---------- fan: photographs stacked as a pile fan out into a spread ---------- */
+.sp-fan__stage { position: relative; display: grid; place-items: center; min-height: 100svh; overflow: clip; padding: var(--gutter); }
+/* the words sit on a band of the ground so they stay readable over the pile */
+.sp-fan__stage > :is(h2, p, .sp-fan__words) { position: relative; z-index: 2; background: var(--sp-ground, var(--c-bg)); padding: var(--s-2) var(--s-4); }
+.sp-fan__card {
+  position: absolute;
+  width: clamp(9rem, 4rem + 16vw, 20rem);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-2);
+  translate: calc(var(--x, 0%) * var(--q)) calc(var(--y, 0%) * var(--q));
+  rotate: calc(var(--r, 0deg) * var(--q));
+}
+@media (max-width: 640px) {
+  .sp-fan__stage { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); align-content: center; }
+  .sp-fan__stage > :is(h2, p, .sp-fan__words) { grid-column: 1 / -1; }
+  .sp-fan__card { position: static; width: 100%; translate: none; rotate: calc(var(--r, 0deg) * var(--q) * 0.3); }
+}
+
+/* ---------- letters: a heading assembles from scattered letters ---------- */
+.sp-letters { overflow-wrap: normal; }
+.sp-letters > span {
+  display: inline-block;
+  white-space: pre;
+  translate: calc((1 - var(--q)) * var(--dx, 0px)) calc((1 - var(--q)) * var(--dy, 0px));
+  rotate: calc((1 - var(--q)) * var(--dr, 0deg));
+  opacity: calc(0.15 + var(--q) * 0.85);
+}
+.sp-letters > span:nth-child(5n + 1) { --dx: -18vw; --dy: 22svh; --dr: -28deg; }
+.sp-letters > span:nth-child(5n + 2) { --dx: 9vw; --dy: -16svh; --dr: 18deg; }
+.sp-letters > span:nth-child(5n + 3) { --dx: -6vw; --dy: 30svh; --dr: 40deg; }
+.sp-letters > span:nth-child(5n + 4) { --dx: 16vw; --dy: 12svh; --dr: -14deg; }
+.sp-letters > span:nth-child(5n + 5) { --dx: 4vw; --dy: -24svh; --dr: 24deg; }
+.sp-letters-host { overflow-x: clip; }
+
+/* ---------- develop: a photograph comes up from grey and soft to full colour ---------- */
+.sp-develop { margin: 0; overflow: clip; }
+.sp-develop img, .sp-develop video {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: grayscale(calc(1 - var(--q))) blur(calc((1 - var(--q)) * 6px));
+  scale: calc(1.08 - var(--q) * 0.08);
+}
+
+/* ---------- tilt: a picture or panel rises from a tilted plane ---------- */
+.sp-tilt { perspective: 1400px; }
+.sp-tilt > * {
+  transform-origin: 50% 100%;
+  transform: rotateX(calc((1 - var(--q)) * 26deg)) translateY(calc((1 - var(--q)) * 6svh));
+}
+
+/* ---------- split: one half holds still while the other scrolls past it ---------- */
+.sp-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-12); padding-inline: var(--gutter); }
+.sp-split__still { position: sticky; top: 0; height: 100svh; display: grid; align-content: center; gap: var(--s-6); }
+.sp-split__flow { display: grid; gap: var(--s-12); padding-block: 30svh; }
+.sp-split__flow img { width: 100%; height: auto; border-radius: var(--r-sm); }
+@media (max-width: 760px) {
+  .sp-split { grid-template-columns: minmax(0, 1fr); }
+  .sp-split__still { position: static; height: auto; padding-block: var(--section) 0; }
+  .sp-split__flow { padding-block: var(--s-8) var(--section); }
+}
+
+/* ---------- word-track: one long line of huge words crosses the screen as the reader scrolls ---------- */
+.sp-word-track__stage { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); align-content: center; gap: var(--s-6); min-height: 100svh; padding: var(--gutter); overflow: clip; }
+.sp-word-track__stage > :is(h1, h2) { margin: 0; font-family: var(--f-display); font-size: var(--t-3xl); }
+.sp-word-track__line {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
+  font-size: var(--t-mega);
+  line-height: 0.9;
+}
+/* words travel as separate spans with air between them, never joined by dots */
+.sp-word-track__line span + span { margin-left: 0.5em; }
+/* the travel needs JavaScript (craft-js); without it the words wrap and stay readable */
+.craft-js .sp-word-track__line {
+  width: max-content;
+  white-space: nowrap;
+  translate: calc((100vw - 100%) * var(--q)) 0;
+}
+
+/* ---------- word-swap: one word in a sentence changes as the reader scrolls ---------- */
+.sp-word-swap {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: var(--display-weight);
+  font-size: var(--t-3xl);
+  line-height: 1.05;
+  letter-spacing: var(--display-tracking);
+  text-wrap: balance;
+}
+.sp-word-swap__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* options stack in one grid cell; each sits in its own band of --p (n bands), slides and fades */
+.sp-word-swap__slot { display: inline-grid; overflow: clip; vertical-align: bottom; padding-block: 0.1em; margin-block: -0.1em; }
+.sp-word-swap__slot > * {
+  --d: max(var(--dlo, -1), min(var(--dhi, 1), calc(var(--p, 1) * var(--n) - var(--i) - 0.5)));
+  grid-area: 1 / 1;
+  opacity: max(0, min(1, calc(1 - (max(var(--d), calc(var(--d) * -1)) - 0.25) * 4)));
+  translate: 0 calc(var(--d) * -110%);
+}
+/* the first option holds before its band, the last one holds after it */
+.sp-word-swap__slot > :first-child { --dlo: 0; }
+.sp-word-swap__slot > :last-child { --dhi: 0; }
+
+/* ---------- type-zoom: one short word fills the screen, zooms through and uncovers the section ---------- */
+.sp-type-zoom__stage { position: relative; display: grid; place-items: center; min-height: 100svh; padding: var(--gutter); overflow: clip; }
+.sp-type-zoom__content { grid-area: 1 / 1; max-width: 40rem; text-align: center; opacity: max(0, min(1, calc((var(--q) - 0.4) * 2.5))); }
+.sp-type-zoom__word {
+  grid-area: 1 / 1;
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: var(--display-weight);
+  font-size: clamp(6rem, 1rem + 52vw, 52rem);
+  letter-spacing: var(--display-tracking);
+  line-height: 0.8;
+  white-space: nowrap;
+  pointer-events: none;
+  transform-origin: var(--zoom-x, 50%) var(--zoom-y, 50%);
+  scale: calc(1 + var(--q) * var(--q) * var(--q) * 30);
+  opacity: max(0, min(1, calc(1 - (var(--q) - 0.6) * 2.5)));
+}
+
+/* ---------- word-mask: each line rises out of its own mask as the heading comes into view ---------- */
+.sp-word-mask { --stagger: 0.08; margin: 0; line-height: 0.95; text-wrap: balance; }
+/* lines finish in order; with --stagger 0.08 a heading can have up to nine lines */
+.sp-word-mask__line {
+  --lq: max(0, min(1, calc((var(--q) - var(--i) * var(--stagger)) / 0.3)));
+  display: block;
+  overflow: clip;
+  padding-block: 0.06em;
+  margin-block: -0.06em;
+}
+.sp-word-mask__line > span { display: block; translate: 0 calc((1 - var(--lq)) * 105%); }
+
+/* ---------- bento-assemble: the tiles of a bento scatter and settle into the grid with the scroll ---------- */
+/* a whole grid is about as tall as the viewport, so it settles on --p 0.25 (--bq), not on --q */
+.sp-bento-assemble {
+  --bq: min(1, calc(var(--p, 1) * 4));
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-rows: minmax(12rem, auto);
+  gap: var(--s-4);
+  overflow-x: clip;
+}
+.sp-bento-assemble__tile {
+  display: grid;
+  align-content: space-between;
+  gap: var(--s-6);
+  padding: var(--s-8);
+  border-radius: var(--r-lg);
+  background: var(--c-surface);
+  overflow: clip;
+  translate: calc((1 - var(--bq)) * var(--dx, 0px)) calc((1 - var(--bq)) * var(--dy, 0px));
+  rotate: calc((1 - var(--bq)) * var(--dr, 0deg));
+  opacity: calc(0.2 + var(--bq) * 0.8);
+}
+.sp-bento-assemble > :nth-child(5n + 1) { --dx: -30vw; --dy: 18svh; --dr: -8deg; }
+.sp-bento-assemble > :nth-child(5n + 2) { --dx: 22vw; --dy: -20svh; --dr: 10deg; }
+.sp-bento-assemble > :nth-child(5n + 3) { --dx: -12vw; --dy: 26svh; --dr: 14deg; }
+.sp-bento-assemble > :nth-child(5n + 4) { --dx: 26vw; --dy: 14svh; --dr: -12deg; }
+.sp-bento-assemble > :nth-child(5n + 5) { --dx: 6vw; --dy: -22svh; --dr: 6deg; }
+.sp-bento-assemble__lead { grid-column: span 8; grid-row: span 2; background: var(--c-ink); color: var(--c-bg); }
+.sp-bento-assemble__tall { grid-column: span 4; grid-row: span 2; }
+.sp-bento-assemble__wide { grid-column: span 7; }
+.sp-bento-assemble__small { grid-column: span 5; }
+@media (max-width: 640px) {
+  .sp-bento-assemble { grid-template-columns: minmax(0, 1fr); }
+  .sp-bento-assemble > .sp-bento-assemble__tile {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    translate: calc((1 - var(--bq)) * var(--dx, 0px) * 0.2) calc((1 - var(--bq)) * var(--dy, 0px) * 0.2);
+    rotate: calc((1 - var(--bq)) * var(--dr, 0deg) * 0.3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-scrub] { --q: 1; }
+  .sp-type-pass__line, .sp-type-pass__line--back { translate: none; }
+  .craft-js .sp-word-track__line { width: auto; white-space: normal; translate: none; }
+  .sp-word-swap__slot > * { opacity: 0; translate: none; }
+  .sp-word-swap__slot > :last-child { opacity: 1; }
+  .sp-type-zoom__content { opacity: 1; }
+  .sp-type-zoom__word { display: none; }
+  .sp-word-mask__line > span { translate: none; }
+  .sp-bento-assemble { --bq: 1; }
+  .sp-bento-assemble__tile { translate: none; rotate: none; opacity: 1; }
+}

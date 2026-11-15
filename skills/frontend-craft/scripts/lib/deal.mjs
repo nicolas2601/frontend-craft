@@ -1,5 +1,5 @@
-// The deal: pick a palette, a type pairing, a composition and motion from the library,
-// weighted by mood and kind, skipping what recent deals already used. Pure given an rng.
+// The deal: pick an art direction, a palette, a type pairing, a composition and motion from the
+// library, weighted by mood and kind, skipping what recent deals already used. Pure given an rng.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -7,8 +7,24 @@ import { hexToRgb, isCream } from './color.mjs';
 
 const LIB = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'library');
 export const RECENT = 6;
+export const RECENT_DIRECTIONS = 4;
+const MIN_NEAR = 3;
+/** How often a website is dealt a direction outside the subject's usual moods, on purpose. */
+export const RISK = { safe: 0, bold: 0.4, wild: 0.8 };
+export const SET_PIECES = ['iris', 'type-pass', 'zoom', 'curtain', 'fan', 'letters', 'develop', 'tilt', 'split', 'word-track', 'word-swap', 'type-zoom', 'word-mask', 'bento-assemble'];
+/**
+ * Subjects sold by how they look in photographs: a place, a dish, a drink, a body, a garment, a landscape. Their
+ * colours come from the subject, and a direction that recolours photographs (riso, duotone) is never dealt to them.
+ */
+/** Subjects whose own register is a serif on a warm pale ground: there it is the subject's voice, not the cafe cliche. */
+export const SERIF_ON_CREAM = ['heritage', 'luxury'];
+export const PHOTO_LED = ['hospitality', 'heritage', 'travel', 'food', 'coffee', 'tea', 'beauty', 'wellness', 'nature', 'organic', 'fashion'];
+/** Set pieces and components used by the last few builds are dealt again only when nothing else fits. */
+export const RECENT_PIECES = 3;
 export const SCROLL_STORIES = ['scroll-words', 'stack', 'scrub', 'rail'];
-export const KINDS = ['landing', 'product', 'portfolio', 'event', 'venue', 'brand', 'campaign', 'app', 'docs'];
+export const KINDS = ['landing', 'site', 'product', 'portfolio', 'event', 'venue', 'brand', 'campaign', 'app', 'docs'];
+/** Kinds that build a product interface rather than persuade: no scroll set pieces, no photograph floor. */
+export const OPERATE_KINDS = ['app', 'docs'];
 
 export function loadLibrary(dir = LIB) {
   const read = (f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
@@ -17,7 +33,27 @@ export function loadLibrary(dir = LIB) {
     pairings: read('type.json').pairings,
     compositions: read('compositions.json').compositions,
     signatures: read('signatures.json').signatures,
+    directions: read('directions.json').directions,
+    components: fs.existsSync(path.join(dir, 'components.json')) ? read('components.json').components : [],
+    landing: fs.existsSync(path.join(dir, 'landing-patterns.json')) ? read('landing-patterns.json').patterns : [],
   };
+}
+
+/**
+ * The compositions that fit a page: its kind, the kind of subject a composition needs (a product interface only for
+ * software, one object on a plinth only for a product), and for a subject sold by its photographs only those that
+ * open on a photograph, when its kind has one. The model chooses among them.
+ */
+export function compositionsFor(lib, kind, moods = []) {
+  const fits = (c) => c.kinds.includes(kind === 'site' ? 'landing' : kind) && (!c.needs || c.needs.some((m) => moods.includes(m)));
+  const all = lib.compositions.filter(fits);
+  const photo = all.filter((c) => c.photoFirst);
+  return moods.some((m) => PHOTO_LED.includes(m)) && photo.length ? photo : all;
+}
+
+/** The reading order a buyer expects for this kind of page (ui-ux-pro-max landing patterns): the first that fits, or null. */
+export function landingFor(patterns, kind, moods = []) {
+  return patterns.find((p) => p.kinds.includes(kind) && (!p.moods.length || p.moods.some((m) => moods.includes(m)))) ?? null;
 }
 
 export function moodsOf(lib) {
@@ -37,7 +73,7 @@ export function rngFrom(seed) {
 }
 
 /** Weighted pick: score by overlap, drop recently used ids unless nothing else is left. */
-function pick(items, { moods = [], recent = new Set(), rng, allow = () => true }) {
+function pick(items, { moods = [], recent = new Set(), rng, allow = () => true, strict = false }) {
   const allowed = items.filter(allow);
   const pool0 = allowed.length ? allowed : items;
   const scored = pool0.map((it) => ({ it, w: 1 + 3 * (it.moods ?? []).filter((m) => moods.includes(m)).length }));
@@ -46,55 +82,197 @@ function pick(items, { moods = [], recent = new Set(), rng, allow = () => true }
   // whole list (mood still weighs in) before ever repeating a recent pick.
   const freshMatching = matching.filter((s) => !recent.has(s.it.id));
   const freshAll = scored.filter((s) => !recent.has(s.it.id));
-  const pool = freshMatching.length ? freshMatching : freshAll.length ? freshAll : scored;
+  // strict (palettes): the subject's moods outrank novelty, so repeat an on-mood item before leaving the mood.
+  const pool = freshMatching.length ? freshMatching : strict && matching.length ? matching : freshAll.length ? freshAll : scored;
   const total = pool.reduce((n, s) => n + s.w, 0);
   let r = rng() * total;
   for (const s of pool) { r -= s.w; if (r <= 0) return s.it; }
   return pool.at(-1).it;
 }
 
-/** Type must speak the palette's language: share a mood with it, and no serif display on a cream ground. */
-export function typeFits(pairing, palette, creamBg) {
+/**
+ * Type must speak the palette's language (share a mood with it) or the subject's own (`subject`, for a subject sold
+ * by its photographs), and no serif display on a cream ground.
+ */
+export function typeFits(pairing, palette, creamBg, subject = []) {
   if (creamBg && pairing.display.serif) return false;
-  return !palette || pairing.moods.some((m) => palette.moods.includes(m));
+  return !palette || !palette.moods?.length || pairing.moods.some((m) => palette.moods.includes(m) || subject.includes(m));
 }
 
-function recentIds(history, key) {
-  return new Set(history.slice(-RECENT).map((h) => h[key]).filter(Boolean));
+/**
+ * Put a palette taken from the subject's picture (palette-from.mjs) in place of the dealt one. The type is
+ * dealt again, from the same seed, only when it no longer fits: a serif display on a cream ground.
+ */
+export function applyPalette(d, palette, lib) {
+  const creamBg = isCream(hexToRgb(palette.roles.bg)) && !(d.moods ?? []).some((m) => SERIF_ON_CREAM.includes(m));
+  const next = { ...d, palette };
+  if (!d.type || typeFits(d.type, palette, creamBg, (d.moods ?? []).some((m) => PHOTO_LED.includes(m)) ? d.moods : [])) return next;
+  const serifOk = (p) => d.direction?.serif == null || p.display.serif === d.direction.serif;
+  const moods = d.wildcard && !(d.moods ?? []).some((m) => PHOTO_LED.includes(m)) ? d.direction?.typeMoods ?? d.moods : d.moods;
+  const subject = (d.moods ?? []).some((m) => PHOTO_LED.includes(m)) ? d.moods : [];
+  const fits = lib.pairings.filter((p) => typeFits(p, palette, creamBg, subject) && serifOk(p));
+  const pool = fits.length ? fits : lib.pairings.filter((p) => typeFits(p, palette, creamBg, subject));
+  next.type = pick(pool, { moods, rng: rngFrom((d.seed ?? 1) + 1), strict: subject.length > 0 });
+  return next;
+}
+
+function recentIds(history, key, n = RECENT) {
+  return new Set(history.slice(-n).flatMap((h) => h[key] ?? []).filter(Boolean));
+}
+
+function shuffled(list, rng) {
+  const out = [...list];
+  for (let i = out.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(rng() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+/** The art directions a page can take, those on the subject's moods first, for the model to choose from. */
+export function directionsFor(lib, kind, moods = []) {
+  const mode = OPERATE_KINDS.includes(kind) ? 'operate' : 'persuade';
+  const photoLed = moods.some((m) => PHOTO_LED.includes(m));
+  const usable = lib.directions.filter((d) => (d.modes ?? ['persuade']).includes(mode) && !(photoLed && d.recolours));
+  const onMood = (d) => d.moods.some((m) => moods.includes(m));
+  return { near: usable.filter(onMood), far: usable.filter((d) => !onMood(d)) };
+}
+
+/**
+ * The art direction. With probability RISK[risk] it is taken from outside the subject's moods, so
+ * the same brief does not always land on the same look; the last few directions are never repeated.
+ */
+export function pickDirection(directions, { moods = [], history = [], rng, risk = 'bold', pin, mode = 'persuade', schemes = null }) {
+  const pinned = directions.find((d) => d.id === pin);
+  if (pinned) return { direction: pinned, wildcard: false };
+  const recent = recentIds(history, 'direction', RECENT_DIRECTIONS);
+  const photoLed = moods.some((m) => PHOTO_LED.includes(m));
+  // A wildcard changes layout, type and motion, never the subject's colours: only directions whose scheme the
+  // subject's palettes can serve, and none that recolours the photographs of a subject sold by them.
+  const fits = (d) => !(photoLed && d.recolours) && (!schemes || d.scheme === 'any' || schemes.has(d.scheme));
+  const usable0 = directions.filter((d) => (d.modes ?? ['persuade']).includes(mode));
+  const usable = usable0.filter(fits).length ? usable0.filter(fits) : usable0;
+  const fresh = usable.filter((d) => !recent.has(d.id));
+  const pool = fresh.length ? fresh : usable;
+  const onMood = (d) => d.moods.some((m) => moods.includes(m));
+  const near = moods.length ? pool.filter(onMood) : [...pool];
+  const far = moods.length ? pool.filter((d) => !onMood(d)) : [];
+  // A subject that matches one or two directions would get the same look every time: unless the
+  // risk is safe, the near pool always holds at least MIN_NEAR directions.
+  if (risk !== 'safe') for (const d of shuffled(far, rng)) { if (near.length >= MIN_NEAR) break; near.push(d); }
+  const goFar = far.length > 0 && (near.length === 0 || rng() < (RISK[risk] ?? RISK.bold));
+  const from = goFar ? far : near;
+  const direction = from[Math.floor(rng() * from.length)];
+  return { direction, wildcard: moods.length > 0 && !onMood(direction) };
 }
 
 /**
  * @param {{ lib, kind:string, moods:string[], history?:object[], rng:() => number, pins?:object, brand?:boolean }} o
  */
-export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = false }) {
+export function deal({ lib, kind, moods, history = [], rng, pins = {}, brand = false, look = 'deal', risk = 'bold', lang = null, pages = [] }) {
+  // look: 'deal' picks palette and type from the library; 'model' leaves them to the model (design.mjs set).
+  const ownLook = brand || look === 'model';
   const byId = (list, id) => list.find((x) => x.id === id) ?? null;
-  const palette = brand ? null : (byId(lib.palettes, pins.palette)
-    ?? pick(lib.palettes, { moods, rng, recent: recentIds(history, 'palette') }));
-  const creamBg = palette && isCream(hexToRgb(palette.roles.bg));
-  const type = brand ? null : (byId(lib.pairings, pins.type)
-    ?? pick(lib.pairings, { moods, rng, recent: recentIds(history, 'type'), allow: (p) => typeFits(p, palette, creamBg) }));
+  const persuade = !OPERATE_KINDS.includes(kind);
+  const mode = persuade ? 'persuade' : 'operate';
+  const onSubject = lib.palettes.filter((p) => p.moods.some((m) => moods.includes(m)));
+  const schemes = brand || pins.palette || !onSubject.length ? null : new Set(onSubject.map((p) => p.scheme));
+  const dealt = kind !== 'docs' && lib.directions?.length
+    // A product interface stays on the subject's moods unless the risk is wild.
+    ? pickDirection(lib.directions, { moods, history, rng, risk: persuade ? risk : risk === 'wild' ? 'bold' : 'safe', pin: pins.direction, mode, schemes })
+    : { direction: null, wildcard: false };
+  const { direction, wildcard } = dealt;
+  // A wildcard direction brings its own type moods; otherwise the subject's moods lead (the direction's when none are given).
+  // Colour always comes from the subject: a wildcard never recolours it.
+  const lead = (own) => (wildcard ? own : moods.length ? moods : own ?? moods);
+  const paletteMoods = moods.length ? moods : direction?.moods ?? [];
+  const photoLed = moods.some((m) => PHOTO_LED.includes(m));
+  // A subject sold by its photographs keeps its own type register too; the wildcard changes layout and motion.
+  const typeMoods = photoLed ? moods : lead(direction?.typeMoods);
+  const scheme = direction && direction.scheme !== 'any' ? direction.scheme : null;
+  const palette = ownLook ? null : (byId(lib.palettes, pins.palette)
+    ?? pick(lib.palettes, { moods: paletteMoods, rng, recent: recentIds(history, 'palette'), allow: (p) => !scheme || p.scheme === scheme, strict: moods.some((m) => PHOTO_LED.includes(m)) }));
+  const creamBg = palette && isCream(hexToRgb(palette.roles.bg)) && !moods.some((m) => SERIF_ON_CREAM.includes(m));
+  const serifOk = (p) => direction?.serif == null || p.display.serif === direction.serif;
+  const type = ownLook ? null : (byId(lib.pairings, pins.type)
+    ?? pick(lib.pairings, { moods: typeMoods, rng, recent: recentIds(history, 'type'), allow: (p) => typeFits(p, palette, creamBg, photoLed ? moods : []) && serifOk(p), strict: photoLed }));
+  const shortlist = new Set(compositionsFor(lib, kind, moods).map((c) => c.id));
   const composition = byId(lib.compositions, pins.composition)
-    ?? pick(lib.compositions, { rng, recent: recentIds(history, 'composition'), allow: (c) => c.kinds.includes(kind) });
+    ?? pick(lib.compositions, { rng, recent: recentIds(history, 'composition'), allow: (c) => shortlist.has(c.id) });
 
   const candidates = composition.signatures;
   const recentSig = recentIds(history, 'signature');
   const signature = pins.signature && lib.signatures.some((x) => x.id === pins.signature) ? pins.signature
     : pick(candidates.map((id) => ({ id })), { rng, recent: recentSig }).id;
-  const supports = candidates.filter((s) => s !== signature).sort(() => rng() - 0.5).slice(0, 2);
-  const persuade = !['app', 'docs'].includes(kind);
+  const supportPool = (direction?.supports ?? candidates).filter((s) => s !== signature && lib.signatures.some((x) => x.id === s));
+  const supports = shuffled(supportPool, rng).slice(0, 2);
   if (persuade && ![signature, ...supports].some((s) => SCROLL_STORIES.includes(s))) supports[1] = SCROLL_STORIES[Math.floor(rng() * 3)];
 
   const sig = (id) => lib.signatures.find((s) => s.id === id);
+  const sitePages = kind === 'site' ? normalizePages(pages) : [];
+  const perPage = persuade && direction ? dealSetPieces(direction, { rng, history, pages: Math.max(1, sitePages.length) }) : [[]];
+  const component = pickComponent(lib.components ?? [], { direction, mode, rng, history, pin: pins.component });
+  const scene = persuade && direction?.scenes?.length ? pickScene(direction, { rng, history, pin: pins.scene }) : null;
   return {
-    version: 1,
+    version: 3,
     kind,
     moods,
+    lang,
     brand,
+    look: brand ? 'brand' : look,
+    risk: direction ? risk : null,
+    direction,
+    wildcard,
     palette,
     type,
     composition,
-    motion: { signature: sig(signature), supports: supports.map(sig) },
+    landing: landingFor(lib.landing ?? [], kind, moods),
+    pages: sitePages.map((p, i) => ({ path: p, setPieces: perPage[i] })),
+    motion: { signature: sig(signature), supports: supports.map(sig), setPieces: perPage[0], component, scene },
   };
+}
+
+/** Page paths for a multi-page site: "/", "/menu", ... in the order given, at most 8, no repeats. */
+export function normalizePages(pages = []) {
+  const list = (Array.isArray(pages) ? pages : String(pages).split(','))
+    .map((p) => String(p).trim()).filter(Boolean).map((p) => (p.startsWith('/') ? p : `/${p}`));
+  const out = [...new Set(list.length ? list : ['/'])].slice(0, 8);
+  return out.includes('/') ? out : ['/', ...out].slice(0, 8);
+}
+
+/**
+ * Two set pieces per page, never the same piece on two pages. The direction's own pieces come first;
+ * pieces the last few builds used come last, so the next build moves differently.
+ */
+export function dealSetPieces(direction, { rng, history = [], pages = 1 }) {
+  const recent = recentIds(history, 'setPieces', RECENT_PIECES);
+  const order = (list) => [...shuffled(list.filter((id) => !recent.has(id)), rng), ...shuffled(list.filter((id) => recent.has(id)), rng)];
+  const own = order(direction.setPieces);
+  const rest = order(SET_PIECES.filter((id) => !direction.setPieces.includes(id)));
+  const queue = [...own, ...rest];
+  return Array.from({ length: pages }, () => [queue.shift(), queue.shift()].filter(Boolean));
+}
+
+/** The live first-screen object (kit/motion/scene.js) from the direction's list, not the one the last build had. */
+export function pickScene(direction, { rng, history = [], pin }) {
+  if (pin && direction.scenes.includes(pin)) return pin;
+  const recent = recentIds(history, 'scene', 1);
+  const fresh = direction.scenes.filter((id) => !recent.has(id));
+  const from = fresh.length ? fresh : direction.scenes;
+  return from[Math.floor(rng() * from.length)];
+}
+
+/** One library component that fits the direction (or the mode when there is none), not one of the last few. */
+export function pickComponent(components, { direction, mode, rng, history = [], pin }) {
+  const pinned = components.find((c) => c.id === pin);
+  if (pinned) return pinned;
+  const fits = components.filter((c) => c.modes.includes(mode) && (!direction || c.fits.includes(direction.id)));
+  const pool = fits.length ? fits : components.filter((c) => c.modes.includes(mode));
+  if (!pool.length) return null;
+  const recent = recentIds(history, 'component', RECENT_PIECES);
+  const fresh = pool.filter((c) => !recent.has(c.id));
+  const from = fresh.length ? fresh : pool;
+  return from[Math.floor(rng() * from.length)];
 }
 
 export function historyFile() {
@@ -104,5 +282,6 @@ export function historyFile() {
 }
 
 export function summarize(d) {
-  return { palette: d.palette?.id, type: d.type?.id, composition: d.composition.id, signature: d.motion.signature.id };
+  const setPieces = d.pages?.length ? d.pages.flatMap((p) => p.setPieces) : d.motion.setPieces ?? [];
+  return { direction: d.direction?.id, palette: d.palette?.id, type: d.type?.id, composition: d.composition.id, signature: d.motion.signature.id, setPieces, component: d.motion.component?.id, scene: d.motion.scene ?? undefined };
 }

@@ -1,8 +1,13 @@
 // Turns probe facts into findings. Pure: no browser, so every rule is unit-testable.
 import { deltaE, hexToRgb, isCream, isTerracotta } from './color.mjs';
 import { lintCopy } from './copy.mjs';
+import { parseConcept, richnessRules } from './rules-richness.mjs';
+import { finishRules } from './rules-finish.mjs';
+import { breakRules, slopRules } from './rules-slop.mjs';
+import { videoRules } from './rules-video.mjs';
+import { PHOTO_LED } from './deal.mjs';
 
-export const PERSUADE_KINDS = ['landing', 'product', 'portfolio', 'event', 'venue', 'brand', 'campaign'];
+export const PERSUADE_KINDS = ['landing', 'site', 'product', 'portfolio', 'event', 'venue', 'brand', 'campaign'];
 
 const SYSTEM_FONTS = ['serif', 'sans-serif', 'monospace', 'system-ui', 'ui-sans-serif', 'ui-serif', '-apple-system',
   'blinkmacsystemfont', 'segoe ui', 'arial', 'helvetica', 'helvetica neue', 'times new roman', 'times', 'georgia', 'verdana'];
@@ -104,6 +109,12 @@ function layoutRules({ text, overflow, targets, css, fold = {} }) {
   if (css.transitionAll.length) out.push(f('FAIL', 'transition-all', `transition: all on ${css.transitionAll.slice(0, 3).join('; ')}`, 'list the properties: transition: transform 160ms var(--ease-out), opacity 160ms'));
   if (css.easeIn.length) out.push(f('WARN', 'ease-in', `ease-in timing on ${css.easeIn.slice(0, 2).join('; ')}`, 'use var(--ease-out) for anything that enters or responds'));
   if (css.vh100.length) out.push(f('WARN', 'vh-unit', `100vh in ${css.vh100[0]}`, 'use 100svh or 100dvh so mobile browser bars do not crop it'));
+  const tokens = css.undefinedTokens ?? [];
+  if (tokens.length) {
+    const scale = [...new Set(tokens.flatMap((t) => t.scale))];
+    out.push(f('FAIL', 'token-undefined', `design token(s) used but never defined: ${tokens.map((t) => `\`${t.name}\``).join(', ')}; each property falls back to its initial value (a padding or gap of 0, a transparent colour)`,
+      `use a step the tokens define${scale.length ? ` (${scale.join(', ')})` : ''}, or define the token in tokens.css`));
+  }
   return out;
 }
 
@@ -126,6 +137,37 @@ function motionRules({ motion, kind }) {
   return out;
 }
 
+/** A subject sold by its photographs is shown in true colour. */
+function photoColourRules({ photoColour, deal }) {
+  const moods = deal?.moods ?? [];
+  if (!photoColour?.count || !moods.some((m) => PHOTO_LED.includes(m))) return [];
+  if (photoColour.count * 3 <= photoColour.total) return [];
+  return [f('FAIL', 'photo-recoloured', `${photoColour.count} of ${photoColour.total} photographs or videos are shown recoloured (grey, sepia, hue-shifted, a riso or blend layer): ${photoColour.treated.slice(0, 3).join('; ')}`,
+    `a ${moods.join(', ')} subject is sold by how it really looks: show the photographs in true colour and take the palette from them (start.mjs --palette-from <hero picture>); one treated image at most`)];
+}
+
+/** On a phone the navigation stays reachable, and controls stay readable. */
+function mobileRules({ nav, controlText = [], marquees = [] }) {
+  const out = [];
+  const wide = nav?.[1440];
+  const narrow = nav?.[390];
+  if (wide?.navs && narrow && narrow.links < wide.links && !narrow.toggle) {
+    out.push(f('FAIL', 'nav-mobile', `at 390 px the header shows ${narrow.links} of its ${wide.links} navigation links and no menu button`,
+      'keep the links as a wrapping or scrolling row (the kit\'s .nav does), or add a menu button with aria-expanded that opens them; never display:none with nothing in its place'));
+  }
+  if (marquees.length) out.push(f('WARN', 'marquee-pause', `an endless band with no pause button: ${marquees.slice(0, 2).join('; ')}`, 'add <button type="button" class="craft-pause" data-marquee-toggle aria-pressed="false"> right after it, labelled in the page language (WCAG 2.2.2)'));
+  if (controlText.length) out.push(f('FAIL', 'control-text-small', `controls or labels under 14 px at 390: ${controlText.slice(0, 3).join('; ')}`, 'set buttons, fields and their labels at var(--t-sm) (14 px) or larger'));
+  return out;
+}
+
+/** Scroll-driven motion must be finished while its element can be read, on every kind of page. */
+function lateRules({ motion }) {
+  const late = motion?.late ?? [];
+  if (!late.length) return [];
+  return [f('FAIL', 'scrub-late', `scroll-driven motion still running as its element leaves the screen: ${late.slice(0, 3).join('; ')}`,
+    'drive it with the kit (data-scrub writes --p, which reaches 1 when the element\'s centre is at 40% of the screen) or map your own progress the same way; never over the whole pass from entering to leaving')];
+}
+
 function runtimeRules({ consoleErrors, network }) {
   const out = [];
   if (consoleErrors.length) out.push(f('FAIL', 'console', `${consoleErrors.length} console error(s): ${consoleErrors.slice(0, 2).join(' | ')}`, 'fix the error; a clean console is required'));
@@ -138,7 +180,8 @@ function runtimeRules({ consoleErrors, network }) {
 export function evaluate(facts) {
   const out = [
     ...documentRules(facts), ...fontRules(facts), ...lookRules(facts), ...layoutRules(facts),
-    ...visibilityRules(facts), ...motionRules(facts), ...runtimeRules(facts),
+    ...visibilityRules(facts), ...motionRules(facts), ...lateRules(facts), ...mobileRules(facts), ...photoColourRules(facts), ...richnessRules(facts), ...runtimeRules(facts), ...slopRules(facts), ...videoRules(facts), ...finishRules(facts),
+    ...(facts.deal?.direction && PERSUADE_KINDS.includes(facts.kind) ? breakRules({ slop: facts.slop, concept: parseConcept(facts.concept) }) : []),
     ...lintCopy(`${facts.doc.text}\n${facts.doc.title}\n${facts.doc.description ?? ''}`, facts.doc.ctas),
   ];
   return out.sort((a, b) => (a.level === b.level ? 0 : a.level === 'FAIL' ? -1 : 1));

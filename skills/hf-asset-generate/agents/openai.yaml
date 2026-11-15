@@ -1,0 +1,3 @@
+interface:
+  display_name: "HF Asset Generate"
+  short_description: "Free images, edits, short clips and voice over the Hugging Face MCP server"

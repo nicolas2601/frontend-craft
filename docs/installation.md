@@ -1,6 +1,6 @@
 # Installation
 
-frontend-craft is a set of Agent Skills: folders with a `SKILL.md`, scripts and data. Install **all of them as siblings**: the router (`frontend-craft`) sends websites to `design-taste-frontend`, polish to `impeccable` and the Emil skills, and `craft-motion`, `craft-review` and `craft-learn` call scripts inside `frontend-craft`.
+frontend-craft is a set of Agent Skills: folders with a `SKILL.md`, scripts and data. Install **all of them as siblings**: the router (`frontend-craft`) builds websites with its own deal and takes their photographs from `design-taste-frontend`, sends polish to `impeccable` and the Emil skills, and `craft-motion`, `craft-review` and `craft-learn` call scripts inside `frontend-craft`.
 
 Requirements: Node 22 or later; Chrome, Chromium or Edge for the checkers (or any browser at `CHROME_PATH`); Python 3 for `ui-ux-pro-max`; ffmpeg optional (photo crops in `design-taste-frontend`).
 
@@ -8,7 +8,7 @@ What each bundled skill needs beyond its own files:
 
 | Skill | Needs | Checked on a clean HOME |
 |---|---|---|
-| `design-taste-frontend` | Node, Chrome; network for Google Fonts and licensed photo frames fetched on demand | `start.mjs deal` and `gate.mjs` run |
+| `design-taste-frontend` | Node; network for licensed photo frames fetched on demand (Wikimedia Commons); Chrome for its own gate on a quiet site | `photos.mjs`, `start.mjs deal` and `gate.mjs` run |
 | `impeccable` | Nothing preinstalled: `scripts/impeccable` downloads its engine (about 23 MB, pinned version, verified against `scripts/engine-checksums.txt`) on first run into `~/.impeccable/bin` | engine 0.1.23 downloaded and answered |
 | `ui-ux-pro-max` | Python 3, no packages; run `scripts/search.py` from its folder | `--design-system` search answered |
 | `ui-animation` | Only for measuring a screen recording: ffmpeg and `pip install opencv-python numpy scipy` | not run |
@@ -22,11 +22,11 @@ npx skills@latest add nicolas2601/frontend-craft --all                     # eve
 npx skills@latest add nicolas2601/frontend-craft -g -a codex -s '*' -y     # every skill, one agent, global
 ```
 
-The CLI knows each tool's skills folder (Claude Code, Codex, OpenCode, Gemini CLI, Cursor, pi and others). Installing a single skill with `-s frontend-craft` works, but the router then has no website engine: `start.mjs` falls back to its own website deal and says so.
+The CLI knows each tool's skills folder (Claude Code, Codex, OpenCode, Gemini CLI, Cursor, pi and others). Installing a single skill with `-s frontend-craft` works, but the brief then has no photo library: it tells the agent to download licensed stand-ins by hand.
 
 ## The finish gates
 
-Two gates decide when an agent may stop: `design-taste-frontend/scripts/gate.mjs` for websites and `frontend-craft/scripts/gate.mjs` for apps, docs and fallback websites. Each one only acts on a build armed in the project folder, allows the stop after its block budget, and prints a fix list when it blocks. How each harness runs them:
+Two gates decide when an agent may stop: `frontend-craft/scripts/gate.mjs` for websites, apps and docs, and `design-taste-frontend/scripts/gate.mjs` for a quiet site built with that skill's own run. Each one only acts on a build armed in the project folder, allows the stop after its block budget, and prints a fix list when it blocks. How each harness runs them:
 
 | Harness | How the gates run |
 |---|---|
@@ -64,8 +64,10 @@ timeout = 600
 
 OpenCode discovers skills in `~/.config/opencode/skills/`, `~/.claude/skills/` and `~/.agents/skills/` (and the project's `.opencode/skills/`, `.claude/skills/`, `.agents/skills/`). Then:
 
-1. Gate: copy `integrations/opencode/frontend-craft-gate.js` to `~/.config/opencode/plugins/`; OpenCode loads every plugin in that folder (plugin API v2). Do not also list it in `opencode.json`. When a session goes idle it runs the website gate and the frontend-craft gate; a block's fix list is sent back into the same session. Restart OpenCode to load it. `TASTE_GATE` and `FRONTEND_CRAFT_GATE` override the script paths.
-2. Optional agent: copy `integrations/opencode/agents/frontend.md` to `~/.config/opencode/agents/`.
+1. Gate: copy `integrations/opencode/frontend-craft-gate.js` to `~/.config/opencode/plugins/`; OpenCode loads every plugin in that folder (plugin API v2). Do not also list it in `opencode.json`. When a session goes idle it runs the frontend-craft gate and design-taste-frontend's; a block's fix list is sent back into the same session. Restart OpenCode to load it. `TASTE_GATE` and `FRONTEND_CRAFT_GATE` override the script paths.
+2. Agents: copy `integrations/opencode/agents/*.md` to `~/.config/opencode/agents/` (choose `frontend` with Tab): `frontend` (a primary agent that follows the run) and the two read-only reviewer subagents the design review starts, `craft-design-critic` and `craft-motion-auditor` (generated from `references/review.md` by `scripts/review-agents.mjs`).
+3. MCP servers, in `mcp.servers` of `~/.config/opencode/opencode.json`: `"playwright": { "type": "local", "command": ["npx", "-y", "@playwright/mcp@latest"] }`, `"hf-mcp-server": { "type": "remote", "url": "https://huggingface.co/mcp" }` (then `opencode mcp auth hf-mcp-server` once, and turn on Dynamic Spaces in huggingface.co/settings/mcp for the hero loops) and, for references, `"awwwards": { "type": "local", "command": ["npx", "-y", "awwwards-mcp"] }`. `opencode mcp list` shows them; its first call after a restart can print none while the servers start.
+4. `playwright-cli` for the reviewers: `npm install -g @playwright/cli@latest` (or `node <skill>/scripts/setup.mjs --install`).
 
 In a prompt, `@frontend-craft` loads the router for sure.
 

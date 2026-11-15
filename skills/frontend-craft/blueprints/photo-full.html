@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en"><!-- set lang to the copy's language -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{Brand: what it is, for whom or where}}</title>
+  <meta name="description" content="{{one sentence: what it is, for whom, where}}">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <!-- paste the font <link> tags from .craft/brief.md here -->
+  <link rel="stylesheet" href="craft/tokens.css">
+  <link rel="stylesheet" href="craft/craft.css">
+  <link rel="stylesheet" href="craft/layouts.css">
+</head>
+<body>
+<!-- Blueprint: photo-full. Keep the structure, scale and kit attributes; replace every {{...}};
+     rename sections for the subject. Build every .visual for real (a supplied or licensed photograph, or the hero loop). -->
+<header class="nav">
+  <a class="brand" href="#top" data-enter>{{brand name}}</a>
+  <nav class="links" aria-label="Sections"><a href="#s2">{{section 2 label}}</a><a href="#s3">{{section 3 label}}</a></nav>
+  <a class="btn small" href="#action" data-enter data-press>{{primary action: verb + object}}</a>
+</header>
+<main id="top">
+  <section class="l-photo-full">
+    <figure class="visual">{{visual: the subject's best photograph in true colour, full bleed (an img with alt, width and height, object-fit: cover), or its hero loop; the calm part of the picture at the bottom left, where the words sit}}</figure>
+    <h1 class="h-display craft-display" data-words>{{3-7 words: the place or the thing and its promise}}</h1>
+    <p class="lede" data-enter>{{one sentence: what it is, where, for whom}}</p>
+    <div class="actions" data-enter><a class="btn" href="#action" data-press>{{primary action}}</a><a class="btn ghost" href="#s2" data-press>{{what a visitor checks first}}</a></div>
+  </section>
+  <section class="photo-facts" id="s2">
+    <div>
+      <h2 class="h-section craft-display" data-reveal>{{the question a visitor asks first, answered}}</h2>
+      <dl class="ledger" data-reveal="stagger">
+        <div><dt>{{label 1: where}}</dt><dd>{{value 1}}</dd></div>
+        <div><dt>{{label 2: price from}}</dt><dd>{{value 2}}</dd></div>
+        <div><dt>{{label 3: when}}</dt><dd>{{value 3}}</dd></div>
+        <div><dt>{{label 4: what is included}}</dt><dd>{{value 4}}</dd></div>
+      </dl>
+    </div>
+    <figure class="visual" data-mask="up">{{visual: a second photograph: a room, a dish, the product in use; not the hero again}}</figure>
+  </section>
+  <section class="section" id="s3">
+    <h2 class="h-section craft-display" data-reveal>{{what you see there, in pictures}}</h2>
+    <div class="mosaic" data-reveal="stagger">
+      <figure class="visual">{{visual: photograph 3, the large one}}</figure>
+      <figure class="visual">{{visual: photograph 4}}</figure>
+      <figure class="visual">{{visual: photograph 5}}</figure>
+      <figure class="visual">{{visual: photograph 6}}</figure>
+      <figure class="visual">{{visual: photograph 7}}</figure>
+    </div>
+  </section>
+  <section class="section" id="getting-there">
+    <h2 class="h-section craft-display" data-reveal>{{how to get there or how it works}}</h2>
+    <figure class="visual" data-scrub aria-label="{{the way in, from the nearest town}}">{{visual: a map traced from real coordinates (OpenStreetMap; name the source in data-source on the svg); its route drawn with stroke-dashoffset: calc(1 - var(--p)) and pathLength="1", so it is finished while it can be read; the distance and travel time as text beside it}}</figure>
+  </section>
+  <section class="section" id="action">
+    <h2 class="h-display craft-display" data-reveal>{{closing line that repeats the promise}}</h2>
+    <div class="actions" data-reveal><a class="btn" href="{{real link: form, booking, WhatsApp, store}}" data-press>{{primary action}}</a></div>
+  </section>
+</main>
+<footer class="site-footer">
+  <div class="site-footer__top">
+    <p class="site-footer__name">{{brand name}}</p>
+    <p class="site-footer__line muted">{{one sentence: what it is and where}}</p>
+    <a class="btn" href="#action" data-press>{{primary action}}</a>
+  </div>
+  <div class="site-footer__cols">
+    <div class="site-footer__col">
+      <p class="site-footer__h">{{label: where}}</p>
+      <address>{{street and district}}<br>{{town and region}}</address>
+      <a href="{{map link: OpenStreetMap or Google Maps for the address}}">{{see it on the map}}</a>
+    </div>
+    <div class="site-footer__col">
+      <p class="site-footer__h">{{label: contact}}</p>
+      <a href="tel:{{phone, digits only}}">{{phone}}</a>
+      <a href="mailto:{{email}}">{{email}}</a>
+      <a href="{{WhatsApp (https://wa.me/...) or booking link}}">{{WhatsApp or booking}}</a>
+    </div>
+    <div class="site-footer__col">
+      <p class="site-footer__h">{{label: hours, or what a buyer checks last (shipping, support)}}</p>
+      <dl class="site-footer__hours">
+        <div><dt>{{days 1}}</dt><dd>{{hours 1}}</dd></div>
+        <div><dt>{{days 2}}</dt><dd>{{hours 2}}</dd></div>
+      </dl>
+    </div>
+    <nav class="site-footer__col" aria-label="{{label: sections}}">
+      <p class="site-footer__h">{{label: sections}}</p>
+      <a href="#s2">{{section 2 label}}</a>
+      <a href="#s3">{{section 3 label}}</a>
+      <a href="#action">{{primary action}}</a>
+    </nav>
+  </div>
+  <p class="site-footer__fine muted"><span>{{credits: photographs and licences, one line}}</span><a href="#top">{{back to top}}</a></p>
+</footer>
+<script type="module">import { init } from './craft/craft-motion.js'; init(document);</script>
+</body>
+</html>

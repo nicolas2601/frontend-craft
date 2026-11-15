@@ -1,6 +1,117 @@
 # Architecture and decisions
 
-## 2.1: the router and the bundle
+## 3.0: the model designs, scripts check
+
+From 2.2 to 2.6 the deal chose the palette, the type and the composition at random within the subject's moods, so
+two models would not converge on the same page. It worked for variety and failed for judgment: a guesthouse got a
+bento grid, a coffee page a riso palette, and the model built what it was dealt. 3.0 moves every design decision to
+the model and keeps the scripts as the floor:
+
+- `start.mjs` lists the compositions and art directions that fit (photo-first structures only for subjects sold by
+  their photographs) and refuses to start until the model names one of each. Variety now comes from the model's
+  reading of the subject, the direction's set pieces (still dealt) and the history the lists exclude.
+- `design.mjs` takes the model's look (or a Hallmark theme), derives the quiet roles, and refuses what breaks the
+  method in `references/color-type.md`. The check fails while the look is pending, so a page cannot ship on the
+  stand-ins.
+- Hallmark's sloplint runs on the page's own files only: the kit's files follow frontend-craft's token conventions,
+  which Hallmark's gates read differently, so findings there stay warnings and the kit was fixed where its tells were
+  real (tracked-caps labels, sideways overflow, disabled states).
+
+## 2.6: loops that move, without a GPU
+
+A hero loop generated from one still with the same first and last frame barely moves, and the free Hugging Face
+quota allows a few GPU runs a day. So the default loop is made on the machine: `parallax.mjs` asks a small depth
+model (Depth Anything V2 Small, ONNX on the CPU through `lib/depth.py`) where each pixel sits, then renders a
+periodic camera move by inverse mapping: each output pixel samples the still at a position shifted by its depth
+(near things move more, the dolly magnifies them more), with a base zoom computed so no sample ever leaves the
+picture. Periodic means frame n is frame 0, so the loop is exact at any length; the encode goes through `video.mjs`
+with no seam. Scene motion (wind, water) still needs a generated clip; two keyframes (the still and a camera-moved
+edit of it) give Wan a real path, and `video.mjs` joins A to B and B to A before the seam.
+
+Measuring a seam: compare the last-to-first step with the steps around it, not with zero. An encoded loop shows a
+small refresh at every codec keyframe, the seam included; the same step inside the clip measures the same.
+
+## 2.5: the subject decides, reviewers look
+
+The deal used to buy variety with colour: a wildcard direction brought its own moods, so a heritage guesthouse could
+be dealt a riso palette and every photograph tinted to match. Variety now lives in layout, type scale and motion;
+the subject keeps its colours (palettes chosen on its moods only, or taken from its hero picture by
+`lib/palette-from.mjs`: OKLab k-means for grounds and ink, hue bins for the accent, lightness walked until every
+role passes contrast) and its photographs stay in true colour (`PHOTO_LED` subjects never get a direction marked
+`recolours`; `photo-recoloured` fails the page). Compositions can require a kind of subject (`needs`).
+
+Motion is judged by where it happens, not only whether it happens. `data-scrub` maps progress to a readable window
+(top 10% into the screen to centre at 40%), and `scrub-late` re-measures every scroll-linked element at two
+positions (centre at 35% and at 10%) to catch any code, the kit's or the model's, still animating as it leaves.
+Parts of a scrubbed element are placed by their scrub host, and pinned or sticky scenes are left to their own range.
+
+What a script cannot judge goes to two reviewers who did not build the page (`references/review.md`): a design
+critic and a motion and mobile auditor, run in parallel. The plugin ships them as agents generated from the same
+briefs (`scripts/review-agents.mjs`, checked by a test), so Claude Code and every other harness get the same text.
+
+## 2.4: hero loops
+
+A first screen can carry footage instead of a shader when the subject is real (`references/hero-video.md`).
+Generation stays free: the Hugging Face MCP server's Z-Image Turbo makes the still and Wan 2.2
+first-last-frame animates it with the same frame at both ends. `scripts/video.mjs` closes the seam with a
+crossfade after motion interpolation (the generated end frame drifts from the start frame) and encodes mp4,
+webm and a poster. The kit's `data-loop` owns playback (on screen only, poster under reduced motion and
+Save-Data, a sticky pause), and the check reads every looping video in the normal pass (muted, poster, a pause
+control, whether it played in the first screen) and in the reduced-motion pass (still playing).
+
+## 2.3: range and the AI tells
+
+2.3 widens what a deal can be and what the check refuses. Directions carry `modes` (persuade for websites,
+operate for platforms) and `scenes`; `deal()` adds per-page set pieces for `--kind site` (no piece twice), a
+React Bits component from `library/components.json`, a hero scene (`kit/motion/scene.js`, four WebGL shaders),
+and the page language. Recent set pieces, components and scenes are avoided like recent directions. The check
+runs every dealt page, judges the direction's breaks across the site, fails the tells a reviewer called
+machine-made (`rules-slop.mjs`: language, slogan shapes, numbering systems, round badges, a photograph used twice)
+and runs impeccable's detector on each page (`lib/impeccable.mjs`), softening the rules the deal itself chose.
+
+## 2.2: websites get a dealt direction, set pieces and a richness floor
+
+2.1 sent every website to `design-taste-frontend`. Two real runs on 2026-11-13 (a GPT model in Claude Code and MiniMax then
+LongCat in OpenCode, the same cafe prompt) both followed that route faithfully and produced nearly the same still
+page. The cause is in the engine's house rules, not in the models:
+
+- a place page's hero is printed, never dealt (Recipe 3: the photograph on top, words under it);
+- its eight cafe palettes are all a light warm ground with one accent, and every model takes the first one dealt;
+- its cafe photographs come from one pool of 18 frames, shared across builds unless `TASTE_SKILL_RECENT` is set;
+- its checker fails any effect (`effect-kind`) and any scroll-linked motion or parallax (`scroll`) on a place,
+  shop or service page: "the page scrolls plainly and the parts sit still".
+
+That engine is right for a credible, quiet small-business site, and wrong for a user who asks for an animated,
+distinctive one. 2.2 keeps it bundled and unchanged, and changes the route:
+
+```
+skills/frontend-craft      router + the build run for every website, app and docs page
+  library/directions.json  16 art directions (12 in 2.2): grounds, type floor, photo treatment, two template breaks, set pieces
+  kit/set-pieces.css       9 scroll scenes on data-scrub (iris, type-pass, zoom, curtain, fan, letters, develop, tilt, split)
+  scripts/lib/rules-richness.mjs   the floor a dealt website must clear
+skills/design-taste-frontend  photo library for every website; the run for a quiet site the user asks for
+```
+
+- **Variety is dealt, not requested.** A prompt cannot make a model inventive; a deal can make two runs different.
+  The direction is drawn at random with history (never one of the last four), and with `--risk bold` about 40% of
+  the time from outside the subject's moods. A subject that matches fewer than three directions draws from at
+  least three, so no single direction can own a trade (the coffee brief had one match and got it 60% of the time
+  before this rule).
+- **Richness is checked, not hoped for.** On a dealt website the check fails: fewer distinct section grounds than
+  the direction asks, fewer photographs, no full-bleed photograph where the direction wants one, a headline under
+  the direction's size, scroll-linked motion in fewer than two sections, a dealt set piece missing, and a missing
+  or thin `.craft/concept.md`. Blueprints and framework builds are checked without the direction (they are
+  skeletons).
+- **The concept is written down.** `.craft/concept.md` (Idea, Signature, Rejected) makes the agent name the one
+  thing only this subject has and the defaults it refuses, before markup. The check reads its structure, not its
+  quality; the screenshots and the impeccable pass judge quality.
+- **Taste's assets, not its house rules.** Photographs come from its `photos.mjs` (licensed, credited); the brief
+  says to ignore the layout notes that command prints. Its gate never arms on a frontend-craft build: only its own
+  `start.mjs` or `gate.mjs --start` arm it, and a `.taste-skill/found.json` left by a photo search does not.
+- **Finish passes sharpen, they do not tame.** impeccable and review-animations run after `RESULT: PASS`; the
+  router tells the agent to refuse fixes that remove set pieces, flatten grounds or shrink type.
+
+## 2.1: the router and the bundle (superseded for websites by 2.2)
 
 The 2.0 pages passed their own check and still looked flat: text, cards and a chart, no photographs, no
 texture, no scenes. The check measured defects, not richness, and the skill had no visual layer to draw from.

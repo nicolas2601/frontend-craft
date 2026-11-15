@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Patio en Barichara</title>
+  <meta name="description" content="Un loop de video del kit de frontend-craft: se reproduce en pantalla, se pausa con un botón y respeta el movimiento reducido.">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/craft.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/surfaces.css">
+  <style>
+    :root { --c-bg: #f3efe6; --c-surface: #e7e0d2; --c-ink: #1d1a16; --c-muted: #5d564c; --c-line: #cfc6b5; --c-accent: #9c2f5a; --c-accent-ink: #fff; }
+    html, body { margin: 0; background: var(--c-bg); color: var(--c-ink); font: 18px/1.5 system-ui, sans-serif; }
+    main { display: grid; grid-template-columns: 1fr 1fr; min-height: 100svh; }
+    h1 { font-size: 64px; line-height: 1; margin: 0; padding: 48px; align-self: end; }
+    .craft-loop { min-height: 100svh; }
+    .after { min-height: 120svh; padding: 48px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Patio a las cinco</h1>
+  <div class="craft-loop">
+    <video data-loop muted playsinline preload="auto" poster="assets/courtyard-poster.webp" width="320" height="180" aria-hidden="true">
+      <source src="assets/courtyard.webm" type="video/webm">
+      <source src="assets/courtyard.mp4" type="video/mp4">
+    </video>
+    <button type="button" data-loop-toggle aria-pressed="false">Pausar</button>
+  </div>
+</main>
+<section class="after"><p>La hamaca se queda quieta cuando el patio sale de la pantalla.</p></section>
+<script type="module">import { init } from '../../../skills/frontend-craft/kit/craft-motion.js'; init(document);</script>
+</body>
+</html>

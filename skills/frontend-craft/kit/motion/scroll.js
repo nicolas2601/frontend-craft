@@ -1,5 +1,5 @@
 // Scroll-linked effects: scroll-words, scrub, parallax, stack, rail, progress.
-import { clamp, pinned, travel } from './context.js';
+import { clamp, pinned, travel, view } from './context.js';
 import { splitWords } from './split.js';
 
 const PARALLAX_MAX_PX = 160;
@@ -38,17 +38,20 @@ function scrollWords(el, ctx) {
   return () => { stop(); split.restore(); };
 }
 
-// Writes --p (0..1) on the element; style anything with calc(var(--p) * ...).
+// Writes --p (0..1) on the element: 0 as it comes into view, 1 once its centre reaches 40% of the screen, so a
+// line drawn or a picture developed with calc(var(--p) * ...) is finished while it can be read. --travel is the
+// whole pass (0 entering at the bottom, 1 leaving at the top), for depth effects that keep moving.
 function scrub(el, ctx) {
-  const set = (p) => el.style.setProperty('--p', p.toFixed(4));
+  const set = (p, t = p) => { el.style.setProperty('--p', p.toFixed(4)); el.style.setProperty('--travel', t.toFixed(4)); };
+  const clear = () => { el.style.removeProperty('--p'); el.style.removeProperty('--travel'); };
   if (ctx.reduced) {
     set(Number.parseFloat(el.dataset.scrubReduced ?? '1'));
-    return () => el.style.removeProperty('--p');
+    return clear;
   }
   const isPinned = el.dataset.scrub === 'pinned';
   const host = isPinned ? pinOf(el) : el;
-  const stop = ctx.scrub(host, (vh) => set(isPinned ? pinned(host, vh) : travel(el, vh)));
-  return () => { stop(); el.style.removeProperty('--p'); };
+  const stop = ctx.scrub(host, (vh) => (isPinned ? set(pinned(host, vh)) : set(view(el, vh), travel(el, vh))));
+  return () => { stop(); clear(); };
 }
 
 // Depth: data-parallax="0.2" moves the element at a fraction of scroll speed.
@@ -56,8 +59,10 @@ function parallax(el, ctx) {
   if (ctx.reduced) return null;
   const speed = clamp(Number.parseFloat(el.dataset.parallax) || 0.15, -1, 1);
   const stop = ctx.scrub(el, (vh) => {
+    // Measure where the element sits without its own shift, or the shift feeds back into itself and jitters.
     const r = el.getBoundingClientRect();
-    const offset = (r.top + r.height / 2 - vh / 2) * -speed;
+    const shift = Number.parseFloat(String(el.style.translate || '0 0').split(' ')[1]) || 0;
+    const offset = (r.top - shift + r.height / 2 - vh / 2) * -speed;
     el.style.translate = `0 ${clamp(offset, -PARALLAX_MAX_PX, PARALLAX_MAX_PX).toFixed(1)}px`;
   });
   return () => { stop(); el.style.removeProperty('translate'); };

@@ -49,7 +49,8 @@ function differs(a, b) {
   // Unit-sized values (opacity, --p, scale factors) move by hundredths; pixel values by half a pixel.
   return x.some((v, i) => Math.abs(v - y[i]) > (Math.abs(v) <= 2 && Math.abs(y[i]) <= 2 ? 0.02 : 0.5));
 }
-const FIELDS = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+// 13: stroke-dashoffset, so a line drawn by its own scroll code counts as motion too.
+const FIELDS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 13];
 
 /** Indexes of elements whose animated state differs between two snapshots. */
 export function changed(a, b, filter = () => true) {

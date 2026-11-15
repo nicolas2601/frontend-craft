@@ -74,6 +74,12 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Nothing ever scrolls sideways; clip (not hidden) keeps sticky and pinned scenes working. */
+html, body { overflow-x: clip; }
+
+/* A control that cannot be used says so, without shifting. */
+:is(button, .btn, input, select, textarea):disabled, [aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+
 body {
   margin: 0;
   background: var(--c-bg);
@@ -217,3 +223,8 @@ html:not(.craft-js) [data-rail] > [data-rail-track] > * { scroll-snap-align: sta
   [data-scroll-words] .craft-word { opacity: 1; }
   [data-marquee] { overflow-x: auto; }
 }
+
+/* A pause button for something that keeps moving (data-marquee-toggle, data-loop-toggle outside .craft-loop). */
+.craft-pause { display: block; margin: var(--s-2) var(--gutter, 1.25rem) 0 auto; min-height: 44px; padding: 0 var(--s-4); border: 1px solid var(--c-line); border-radius: 999px; background: var(--c-bg); color: var(--c-ink); font: inherit; font-size: var(--t-sm); cursor: pointer; transition: transform 140ms var(--ease-out); }
+.craft-pause:active { transform: scale(0.97); }
+.craft-pause:focus-visible { outline: 2px solid var(--c-accent); outline-offset: 3px; }
