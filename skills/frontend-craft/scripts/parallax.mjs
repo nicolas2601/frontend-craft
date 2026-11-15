@@ -195,7 +195,7 @@ export function doctor() {
 
 const INSTALL = [
   'ffmpeg: Arch `sudo pacman -S ffmpeg` · Debian/Ubuntu `sudo apt install ffmpeg` · macOS `brew install ffmpeg` · Windows `winget install Gyan.FFmpeg`',
-  'numpy and onnxruntime: `python3 -m pip install --user numpy onnxruntime` (where pip --user is blocked, a venv, or Arch `sudo pacman -S python-numpy python-onnxruntime`)',
+  'numpy and onnxruntime: `python3 -m pip install --user numpy onnxruntime` (where pip --user is blocked, a venv, or Arch `sudo pacman -S python-numpy python-onnxruntime-cpu`)',
   'model: downloaded on the first run (99 MB), or pass --depth <map.png>',
 ];
 
