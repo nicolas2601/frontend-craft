@@ -1,5 +1,6 @@
 // The look the model chooses: roles derived from ground, ink and accent; the sober method; fonts that exist.
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import path from 'node:path';
 import { test } from 'node:test';
 import { contrast, hexToRgb } from '../skills/frontend-craft/scripts/lib/color.mjs';
@@ -42,4 +43,16 @@ test('design.mjs needs a reason and warns on a framework default accent', () => 
   const look = evaluateLook({ bg: '#ffffff', ink: '#111111', accent: '#2563eb', display: 'Fraunces', text: 'Inter' }, fonts);
   assert.ok(ids(look.findings).includes('FAIL:why-missing'));
   assert.ok(ids(look.findings).includes('WARN:accent-default'));
+});
+
+test('a Hallmark theme maps onto the kit: its tokens to hex, its faces, its own font links', async () => {
+  const { themeLook } = await import('../skills/frontend-craft/scripts/lib/look.mjs');
+  const text = fs.readFileSync(path.resolve('skills/hallmark/references/themes/atelier.md'), 'utf8');
+  const t = themeLook(text);
+  assert.match(t.bg, /^#[0-9a-f]{6}$/);
+  assert.deepEqual([t.display, t.text], ['Sentient', 'Hanken Grotesk']);
+  assert.match(t.links, /api\.fontshare\.com/);
+  const hedge = themeLook(fs.readFileSync(path.resolve('skills/hallmark/references/themes/hedgerow.md'), 'utf8'), 'sloe');
+  assert.notEqual(hedge.bg, themeLook(fs.readFileSync(path.resolve('skills/hallmark/references/themes/hedgerow.md'), 'utf8')).bg, 'a colourway changes the ground');
+  assert.throws(() => themeLook(text, 'nope'), /no colourway/);
 });

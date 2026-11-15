@@ -1,7 +1,7 @@
 # Colour and type: how to choose them
 
-You choose the colours and the faces, as the designer of this page. Nothing is dealt. ui-ux-pro-max gives candidates,
-the subject gives the reasons, and `scripts/design.mjs set` checks the choice and writes `tokens.css`.
+You choose the colours and the faces, as the designer of this page. Nothing is dealt. ui-ux-pro-max and Hallmark's
+themes give candidates, the subject gives the reasons, and `scripts/design.mjs` checks the choice and writes `tokens.css`.
 
 ## The palette: white, black, one colour with life
 
@@ -66,6 +66,21 @@ Refuse what it suggests that breaks this page: glass and "liquid" styles, gradie
 navy-and-blue palettes for things that are not banks. Measured: for "boutique hotel guesthouse heritage colonial"
 its design system returned a Liquid Glass style with navy `#1E3A8A` and blue `#3B82F6`; a colonial guesthouse is
 white walls, dark wood and terracotta, so the subject wins. Its font pairings and its UX rules are the useful part.
+
+## Finished materials: Hallmark themes
+
+The bundled `hallmark` skill ships fifty themes: each a finished material (paper, ink, accent, faces, surfaces) with a
+picture of a page built in it. When one fits the subject better than a palette built from scratch, take it whole.
+
+```sh
+node <skill>/../hallmark/scripts/theme.mjs deal --genre <editorial|modern-minimal|atmospheric|playful> --prompt "<what the page is>"
+# open the three pictures it names (references/themes/<slug>.jpg), read the one that fits, then:
+node <skill>/scripts/design.mjs theme <slug> [--colourway <name>] --why "<why this material fits the subject>"
+```
+
+`design.mjs theme` maps the theme's tokens onto the kit, keeps its own font links (some faces come from Fontshare),
+and says whether the theme is sober. A theme that colours its grounds is fine when the subject asks for it; the
+default here stays white, black and one accent.
 
 ## Check and write the choice
 

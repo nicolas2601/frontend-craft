@@ -25,6 +25,8 @@ export function googleFontsUrl(type) {
 }
 
 export function fontLinks(type) {
+  // A theme from another foundry ships its own link tags.
+  if (type.links) return type.links;
   return [
     '<link rel="preconnect" href="https://fonts.googleapis.com">',
     '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
@@ -141,10 +143,14 @@ function directionBlock(d) {
     'The composition below is the skeleton (section order, first screen); this direction decides grounds, scale, pictures and the two breaks. Where they disagree, the direction wins.', ''];
 }
 
-function photosBlock(d, { taste }) {
+function photosBlock(d, { taste, hallmark = null }) {
   if (!d.direction) return [];
   const t = taste ? `node ${taste}/scripts/photos.mjs` : null;
   const lines = ['## Photographs', 'Real photographs carry the page, never empty boxes or drawn stand-ins. Use the client\'s own files when given.'];
+  if (hallmark) {
+    lines.push('A second library, 755 Wikimedia Commons photographs (CC0, CC BY, CC BY-SA), searched by subject with honest match notes and the credit line each one needs:', '', '```sh',
+      `node ${hallmark}/scripts/theme.mjs photos "<the subject>" "<a second subject>" --n 4 --save assets/photos`, '```', '');
+  }
   if (t) {
     lines.push('With none, take licensed frames from the bundled library and Wikimedia Commons (from the project folder):', '', '```sh',
       'export TASTE_SKILL_RECENT="$HOME/.local/state/frontend-craft/photos-recent.json"   # later builds get other frames',
@@ -170,7 +176,7 @@ function conceptBlock(d) {
 }
 
 /** The model chooses the colours and type: the method, where candidates come from, and the command that checks the choice. */
-function lookBlock(d, { uupm = '<skill>/../ui-ux-pro-max', design = '<skill>/scripts/design.mjs', colorRef = 'references/color-type.md' } = {}) {
+function lookBlock(d, { uupm = '<skill>/../ui-ux-pro-max', hallmark = '<skill>/../hallmark', design = '<skill>/scripts/design.mjs', colorRef = 'references/color-type.md' } = {}) {
   const subject = d.moods.join(' ') || '<the subject in 3-5 words>';
   const photo = d.moods.some((m) => PHOTO_LED.includes(m));
   return ['## Colour and type: you choose them',
@@ -178,7 +184,9 @@ function lookBlock(d, { uupm = '<skill>/../ui-ux-pro-max', design = '<skill>/scr
     '1. Candidates (data, not orders; refuse glass styles, default blues, purple, gradients and carousels it suggests):', '', '```sh',
     `python3 ${uupm}/scripts/search.py "<what is sold> ${subject}" --design-system`,
     `python3 ${uupm}/scripts/search.py "<the subject's character in 2-4 words>" --domain typography -n 6`,
-    `python3 ${uupm}/scripts/search.py "<the headline face's feel>" --domain google-fonts -n 8`, '```', '',
+    `python3 ${uupm}/scripts/search.py "<the headline face's feel>" --domain google-fonts -n 8`,
+    `node ${hallmark}/scripts/theme.mjs deal --genre <editorial|modern-minimal|atmospheric|playful> --prompt "<what the page is>"   # three finished materials with pictures`, '```', '',
+    `   A Hallmark theme that fits is taken whole: \`node ${design} theme <slug> --why "..."\`.`, '',
     ...(photo ? [`2. The accent from the subject's own picture: \`node ${design} accents <hero photograph>\` lists the colours in it; the strongest material colour usually gives the page its life.`, ''] : []),
     `${photo ? 3 : 2}. Decide and check (it writes tokens.css, or says what breaks the method and writes nothing):`, '', '```sh',
     `node ${design} set --bg "#fbfaf7" --ink "#151413" --accent "<hex>" --display "<headline face>" --text "<text face>" --why "<one line: where the accent and the faces come from>"`, '```', '',
@@ -213,7 +221,7 @@ export function briefMd(d, { kitDir, checkCmd, taste = null, setPiecesRef = 'ref
   lines.push(`## Composition: ${c.id}`, c.idea, '', `First screen: ${c.firstScreen}`, '',
     'Sections, in order (rename them for the subject; keep the pacing):', ...c.sections.map((s, i) => `${i + 1}. ${s}`), '');
   if (d.landing) lines.push(`Reading order a visitor expects on this kind of page (ui-ux-pro-max, ${d.landing.id}): ${d.landing.order.join(' > ')}. Main action: ${d.landing.cta}. Lay the sections above along it; where they differ, the composition's pacing wins. Proof means what the client gave you, never invented.`, '');
-  lines.push(...conceptBlock(d), ...pagesBlock(d, { setPiecesRef }), ...platformBlock(d), ...referencesBlock(d), ...photosBlock(d, { taste }));
+  lines.push(...conceptBlock(d), ...pagesBlock(d, { setPiecesRef }), ...platformBlock(d), ...referencesBlock(d), ...photosBlock(d, { taste, hallmark: tools.hallmark ?? null }));
   lines.push('## Motion', motionBlock(d, setPiecesRef),
     '- Entrance: data-enter on 3-6 first-screen elements in reading order (nav, headline, line, action, visual); done by 1.5 s.',
     '- Press feedback: data-press on every button and button-like link.', '');

@@ -222,7 +222,7 @@ export function run(argv, cwd = process.cwd()) {
   const rel = path.relative(cwd, script);
   const checkCmd = `node ${rel.startsWith('..') ? script : rel}`;
   const ref = (f) => path.join(SKILL, 'references', f);
-  const tools = { uupm: path.join(SKILL, '..', 'ui-ux-pro-max'), design: path.join(SKILL, 'scripts', 'design.mjs'), colorRef: ref('color-type.md') };
+  const tools = { uupm: path.join(SKILL, '..', 'ui-ux-pro-max'), hallmark: path.join(SKILL, '..', 'hallmark'), design: path.join(SKILL, 'scripts', 'design.mjs'), colorRef: ref('color-type.md') };
   const brief = briefMd(current, { kitDir, checkCmd, taste: tasteSkill(), setPiecesRef: ref('set-pieces.md'), componentsRef: ref('components.md'), surfacesRef: ref('surfaces.md'), scenesRef: ref('scenes.md'), tools });
   fs.writeFileSync(path.join(dir, 'brief.md'), brief);
   const tail = target ? `Gate armed on ${target.url ?? target.root}.`

@@ -124,3 +124,37 @@ export function buildType({ display, displayWeights, text, textWeights, mono, tr
     ...(mono ? { mono: { family: mono, weights: [400, 500] } } : {}),
   };
 }
+
+const OKLCH = /oklch\(\s*([\d.]+)%\s+([\d.]+)\s+([\d.]+)\s*\)/;
+const hexOf = (value) => {
+  const m = OKLCH.exec(value ?? '');
+  if (m) return lchHex(Number(m[1]) / 100, Number(m[2]), Number(m[3]));
+  const h = /#[0-9a-f]{6}\b/i.exec(value ?? '');
+  return h ? h[0].toLowerCase() : null;
+};
+const token = (text, name) => new RegExp(`${name}:\\s*([^;]+);`).exec(text)?.[1]?.trim() ?? null;
+const firstFamily = (value) => /"([^"]+)"/.exec(value ?? '')?.[1] ?? (value ?? '').split(',')[0].trim();
+
+/**
+ * A Hallmark theme (skills/hallmark/references/themes/<slug>.md) as a look for the kit: its paper, ink, rule and
+ * accent tokens, its colourway when one is named, its faces and the font links it ships. The theme stays as designed;
+ * the kit's names are a mapping, not a redesign.
+ */
+export function themeLook(text, colourway = null) {
+  const look = {
+    bg: hexOf(token(text, '--color-paper')), surface: hexOf(token(text, '--color-paper-2')), ink: hexOf(token(text, '--color-ink')),
+    muted: hexOf(token(text, '--color-muted')), line: hexOf(token(text, '--color-rule')), accent: hexOf(token(text, '--color-accent')),
+    accentInk: hexOf(token(text, '--color-accent-ink')),
+    display: firstFamily(token(text, '--font-display')), text: firstFamily(token(text, '--font-body')),
+    displayWeight: Number(token(text, '--display-weight')) || null, tracking: token(text, '--tracking-display'),
+    links: [...text.matchAll(/<link [^>]*href="https:\/\/(?:fonts\.googleapis\.com|api\.fontshare\.com)[^>]*>/g)].map((m) => m[0]).join('\n') || null,
+  };
+  if (colourway) {
+    const row = text.split('\n').find((l) => l.startsWith(`| \`${colourway}\``));
+    if (!row) throw new Error(`the theme has no colourway "${colourway}"`);
+    const [ground, ink, accent] = row.split('|').slice(2, 5).map(hexOf);
+    Object.assign(look, { bg: ground ?? look.bg, ink: ink ?? look.ink, accent: accent ?? look.accent, surface: undefined, muted: undefined, line: undefined, accentInk: undefined });
+  }
+  for (const k of ['bg', 'ink', 'accent']) if (!look[k]) throw new Error(`the theme has no ${k} token this script can read`);
+  return look;
+}
