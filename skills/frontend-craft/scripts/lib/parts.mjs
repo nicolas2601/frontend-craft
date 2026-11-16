@@ -102,7 +102,7 @@ export function partsRules({ kind, parts }) {
   }
   const jobs = searchedJobs(parts);
   if (jobs < MIN_JOBS) {
-    out.push(finding('FAIL', 'parts-unsearched', `${jobs} part(s) of the page were looked up in the component libraries; at least ${MIN_JOBS} (the nav, a gallery, a booking or order form, a menu or price list, a map, an FAQ...)`,
+    out.push(finding(jobs === 0 ? 'FAIL' : 'WARN', 'parts-unsearched', `${jobs} part(s) of the page were looked up in the component libraries; at least ${MIN_JOBS} (the nav, a gallery, a booking or order form, a menu or price list, a map, an FAQ...)`,
       'before you hand-build a part, run node <skill>/scripts/components.mjs search "<its job>" --section <id> (21st.dev, cult-ui, React Bits), open the candidates and take the best with components.mjs pick'));
   } else if (!(parts.picks ?? []).length) {
     out.push(finding('WARN', 'parts-none-taken', `${jobs} parts searched, none taken`, 'take the candidates that fit with components.mjs pick, or say under # Components in .craft/concept.md why each one was refused'));

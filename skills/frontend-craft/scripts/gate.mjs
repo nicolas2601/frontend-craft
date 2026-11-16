@@ -13,6 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { formatReport, runCheck } from './check.mjs';
 import { loadParts } from './lib/source-scan.mjs';
+import { storyboardRows } from './lib/studio.mjs';
 import { isMain, parseArgs, readJson, writeJson } from './lib/state.mjs';
 
 export const MAX_BLOCKS = 4;
@@ -93,7 +94,8 @@ async function main() {
   const conceptFile = path.join(out, 'concept.md');
   const concept = fs.existsSync(conceptFile) ? fs.readFileSync(conceptFile, 'utf8') : null;
   const parts = loadParts(project, deal, readJson);
-  const check = (st) => runCheck({ target: st.target, pages: st.pages ?? deal?.pages?.map((p) => p.path), kind: st.kind ?? deal?.kind ?? 'landing', deal: deal?.brand ? null : deal, concept, parts, out, requireDeal: !st.kitOnly && !deal?.brand });
+  const plan = deal?.mode === 'studio' ? { rows: storyboardRows(fs.existsSync(path.join(out, 'plan.md')) ? fs.readFileSync(path.join(out, 'plan.md'), 'utf8') : '') } : undefined;
+  const check = (st) => runCheck({ target: st.target, pages: st.pages ?? deal?.pages?.map((p) => p.path), kind: st.kind ?? deal?.kind ?? 'landing', deal: deal?.brand ? null : deal, concept, parts, plan, out, requireDeal: !st.kitOnly && !deal?.brand });
 
   if (!args.hook) {
     process.chdir(project);

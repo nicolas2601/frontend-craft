@@ -141,7 +141,7 @@ const url = (f) => {
 export function markup(files, { w, h }) {
   return `<div class="craft-loop">\n  <video data-loop muted playsinline preload="metadata" poster="${url(files.poster)}" width="${w}" height="${h}" aria-hidden="true">\n`
     + `    <source src="${url(files.webm)}" type="video/webm">\n    <source src="${url(files.mp4)}" type="video/mp4">\n  </video>\n`
-    + '  <button type="button" data-loop-toggle aria-pressed="false">Pause</button>\n</div>';
+    + '  <button type="button" data-loop-toggle aria-pressed="false"><span class="craft-sr">Pause</span></button>\n</div>';
 }
 
 function has(list, names) {

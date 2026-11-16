@@ -155,7 +155,7 @@ function mobileRules({ nav, controlText = [], marquees = [] }) {
     out.push(f('FAIL', 'nav-mobile', `at 390 px the header shows ${narrow.links} of its ${wide.links} navigation links and no menu button`,
       'keep the links as a wrapping or scrolling row (the kit\'s .nav does), or add a menu button with aria-expanded that opens them; never display:none with nothing in its place'));
   }
-  if (marquees.length) out.push(f('WARN', 'marquee-pause', `an endless band with no pause button: ${marquees.slice(0, 2).join('; ')}`, 'add <button type="button" class="craft-pause" data-marquee-toggle aria-pressed="false"> right after it, labelled in the page language (WCAG 2.2.2)'));
+  if (marquees.length) out.push(f('WARN', 'marquee-pause', `an endless band with no pause button: ${marquees.slice(0, 2).join('; ')}`, 'put <button type="button" data-marquee-toggle aria-pressed="false"><span class="craft-sr">Pause</span></button> right after it, inside the same wrapper: the kit draws it as a small icon in the corner (WCAG 2.2.2), the label in the page language. Or drop the band: an endless band is rarely worth it'));
   if (controlText.length) out.push(f('FAIL', 'control-text-small', `controls or labels under 14 px at 390: ${controlText.slice(0, 3).join('; ')}`, 'set buttons, fields and their labels at var(--t-sm) (14 px) or larger'));
   return out;
 }

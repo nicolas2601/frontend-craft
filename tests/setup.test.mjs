@@ -18,17 +18,19 @@ test('a bare machine gets playwright-cli and both MCP servers planned, never a s
   assert.equal(r.browser.ok, false);
   assert.equal(r.siblings.impeccable, true);
   assert.equal(r.siblings['design-taste-frontend'], false);
-  assert.deepEqual(r.mcp, { playwright: false, 'hf-mcp-server': false });
+  assert.deepEqual(r.mcp, { playwright: false, 'hf-mcp-server': false, awwwards: false, figma: false });
+  assert.deepEqual(r.ytdlp, { ok: false });
   assert.deepEqual(r.cli21st, { ok: false, login: false });
   const plan = installPlan(r, { cacheExists: () => false });
   assert.deepEqual(plan.map(([cmd, a]) => `${cmd} ${a.slice(0, 3).join(' ')}`), ['npm install -g @playwright/cli@latest', 'npm install -g @21st-dev/cli@latest',
-    'git clone --quiet https://github.com/Motionsites-AI/claude-skill', 'git -C ' + plan[3][1][1] + ' -c', 'claude mcp add playwright', 'claude mcp add hf-mcp-server']);
-  assert.ok(plan[3][1].includes('faa30d512e3973e58675c72101a7ef42ed37ae83'), 'the library is checked out at the pinned commit');
+    'python3 -m pip install', 'git clone --quiet https://github.com/Motionsites-AI/claude-skill', 'git -C ' + plan[4][1][1] + ' -c',
+    'claude mcp add playwright', 'claude mcp add hf-mcp-server', 'claude mcp add awwwards', 'claude mcp add figma']);
+  assert.ok(plan[4][1].includes('faa30d512e3973e58675c72101a7ef42ed37ae83'), 'the library is checked out at the pinned commit');
   assert.ok(plan.every(([cmd]) => cmd !== 'sudo'));
 });
 
 test('a ready machine plans nothing; plugin-scoped servers count', () => {
-  const list = 'plugin:frontend-craft:playwright: npx -y @playwright/mcp@latest - ok\nhf-mcp-server: https://huggingface.co/mcp?login (HTTP) - ok\n';
+  const list = 'plugin:frontend-craft:playwright: npx -y @playwright/mcp@latest - ok\nhf-mcp-server: https://huggingface.co/mcp?login (HTTP) - ok\nawwwards: npx -y awwwards-mcp - ok\nfigma: https://mcp.figma.com/mcp (HTTP) - ok\n';
   const run = (cmd, args) => (cmd === 'claude' && args[0] === 'mcp' ? list : 'v1');
   const r = report({ run: (cmd, args) => (cmd === '21st' && args[0] === 'whoami' ? 'Logged in as someone.' : run(cmd, args)), skillsDir: skillsWith(SIBLINGS), chrome: () => '/usr/bin/chromium', library: () => '/x/motionsites-web-builder' });
   assert.deepEqual(r.cli21st, { ok: true, login: true });

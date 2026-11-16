@@ -63,6 +63,8 @@ export function createContext(options = {}) {
   return {
     reduced,
     fine,
+    /** Loaders for optional libraries the project installed: { three: () => import('three'), maplibre: () => import('maplibre-gl') }. */
+    libs: options.libs ?? {},
     track(fn) {
       if (typeof fn === 'function') cleanups.push(fn);
     },

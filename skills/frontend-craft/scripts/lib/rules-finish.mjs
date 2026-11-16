@@ -15,7 +15,7 @@ export function heroPictureRules({ heroPicture = {}, deal }) {
   const short = Object.entries(HERO_PICTURE_MIN).filter(([w, min]) => heroPicture[w] && heroPicture[w].share < min);
   if (!short.length) return [];
   return [f('FAIL', 'hero-picture', `the subject's picture fills ${short.map(([w]) => `${Math.round(heroPicture[w].share * 100)}% of the first screen at ${w}`).join(' and ')} (${heroPicture[short[0][0]].label || 'no picture'}); a subject sold by its photographs opens on one`,
-    `put the best photograph or the hero loop in the first screen at ${HERO_PICTURE_MIN[1440] * 100}% of it or more at 1440 (${HERO_PICTURE_MIN[390] * 100}% at 390): beside the headline, under it full width, or behind it with a scrim; never a text-only first screen with the picture below the fold`)];
+    `put the best photograph or the hero loop in the first screen at ${HERO_PICTURE_MIN[1440] * 100}% of it or more at 1440 (${HERO_PICTURE_MIN[390] * 100}% at 390): full bleed behind the words with a scrim (the dive recipe), or beside them at its own ratio. Choose the focal point with object-position; never crop the source file and never letterbox it with object-fit: contain`)];
 }
 
 /** Big boxes that hold one number or two lines read as a template filled in a hurry. */
@@ -52,6 +52,53 @@ export function lookRules({ deal }) {
   return [f('FAIL', 'look-pending', 'the colours and type were never chosen: the page runs on the neutral stand-ins', 'choose them as references/color-type.md says (ui-ux-pro-max for candidates, the subject for the reasons), then run design.mjs set')];
 }
 
+export const FLAT = { blank: 0.965, sparse: 0.9, half: 0.985, other: 0.93 };
+
+/**
+ * Screens that show almost nothing, read from real screenshots down the page: one flat colour over 96.5% of the
+ * screen is blank (an empty stage, a curtain opening on a void, a frame a script never filled); over 90%, a sparse
+ * screen (a number or a few words alone on an empty ground: the critic and look.mjs judge it); one half flat while the
+ * other holds the content, a half-empty one. Measured: an empty iris 1.00, a curtain on three small words 0.99, a
+ * dark stats band 0.94, a curtain on a big motto 0.95, a page whose every section holds a photograph 0.69 at most.
+ */
+export function blankRules({ blank = [], kind }) {
+  if (OPERATE_KINDS.includes(kind) || !blank.length) return [];
+  const at = (list) => list.slice(0, 4).map((b) => b.y).join(', ');
+  const empty = blank.filter((b) => b.all >= FLAT.blank);
+  const sparse = blank.filter((b) => b.all >= FLAT.sparse && b.all < FLAT.blank);
+  const half = blank.filter((b) => b.all < FLAT.blank && Math.max(b.left, b.right) >= FLAT.half && Math.min(b.left, b.right) < FLAT.other);
+  const out = [];
+  if (empty.length) out.push(f('FAIL', 'blank-screen', `${empty.length} screen(s) are one flat colour while scrolling at 1440 (at y ${at(empty)})`,
+    'open the look.mjs sheets at those heights: give the stage its picture or footage, shorten a pinned section that runs past its content, or remove the effect that leaves the screen empty (a curtain or iris on a dark ground, a scene or map that did not render)'));
+  if (sparse.length) out.push(f('WARN', 'sparse-screen', `${sparse.length} screen(s) are mostly one flat colour (at y ${at(sparse)}): a few words, a number or a band of stats alone on an empty ground`,
+    'look at those heights in the look.mjs sheets as the client would: a dark stage that opens on a few words reads unfinished. Bring the section\'s picture or footage into it, set the words to fill the screen, or tighten the section'));
+  if (half.length) out.push(f('WARN', 'half-empty', `${half.length} screen(s) have one half empty while the other holds everything (at y ${at(half)})`,
+    'fill the empty half with the section\'s picture, footage or map, or centre the content and narrow the section'));
+  return out;
+}
+
+/** A big drawing of boxes, straight lines and labels where a picture or a real map belongs. */
+export function drawnSvgRules({ drawnSvg = [], kind }) {
+  if (OPERATE_KINDS.includes(kind) || !drawnSvg.length) return [];
+  return [f('FAIL', 'svg-boxes', `${drawnSvg.length} large drawing(s) made only of boxes, straight lines and labels (${drawnSvg.map((d) => `${d.label || 'svg'}: ${d.shapes} shapes, ${d.area}% of the screen`).join('; ')})`,
+    'a place is shown on a real map (the data-map recipe: MapLibre + OpenStreetMap) or in its photograph; a process in its footage or photographs. An illustration is drawn for real (svg-craft), never a wireframe of rectangles')];
+}
+
+/** A large picture or video shown whole in a frame of another shape leaves bars of empty ground beside it. */
+export function letterboxRules({ letterbox = [], kind }) {
+  if (OPERATE_KINDS.includes(kind) || !letterbox.length) return [];
+  return [f('FAIL', 'letterbox', `${letterbox.length} large picture(s) or video(s) letterboxed with object-fit: contain: ${letterbox.slice(0, 2).join('; ')}`,
+    'fill the frame with object-fit: cover and choose the focal point with object-position (or the dive recipe\'s --focus), or give the frame the media\'s own ratio. Never crop the source file and never show bars of empty ground')];
+}
+
+/** Studio builds think before they build: the storyboard in .craft/plan.md is what the page is checked against. */
+export function planRules({ deal, plan }) {
+  if (deal?.mode !== 'studio' || plan === undefined) return [];
+  if ((plan?.rows ?? 0) >= 3) return [];
+  return [f('FAIL', 'plan-missing', `.craft/plan.md has ${plan?.rows ?? 0} storyboard row(s)`,
+    'fill .craft/plan.md before building: # Brief, # References, # Direction, and a # Storyboard row for every section (the visitor\'s question, what they see, the media and where it comes from, the motion and why, the part)')];
+}
+
 export function finishRules(facts) {
-  return [...heroPictureRules(facts), ...emptyBoxRules(facts), ...footerRules(facts), ...magneticRules(facts), ...lookRules(facts), ...partsRules(facts)];
+  return [...heroPictureRules(facts), ...emptyBoxRules(facts), ...footerRules(facts), ...magneticRules(facts), ...lookRules(facts), ...partsRules(facts), ...blankRules(facts), ...drawnSvgRules(facts), ...letterboxRules(facts), ...planRules(facts)];
 }

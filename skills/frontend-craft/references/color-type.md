@@ -44,7 +44,7 @@ Look at the page as areas of colour, not as components.
 | Role | Choose | Avoid |
 |---|---|---|
 | Display (headlines) | A face with the subject's character: a serif with warmth for a heritage house or a restaurant, a grotesk for a studio or a product, a condensed face for an event | Inter, Roboto, Poppins, Montserrat or Playfair Display as the headline face: what most generated pages use |
-| Text (body, buttons, labels) | A quiet face built for reading: Inter, Instrument Sans, Source Sans 3, IBM Plex Sans, Public Sans, Newsreader for long reading | Display or handwriting faces for text |
+| Text (body, buttons, labels) | A quiet face built for reading: Schibsted Grotesk, Public Sans, Source Sans 3, IBM Plex Sans, Hanken Grotesk, Newsreader for long reading | Display or handwriting faces for text; Inter, Geist, DM Sans, Plus Jakarta Sans and Instrument Sans as the text face (impeccable's detector calls them overused) |
 
 - Pair by contrast of structure (a serif headline over a sans text, or a grotesk headline over a humanist text), or
   use one family in two weights. Never two serifs or two grotesks that look alike.
@@ -86,7 +86,7 @@ default here stays white, black and one accent.
 
 ```sh
 node <skill>/scripts/design.mjs set --bg "#fbfaf7" --ink "#151413" --accent "#9a4a2c" \
-  --display "Fraunces" --text "Instrument Sans" \
+  --display "Fraunces" --text "Public Sans" \
   --why "accent from the terracotta tiles in the patio photograph; Fraunces for the colonial calm"
 ```
 
