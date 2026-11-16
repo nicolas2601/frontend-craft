@@ -1,8 +1,8 @@
 {
   "name": "frontend-craft",
   "displayName": "Frontend Craft",
-  "version": "3.1.0",
-  "description": "A professional frontend design skill set for coding agents: the model chooses structure, direction, colours and faces with real candidates and scripts that check them, real photographs, timed motion, free hero loops, and a browser check (with impeccable and Hallmark) that refuses the generated look",
+  "version": "4.0.0",
+  "description": "A design studio for coding agents: the client's own photographs and videos first, a written direction and storyboard, finished section recipes (a hero that flies into the picture, a horizontal story, a carousel, the product in 3D, a real map), component libraries, a browser that photographs every section in motion, and a check (with impeccable and Hallmark) that refuses only what is broken",
   "author": {
     "name": "nicolas2601",
     "url": "https://github.com/nicolas2601"

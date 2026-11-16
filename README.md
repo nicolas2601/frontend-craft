@@ -1,19 +1,24 @@
 # frontend-craft
 
-**A professional frontend design skill set for coding agents.** It turns "make me a landing page" into a page a
-designer would sign: a structure chosen for the subject, a sober palette with one colour that gives it life, real
-photographs, motion that is timed to the reader, and a browser check that refuses the look every generated page
-falls into. Works in Claude Code, Codex, OpenCode, Cursor, Gemini CLI and pi, in any framework.
+**A design studio for coding agents.** frontend-craft makes an agent build a website the way a studio does: the
+client's own material first (their photographs and their TikTok or Instagram videos), real references, a written
+direction and a section-by-section storyboard, real media (the client's footage, licensed stock, their product in
+3D, a real map), finished section recipes and component libraries, and a browser that photographs every section in
+motion so nothing ships half done. The model makes every design decision; scripts fetch media and catch defects.
+Works in Claude Code, Codex, OpenCode, Cursor, Gemini CLI and pi, in any framework.
 
-Ask a model for "a landing page for a guesthouse" and you usually get the same page: cream background, a serif
-headline, a terracotta accent, three equal cards, an eyebrow above every heading, a footer in four grey columns.
-Rules in a prompt do not fix it, because the model falls back to its defaults whenever a decision is left open.
-frontend-craft closes those decisions: the model makes them as a designer, with real references and candidates in
-front of it, and scripts check every choice before and after the build.
+Ask a model for "a landing page for a café" and you usually get the same page: a near-black ground with one bright
+accent (or cream with a serif and terracotta), an eyebrow above every heading, a big number with a small label, a
+paragraph that lights up word by word, a drawn map, and a dark stage that opens on three words. Rules in a prompt do
+not fix it, and neither do scripts that force more effects. frontend-craft 4 puts the model in the design lead's
+chair with the client's real material in front of it, gives it finished parts to build with, and makes it look at
+every section in motion before a check that only refuses what is objectively broken.
 
 ## Quick start
 
-**Claude Code** (plugin: every skill, the two reviewer agents, the MCP servers and the Stop-hook gates):
+**Let your agent install everything:** paste the prompt in [docs/installation.md](docs/installation.md#install-with-your-agent-copy-this-prompt) into Claude Code, OpenCode or any agent with a shell. Or by hand:
+
+**Claude Code** (plugin: every skill, the reviewer agents, the MCP servers and the Stop-hook gates):
 
 ```
 /plugin marketplace add nicolas2601/frontend-craft
@@ -26,7 +31,7 @@ front of it, and scripts check every choice before and after the build.
 npx skills@latest add nicolas2601/frontend-craft --all
 ```
 
-Then check the machine (Node 22+, a Chrome, ffmpeg, Python 3, playwright-cli, the sibling skills, the MCP servers):
+Then check the machine (Node 22+, a Chrome, ffmpeg, Python 3, yt-dlp, playwright-cli, the 21st.dev CLI, the sibling skills, the MotionSites library, the MCP servers):
 
 ```sh
 node ~/.agents/skills/frontend-craft/scripts/setup.mjs            # what is there and what is missing
@@ -40,64 +45,77 @@ OpenCode, Codex and the manual install: [docs/installation.md](docs/installation
 Copy one into your agent, in any language:
 
 ```
-Use the frontend-craft skill: build the landing page for a six-room guesthouse in Barichara, Colombia,
-with a looping video of the courtyard in the hero. Page in Spanish.
+Use the frontend-craft skill: the landing page for Agostino Coffee, a new specialty café at Cra 29 #41-76 in
+Bucaramanga. Their photos are in ./fotos and their videos are on https://www.tiktok.com/@agostinocoffee (they gave
+permission). Page in Spanish. Follow the studio run and show me the plan before you build.
 ```
 
 ```
-Use the frontend-craft skill: a landing page for a specialty coffee roaster in Bucaramanga that sells
-beans online and has a tasting bar. Sober colours, real photographs.
+Use the frontend-craft skill: a landing page for a specialty coffee roaster that sells beans online and has a
+tasting bar. Sober colours, their own photographs, the bag in 3D, a real map.
 ```
 
 ```
-Use the frontend-craft skill: a dashboard for our support queue in React with shadcn. Restraint, no set pieces.
+Use the frontend-craft skill: a dashboard for our support queue in React with shadcn. Restraint, no scroll effects.
 ```
 
 ```
 Use craft-review on http://localhost:5173: strict review, Before | After | Why, do not edit.
 ```
 
-```
-/hallmark redesign ./src/app        (Hallmark's own redesign, keeping content and wiring)
-```
-
-## The design flow
+## The studio run
 
 ```
-prompt ─> frontend-craft (router)
-  1  read the project, pick the kind, 2-3 moods and the language
-  2  start.mjs lists the structures and art directions that fit  ─> the model chooses (ui-ux-pro-max landing patterns)
-  3  concept.md: the idea only this client has, what it refuses   ─> inspiration.md, the Awwwards MCP, the closest MotionSites designs
-  4  photographs: the client's, or two licensed libraries          ─> design-taste-frontend, Hallmark (755 Wikimedia photos)
-  5  the look: the model chooses colours and faces                 ─> color-type.md, ui-ux-pro-max, Hallmark themes,
-                                                                       design.mjs accents <photo>, then design.mjs set (checked)
-  6  hero loop when the subject is real                            ─> parallax.mjs (CPU), hf-asset-generate, kaggle-video
-  7  build the first screen alone, look at it, then the rest       ─> blueprints, the motion kit, set pieces,
-                                                                       components.mjs search (21st.dev, cult-ui, React Bits) per part
-  8  check.mjs in Chrome                                           ─> defects, richness, finish, impeccable detect, Hallmark sloplint
-  9  two reviewers in parallel                                     ─> craft-design-critic, craft-motion-auditor (playwright-cli)
- 10  polish and the motion review, check again, report             ─> impeccable, Emil Kowalski's skills
+prompt ─> frontend-craft
+  1  start.mjs: the kit, a starter page, the studio brief, .craft/plan.md      (nothing is dealt)
+  2  material first: the client's photographs and videos                      ─> media.mjs social <their URL>, media.mjs sheet
+  3  three real references, one move from each                                ─> Awwwards MCP, land-book, MotionSites designs
+  4  direction: the idea, palette, faces, the one moment, then attack it      ─> color-type.md, ui-ux-pro-max, design.mjs set, Figma MCP (optional)
+  5  storyboard: one row per section (question, picture, media, motion, part) ─> recipes.md, components.mjs search (21st.dev, cult-ui, React Bits)
+  6  media: their footage as loops and scroll sequences, their product in 3D  ─> video.mjs, media.mjs frames, product3d, media.mjs stock
+  7  the first screen alone, looked at, fixed; then every section            ─> starter.html, the kit's recipes
+  8  look in motion: every section entering, middle, leaving, 1440 and 390    ─> look.mjs contact sheets
+  9  check: defects only                                                      ─> check.mjs (blank screens, drawn placeholders, contrast, overflow, AI tells)
+ 10  an independent critic, the motion review, look and check again          ─> craft-design-critic, Emil Kowalski's rules
 ```
 
 What decides what:
 
 | Decision | Who makes it | What holds it |
 |---|---|---|
-| Structure (composition) and art direction | The model, from the lists that fit the subject | `start.mjs` refuses to start without them; a subject sold by its photographs is offered only photo-first structures |
-| Colours | The model: a white or near-white ground, a near-black ink, one accent with life taken from the subject (or a Hallmark theme taken whole) | `design.mjs` checks contrast, the sober method, violet, neon and framework-default accents, and writes `tokens.css`; the check fails while the look is pending |
-| Faces | The model, from ui-ux-pro-max's pairings and Google Fonts | `design.mjs` checks the families and weights exist and warns on the faces every generated page uses |
-| Set pieces, motion, the library component | Dealt from the chosen direction, for variety | The check measures that they render, move, and finish while they can be read |
-| The page's parts (nav, gallery, booking form, menu, map, FAQ) | The model, from 21st.dev, cult-ui and React Bits candidates that `components.mjs search` lists with previews | The check fails (`parts-unsearched`) until three parts were searched; every search and pick is logged in `.craft/components.json` |
-| Everything else | The two reviewers and the user | The order is: the user, accessibility, the subject, then the brief |
+| Idea, structure, the one moment, every section | The model, written in `.craft/plan.md` before building | The check fails a studio build without a storyboard (`plan-missing`) |
+| Colours and faces | The model: a white ground, near-black ink, one accent from the subject; faces with character | `design.mjs set` checks contrast, the sober method, violet, neon, overused faces, and writes `tokens.css` |
+| Media | The model, from the client's own files and videos first | `media.mjs` fetches and shows them; the check refuses broken, repeated and letterboxed pictures |
+| Parts | The model: a kit recipe, a library piece, or built for real | `components.mjs search` lists 21st.dev, cult-ui and React Bits candidates with previews |
+| Whether it is good | The model looking at `look.mjs` sheets, then an independent critic | The check only refuses what is broken: blank or half-empty screens, drawings of boxes, contrast, overflow, invisible content |
+
+## Section recipes
+
+Finished sections in the kit, each working without JavaScript and under reduced motion
+([recipes.md](skills/frontend-craft/references/recipes.md)):
+
+| Recipe | What it is |
+|---|---|
+| `dive` | The hero's photograph or loop at full bleed; scrolling flies into it toward a focal point (the sign, the door) |
+| `journey` | A pinned horizontal story: the client's photographs pass while two lines of type cross |
+| `carousel` | A row that snaps, drags, answers arrows and keys, and counts "1 / 4" |
+| `sequence` | Frames of the client's own clip scrubbed by scroll, with steps that light up |
+| `product3d` | The client's packaged product in 3D from its artwork, swaying with the scroll (three.js) |
+| `map` | A real map with a pin on the door: OpenStreetMap tiles from OpenFreeMap, free and keyless (MapLibre) |
+| `spec` | Facts as a quiet two-column list instead of cards or a big number |
 
 ## What the check refuses
 
 `check.mjs` loads every page in headless Chrome three times (normal at 1440, 1280, 768 and 390; reduced motion;
-JavaScript off) and runs impeccable's detector and Hallmark's sloplint. A few of the things that fail a page:
+JavaScript off) and runs impeccable's detector and Hallmark's sloplint. It refuses defects, not taste. A few of the
+things that fail a page:
 
+- a screen that is one flat colour while scrolling (an empty stage, a curtain opening on nothing, a map that never
+  rendered), measured from real screenshots; sparse and half-empty screens warn;
+- a drawing of boxes and lines where a picture or a real map belongs;
 - a subject sold by its photographs whose first screen is text, with the picture below the fold;
 - cards and tiles left mostly empty, a footer with no way to reach the business;
-- parts built by hand without ever looking for them in a component library;
+- a studio build with no storyboard, parts built without ever searching a library;
 - photographs tinted to match a palette, a palette that never was chosen;
 - scroll animations that finish after their element has left the screen, motion with no reduced-motion fallback;
 - eyebrows and tracked-caps labels, middle-dot meta strings, em dashes, an italic word in a heading, purple
@@ -112,7 +130,7 @@ The full list with causes and fixes: [checks.md](skills/frontend-craft/reference
 
 | Skill | Job |
 |---|---|
-| [`frontend-craft`](skills/frontend-craft/SKILL.md) | The router and the build run: 16 art directions, 15 compositions with working blueprints, 14 scroll set pieces, 4 WebGL hero scenes, hero loops, 43 curated React Bits components, a dependency-free motion kit, `design.mjs` and `check.mjs` |
+| [`frontend-craft`](skills/frontend-craft/SKILL.md) | The studio run: the studio brief and plan, seven section recipes, a dependency-free motion kit, `media.mjs` (client videos, frames, stock), `look.mjs` (every section in motion), `design.mjs`, `components.mjs` and `check.mjs`; the dealt run of earlier versions stays behind its flags |
 | [`craft-motion`](skills/craft-motion/SKILL.md) | Add, fix or trim motion in an interface that already exists |
 | [`craft-review`](skills/craft-review/SKILL.md) | A strict rendered review: findings as Before, After, Why with exact values. Does not edit |
 | [`craft-learn`](skills/craft-learn/SKILL.md) | Turn a session's design corrections into testable rules in `DESIGN.md` |
@@ -122,7 +140,7 @@ The full list with causes and fixes: [checks.md](skills/frontend-craft/reference
 
 **Reviewer agents**, generated from [review.md](skills/frontend-craft/references/review.md) for Claude Code
 ([agents/](agents/)) and OpenCode ([integrations/opencode/agents/](integrations/opencode/agents/)):
-`craft-design-critic` and `craft-motion-auditor`, run in parallel at the end of every build.
+`craft-design-critic` (every build) and `craft-motion-auditor` (when more than one section moves).
 
 **Bundled skills**, copied unchanged from upstream at a pinned commit ([vendor.json](vendor.json), licences in
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)); `npm run verify` fails if one byte differs:
@@ -146,20 +164,22 @@ The full list with causes and fixes: [checks.md](skills/frontend-craft/reference
 | [MotionSites](https://github.com/Motionsites-AI/claude-skill) | 40 finished hero and landing designs read for their precision, a shelf of cinematic loops and cut-outs, 58 technique recipes ([what to take and leave](skills/frontend-craft/references/motionsites.md)) | `setup.mjs --install` clones it into `~/.cache` at a pinned commit; its examples and media stay (c) MotionSites |
 
 **MCP servers** ([.mcp.json](.mcp.json) in the plugin; the others in [docs/installation.md](docs/installation.md)):
-Playwright, Hugging Face (free stills and clips) and, optionally, Awwwards (references and motion timing of award
-winners).
+Playwright, Hugging Face (free stills and clips), Awwwards (references and motion timing of award winners) and
+Figma (drawing the direction for approval before code).
 
-## Hero loops, for free
+## Media, for free
 
-| Route | How | Cost |
-|---|---|---|
-| Parallax from a still | `scripts/parallax.mjs`: a depth map on the CPU, a slow periodic camera move, an exact loop of any length | Free, local, no GPU |
-| Generated motion | `hf-asset-generate`: Z-Image Turbo, a camera-moved keyframe, Wan 2.2 from A to B and back | Free account, a few runs a day |
-| Generated motion on Kaggle | `kaggle-video`: Wan 2.2 TI2V-5B in a private kernel on a T4 | Free, 30 GPU hours a week |
-| Coded film | HyperFrames or bang-motion | Free, local |
+| Route | How |
+|---|---|
+| The client's own videos | `media.mjs social <their TikTok, Instagram or YouTube URL>` (yt-dlp), `media.mjs sheet` to look, frames and loops from the good seconds |
+| A loop from their footage | `video.mjs clip.mp4 --start <s> --end <s>`: a seamless muted loop (mp4, webm, poster), played only on screen, with a corner pause icon |
+| A scroll sequence | `media.mjs frames clip.mp4` and the `sequence` recipe |
+| Their product in 3D | The `product3d` recipe with the packaging artwork |
+| Free stock (atmosphere only) | `media.mjs stock "<query>"` with a free Pexels or Pixabay key |
+| Generated clips | `hf-asset-generate`, `kaggle-video` (free quotas), `scripts/parallax.mjs` as the last resort |
+| Motion graphics | bang-motion or HyperFrames render HTML to MP4 |
 
-`scripts/video.mjs` turns any of them into a muted 30 fps loop (mp4, webm, poster) that the kit plays only on
-screen, never under reduced motion, with a pause button. [hero-video.md](skills/frontend-craft/references/hero-video.md).
+[media.md](skills/frontend-craft/references/media.md) has the order, the licences and the rules that keep media looking expensive.
 
 ## Develop
 

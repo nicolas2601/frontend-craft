@@ -2,7 +2,7 @@
 
 frontend-craft is a set of Agent Skills: folders with a `SKILL.md`, scripts and data. Install **all of them as siblings**: the router (`frontend-craft`) builds websites with its own deal and takes their photographs from `design-taste-frontend`, sends polish to `impeccable` and the Emil skills, and `craft-motion`, `craft-review` and `craft-learn` call scripts inside `frontend-craft`.
 
-Requirements: Node 22 or later; Chrome, Chromium or Edge for the checkers (or any browser at `CHROME_PATH`); Python 3 for `ui-ux-pro-max`; ffmpeg optional (photo crops in `design-taste-frontend`).
+Requirements: Node 22 or later; Chrome, Chromium or Edge for the checkers (or any browser at `CHROME_PATH`); Python 3 for `ui-ux-pro-max` and yt-dlp; ffmpeg for the client's videos, loops and sequences. `node <skill>/scripts/setup.mjs` reports all of it and `--install` adds what it can without sudo.
 
 What each bundled skill needs beyond its own files:
 
@@ -21,6 +21,45 @@ Libraries the build reads on your machine (not copied into the repository):
 |---|---|---|
 | 21st.dev (library parts) | Its CLI and a free login | `npm install -g @21st-dev/cli` (or `setup.mjs --install`), then `21st login` once in a browser. `components.mjs search` asks it with cult-ui and React Bits; search is free, two source retrievals a day |
 | MotionSites (reference designs, media shelf) | git and network | `setup.mjs --install` clones it into `~/.cache/frontend-craft/libraries/motionsites` at a pinned commit. Its examples and media are (c) MotionSites: use them to build sites, never redistribute them |
+
+## Install with your agent (copy this prompt)
+
+Paste this into Claude Code, OpenCode, Codex or any agent with a shell. It installs everything, never uses sudo
+without asking, never prints a key, and ends with a check you can read.
+
+```text
+Install the frontend-craft skill set (https://github.com/nicolas2601/frontend-craft) on this machine and verify it.
+Work step by step; after each step show the command and its last lines of output. Never run sudo without asking me
+first, never print an API key or token, never commit anything.
+
+1. Requirements: check `node --version` (needs 22 or later), `ffmpeg -version`, `python3 --version`, and a Chrome,
+   Chromium or Edge. For anything missing, tell me the exact install command for this OS and wait.
+2. The skills: if this is Claude Code, run `/plugin marketplace add nicolas2601/frontend-craft` and
+   `/plugin install frontend-craft@frontend-craft`; in any other agent run
+   `npx skills@latest add nicolas2601/frontend-craft --all`.
+3. Find the installed frontend-craft folder (it contains scripts/setup.mjs: look in ~/.claude/skills,
+   ~/.agents/skills, ~/.config/opencode/skills or the plugin cache) and run
+   `node <that folder>/scripts/setup.mjs --install`. It installs playwright-cli and the 21st.dev CLI, yt-dlp with
+   pip --user, clones the MotionSites reference library into ~/.cache, and in Claude Code adds the Playwright,
+   Hugging Face, Awwwards and Figma MCP servers.
+4. If this is OpenCode, add to ~/.config/opencode/opencode.json under "mcp" (keep what is there):
+   playwright `{ "type": "local", "command": ["npx", "-y", "@playwright/mcp@latest"] }`,
+   awwwards `{ "type": "local", "command": ["npx", "-y", "awwwards-mcp"] }`,
+   figma `{ "type": "remote", "url": "https://mcp.figma.com/mcp" }`,
+   hf-mcp-server `{ "type": "remote", "url": "https://huggingface.co/mcp" }`;
+   copy the repo's integrations/opencode/agents/*.md to ~/.config/opencode/agents/ and
+   integrations/opencode/frontend-craft-gate.js to ~/.config/opencode/plugins/.
+5. Logins that only I can do (tell me, do not attempt them for me): `21st login` (free, for the component search),
+   the Figma and Hugging Face MCP sign-ins the first time they are used, and optional free stock keys:
+   PEXELS_API_KEY (https://www.pexels.com/api/) and PIXABAY_API_KEY (https://pixabay.com/api/docs/) in my shell
+   profile.
+6. Verify: run `node <frontend-craft folder>/scripts/setup.mjs` again and show the full report (every line should
+   start with "ok", except the logins I still have to do). Then a smoke test in a new empty folder under the
+   current directory: `node <frontend-craft folder>/scripts/start.mjs --kind landing --lang en` must print
+   "# Studio brief", and `ls craft .craft` must show starter.html, recipes.css, brief.md and plan.md. Remove the
+   test folder.
+7. Report: what was installed, what was already there, what failed with its error, and what I still have to do.
+```
 
 ## Any harness: the skills CLI
 
@@ -73,7 +112,7 @@ OpenCode discovers skills in `~/.config/opencode/skills/`, `~/.claude/skills/` a
 
 1. Gate: copy `integrations/opencode/frontend-craft-gate.js` to `~/.config/opencode/plugins/`; OpenCode loads every plugin in that folder (plugin API v2). Do not also list it in `opencode.json`. When a session goes idle it runs the frontend-craft gate and design-taste-frontend's; a block's fix list is sent back into the same session. Restart OpenCode to load it. `TASTE_GATE` and `FRONTEND_CRAFT_GATE` override the script paths.
 2. Agents: copy `integrations/opencode/agents/*.md` to `~/.config/opencode/agents/` (choose `frontend` with Tab): `frontend` (a primary agent that follows the run) and the two read-only reviewer subagents the design review starts, `craft-design-critic` and `craft-motion-auditor` (generated from `references/review.md` by `scripts/review-agents.mjs`).
-3. MCP servers, in `mcp.servers` of `~/.config/opencode/opencode.json`: `"playwright": { "type": "local", "command": ["npx", "-y", "@playwright/mcp@latest"] }`, `"hf-mcp-server": { "type": "remote", "url": "https://huggingface.co/mcp" }` (then `opencode mcp auth hf-mcp-server` once, and turn on Dynamic Spaces in huggingface.co/settings/mcp for the hero loops) and, for references, `"awwwards": { "type": "local", "command": ["npx", "-y", "awwwards-mcp"] }`. `opencode mcp list` shows them; its first call after a restart can print none while the servers start.
+3. MCP servers, in `mcp.servers` of `~/.config/opencode/opencode.json`: `"playwright": { "type": "local", "command": ["npx", "-y", "@playwright/mcp@latest"] }`, `"awwwards": { "type": "local", "command": ["npx", "-y", "awwwards-mcp"] }` (references), `"figma": { "type": "remote", "url": "https://mcp.figma.com/mcp" }` (drawing the direction for approval; `opencode mcp auth figma` once) and `"hf-mcp-server": { "type": "remote", "url": "https://huggingface.co/mcp" }` (then `opencode mcp auth hf-mcp-server` once, and turn on Dynamic Spaces in huggingface.co/settings/mcp for generated clips). `opencode mcp list` shows them; its first call after a restart can print none while the servers start.
 4. `playwright-cli` for the reviewers: `npm install -g @playwright/cli@latest` (or `node <skill>/scripts/setup.mjs --install`).
 
 In a prompt, `@frontend-craft` loads the router for sure.

@@ -1,5 +1,26 @@
 # Architecture and decisions
 
+## 4.0: the studio run
+
+Three versions tried to buy quality with scripts: 2.x dealt every decision for variety, 3.0 let the model choose
+the look and the structure but still dealt set pieces, a scene and a component that the check then required, and
+3.1 added a minimum of library searches. A DeepSeek build passed all of it and looked half done; the session's
+forensics showed the agent filling checkboxes (and editing its own concept to satisfy a rule that read it). 4.0
+moves the judgment to written artifacts and to looking:
+
+- Nothing is dealt. `start.mjs` writes the studio brief and `.craft/plan.md`; the model fills the brief, three
+  references, the direction (reviewed against the calibration list of generated-page defaults, as Anthropic's
+  frontend-design does) and a storyboard row per section with its media and its part.
+- Media comes from the client first: `media.mjs social` downloads their own videos, `media.mjs sheet` shows them,
+  `video.mjs` and `media.mjs frames` turn them into loops and scroll sequences.
+- Quality comes from finished parts and from looking: seven section recipes that read finished without JavaScript,
+  and `look.mjs`, which photographs every section in motion so an empty stage cannot hide behind a good first screen.
+- The check refuses defects only. The new screen rules read real screenshots (the share of one flat colour), because
+  a black curtain made of images passes any DOM probe. Calibrated on DeepSeek's page and the fixtures: an empty iris
+  1.00, a curtain on three small words 0.99, a dark stats band 0.94, a curtain on a big motto 0.95, a page whose every
+  section holds a photograph 0.69 at most. Only the first two fail; sparse and half-empty screens warn and go to the
+  model's own look and the critic, where judgment belongs.
+
 ## 3.1: the libraries are searched, not mentioned
 
 A DeepSeek build used the one library piece the brief forced and hand-built everything else: 21st.dev, cult-ui and
