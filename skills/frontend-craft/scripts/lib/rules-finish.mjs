@@ -1,6 +1,7 @@
 // Rules for how finished a page looks: a subject sold by its photographs shows one in the first screen, no card or
 // tile is left mostly empty, the footer is a real one, and no button chases the cursor. Pure: facts in, findings out.
 import { OPERATE_KINDS, PHOTO_LED } from './deal.mjs';
+import { partsRules } from './parts.mjs';
 
 const f = (level, id, msg, fix) => ({ level, id, msg, fix });
 export const HERO_PICTURE_MIN = { 1440: 0.35, 390: 0.3 };
@@ -52,5 +53,5 @@ export function lookRules({ deal }) {
 }
 
 export function finishRules(facts) {
-  return [...heroPictureRules(facts), ...emptyBoxRules(facts), ...footerRules(facts), ...magneticRules(facts), ...lookRules(facts)];
+  return [...heroPictureRules(facts), ...emptyBoxRules(facts), ...footerRules(facts), ...magneticRules(facts), ...lookRules(facts), ...partsRules(facts)];
 }

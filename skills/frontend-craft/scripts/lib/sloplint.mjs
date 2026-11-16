@@ -70,7 +70,7 @@ export function mapSloplint(json, { kit = null } = {}) {
 /** Run sloplint on the page's files. Resolves to { findings, ran, note }; never throws. */
 export function runSloplint(files, { kit = null } = {}) {
   const script = sloplintScript();
-  if (!script) return Promise.resolve({ findings: [], ran: false, note: 'hallmark is not installed next to frontend-craft: its sloplint did not run' });
+  if (!script) return Promise.resolve({ findings: [], ran: false, note: 'hallmark is not installed next to frontend-craft: its sloplint did not run', missing: true });
   if (!files.length) return Promise.resolve({ findings: [], ran: false, note: 'no page file to lint (a dev-server target): run hallmark sloplint on the source yourself' });
   return new Promise((resolve) => {
     execFile(process.execPath, [script, ...files, '--json', '--scope', 'page'], { timeout: TIMEOUT_MS, maxBuffer: 16 << 20 }, (err, stdout) => {

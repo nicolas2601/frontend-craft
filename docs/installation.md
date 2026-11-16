@@ -15,6 +15,13 @@ What each bundled skill needs beyond its own files:
 | `svg-craft` (own) | `npm ci --prefix tools` once | `npm ci` exits 0 |
 | Emil skills | Nothing (Markdown only) | |
 
+Libraries the build reads on your machine (not copied into the repository):
+
+| Library | Needs | How |
+|---|---|---|
+| 21st.dev (library parts) | Its CLI and a free login | `npm install -g @21st-dev/cli` (or `setup.mjs --install`), then `21st login` once in a browser. `components.mjs search` asks it with cult-ui and React Bits; search is free, two source retrievals a day |
+| MotionSites (reference designs, media shelf) | git and network | `setup.mjs --install` clones it into `~/.cache/frontend-craft/libraries/motionsites` at a pinned commit. Its examples and media are (c) MotionSites: use them to build sites, never redistribute them |
+
 ## Any harness: the skills CLI
 
 ```sh

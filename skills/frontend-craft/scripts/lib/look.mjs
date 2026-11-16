@@ -96,7 +96,7 @@ export function loadFonts(csvFile) {
 }
 
 /** Display faces seen on most AI-made pages: fine as text, a tell as the headline face. */
-export const OVERUSED_DISPLAY = ['inter', 'roboto', 'poppins', 'montserrat', 'open sans', 'lato', 'playfair display', 'space grotesk'];
+export const OVERUSED_DISPLAY = ['inter', 'roboto', 'poppins', 'montserrat', 'open sans', 'lato', 'playfair display', 'space grotesk', 'instrument serif'];
 
 export function typeFindings({ display, text }, fonts) {
   const out = [];

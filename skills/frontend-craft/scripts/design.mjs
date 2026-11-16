@@ -103,7 +103,7 @@ function show(cwd) {
   const deal = readJson(path.join(craftDir(cwd), 'deal.json'));
   if (!deal) throw new Error('no .craft/deal.json here');
   if (!deal.palette) { console.log('Look pending: choose it (references/color-type.md), then design.mjs set.'); return 0; }
-  console.log(JSON.stringify({ design: deal.design ?? 'dealt', palette: deal.palette.roles, display: deal.type.display.family, text: deal.type.text.family }, null, 2));
+  console.log(JSON.stringify({ design: deal.design ?? (deal.look === 'model' ? 'pending: run design.mjs set' : 'dealt'), palette: deal.palette.roles, display: deal.type.display.family, text: deal.type.text.family }, null, 2));
   return 0;
 }
 

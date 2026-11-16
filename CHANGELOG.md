@@ -1,5 +1,38 @@
 # Changelog
 
+## 3.1.0 - 2026-11-16
+
+The libraries are searched, not mentioned. Every part of a page is looked up in 21st.dev, cult-ui and React Bits before
+it is hand-built, the check holds it, and MotionSites joins as a library of reference designs.
+
+### Why
+The DeepSeek build used only the React Bits piece the brief forced; 21st.dev, cult-ui and shadcn were never searched
+because no step printed a command and no check asked. Four parallel reviews of the process (integration reach, a
+literal dry run, the DeepSeek build, consistency) confirmed that integrations which are only mentioned get skipped.
+
+### Added
+- `scripts/components.mjs`: `search "<job>" --section <id>` asks 21st.dev (CLI), cult-ui (registry) and React Bits
+  (curated) at once, with previews, decoration marked and listed last; `pick <source>:<id>` saves the source to
+  `.craft/parts/` (keys scrubbed) and logs the choice; `show`.
+- Check rules: `parts-unsearched` (FAIL until three parts were searched), `parts-none-taken` (WARN),
+  `deal-component-unused` (FAIL when the dealt component appears in none of the project's source files),
+  `tool-missing` (WARN when impeccable or Hallmark is absent).
+- MotionSites (Motionsites-AI/claude-skill) as a library: `setup.mjs --install` clones it at a pinned commit; the brief
+  names the closest of its 40 designs, its technique recipes and, off photo-led subjects, its media shelf;
+  `references/motionsites.md` says what to take and what the check refuses. Its examples and media stay
+  (c) MotionSites and are not in this repository.
+- `setup.mjs` reports and installs the 21st.dev CLI and the MotionSites library.
+
+### Changed
+- SKILL.md: the parts search in step 6, the MotionSites designs in step 4, a precedence that names the libraries read
+  as candidates, no eyebrows or tracked caps at all (Hallmark fails them), never violet. The kit wiring is shorter
+  (the blueprint is wired).
+- The 15 blueprints load all five kit stylesheets; their font comment points at `design.mjs set`.
+- The concept template adds `# Look`, and its `# Breaks` example no longer shows selectors a model copies.
+- `start.mjs --palette-from` no longer writes over a look the model chose; it points at `design.mjs accents`.
+- `design.mjs set` warns on Instrument Serif as the display face (11 of MotionSites' 40 designs use it).
+- `check.json` says `detector: ran` or `off` instead of null; `gate.mjs --help` prints its usage.
+
 ## 3.0.0 - 2026-11-15
 
 The model designs. Structure, art direction, colours and faces are the model's choices, made with candidates in front

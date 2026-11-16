@@ -35,23 +35,23 @@ The user gives the subject; you supply the design judgment through the skills th
 | Add or fix motion in existing UI | `craft-motion`, with `animate`, `choreograph` and `animation-performance` |
 | Review a page without editing | `craft-review`, plus `impeccable` (critique, audit, and `impeccable detect <url>`) |
 | The user names Hallmark (`/hallmark`, its `redesign` or `audit`) | `hallmark`'s own run |
-| A component the page needs (menu, gallery, slider, text effect, command palette) | `references/components.md`: React Bits, HeroUI, shadcn, 21st.dev |
+| A component the page needs (menu, gallery, booking form, slider, command palette) | `node <skill>/scripts/components.mjs search "<its job>"` (21st.dev, cult-ui, React Bits), then `references/components.md` |
 | UI that must survive bad data | `break-ui` |
 | Icon, logo, illustration, diagram | `svg-craft` |
 | End of a session with design corrections | `craft-learn` |
 
 Bundled tools run from their own folder (`<skill>/../<name>`): `ui-ux-pro-max` search is `python3 <its folder>/scripts/search.py "<query>" --design-system`; `impeccable` is `<its folder>/scripts/impeccable <verb>` (`impeccable.cmd` on Windows), which downloads its engine once; `design-taste-frontend/scripts/photos.mjs` supplies licensed photographs (the brief prints the commands).
 
-Order when advice conflicts: the user, then accessibility, then the subject (its place, materials and photographs), then the brief (direction, set pieces), then `impeccable` and the Emil skills, then defaults.
+Order when advice conflicts: the user, then accessibility, then the subject (its place, materials and photographs), then your direction and look (checked by the scripts), then the libraries you read as candidates (ui-ux-pro-max, Hallmark themes, MotionSites designs), then `impeccable` and the Emil skills, then defaults.
 
 ## The run
 
 1. **Read the project.** `package.json`, framework, existing `DESIGN.md`, tokens and components. Preserve what exists. If the brand already has colors and fonts, add `--brand` in step 3. A new project goes in a new folder inside the current working directory; run every script from that folder.
 2. **Pick the kind, 2-3 moods and the language.** Kinds: landing, site, product, portfolio, event, venue, brand, campaign, app, docs. Site is several pages; app is a platform or product UI. The language is the one the user wrote in and the audience reads (`es`, `en`, `pt-BR`). Moods: beauty, bold, brutal, calm, coffee, craft, creative, culture, developer, editorial, energetic, fashion, festive, finance, food, fresh, friendly, health, heritage, hospitality, industrial, luxury, minimal, modern, music, nature, nightlife, organic, playful, precise, print, retro, science, sport, tea, tech, travel, warm, wellness, youth.
 3. **Choose the structure and the direction.** `node <skill>/scripts/start.mjs --kind landing --moods warm,craft,coffee --lang es` (a site: `--kind site --pages /,/menu,/visit`) prints the compositions and art directions that fit. Choose one of each as a designer (more structures: ui-ux-pro-max `--domain landing`) and run it again with `--composition <id> --direction <id>`. It deals two set pieces per page, motion and one library component (React Bits) from that direction, copies the kit (`src/craft/`, `app/craft/` or `craft/`) and prints the brief (also `.craft/brief.md`).
-4. **Concept, then copy.** Write `.craft/concept.md` (Idea, Signature, Rejected, Breaks, Components; template in the brief) before any markup. Then write the copy (rules below) in the dealt language.
+4. **Concept, then copy.** Read the MotionSites designs the brief names for their precision (`references/motionsites.md`). Write `.craft/concept.md` (Idea, Signature, Rejected, Breaks, Components; template in the brief) before any markup. Then write the copy (rules below) in the dealt language.
 5. **Photographs, colour and type.** Real photographs carry a website: the client's files, or the brief's `photos.mjs` commands; look at each frame full size and keep it in true colour. Then choose the look yourself (`references/color-type.md`): a white ground, near-black ink and one accent with life taken from the subject (`design.mjs accents <photo>`), faces from ui-ux-pro-max's candidates. Write it with `node <skill>/scripts/design.mjs set ... --why "..."`, which checks it; the check fails while it is pending.
-6. **Build from the blueprint, hero first.** Build the first screen alone, look at it at 1440 and 390 and fix it (`<skill>/../hallmark/references/review-hero.md`) before the rest. `<kit>/blueprint.html` is the dealt composition as a working page. Move its structure into your page, replace every `{{...}}`, and apply the direction on top: grounds, type scale, photo treatment and both breaks. Build both set pieces (`references/set-pieces.md`) in two different sections, put the dealt hero scene in the first screen (`references/scenes.md`; real subjects get a loop, `references/hero-video.md`), add the dealt component (`references/components.md`), use library controls rather than hand-rolled ones, and take materials (glass, bento, riso, mono, page transitions) from `references/surfaces.md`. Wire the kit (table below).
+6. **Build from the blueprint, hero first.** Build the first screen alone, look at it at 1440 and 390 and fix it (`<skill>/../hallmark/references/review-hero.md`) before the rest. Before you hand-build any part (nav, gallery, form, menu, map, FAQ), search for it: `node <skill>/scripts/components.mjs search "<its job>" --section <id>`, then `pick` the best (the check fails until three parts were searched). `<kit>/blueprint.html` is the dealt composition as a working page. Move its structure into your page, replace every `{{...}}`, and apply the direction on top: grounds, type scale, photo treatment and both breaks. Build both set pieces (`references/set-pieces.md`) in two different sections, put the dealt hero scene in the first screen (`references/scenes.md`; real subjects get a loop, `references/hero-video.md`), build the dealt component into the page, and take materials (glass, bento, riso, mono, page transitions) from `references/surfaces.md`. Wire the kit (below).
 7. **Check.** Start the dev server or build, then once: `node <skill>/scripts/start.mjs --url http://localhost:5173 --lang <same>` (or `--root dist`). Then `node <skill>/scripts/check.mjs` (every dealt page of a site). It also measures the direction's floor and the AI tells, and runs `impeccable detect` and Hallmark's `sloplint`.
 8. **Fix and look.** Fix every FAIL (`references/checks.md`). Open every screenshot in `.craft/shots/`, then look yourself with `playwright-cli` (or a browser tool) at 1440, 390 and 320 px, scrolling and with reduced motion: is the subject seen first, do the set pieces read at 390 px, where is the action. Fix the three weakest. Re-run until `RESULT: PASS`.
 9. **Design review.** Two independent reviewers in parallel, a design critic and a motion and mobile auditor (`references/review.md`: the plugin's agents, subagents with its briefs, or one after the other). Fix every high finding; the subject outranks the deal, and a fix that only tames the page to a default is refused. Then `impeccable` polish and the Emil motion review as a Before | After | Why table. Run the check again; it must still pass.
@@ -65,14 +65,14 @@ Order when advice conflicts: the user, then accessibility, then the subject (its
 - Each section heading answers one visitor question: what is it, why trust it, what does it cost, where and when, how do I start.
 - No testimonials, ratings, client logos or press quotes unless supplied. Menu items, prices and hours may be realistic samples; list them in the report as samples to replace.
 - Facts over slogans: every section says something only this business has (a time, a street, a name, a number, how it is made). Slogan shapes fail ("A little X. A lot of Y.", "Tear it. Toast it. Share it.", "more than just", "made with love").
-- One numbering system at most; no small uppercase eyebrow above every heading; no round tilted badge.
+- One numbering system at most; no eyebrow labels; no round tilted badge.
 - Banned: lorem ipsum, emoji, "elevate", "unlock", "seamless", "cutting-edge", "next level", "Get Started", "Learn More" (and their Spanish forms). The check flags more.
 
 ## House rules
 
-**Type.** Headlines use `.craft-display` (dealt family, weight, tracking, leading). Hero headline at `--t-display` or `--t-mega`, max-width 10-16ch, at most 5 lines at 390 px, no broken words. Body 16-20 px (`--t-base`, `--t-lg`), lines under 65ch, line-height 1.5-1.6. At most 3 text sizes per screen besides the headline. No italic accent word in the headline. At most 2 small all-caps labels on the whole page.
+**Type.** Headlines use `.craft-display` (dealt family, weight, tracking, leading). Hero headline at `--t-display` or `--t-mega`, max-width 10-16ch, at most 5 lines at 390 px, no broken words. Body 16-20 px (`--t-base`, `--t-lg`), lines under 65ch, line-height 1.5-1.6. At most 3 text sizes per screen besides the headline. No italic accent word in the headline. No eyebrows or tracked-caps labels (Hallmark's sloplint fails them).
 
-**Color.** Only `var(--c-*)`; never a new hex value. Large fields use bg, surface, ink or accent (an ink field takes `--c-bg` text). The accent marks the primary action and at most one other thing per screen. No gradients beyond two dealt colors, no glow blobs, no purple unless dealt.
+**Color.** Only `var(--c-*)`; never a new hex value. Large fields use bg, surface, ink or accent (an ink field takes `--c-bg` text). The accent marks the primary action and at most one other thing per screen. No gradients beyond two of your colours, no glow blobs, never violet.
 
 **Layout.** The first screen at 1440x900 and 390x844 shows the headline, the line, the primary action and the composition's first-screen visual. Spacing from `--s-*`; sections use `padding-block: var(--section)` and `padding-inline: var(--gutter)`. Never a row of 3+ identical cards, nor a big card holding one number: one dominant item, unequal sizes, or a list. The footer is the blueprint's `.site-footer`, filled for real. No horizontal scroll at any width: `min-width: 0` on grid and flex children.
 
@@ -88,14 +88,7 @@ At most 2 moving effects in one viewport and one pinned or scrubbed scene per sc
 
 ## Wiring the kit
 
-Load `tokens.css`, then `craft.css`, then `layouts.css`, then `set-pieces.css`, then `surfaces.css`, then your styles. Call `init(document)` once after the DOM exists; it returns a cleanup. Add `<script>document.documentElement.classList.add('craft-js')</script>` in `<head>` so first-screen elements do not flash before the kit runs.
-
-| Stack | Wiring |
-|---|---|
-| HTML | `<link>` the CSS files; `<script type="module">import { init } from './craft/craft-motion.js'; init(document);</script>` before `</body>` |
-| React, Next.js, Vue, Svelte, Astro, Tailwind v4 | `references/frameworks.md`: import the CSS once, call `init(document)` after mount (Next.js: a `'use client'` component keyed on the pathname), map the tokens into `@theme inline` |
-
-Elements with `data-words`, `data-scroll-words`, `data-count` or `data-scramble` hold static text.
+The blueprint is wired: `tokens.css`, `craft.css`, `layouts.css`, `set-pieces.css`, `surfaces.css` in that order, then your styles; `<script>document.documentElement.classList.add('craft-js')</script>` in `<head>`; `init(document)` from `craft-motion.js` once after the DOM exists (it returns a cleanup). React, Next.js, Vue, Svelte, Astro, Tailwind v4: `references/frameworks.md`. Elements with `data-words`, `data-scroll-words`, `data-count` or `data-scramble` hold static text.
 
 ## Report
 

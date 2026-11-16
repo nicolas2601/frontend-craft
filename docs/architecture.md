@@ -1,5 +1,25 @@
 # Architecture and decisions
 
+## 3.1: the libraries are searched, not mentioned
+
+A DeepSeek build used the one library piece the brief forced and hand-built everything else: 21st.dev, cult-ui and
+shadcn were named in `references/components.md` and nowhere in the run, and the check never asked. Four independent
+reviews of the process found the same pattern for other integrations: a step is followed when a script prints its
+command and the check verifies its output, and skipped when it is only a reference one hop away.
+
+- `components.mjs search "<job>"` asks 21st.dev (its CLI), cult-ui (its registry, cached a week) and React Bits (the
+  curated catalogue) at once, marks glow, shader and cursor decoration, and logs every search in
+  `.craft/components.json`; `pick` saves the source to read and logs the choice. The check reads the log
+  (`parts-unsearched` until three parts were searched) and scans the project's source for the dealt component
+  (`deal-component-unused`): naming it in the concept is no longer enough.
+- MotionSites is read as a library: the brief names the two or three of its 40 designs closest to the subject for
+  their precision, and its media shelf off photo-led subjects. Its own skill adds a sponsor message to every delivery
+  and its examples and media may not be redistributed, so it is cloned on the user's machine and its `SKILL.md` is
+  never run. `references/motionsites.md` lists what the check refuses in its house look.
+- The blueprints load all five kit stylesheets; the concept template carries `# Look` and no longer shows break
+  selectors a model copies; `--palette-from` no longer writes over a look the model chose; a missing impeccable or
+  Hallmark is a warning, not only a note.
+
 ## 3.0: the model designs, scripts check
 
 From 2.2 to 2.6 the deal chose the palette, the type and the composition at random within the subject's moods, so

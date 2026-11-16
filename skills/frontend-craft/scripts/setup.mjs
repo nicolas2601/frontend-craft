@@ -2,9 +2,11 @@
 /*
   What frontend-craft needs on this machine, and how to get it. Free tools only; nothing secret is written.
 
-    node <skill>/scripts/setup.mjs             report: Node, a browser, ffmpeg, Python (and numpy + onnxruntime), playwright-cli, the sibling skills, the MCP servers
-    node <skill>/scripts/setup.mjs --install   also install what is missing and can be installed without sudo:
-                                               playwright-cli (npm -g) and, in Claude Code, the Playwright and Hugging Face MCP servers
+    node <skill>/scripts/setup.mjs             report: Node, a browser, ffmpeg, Python (and numpy + onnxruntime), playwright-cli, the 21st.dev CLI,
+                                               the sibling skills, the MotionSites library, the MCP servers
+    node <skill>/scripts/setup.mjs --install   also install what is missing and can be installed without sudo: playwright-cli and the
+                                               21st.dev CLI (npm -g), the MotionSites library (git clone into ~/.cache at a pinned commit)
+                                               and, in Claude Code, the Playwright and Hugging Face MCP servers. `21st login` stays yours.
     node <skill>/scripts/setup.mjs --json      the report as JSON
 
   ffmpeg, Python and a browser come from the system's package manager; the report prints the command.
@@ -14,6 +16,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { findChrome } from './lib/chrome.mjs';
+import { CACHE, PIN, UPSTREAM, findMotionsites } from './lib/motionsites.mjs';
 import { isMain, parseArgs } from './lib/state.mjs';
 
 const SKILL = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -39,7 +42,7 @@ const OTHER_HARNESSES = [
 const defaultRun = (cmd, args) => { try { return execFileSync(cmd, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 60000 }); } catch { return null; } };
 
 /** What is here and what is missing. `run` is injected so the report is testable. */
-export function report({ run = defaultRun, skillsDir = path.dirname(SKILL), chrome = findChrome } = {}) {
+export function report({ run = defaultRun, skillsDir = path.dirname(SKILL), chrome = findChrome, library = () => findMotionsites(SKILL) } = {}) {
   const major = Number(process.versions.node.split('.')[0]);
   let browser = null;
   try { browser = chrome(); } catch { browser = null; }
@@ -52,6 +55,8 @@ export function report({ run = defaultRun, skillsDir = path.dirname(SKILL), chro
     python3: { ok: run('python3', ['--version']) !== null },
     depth: { ok: run('python3', ['-c', 'import numpy, onnxruntime']) !== null },
     playwrightCli: { ok: run('playwright-cli', ['--version']) !== null },
+    cli21st: { ok: run('21st', ['help']) !== null, login: /logged in/i.test(run('21st', ['whoami']) ?? '') },
+    motionsites: { ok: !!library(), path: library() },
     siblings: Object.fromEntries(SIBLINGS.map((s) => [s, fs.existsSync(path.join(skillsDir, s, 'SKILL.md'))])),
     claude,
     mcp: claude ? Object.fromEntries(Object.entries(MCP).map(([k, v]) => [k, v.test.test(mcpList)])) : null,
@@ -59,9 +64,11 @@ export function report({ run = defaultRun, skillsDir = path.dirname(SKILL), chro
 }
 
 /** The commands --install runs: only user-level installs, never sudo. */
-export function installPlan(r) {
+export function installPlan(r, { cacheExists = () => fs.existsSync(CACHE) } = {}) {
   const plan = [];
   if (!r.playwrightCli.ok) plan.push(['npm', ['install', '-g', '@playwright/cli@latest']]);
+  if (!r.cli21st?.ok) plan.push(['npm', ['install', '-g', '@21st-dev/cli@latest']]);
+  if (!r.motionsites?.ok && !cacheExists()) plan.push(['git', ['clone', '--quiet', UPSTREAM, CACHE]], ['git', ['-C', CACHE, '-c', 'advice.detachedHead=false', 'checkout', '--quiet', PIN]]);
   if (r.claude) for (const [k, v] of Object.entries(MCP)) if (!r.mcp?.[k]) plan.push(['claude', v.add]);
   return plan;
 }
@@ -75,6 +82,8 @@ function text(r) {
     `${mark(r.python3.ok)} python3${r.python3.ok ? '' : ` - ${SYSTEM.python3}`} (ui-ux-pro-max search)`,
     `${mark(r.depth.ok)} numpy + onnxruntime${r.depth.ok ? '' : ` - ${SYSTEM.depth}`} (parallax hero loops from a still)`,
     `${mark(r.playwrightCli.ok)} playwright-cli${r.playwrightCli.ok ? '' : ' - npm install -g @playwright/cli@latest (or --install)'} (looking at the page, the reviewers)`,
+    `${mark(r.cli21st.ok && r.cli21st.login)} 21st.dev CLI${!r.cli21st.ok ? ' - npm install -g @21st-dev/cli@latest (or --install), then 21st login' : r.cli21st.login ? '' : ' - run 21st login once (browser sign-in, free)'} (library parts: components.mjs search)`,
+    `${mark(r.motionsites.ok)} MotionSites library${r.motionsites.ok ? ` ${r.motionsites.path}` : ' - --install clones it into ~/.cache/frontend-craft/libraries (optional)'} (reference designs, media shelf)`,
     ...Object.entries(r.siblings).map(([s, ok]) => `${mark(ok)} skill ${s}${ok ? '' : ' - install every skill of the repo as siblings: npx skills@latest add nicolas2601/frontend-craft --all'}`),
   ];
   if (r.mcp) lines.push(...Object.entries(r.mcp).map(([k, ok]) => `${mark(ok)} MCP ${k}${ok ? '' : ' - --install adds it to Claude Code'}`));
