@@ -98,4 +98,64 @@ function smooth(el, ctx) {
   return () => { alive = false; lenis?.destroy(); };
 }
 
-export const premium = { lines, unveil, ground, smooth };
+/** The ground and ink of the section under a point: data-nav-ground / data-nav-ink, then data-ground / data-ink, then the page's. */
+function coloursUnder(el, x, y, base) {
+  const hit = document.elementsFromPoint(x, y).find((n) => !el.contains(n));
+  const sec = hit?.closest('[data-nav-ground], [data-ground]');
+  return { ground: sec?.dataset.navGround ?? sec?.dataset.ground ?? base.ground, ink: sec?.dataset.navInk ?? sec?.dataset.ink ?? base.ink };
+}
+
+// data-nav on the header: a floating bar in the colours of the section under it, that steps away while the visitor
+// reads down and comes back on the way up. On a phone its links open as a full screen from the menu button
+// (<button class="nav__toggle" aria-expanded="false" aria-controls="<the links' id>">). Without JavaScript the links
+// stay a row.
+function nav(el, ctx) {
+  const root = document.documentElement;
+  const css = getComputedStyle(root);
+  const base = { ground: css.getPropertyValue('--c-bg').trim(), ink: css.getPropertyValue('--c-ink').trim() };
+  const toggle = el.querySelector('.nav__toggle[aria-controls]');
+  const sheet = toggle && document.getElementById(toggle.getAttribute('aria-controls'));
+  let last = window.scrollY;
+  let raf = 0;
+  const paint = () => {
+    raf = 0;
+    // where the bar rests, not where it is: while it steps away its rectangle is off the screen
+    const { ground, ink } = coloursUnder(el, window.innerWidth / 2, el.offsetTop + el.offsetHeight + 4, base);
+    el.style.setProperty('--nav-ground', ground);
+    el.style.setProperty('--nav-ink', ink);
+    const y = window.scrollY;
+    const deep = y > window.innerHeight * 0.6;
+    const busy = el.hasAttribute('data-nav-open') || el.contains(document.activeElement) || ctx.reduced;
+    if (y > last + 4 && deep && !busy) el.setAttribute('data-nav-away', '');
+    else if (y < last - 4 || !deep) el.removeAttribute('data-nav-away');
+    last = y;
+  };
+  const onScroll = () => { if (!raf) raf = requestAnimationFrame(paint); };
+  const setOpen = (open) => {
+    el.toggleAttribute('data-nav-open', open);
+    root.toggleAttribute('data-nav-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    if (open) { el.removeAttribute('data-nav-away'); sheet.querySelector('a')?.focus({ preventScroll: true }); }
+  };
+  const onToggle = () => setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+  const onPick = (e) => { if (e.target.closest('a')) setOpen(false); };
+  const onKey = (e) => { if (e.key === 'Escape' && el.hasAttribute('data-nav-open')) { setOpen(false); toggle.focus(); } };
+  toggle?.addEventListener('click', onToggle);
+  sheet?.addEventListener('click', onPick);
+  document.addEventListener('keydown', onKey);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  paint();
+  return () => {
+    if (raf) cancelAnimationFrame(raf);
+    toggle?.removeEventListener('click', onToggle);
+    sheet?.removeEventListener('click', onPick);
+    document.removeEventListener('keydown', onKey);
+    window.removeEventListener('scroll', onScroll);
+    window.removeEventListener('resize', onScroll);
+    if (toggle) setOpen(false);
+    el.removeAttribute('data-nav-away');
+  };
+}
+
+export const premium = { lines, unveil, ground, smooth, nav };
