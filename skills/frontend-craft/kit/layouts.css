@@ -35,6 +35,11 @@
   .nav .links::-webkit-scrollbar { display: none; }
   .nav .links a { flex: none; }
 }
+/* A small phone keeps the name whole and the main action on one line; the links scroll between them. */
+@media (max-width: 520px) {
+  .nav .brand { flex: none; overflow: visible; }
+  .nav > .btn { min-height: 44px; padding-inline: var(--s-3); font-size: var(--t-sm); white-space: nowrap; }
+}
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
@@ -61,7 +66,8 @@
 
 /* ---------- pinned statement (used by several compositions) ---------- */
 .pin-statement > div { display: grid; place-items: center; padding: 0 var(--gutter); }
-.pin-statement p { font-family: var(--f-display); font-weight: var(--display-weight); letter-spacing: var(--display-tracking); font-size: var(--t-3xl); line-height: 1.1; max-width: 22ch; margin: 0; }
+/* The statement fills its screen: set large enough that the pinned stage is never an empty ground with a few words. */
+.pin-statement p { font-family: var(--f-display); font-weight: var(--display-weight); letter-spacing: var(--display-tracking); font-size: clamp(2.25rem, 0.9rem + 4.2vw, 5.5rem); line-height: 1.04; max-width: 20ch; margin: 0; }
 
 /* ---------- split-stage ---------- */
 .l-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-12); padding: var(--s-12) var(--gutter); }

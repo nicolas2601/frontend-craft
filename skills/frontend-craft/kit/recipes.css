@@ -1,0 +1,167 @@
+/* frontend-craft section recipes (kit/motion/recipes.js, product3d.js, map.js). Load after craft.css.
+   Every recipe reads as a finished section without JavaScript and under reduced motion (.r-still). */
+
+/* ---------- dive: fly forward into the hero picture as the page scrolls ---------- */
+.r-dive { position: relative; height: 210svh; background: var(--c-ink); color: var(--c-on-scrim, #fff); }
+.r-dive__stage { position: sticky; top: 0; height: 100svh; overflow: clip; display: grid; align-items: end; }
+.r-dive__media { position: absolute; inset: 0; }
+.r-dive__media > img, .r-dive__media > video, .r-dive__media > picture > img {
+  width: 100%; height: 100%; object-fit: cover; object-position: var(--focus, 50% 50%);
+  transform-origin: var(--focus, 50% 50%);
+  scale: calc(1 + var(--pe, 0) * var(--dive-depth, 0.85));
+  will-change: scale;
+}
+/* Legibility: a scrim weighted to where the words sit, fading out as the words leave. */
+.r-dive__scrim {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.62) 0%, rgb(0 0 0 / 0.25) 38%, rgb(0 0 0 / 0) 62%),
+              linear-gradient(to right, rgb(0 0 0 / 0.35) 0%, rgb(0 0 0 / 0) 55%);
+  opacity: calc(1 - var(--p, 0) * 1.4);
+}
+.r-dive__copy {
+  position: relative; z-index: 2; width: 100%; max-width: 1440px; margin-inline: auto;
+  padding: 0 var(--gutter) clamp(2.5rem, 7svh, 6rem);
+  opacity: calc(1 - var(--p, 0) * 2.4);
+  translate: 0 calc(var(--pe, 0) * -14svh);
+}
+.r-dive__copy h1 { max-width: 14ch; margin: 0 0 var(--s-6); font-size: var(--t-display); line-height: var(--display-leading, 0.95); text-wrap: balance; }
+.r-dive__copy p { max-width: 38ch; margin: 0 0 var(--s-8); font-size: var(--t-lg); line-height: 1.5; color: color-mix(in oklab, currentColor 86%, transparent); }
+/* The last part of the pass dissolves into the next section's ground. */
+.r-dive__stage::after {
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: var(--next-ground, var(--c-bg));
+  opacity: clamp(0, calc((var(--p, 0) - 0.82) * 5.5), 1);
+}
+.r-dive.r-still { height: auto; }
+.r-dive.r-still .r-dive__stage { position: relative; min-height: 100svh; }
+
+/* A hero that opens the page sits under the sticky kit nav, so its picture reaches the top edge. */
+.nav ~ main > .r-dive:first-child { margin-top: calc(-1 * var(--nav-h, 68px)); }
+
+/* ---------- journey: a pinned horizontal story; photographs pass, two lines of type cross ---------- */
+.r-journey { position: relative; background: var(--c-bg); color: var(--c-ink); }
+.r-journey__stage {
+  position: sticky; top: 0; height: 100svh; overflow: clip;
+  display: grid; grid-template-rows: auto 1fr auto; align-content: center; row-gap: clamp(1rem, 3svh, 2rem);
+  padding-block: clamp(4.5rem, 10svh, 7rem) clamp(1.5rem, 4svh, 3rem);
+}
+.r-journey__line {
+  margin: 0; padding-inline: var(--gutter); white-space: nowrap; pointer-events: none;
+  font-family: var(--f-display); font-weight: var(--display-weight, 700); letter-spacing: var(--display-tracking, -0.02em);
+  font-size: clamp(3.25rem, 1rem + 9vw, 10rem); line-height: 0.9; will-change: translate;
+}
+.r-journey__line--soft { color: color-mix(in oklab, var(--c-ink) 52%, var(--c-bg)); } /* 3:1 or more: large text */
+.r-journey__track {
+  display: flex; align-items: center; gap: clamp(1rem, 2.4vw, 2.5rem); width: max-content;
+  margin: 0; padding: 0 var(--gutter); list-style: none; will-change: translate;
+}
+.r-journey__track > li { flex: none; }
+.r-journey__track figure { margin: 0; }
+.r-journey__track img {
+  display: block; height: clamp(14rem, 44svh, 30rem); width: auto; aspect-ratio: var(--ratio, 4 / 5);
+  object-fit: cover; border-radius: var(--r-sm);
+}
+.r-journey__track > li:nth-child(even) img { height: clamp(11rem, 34svh, 23rem); }
+.r-journey__track > li:nth-child(3n) { align-self: flex-start; }
+.r-journey__track > li:nth-child(3n + 2) { align-self: flex-end; }
+.r-journey__track figcaption { margin-top: var(--s-3); max-width: 28ch; font-size: var(--t-sm, 0.875rem); line-height: 1.4; color: var(--c-muted); }
+.r-journey__progress { margin-inline: var(--gutter); height: 2px; background: var(--c-line); overflow: clip; }
+.r-journey__progress > span { display: block; height: 100%; background: var(--c-ink); transform-origin: left; scale: 0 1; }
+.r-journey.r-still { height: auto; }
+.r-journey.r-still .r-journey__stage { position: relative; height: auto; }
+.r-journey.r-still .r-journey__track { width: auto; overflow-x: auto; scroll-snap-type: x mandatory; }
+.r-journey.r-still .r-journey__track > li { scroll-snap-align: start; }
+.r-journey.r-still .r-journey__line { white-space: normal; }
+
+/* ---------- carousel: a snapping row with arrows, drag, keys and a live count ---------- */
+.r-carousel { position: relative; }
+.r-carousel__head {
+  display: flex; align-items: end; justify-content: space-between; gap: var(--s-6);
+  padding-inline: var(--gutter); margin-bottom: var(--s-8);
+}
+.r-carousel__nav { display: flex; align-items: center; gap: var(--s-3); flex: none; }
+.r-carousel__count { min-width: 4.5ch; text-align: center; font-variant-numeric: tabular-nums; font-size: var(--t-sm, 0.875rem); color: var(--c-muted); }
+.r-carousel__nav button {
+  display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border-radius: 50%;
+  border: 1px solid var(--c-line); background: transparent; color: var(--c-ink); cursor: pointer; font-size: var(--t-sm, 0.875rem);
+  transition: background-color 160ms var(--ease-out), transform 140ms var(--ease-out), opacity 160ms var(--ease-out);
+}
+.r-carousel__nav button::before {
+  content: ""; width: 9px; height: 9px; border-top: 2px solid currentColor; border-right: 2px solid currentColor; rotate: 45deg; translate: -2px 0;
+}
+.r-carousel__nav [data-prev]::before { rotate: -135deg; translate: 2px 0; }
+.r-carousel__nav button:disabled { opacity: 0.32; cursor: default; border-style: dashed; }
+.r-carousel__nav button:not(:disabled):active { transform: scale(0.94); }
+@media (hover: hover) and (pointer: fine) {
+  .r-carousel__nav button:not(:disabled):hover { background: color-mix(in oklab, var(--c-ink) 8%, transparent); }
+}
+.r-carousel__nav button:focus-visible { outline: 2px solid var(--c-accent); outline-offset: 3px; }
+.r-carousel__track {
+  display: grid; grid-auto-flow: column; grid-auto-columns: clamp(16rem, 76vw, 26rem);
+  gap: clamp(0.875rem, 1.6vw, 1.5rem); margin: 0; padding: 0 var(--gutter) var(--s-2); list-style: none;
+  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
+  scrollbar-width: none; cursor: grab;
+}
+.r-carousel__track::-webkit-scrollbar { display: none; }
+.r-carousel__track.is-dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+.r-carousel__track:focus-visible { outline: 2px solid var(--c-accent); outline-offset: 4px; }
+.r-carousel__slide { scroll-snap-align: start; min-width: 0; }
+.r-carousel__slide figure { margin: 0 0 var(--s-4); overflow: clip; border-radius: var(--r-md); background: var(--c-surface); }
+.r-carousel__slide img { display: block; width: 100%; aspect-ratio: var(--ratio, 4 / 5); object-fit: cover; transition: scale 600ms var(--ease-out); -webkit-user-drag: none; }
+@media (hover: hover) and (pointer: fine) { .r-carousel__slide:hover img { scale: 1.03; } }
+.r-carousel__slide h3 { margin: 0 0 var(--s-2); font-size: var(--t-xl); line-height: 1.15; }
+.r-carousel__slide p { margin: 0; max-width: 34ch; color: var(--c-muted); line-height: 1.5; }
+@media (min-width: 900px) { .r-carousel__track { grid-auto-columns: clamp(18rem, 28vw, 27rem); } }
+
+/* ---------- sequence: frames of a real clip scrubbed by scroll ---------- */
+.r-sequence { position: relative; height: var(--seq-length, 320svh); background: var(--c-ink); color: var(--c-on-scrim, #fff); }
+.r-sequence__stage { position: sticky; top: 0; height: 100svh; overflow: clip; }
+.r-sequence__stage canvas, .r-sequence__poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.r-sequence__poster { z-index: 0; }
+.r-sequence__stage canvas { z-index: 1; }
+.r-sequence__steps { position: absolute; inset: 0; z-index: 2; display: grid; align-items: end; pointer-events: none; }
+.r-sequence__steps > * {
+  grid-area: 1 / 1; max-width: 30ch; margin: 0 var(--gutter) clamp(2.5rem, 9svh, 6rem);
+  font-family: var(--f-display); font-size: var(--t-2xl); line-height: 1.1; text-wrap: balance;
+  text-shadow: 0 1px 24px rgb(0 0 0 / 0.45);
+  opacity: 0; translate: 0 1.25rem; transition: opacity 420ms var(--ease-out), translate 520ms var(--ease-out);
+}
+.r-sequence__steps > .is-on { opacity: 1; translate: 0 0; }
+.r-sequence.r-still { height: auto; }
+.r-sequence.r-still .r-sequence__stage { position: relative; height: 100svh; }
+.r-sequence.r-still .r-sequence__steps { position: relative; inset: auto; display: block; padding-block: var(--s-12); background: var(--c-ink); }
+.r-sequence.r-still .r-sequence__steps > * { opacity: 1; translate: none; margin-bottom: var(--s-6); text-shadow: none; }
+
+/* ---------- product3d: the real product in 3D from its own artwork ---------- */
+.r-product { position: relative; display: grid; place-items: center; aspect-ratio: var(--ratio, 4 / 5); min-height: 22rem; }
+.r-product > img { max-width: 70%; max-height: 90%; object-fit: contain; filter: drop-shadow(0 24px 30px rgb(0 0 0 / 0.25)); }
+.r-product__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.r-product[data-product3d-on] > img { visibility: hidden; }
+
+/* ---------- map: a real map of the place (MapLibre + OpenFreeMap) ---------- */
+.r-map { position: relative; min-height: clamp(20rem, 52svh, 34rem); border-radius: var(--r-md); overflow: clip; background: var(--c-surface); }
+/* MapLibre's own stylesheet sets the container relative; the map must fill the frame whatever loads last. */
+.r-map > .r-map__canvas, .r-map > .r-map__canvas.maplibregl-map { position: absolute; inset: 0; width: 100%; height: 100%; }
+.r-map > :not(.r-map__canvas) { position: relative; z-index: 1; }
+.r-map[data-map-on] > :not(.r-map__canvas):not(.r-map__directions) { display: none; }
+.r-map__directions { position: absolute; z-index: 2; left: var(--s-4); bottom: var(--s-4); }
+.r-map .maplibregl-ctrl-attrib a { display: inline-block; padding-block: 8px; }
+.r-map .maplibregl-ctrl button, .r-map .maplibregl-ctrl-attrib-button, .r-map .maplibregl-ctrl-attrib { font-size: var(--t-sm, 0.875rem); }
+.r-map__pin { font-size: var(--t-sm, 0.875rem); display: flex; align-items: center; gap: var(--s-2); pointer-events: none; }
+.r-map__dot { width: 18px; height: 18px; border-radius: 50%; background: var(--c-accent); box-shadow: 0 0 0 5px color-mix(in oklab, var(--c-accent) 28%, transparent), 0 4px 12px rgb(0 0 0 / 0.3); }
+.r-map__label {
+  padding: var(--s-2) var(--s-3); border-radius: 999px; background: var(--c-ink); color: var(--c-bg);
+  font-size: 0.875rem; font-weight: 600; white-space: nowrap; box-shadow: 0 6px 18px rgb(0 0 0 / 0.25);
+}
+
+/* ---------- spec: facts as a quiet two-column list (dl > div > dt + dd) ---------- */
+.r-spec { display: grid; margin: var(--s-8) 0; border-top: 1px solid var(--c-line); }
+.r-spec > div { display: grid; grid-template-columns: minmax(6rem, 9rem) minmax(0, 1fr); align-items: center; gap: var(--s-4); min-height: 3.25rem; padding-block: var(--s-2); border-bottom: 1px solid var(--c-line); }
+.r-spec dt { color: color-mix(in oklab, var(--c-ink) 72%, var(--c-bg)); } /* AA on the ground and on the surface */
+.r-spec dd { margin: 0; font-weight: 500; }
+.r-spec a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; text-decoration: underline; text-decoration-color: var(--c-line); text-underline-offset: 0.25em; }
+
+@media (prefers-reduced-motion: reduce) {
+  .r-dive__media > img, .r-dive__media > video { scale: 1; }
+  .r-sequence__steps > * { transition: none; }
+}

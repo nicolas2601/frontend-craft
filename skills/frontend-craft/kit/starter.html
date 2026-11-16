@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{title: what is sold, where or for whom, the name}}</title>
+  <meta name="description" content="{{one sentence: what it is, where, the main action}}">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <!-- the font <link> tags that design.mjs set printed -->
+  <link rel="stylesheet" href="craft/tokens.css">
+  <link rel="stylesheet" href="craft/craft.css">
+  <link rel="stylesheet" href="craft/layouts.css">
+  <link rel="stylesheet" href="craft/set-pieces.css">
+  <link rel="stylesheet" href="craft/surfaces.css">
+  <link rel="stylesheet" href="craft/recipes.css">
+  <!-- Only when a section uses data-product3d (three.js) or data-map (MapLibre); references/recipes.md:
+  <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js" } }</script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.1/dist/maplibre-gl.css">
+  <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.1/dist/maplibre-gl.js" defer></script> -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="craft-skip" href="#main">{{skip to content, in the page language}}</a>
+  <header class="nav">
+    <a class="brand" href="#main">{{name}}</a>
+    <nav class="links" aria-label="{{sections, in the page language}}"><!-- 3-4 links to the sections --></nav>
+    <a class="btn" href="{{the main action's real link}}" data-press>{{main action, the same words as the hero's}}</a>
+  </header>
+  <main id="main">
+    <!-- one <section> per storyboard row in .craft/plan.md, built from references/recipes.md -->
+  </main>
+  <footer class="site-footer">
+    <!-- the name, contact as links (tel:, mailto:, WhatsApp), hours, the sections, credits for every photograph -->
+  </footer>
+  <script type="module">
+    import { init } from './craft/craft-motion.js';
+    init(document);
+  </script>
+</body>
+</html>

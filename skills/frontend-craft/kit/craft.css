@@ -120,6 +120,9 @@ img, video { height: auto; }
   color: var(--c-accent-ink);
 }
 
+.craft-skip { position: absolute; z-index: 100; left: var(--s-4); top: var(--s-4); padding: var(--s-3) var(--s-4); border-radius: var(--r-sm); background: var(--c-ink); color: var(--c-bg); translate: 0 -200%; transition: translate 160ms var(--ease-out); }
+.craft-skip:focus-visible { translate: 0 0; }
+
 .craft-sr {
   position: absolute !important;
   width: 1px;
@@ -224,7 +227,26 @@ html:not(.craft-js) [data-rail] > [data-rail-track] > * { scroll-snap-align: sta
   [data-marquee] { overflow-x: auto; }
 }
 
-/* A pause button for something that keeps moving (data-marquee-toggle, data-loop-toggle outside .craft-loop). */
-.craft-pause { display: block; margin: var(--s-2) var(--gutter, 1.25rem) 0 auto; min-height: 44px; padding: 0 var(--s-4); border: 1px solid var(--c-line); border-radius: 999px; background: var(--c-bg); color: var(--c-ink); font: inherit; font-size: var(--t-sm); cursor: pointer; transition: transform 140ms var(--ease-out); }
-.craft-pause:active { transform: scale(0.97); }
-.craft-pause:focus-visible { outline: 2px solid var(--c-accent); outline-offset: 3px; }
+/* The pause control for anything that keeps moving (WCAG 2.2.2): a small round icon in the corner of the media or
+   band it controls, never a text button under it. Its label stays for screen readers: <span class="craft-sr">. */
+:where(figure, div, section, header):has(> .craft-pause, > [data-loop-toggle], > [data-marquee-toggle]) { position: relative; }
+.craft-pause, [data-loop-toggle], [data-marquee-toggle] {
+  position: absolute; z-index: 3; inset: auto var(--s-4, 1rem) var(--s-4, 1rem) auto;
+  display: grid; place-items: center; width: 44px; height: 44px; padding: 0; margin: 0;
+  border: 0; border-radius: 50%; background: rgb(0 0 0 / 0.42); color: rgb(251 250 248);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  font-size: var(--t-sm, 0.875rem); text-indent: -999px; overflow: hidden; cursor: pointer; opacity: 0.72;
+  transition: opacity 160ms var(--ease-out, ease-out), transform 140ms var(--ease-out, ease-out);
+}
+.craft-pause::before, [data-loop-toggle]::before, [data-marquee-toggle]::before {
+  content: ""; width: 12px; height: 14px;
+  background: linear-gradient(90deg, currentColor 0 4px, transparent 4px 8px, currentColor 8px 12px);
+}
+.craft-pause[aria-pressed="true"]::before, [data-loop-toggle][aria-pressed="true"]::before, [data-marquee-toggle][aria-pressed="true"]::before {
+  width: 13px; background: currentColor; clip-path: polygon(0 0, 100% 50%, 0 100%); translate: 1px 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .craft-pause:hover, [data-loop-toggle]:hover, [data-marquee-toggle]:hover { opacity: 1; }
+}
+.craft-pause:focus-visible, [data-loop-toggle]:focus-visible, [data-marquee-toggle]:focus-visible { opacity: 1; outline: 2px solid rgb(251 250 248); outline-offset: 3px; }
+.craft-pause:active, [data-loop-toggle]:active, [data-marquee-toggle]:active { transform: scale(0.94); }

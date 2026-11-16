@@ -116,7 +116,9 @@ test('a hero loop takes the riso treatment like a photograph, and its pause butt
   const css = fs.readFileSync(path.join(SKILL_DIR, 'kit', 'surfaces.css'), 'utf8');
   assert.match(css, /\.craft-riso :is\(img, video\)\s*\{\s*filter: grayscale/, 'riso filter must cover video');
   const z = (re) => Number(css.match(re)?.[1]);
-  assert.ok(z(/\.craft-loop \[data-loop-toggle\][^{]*\{[^}]*z-index: (\d+)/) > z(/\.craft-riso::after \{[^}]*z-index: (\d+)/), 'toggle above the riso grain');
+  const kit = fs.readFileSync(path.join(SKILL_DIR, 'kit', 'craft.css'), 'utf8');
+  const toggle = Number(kit.match(/\.craft-pause, \[data-loop-toggle\], \[data-marquee-toggle\] \{[^}]*z-index: (\d+)/)?.[1]);
+  assert.ok(toggle > z(/\.craft-riso::after \{[^}]*z-index: (\d+)/), 'the corner pause icon stays above the riso grain');
   assert.match(fs.readFileSync(path.join(SKILL_DIR, 'references', 'hero-video.md'), 'utf8'), /picture treatment/);
 });
 

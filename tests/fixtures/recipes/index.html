@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panadería de la 33: pan de masa madre en Cabecera, Bucaramanga</title>
+  <meta name="description" content="Pan de masa madre horneado de noche en la Carrera 33, Cabecera. Fixture for the frontend-craft section recipes.">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <style>
+    @font-face { font-family: 'Fixture Display'; src: local('DejaVu Sans Bold'), local('DejaVuSans-Bold'), local('Liberation Sans Bold'); font-weight: 700; }
+    @font-face { font-family: 'Fixture Text'; src: local('DejaVu Sans'), local('DejaVuSans'), local('Liberation Sans'); font-weight: 400; }
+    :root {
+      --c-bg: #f7f6f2; --c-surface: #eeede9; --c-ink: #151413; --c-muted: #656462;
+      --c-line: #d8d7d3; --c-accent: #8f4b36; --c-accent-ink: #f7f6f2; --c-scrim: #151413; --c-on-scrim: #f7f6f2;
+      --f-display: 'Fixture Display', sans-serif; --f-text: 'Fixture Text', sans-serif;
+      --display-weight: 700; --display-tracking: -0.04em; --display-leading: 0.92;
+    }
+  </style>
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/craft.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/layouts.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/set-pieces.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/surfaces.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/recipes.css">
+  <style>
+    body { margin: 0; background: var(--c-bg); color: var(--c-ink); font-family: var(--f-text); }
+    .craft-display { font-family: var(--f-display); font-weight: 700; letter-spacing: -0.04em; line-height: 0.92; }
+    .hero .r-dive__copy h1 { color: #fbfaf8; }
+    .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-12); align-items: center; padding: var(--section) var(--gutter); }
+    .split img { width: 100%; height: auto; border-radius: var(--r-md); }
+    .shop { padding-block: var(--section); }
+    footer { padding: var(--section) var(--gutter); background: var(--c-surface); }
+    footer a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; }
+    @media (max-width: 800px) { .split { grid-template-columns: minmax(0, 1fr); } }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="#main">Panadería de la 33</a>
+    <nav class="links" aria-label="Secciones"><a href="#pan">El pan</a><a href="#visita">Visita</a></nav>
+    <a class="btn" href="tel:+576070000000" data-press>Encargar pan</a>
+  </header>
+  <main id="main">
+    <section class="r-dive hero" data-dive="0.7" aria-label="La panadería">
+      <div class="r-dive__stage">
+        <div class="r-dive__media"><img src="../../../skills/design-taste-frontend/assets/photos/img/m179564041-1200.webp" alt="El horno de la panadería encendido de noche" width="1200" height="800" style="--focus: 50% 45%"></div>
+        <div class="r-dive__scrim"></div>
+        <div class="r-dive__copy">
+          <h1 class="craft-display" data-enter>Pan de masa madre en la Carrera 33</h1>
+          <p data-enter>Horneado de noche en Cabecera, listo a las seis de la mañana.</p>
+          <div class="actions" data-enter><a class="btn" href="tel:+576070000000" data-press>Encargar pan</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="r-journey" id="pan" data-journey aria-label="Del trigo a la mesa">
+      <div class="r-journey__stage">
+        <p class="r-journey__line" data-line="-1">Del trigo de Boyacá</p>
+        <ol class="r-journey__track">
+          <li><figure><img src="../../../skills/design-taste-frontend/assets/photos/img/m21913761-1200.webp" alt="Pan de masa madre recién sacado del horno" width="1200" height="800"><figcaption>Masa madre de doce años.</figcaption></figure></li>
+          <li><figure><img src="../../../skills/design-taste-frontend/assets/photos/img/m187311853-1200.webp" alt="Pan de centeno cortado sobre una tabla" width="1200" height="800"><figcaption>Centeno, los jueves.</figcaption></figure></li>
+          <li><figure><img src="../../../skills/design-taste-frontend/assets/photos/img/m108358720-1200.webp" alt="Panes enfriándose en una rejilla" width="1200" height="800"><figcaption>Enfriado en rejilla.</figcaption></figure></li>
+          <li><figure><img src="../../../skills/design-taste-frontend/assets/photos/img/m111881197-1200.webp" alt="Harina sobre la mesa de trabajo" width="800" height="1000"><figcaption>Harina molida en piedra.</figcaption></figure></li>
+          <li><figure><img src="../../../skills/design-taste-frontend/assets/photos/img/m11317510-1200.webp" alt="Una hogaza con corteza dorada" width="800" height="1000"><figcaption>La hogaza de la casa.</figcaption></figure></li>
+        </ol>
+        <p class="r-journey__line r-journey__line--soft" data-line="1">a la mesa de Cabecera</p>
+        <div class="r-journey__progress"><span></span></div>
+      </div>
+    </section>
+
+    <section class="shop" aria-labelledby="shop-title">
+      <div class="r-carousel" data-carousel aria-roledescription="carrusel" aria-labelledby="shop-title">
+        <div class="r-carousel__head">
+          <h2 class="h-section craft-display" id="shop-title">Los panes de la semana</h2>
+          <div class="r-carousel__nav"><button type="button" data-prev aria-label="Anterior"></button><span class="r-carousel__count" aria-live="polite">1 / 4</span><button type="button" data-next aria-label="Siguiente"></button></div>
+        </div>
+        <ul class="r-carousel__track" aria-label="Panes">
+          <li class="r-carousel__slide"><figure><img src="../../../skills/design-taste-frontend/assets/photos/img/m113462760-1200.webp" alt="Hogaza de trigo" width="800" height="1000"></figure><h3>Hogaza de trigo</h3><p>Todos los días.</p></li>
+          <li class="r-carousel__slide"><figure><img src="../../../skills/design-taste-frontend/assets/photos/img/m117663639-1200.webp" alt="Pan de centeno" width="800" height="1000"></figure><h3>Centeno</h3><p>Los jueves.</p></li>
+          <li class="r-carousel__slide"><figure><img src="../../../skills/design-taste-frontend/assets/photos/img/m130857602-1200.webp" alt="Pan integral" width="800" height="1000"></figure><h3>Integral</h3><p>Martes y sábados.</p></li>
+          <li class="r-carousel__slide"><figure><img src="../../../skills/design-taste-frontend/assets/photos/img/m138226685-1200.webp" alt="Pan de semillas" width="800" height="1000"></figure><h3>Semillas</h3><p>Los domingos.</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="split" id="visita" aria-labelledby="visit-title">
+      <div>
+        <h2 class="h-section craft-display" id="visit-title">Carrera 33, Cabecera</h2>
+        <dl class="r-spec">
+          <div><dt>Horario</dt><dd>Lunes a sábado, 6:00 a 13:00</dd></div>
+          <div><dt>Teléfono</dt><dd><a href="tel:+576070000000">607 000 0000</a></dd></div>
+          <div><dt>Encargos</dt><dd><a href="mailto:pan@panaderia.example">pan@panaderia.example</a></dd></div>
+        </dl>
+      </div>
+      <img src="../../../skills/design-taste-frontend/assets/photos/img/m138547195-1200.webp" alt="La vitrina de la panadería desde la calle" width="1200" height="800">
+    </section>
+  </main>
+  <footer>
+    <p><strong>Panadería de la 33</strong>, Carrera 33, Cabecera, Bucaramanga.</p>
+    <ul><li><a href="tel:+576070000000">607 000 0000</a></li><li><a href="mailto:pan@panaderia.example">pan@panaderia.example</a></li><li><a href="#main">Arriba</a></li></ul>
+    <p>Fotografías: biblioteca con licencia de design-taste-frontend.</p>
+  </footer>
+  <script type="module">
+    import { init } from '../../../skills/frontend-craft/kit/craft-motion.js';
+    init(document);
+  </script>
+</body>
+</html>
