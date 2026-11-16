@@ -4,7 +4,8 @@ import assert from 'node:assert/strict';
 import zlib from 'node:zlib';
 import { test } from 'node:test';
 import { effects } from '../skills/frontend-craft/kit/craft-motion.js';
-import { puff } from '../skills/frontend-craft/kit/motion/product3d.js';
+import { parsePath, poseAt } from '../skills/frontend-craft/kit/motion/product3d.js';
+import { halfDepth, faceDepth, SEAL } from '../skills/frontend-craft/kit/motion/bag-geometry.js';
 import { framesArgs, parseStock, sheetArgs, socialArgs } from '../skills/frontend-craft/scripts/media.mjs';
 import { positionsFor } from '../skills/frontend-craft/scripts/look.mjs';
 import { decodePng, screenFlatness } from '../skills/frontend-craft/scripts/lib/png.mjs';
@@ -99,12 +100,25 @@ test('media.mjs builds the yt-dlp, ffmpeg and stock calls, and parses Pexels and
   assert.deepEqual([pix[0].ref, pix[0].file], ['pixabay:9', 'L']);
 });
 
-test('the kit registers the recipes, and the pouch is full in the middle and sealed at the edges', () => {
-  for (const name of ['dive', 'journey', 'carousel', 'sequence', 'product3d', 'map']) assert.ok(effects.includes(name), name);
-  assert.equal(puff(0, 0, 1, 1.5), 1);
-  assert.equal(puff(0.5, 0, 1, 1.5), 0);
-  assert.equal(puff(0, 0.75, 1, 1.5), 0);
-  assert.ok(puff(0.3, 0.3, 1, 1.5) > 0.9, 'flat across most of the face');
+test('the kit registers the recipes, and the bag stands full and closes into a flat seal', () => {
+  for (const name of ['dive', 'journey', 'carousel', 'sequence', 'product3d', 'map', 'nav']) assert.ok(effects.includes(name), name);
+  const d = 0.4;
+  assert.ok(Math.abs(halfDepth(0.4, d) - d / 2) < 1e-9, 'the body keeps its full depth');
+  assert.ok(halfDepth(1 - SEAL / 2, d) < d * 0.01, 'the seal is flat');
+  assert.ok(halfDepth(0.85, d) < halfDepth(0.6, d), 'it narrows toward the seal');
+  assert.ok(faceDepth(0, 0.5, 0.2, 1) > faceDepth(0.4, 0.5, 0.2, 1), 'the face swells in the middle');
+  assert.equal(faceDepth(0.5, 0.5, 0.2, 1), 0, 'and rounds into the gusset at the edge');
+});
+
+test('a journey holds the pose of each chapter and travels between them', () => {
+  const poses = parsePath('0 0 0; 0.5 0 0.1; -0.5 0 -0.1');
+  assert.equal(poses.length, 3);
+  assert.equal(parsePath('0 0'), null, 'a pose needs x, y and a turn');
+  assert.deepEqual(poseAt(poses, 0), [0, 0, 0]);
+  assert.deepEqual(poseAt(poses, 0.5), [0.5, 0, 0.1]);
+  assert.deepEqual(poseAt(poses, 1), [-0.5, 0, -0.1]);
+  assert.ok(poseAt(poses, 0.04)[0] < 0.01, 'it holds near a chapter');
+  assert.ok(Math.abs(poseAt(poses, 0.25)[0] - 0.25) < 1e-9, 'and crosses halfway between two');
 });
 
 test('the studio brief names every tool with its path and the defaults to refuse', () => {

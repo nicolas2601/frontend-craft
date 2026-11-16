@@ -1,5 +1,28 @@
 # Changelog
 
+## 4.2.0 - 2026-11-16
+
+From building a café's page with its own product: the bag in 3D read as a blurry pillow, the scroll did nothing
+with it, and the header was a flat bar that ignored the colour of every section.
+
+### Added
+- `journey3d`: the product travels a pinned stage while chapters of its story pass on alternate sides, turning to
+  show its gussets and one full turn before the last chapter (`data-path`, one pose per chapter). On a phone it stays
+  under the bar, swaying toward each chapter, and the words rise over its foot on the section's ground; under reduced
+  motion the stage is not pinned.
+- `data-nav`: a floating bar in the colours of the section under it (`data-nav-ground` / `data-nav-ink` over a
+  photograph), that steps away while the visitor reads down and returns on the way up; on a phone the links open as
+  a full screen from a menu button. The starter page uses it; without JavaScript the links stay a row.
+- The review step scores type, rhythm, density, restraint, alignment and focus with evidence from a sheet and fixes
+  the lowest only; the direction step builds two or three structurally different first screens before choosing; the
+  main reference is written down as measurements, with what was inferred and what not to copy.
+
+### Changed
+- `product3d` builds a stand-up bag instead of a pillow: a boxy body with soft edges, side gussets folded in, a
+  crimped heat seal, a flat bottom, an optional degassing valve (`data-valve`) and a finish (`matte`, `gloss`, `foil`).
+  The docs show how to join two photographs of the same pack into one clean print.
+- A pinned journey reads its progress from the stage's own height, so a phone's address bar does not move the pack.
+
 ## 4.1.0 - 2026-11-16
 
 The premium layer. Next to four Awwwards Sites of the Day in hospitality and food (Tengile Malamala, Delta Cafés,
