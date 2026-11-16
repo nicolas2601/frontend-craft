@@ -36,7 +36,7 @@ const CALIBRATION = [
   'one word of the headline in italic or another colour; a big number with a small label as a section; three identical cards',
   'a fade-and-rise on every section; a paragraph that lights up word by word as the default "wow"; an endless band of words',
   'a drawn map, a diagram of boxes and lines, an empty dark stage that opens on three words, a text button under every animation',
-  'a cropped or letterboxed hero picture; a stock photograph standing in for the client\'s own place, product or people',
+  'a cropped or letterboxed hero picture; a stock photograph standing in for the client\'s own place, product or people; a social cover with its burned-in title used as a photograph',
 ];
 
 export function studioBrief(d, t) {
