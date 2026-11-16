@@ -5,6 +5,62 @@ reads as a finished section without JavaScript and under reduced motion, runs on
 page's tokens. Choose one by the story the section tells; a page rarely needs more than three. Load
 `<kit>/recipes.css` after the other kit stylesheets (the starter page does).
 
+## The premium layer: one motion system for the whole page
+
+What award-winning pages share (references/studio.md): smooth scroll, headings that rise line by line, pictures that
+unveil and settle, a ground that changes with the section, pictures that lean in on hover. Expo-out, about a second.
+The starter page loads it (`craft/premium.css`, Lenis in the import map, `data-smooth` on `<html>`). Use what the page
+needs; under reduced motion everything is simply there, and without JavaScript nothing is hidden.
+
+| Attribute | On | What it does |
+|---|---|---|
+| `data-smooth` | `<html>` | Lenis smooth scroll with inertia, anchor links included (`"lenis"` in the import map, or `init(document, { libs: { lenis: () => import('lenis') } })`) |
+| `data-lines` | a heading, a lede | Rises line by line, each word from behind a mask; small connecting words (`<small>`) fade in with their line. In a section with `data-ground` it waits for the section's colour |
+| `data-unveil` (`up`, `down`, `left`, `right`) | a frame holding an img or video | Opens from that edge while the picture settles from a slight zoom; pairs with `data-parallax="0.06"`-`"0.22"` for depth |
+| `data-ground="#hex"` (and `data-ink="#hex"`) | a section | The page's ground eases to this colour while the section holds the middle of the screen; the section's words take its ink. Keep words clear of the section's edges |
+| `data-hover="zoom"` / `"line"` | a frame / a link | The picture leans in; the link draws its underline |
+
+```html
+<section class="story" data-ground="#F1E9DC" aria-label="La historia">
+  <p class="r-lede" data-lines>Fabián cumplió diez años en Colombia en 2025 y empezó a servir café de Santander…</p>
+  <figure data-unveil data-parallax="0.08"><img src="assets/img/portrait.webp" alt="..." width="1233" height="1764" loading="lazy"></figure>
+</section>
+```
+
+## statement: a headline composed line by line
+
+Each line its own span, offset with `--indent`, small connecting words in `<small>`: the poster scale of the
+references. Pair with `data-lines`. With accented capitals keep the leading at 0.9 or more, or the accents of one
+line touch the line above.
+
+```html
+<h2 class="r-statement" data-lines>
+  <span>Del cañón</span>
+  <span style="--indent: 1.4em"><small>a la</small> taza</span>
+</h2>
+```
+
+## lede: an editorial paragraph set large
+
+`<p class="r-lede" data-lines>`: the story in two or three sentences, in the display face at about 2.5 rem. Replaces
+a small paragraph under a heading.
+
+## collage: the client's pictures with tension
+
+Three to six pictures at different sizes, offset, overlapping, slightly turned, unveiling and moving at different
+depths; one large word may cross them (`r-collage__word`). For an origin, a process, the people, the place.
+
+```html
+<div class="r-collage">
+  <figure class="r-collage__item" data-unveil data-parallax="0.06"><img src="..." alt="..." width="1044" height="1392" loading="lazy"><figcaption>Cereza madura</figcaption></figure>
+  <figure class="r-collage__item" data-unveil data-parallax="0.14"><img ...></figure>
+  <figure class="r-collage__item" data-unveil data-parallax="0.22"><img ...></figure>
+</div>
+```
+
+`--ratio`, `--rot` and `--focus` on an item override its place in the pattern. On a phone it becomes two staggered
+columns.
+
 ## dive: fly forward into the hero picture
 
 The first screen is the subject's best photograph or loop at full bleed; scrolling flies the camera into it toward a

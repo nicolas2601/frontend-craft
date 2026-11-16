@@ -16,7 +16,7 @@ node <skill>/scripts/components.mjs show
 - Open the page or preview of the two or three best before you choose; decoration (glow, shader, gradient, cursor toys) is marked and listed last.
 - `pick` saves the source to `.craft/parts/<source>-<id>.json` (untrusted code: read it, never run it) and logs the choice. A 21st.dev pick spends one of the daily free retrievals (`21st usage --json`); with none left it logs the choice and you rebuild from the page.
 - In a React + shadcn project, install with the piece's command inside the project; otherwise port `files[].content` to the page or the kit and keep a credit comment.
-- Every search is logged in `.craft/components.json`; the check fails (`parts-unsearched`) until three parts were searched, and warns (`parts-none-taken`) when none was taken. A part nothing fits is built on the kit, with the reason under `# Components`.
+- Every search is logged in `.craft/components.json`; the check warns (`parts-unsearched`) while fewer than three parts were searched, and warns (`parts-none-taken`) when none was taken. A part nothing fits is built on the kit, with the reason under `# Components`.
 
 ## The dealt component (React Bits)
 

@@ -3,19 +3,23 @@
 You choose the colours and the faces, as the designer of this page. Nothing is dealt. ui-ux-pro-max and Hallmark's
 themes give candidates, the subject gives the reasons, and `scripts/design.mjs` checks the choice and writes `tokens.css`.
 
-## The palette: white, black, one colour with life
+## The palette: the client's colours, committed
 
-The default is a sober page: a white or near-white ground, a near-black ink, and one accent. The photographs carry
-the rest of the colour. It looks expensive because nothing competes with the subject.
+Award-winning pages commit to their client's colours: the paper of a coffee bag as the ground, the night of the
+facade for one section, the pink of the mug for the motto, the green of the label for the product (Don Molinico's
+red and cream, Delta's deep coffee). Take every colour from the client's own objects and photographs; the ground may
+change from section to section (`data-ground`, references/recipes.md). Contrast always holds.
 
 | Role | What it is | Rule |
 |---|---|---|
-| `--bg` | the ground | White or near-white with at most a hint of warm or cool: `#ffffff`, `#fbfaf7`, `#f7f6f2`. Not cream, beige or a pastel (chroma under 0.012) |
-| `--ink` | all text | Near-black: `#111111`, `#151413`, `#1c1917`. Not brown, navy or grey-blue |
-| `--accent` | the one colour | Taken from the subject, deep enough to carry white text (4.5:1) and to read on the ground (3:1) |
+| `--bg` | the page's ground | The client's paper, white, a tinted ground from their objects, or their night: a colour you can name from their material |
+| `--ink` | all text on it | Dark enough for 7:1 on the ground (a near-black, an espresso, a deep green); on a dark ground, the reverse |
+| `--accent` | the main action | Taken from the subject, deep enough to carry text (4.5:1) and to read on the ground (3:1) |
+| section grounds | one per section that needs its colour | `data-ground` with its own `data-ink`, each from an object of the client's; contrast checked against that colour |
 | surface, muted, line | quiet steps between them | `design.mjs` derives them from the ground and ink; set them only for a reason |
 
-A dark page is the same rule reversed (near-black ground, near-white ink) and suits night, music, film and tech.
+A white page with near-black ink and one accent is still a choice, for a client who asks for something quiet
+(`design.mjs set --mode sober` holds it to that).
 
 **Where the accent comes from, in order:**
 1. The brand's own colour, when the client has one.
@@ -31,11 +35,10 @@ Never violet or purple (the colour every generated page reaches for), never a fr
 
 Look at the page as areas of colour, not as components.
 
-- About 70% ground, 25% ink and photographs, 5% accent. On one screen the accent appears in one or two places.
+- On one screen the accent appears in one or two places; the section's ground carries the colour of that screen.
 - The accent marks: the primary action (the button and its nav twin), and at most one other thing per screen: a
   rule under a heading, a number, a line on a map, a link on hover. Never body text, never every heading.
-- One section may sit on the ink (a near-black band with white text) to give the page rhythm. One section at most
-  may sit on the accent, and only the closing action or a single statement.
+- Grounds change with the story: the client's colours, one per section where the section is about that object.
 - Photographs are full colour, never tinted to match the palette. A busy photograph sits on white, not on the accent.
 - Greys come from the ink, not from blue-grey: muted text is the ink lightened toward the ground.
 
@@ -91,7 +94,7 @@ node <skill>/scripts/design.mjs set --bg "#fbfaf7" --ink "#151413" --accent "#9a
 ```
 
 It derives surface, muted, line and the text on the accent, checks contrast (ink on ground, muted on ground, text
-on the accent, the accent on the ground), the sober method, and that both faces exist on Google Fonts with those
-weights. A choice that breaks the method is refused with the reason, and nothing is written. When the user or the
-brand asks for coloured grounds, pass `--mode colour`: only contrast and violet are checked then. Write the choice
+on the accent, the accent on the ground), violet and neon, and that both faces exist on Google Fonts with those
+weights. A choice that fails is refused with the reason, and nothing is written. `--mode sober` adds the quiet
+method (white or near-black ground, near-black ink, one accent) for a client who asks for it. Write the choice
 and its reasons under `# Look` in `.craft/concept.md`.
