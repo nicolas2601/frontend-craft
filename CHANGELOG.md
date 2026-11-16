@@ -1,5 +1,44 @@
 # Changelog
 
+## 4.1.0 - 2026-11-16
+
+The premium layer. Next to four Awwwards Sites of the Day in hospitality and food (Tengile Malamala, Delta Cafés,
+White Desert, Don Molinico) the 4.0 builds read correct but plain: a white page with one accent, a headline in one
+size, a fade-up per section. Every one of those sites runs smooth scroll, reveals with expo-out over about a second,
+composes its headlines line by line and commits to the client's colours as grounds. The skill now gives the model
+those moves as tools and the judgment to use them; nothing is required for its own sake.
+
+### Added
+- `kit/premium.css` and `kit/motion/premium.js`: `data-smooth` (Lenis smooth scroll, native when Lenis is missing or
+  under reduced motion), `data-lines` (headings and ledes rise line by line from a mask; small connecting words fade),
+  `data-unveil` (a picture opens from an edge and settles from a slight zoom), `data-ground` / `data-ink` (the page's
+  ground eases to the colour of the section in the middle of the screen; the words wait for their own ground) and
+  `data-hover="zoom" | "line"`. Expo-out and quart-out tokens. Every state has a final state without JavaScript and
+  under reduced motion.
+- Recipes `r-statement` (a headline composed line by line, offset lines and small connecting words), `r-lede` (an
+  editorial paragraph set large) and `r-collage` (pictures of different sizes, offset and slightly turned).
+- `references/studio.md`: what an award-level page has, measured on those four sites; moves by trade; the review
+  questions; when Figma helps (sketching the first screen with the Figma MCP's own skills, the client's review on
+  editable layers with `generate_figma_design` and `get_comments`, the client's own design).
+- The check fails two screens of emptiness in a row, whatever the ground's colours (`empty-run`).
+
+### Changed
+- `design.mjs` commits the client's colours by default (`--mode colour`); a white ground with one accent is
+  `--mode sober`, for a client who asks for quiet.
+- `motion-entrance`, `motion-scroll-story` and `parts-unsearched` warn instead of failing: they are advice, and the
+  model decides.
+- The check reads text in a `data-ground` section against the colour the section declares.
+- A section's plain links take its ink (`data-ink`), so the browser's blue never sits on a committed ground.
+- The calibration names more defaults: the split dark hero, the slogan headline, tracked labels, the flush headline,
+  the white page, the generic fade-up, a social cover with its burned-in title used as a photograph.
+- The examples use a fictional bakery instead of a real client.
+
+### Fixed
+- The kit's observer keeps every handler watching one element (the line reveals and the grounds watch the same
+  section); before, the second replaced the first.
+- The dive no longer dissolves into an empty screen at the end of its pass.
+- The studio brief prints the keyless photograph libraries again.
+
 ## 4.0.1 - 2026-11-16
 
 Fixes from looking at the 4.0 test build after release.
