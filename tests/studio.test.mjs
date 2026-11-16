@@ -92,6 +92,10 @@ test('media.mjs builds the yt-dlp, ffmpeg and stock calls, and parses Pexels and
   const f = framesArgs('clip.mp4', { out: 'assets/seq', fps: 18, width: 1280, start: 2, end: 6 });
   assert.deepEqual(f.slice(2, 6), ['-ss', '2', '-to', '6']);
   assert.ok(f.join(' ').includes('fps=18,scale=1280'));
+  const e = framesArgs('clip.mp4', { width: 720, enhance: true, portrait: true, focus: 0.6 }).join(' ');
+  assert.match(e, /fps=24,hqdn3d=[^,]+,crop=w='min\(iw,ih\*9\/16\)':h=ih:x='\(iw-min\(iw,ih\*9\/16\)\)\*0\.6':y=0,scale=720:-2:flags=lanczos,unsharp=/,
+    'denoise at the clip\'s size, cut 9:16 at the focus, resize, then sharpen');
+  assert.ok(framesArgs('clip.mp4', { focus: 3, portrait: true }).join(' ').includes(")*1'"), 'the focus stays inside the frame');
   assert.ok(sheetArgs('a.mp4', 'a.jpg', 120).join(' ').includes('fps=0.1000'), 'twelve frames over two minutes');
   const pex = parseStock('pexels', { videos: [{ id: 7, width: 3840, height: 2160, duration: 12, url: 'https://pexels.com/v/7', user: { name: 'Ana' }, video_files: [
     { file_type: 'video/mp4', width: 3840, link: '4k' }, { file_type: 'video/mp4', width: 1920, link: 'hd' }, { file_type: 'video/mp4', width: 960, link: 'sd' }] }] }, 'video');

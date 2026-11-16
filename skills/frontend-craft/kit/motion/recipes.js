@@ -6,24 +6,54 @@
 //   data-carousel   a row of cards that snaps, drags, and answers arrow buttons and keys, with a live count
 //   data-sequence   frames of a real clip scrubbed by scroll (Apple style), with steps that light up in turn
 import { clamp, pinned } from './context.js';
+import { framePlayer } from './frames.js';
 
 const DIVE_DEPTH = 0.85;
+const NARROW = 0.9; // a stage narrower than this (width / height) is a phone held upright
 const JOURNEY_LINE_TRAVEL = 0.45;
 const KEY_STEP = { ArrowLeft: -1, ArrowRight: 1 };
 
 const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
-// The hero picture fills the first screen; scrolling flies the camera forward into it, toward data-focus.
+// The hero picture fills the first screen; scrolling flies the camera forward into it, toward data-focus. With
+// data-frames (a manifest from scripts/media.mjs frames) the camera's own clip plays on a canvas over the picture as
+// the page scrolls; data-frames-narrow names a portrait set for a phone. The picture stays as the first paint, the
+// reduced-motion view and the fallback.
 function dive(el, ctx) {
   const set = (p) => {
     el.style.setProperty('--p', p.toFixed(4));
     el.style.setProperty('--pe', easeInOut(p).toFixed(4));
   };
-  const depth = Number.parseFloat(el.dataset.dive) || DIVE_DEPTH;
-  el.style.setProperty('--dive-depth', String(depth));
+  const depth = Number.parseFloat(el.dataset.dive);
+  el.style.setProperty('--dive-depth', String(Number.isFinite(depth) ? depth : DIVE_DEPTH));
   if (ctx.reduced) { set(0); el.classList.add('r-still'); return () => el.classList.remove('r-still'); }
-  const stop = ctx.scrub(el, (vh) => set(pinned(el, vh)));
-  return () => { stop(); ['--p', '--pe', '--dive-depth'].forEach((k) => el.style.removeProperty(k)); };
+  const clip = diveFrames(el);
+  const stop = ctx.scrub(el, (vh) => { const p = pinned(el, vh); set(p); clip?.show(p); });
+  return () => { stop(); clip?.stop(); ['--p', '--pe', '--dive-depth'].forEach((k) => el.style.removeProperty(k)); };
+}
+
+/** The clip of a data-frames hero, the portrait set while the stage is taller than wide; null without frames. */
+function diveFrames(el) {
+  const media = el.querySelector('.r-dive__media');
+  if (!el.dataset.frames || !media) return null;
+  const own = !media.querySelector('canvas');
+  const canvas = media.querySelector('canvas') ?? media.appendChild(document.createElement('canvas'));
+  canvas.setAttribute('aria-hidden', 'true');
+  const pick = () => (el.dataset.framesNarrow && media.clientWidth / Math.max(1, media.clientHeight) < NARROW ? el.dataset.framesNarrow : el.dataset.frames);
+  let url = pick();
+  let p = 0;
+  let player = framePlayer(canvas, url, { onReady: () => player.show(p), onFail: (err) => console.warn('[craft] data-frames: manifest not loaded', err) });
+  const onResize = () => {
+    if (pick() === url) { player.size(); return; }
+    player.stop();
+    url = pick();
+    player = framePlayer(canvas, url, { onReady: () => player.show(p) });
+  };
+  window.addEventListener('resize', onResize, { passive: true });
+  return {
+    show(next) { p = next; player.show(p); },
+    stop() { player.stop(); window.removeEventListener('resize', onResize); if (own) canvas.remove(); },
+  };
 }
 
 // A pinned stage: the photograph track moves left by its own overflow while each [data-line] crosses the stage at
@@ -148,80 +178,27 @@ function carousel(el, ctx) {
 }
 
 // Frames of a real clip drawn on a canvas by scroll position. data-sequence names a manifest written by
-// scripts/media.mjs frames ({ frames: [...], width, height }). Frames load lazily: the first, then every
-// fourth, then the rest, and the nearest loaded frame is drawn meanwhile. [data-at="0.4"] steps light up in turn.
+// scripts/media.mjs frames (frames.js loads and draws it). [data-at="0.4"] steps light up in turn.
 function sequence(el, ctx) {
   const canvas = el.querySelector('canvas');
   const steps = [...el.querySelectorAll('[data-at]')];
   const url = el.dataset.sequence;
   if (!canvas || !url) return null;
-  const g = canvas.getContext('2d');
-  let images = [];
-  let alive = true;
-  let last = -1;
-  let wanted = 0;
-  const draw = (i) => {
-    const pick = images[i]?.complete ? i : nearestLoaded(images, i);
-    if (pick < 0 || pick === last) return;
-    last = pick;
-    const img = images[pick];
-    const { width: cw, height: ch } = canvas;
-    const s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
-    const w = img.naturalWidth * s;
-    const h = img.naturalHeight * s;
-    g.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
-  };
-  const size = () => {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.round(canvas.clientWidth * dpr);
-    canvas.height = Math.round(canvas.clientHeight * dpr);
-    last = -1;
-    draw(wanted);
-  };
   const light = (p) => steps.forEach((s, i) => {
     const from = Number.parseFloat(s.dataset.at) || 0;
     const to = Number.parseFloat(steps[i + 1]?.dataset.at ?? '1.01');
     s.classList.toggle('is-on', p >= from && p < to);
   });
   let stop = null;
-  const base = new URL(url, document.baseURI);
-  fetch(base).then((r) => r.json()).then((manifest) => {
-    if (!alive) return;
-    const files = manifest.frames ?? [];
-    images = files.map(() => null);
-    const load = (i) => {
-      if (images[i]) return;
-      const img = new Image();
-      img.decoding = 'async';
-      img.onload = () => { if (Math.abs(i - wanted) < 3) { last = -1; draw(wanted); } };
-      img.src = new URL(files[i], base).href;
-      images[i] = img;
-    };
-    load(0);
-    const order = [...files.keys()].filter((i) => i % 4 === 0).concat([...files.keys()].filter((i) => i % 4 !== 0));
-    const idle = window.requestIdleCallback ?? ((fn) => setTimeout(fn, 32));
-    let k = 0;
-    const pump = () => { for (let n = 0; n < 6 && k < order.length; n += 1) load(order[k++]); if (alive && k < order.length) idle(pump); };
-    idle(pump);
-    size();
-    if (ctx.reduced) { el.classList.add('r-still'); light(0); return; }
-    stop = ctx.scrub(el, (vh) => {
-      const p = pinned(el, vh);
-      wanted = Math.round(p * (files.length - 1));
-      draw(wanted);
-      light(p);
-    });
-  }).catch((err) => { el.classList.add('r-still'); console.warn('[craft] data-sequence: manifest not loaded', err); });
-  window.addEventListener('resize', size, { passive: true });
-  return () => { alive = false; stop?.(); window.removeEventListener('resize', size); el.classList.remove('r-still'); };
-}
-
-function nearestLoaded(images, i) {
-  for (let d = 1; d < images.length; d += 1) {
-    if (images[i - d]?.complete) return i - d;
-    if (images[i + d]?.complete) return i + d;
-  }
-  return -1;
+  const player = framePlayer(canvas, url, {
+    onReady: () => {
+      if (ctx.reduced) { el.classList.add('r-still'); light(0); return; }
+      stop = ctx.scrub(el, (vh) => { const p = pinned(el, vh); player.show(p); light(p); });
+    },
+    onFail: (err) => { el.classList.add('r-still'); console.warn('[craft] data-sequence: manifest not loaded', err); },
+  });
+  window.addEventListener('resize', player.size, { passive: true });
+  return () => { player.stop(); stop?.(); window.removeEventListener('resize', player.size); el.classList.remove('r-still'); };
 }
 
 export const recipes = { dive, journey, carousel, sequence };
