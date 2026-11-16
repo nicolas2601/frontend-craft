@@ -5,12 +5,15 @@
 .r-dive { position: relative; height: 210svh; background: var(--c-ink); color: var(--c-on-scrim, #fff); }
 .r-dive__stage { position: sticky; top: 0; height: 100svh; overflow: clip; display: grid; align-items: end; }
 .r-dive__media { position: absolute; inset: 0; }
-.r-dive__media > img, .r-dive__media > video, .r-dive__media > picture > img {
+.r-dive__media > img, .r-dive__media > video, .r-dive__media > picture > img, .r-dive__media > canvas {
   width: 100%; height: 100%; object-fit: cover; object-position: var(--focus, 50% 50%);
   transform-origin: var(--focus, 50% 50%);
   scale: calc(1 + var(--pe, 0) * var(--dive-depth, 0.85));
   will-change: scale;
 }
+/* data-frames: the clip's canvas lies over the picture and shows once its first frame is drawn. */
+.r-dive__media > canvas { position: absolute; inset: 0; display: block; opacity: 0; transition: opacity 400ms var(--ease-out, ease-out); }
+.r-dive__media > canvas[data-frames-on] { opacity: 1; }
 /* Legibility: a scrim weighted to where the words sit, fading out as the words leave. */
 .r-dive__scrim {
   position: absolute; inset: 0; pointer-events: none;

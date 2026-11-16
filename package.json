@@ -1,6 +1,6 @@
 {
   "name": "frontend-craft",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "private": true,
   "description": "A design studio for coding agents: the client's own photographs and videos first, a written direction and storyboard, finished section recipes (a hero that flies into the picture, a horizontal story, a carousel, the product in 3D, a real map), component libraries, a browser that photographs every section in motion, and a check (with impeccable and Hallmark) that refuses only what is broken",
   "scripts": {

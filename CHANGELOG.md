@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.3.0 - 2026-11-16
+
+From the same café page: its hero was one still photograph that the scroll only zoomed. The owner had a clip of the
+camera walking past the planters and through the door, and that walk is what the first screen should be.
+
+### Added
+- `data-frames` on a `data-dive` hero: the camera's own clip plays on a canvas over the picture as the page scrolls,
+  and `data-frames-narrow` names a portrait set for a phone held upright. The picture stays the first paint, the
+  reduced-motion view and the fallback; the canvas shows once its first frame is drawn.
+- `frames.js`: one frame player shared by the hero and `data-sequence` (the first frame, then every fourth, then the
+  rest in idle time, drawing the nearest loaded frame meanwhile).
+- `media.mjs frames --enhance` takes the grain out at the clip's own size, resizes with Lanczos and sharpens lightly;
+  `--quality` sets the WebP quality; `--portrait` with `--focus` cuts a 9:16 set for a phone at a chosen point across
+  the frame. The recipe docs show the camera-walk hero and how to measure a clip before cutting it.
+
 ## 4.2.0 - 2026-11-16
 
 From building a café's page with its own product: the bag in 3D read as a blurry pillow, the scroll did nothing

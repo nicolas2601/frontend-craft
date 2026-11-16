@@ -85,6 +85,16 @@ shopfront, the window, the sign) or a product (into its detail).
 
 - `data-dive` is the depth (0.5 a step closer, 1 deep into it). `--focus` is where the camera goes and how the picture
   is framed (object-position): the sign, the door, the cup. Never crop the source file; pick the focus.
+- **A camera walk instead of a still.** When there is a clip of the camera moving toward the place (the client's own,
+  or one generated from their photograph: a slow, steady walk past the surroundings that ends through the door, no
+  people, no cuts), the hero plays it with the scroll. Cut two frame sets: `media.mjs frames walk.mp4 --out
+  assets/hero/wide --width 1600 --fps 16 --enhance` and `media.mjs frames walk.mp4 --out assets/hero/narrow --width
+  720 --fps 16 --enhance --portrait --focus 0.55` (the focus keeps the door in the phone's cut). Then
+  `data-frames="assets/hero/wide/manifest.json" data-frames-narrow="assets/hero/narrow/manifest.json"`, a
+  `data-dive` near 0 (the clip already moves forward), the first frame of each set as the `<picture>` (the narrow one
+  under `media="(max-aspect-ratio: 9/10)"`), and the section at about 250svh. The picture is the first paint, the
+  reduced-motion view and the fallback; the canvas comes over it once its first frame is drawn. Measure the clip
+  before cutting it (a contact sheet and the frame-to-frame motion: no jumps, an even speed).
 - A video works the same (`<video data-loop ...>` in `.r-dive__media`).
 - After the kit nav it sits under the sticky bar on its own.
 

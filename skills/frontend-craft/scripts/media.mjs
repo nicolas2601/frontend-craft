@@ -6,7 +6,10 @@
     node <skill>/scripts/media.mjs social <url> [--out assets/video/raw] [--max 6]
          the client's own TikTok, Instagram, YouTube or Facebook videos (a post or a profile), with their permission
     node <skill>/scripts/media.mjs frames <clip.mp4> [--out assets/seq] [--fps 24] [--width 1600] [--start 0] [--end 6]
-         webp frames + manifest.json for <section data-sequence="assets/seq/manifest.json"> (references/recipes.md)
+         [--quality 72] [--enhance] [--portrait] [--focus 0.5]
+         webp frames + manifest.json for <section data-sequence="assets/seq/manifest.json"> or a hero's data-frames
+         (references/recipes.md); --enhance cleans the grain of a generated or phone clip and resizes it sharply;
+         --portrait cuts a 9:16 set for a phone (--focus: where across the frame, 0 left to 1 right)
     node <skill>/scripts/media.mjs sheet <clip.mp4> [--out .craft/looks]      a 4x3 contact sheet: open it and look
     node <skill>/scripts/media.mjs stock "<query>" [--source pexels|pixabay] [--type video|photo] [--n 8]
     node <skill>/scripts/media.mjs stock --get <source>:<id> [--type video|photo] [--out assets/stock]
@@ -22,6 +25,9 @@ import { isMain, parseArgs } from './lib/state.mjs';
 const VIDEO_FORMAT = 'bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[height<=1080][ext=mp4]/b';
 const SHEET_TILES = '4x3';
 const WEBP_QUALITY = 72;
+// A generated or phone clip: take the grain out at its own size, resize with Lanczos, then sharpen lightly.
+const ENHANCE_BEFORE = 'hqdn3d=1.5:1.5:4:4';
+const ENHANCE_AFTER = 'unsharp=5:5:0.6:3:3:0';
 const BROWSE = {
   pexels: (q) => `https://www.pexels.com/search/videos/${encodeURIComponent(q)}/`,
   coverr: (q) => `https://coverr.co/s?q=${encodeURIComponent(q)}`,
@@ -40,9 +46,13 @@ export function socialArgs(url, { out = 'assets/video/raw', max = 6 } = {}) {
 }
 
 /** ffmpeg arguments for webp frames: a fixed rate and width, an optional window of the clip. */
-export function framesArgs(input, { out = 'assets/seq', fps = 24, width = 1600, start, end, quality = WEBP_QUALITY } = {}) {
+export function framesArgs(input, { out = 'assets/seq', fps = 24, width = 1600, start, end, quality = WEBP_QUALITY, enhance = false, portrait = false, focus = 0.5 } = {}) {
   const win = [...(start !== undefined ? ['-ss', String(start)] : []), ...(end !== undefined ? ['-to', String(end)] : [])];
-  return ['-v', 'error', ...win, '-i', input, '-vf', `fps=${fps},scale=${width}:-2:flags=lanczos`, '-c:v', 'libwebp',
+  const f = Math.min(1, Math.max(0, Number(focus)));
+  const filters = [`fps=${fps}`, ...(enhance ? [ENHANCE_BEFORE] : []),
+    ...(portrait ? [`crop=w='min(iw,ih*9/16)':h=ih:x='(iw-min(iw,ih*9/16))*${f}':y=0`] : []),
+    `scale=${width}:-2:flags=lanczos`, ...(enhance ? [ENHANCE_AFTER] : [])];
+  return ['-v', 'error', ...win, '-i', input, '-vf', filters.join(','), '-c:v', 'libwebp',
     '-quality', String(quality), '-compression_level', '4', path.join(out, 'f%04d.webp')];
 }
 
@@ -145,7 +155,8 @@ function frames(args) {
   const out = String(args.out ?? 'assets/seq');
   fs.mkdirSync(out, { recursive: true });
   for (const f of fs.readdirSync(out)) if (/^f\d{4}\.webp$/.test(f)) fs.rmSync(path.join(out, f));
-  const o = { out, fps: num(args.fps, 24), width: num(args.width, 1600), start: args.start === undefined ? undefined : num(args.start), end: args.end === undefined ? undefined : num(args.end) };
+  const o = { out, fps: num(args.fps, 24), width: num(args.width, 1600), start: args.start === undefined ? undefined : num(args.start), end: args.end === undefined ? undefined : num(args.end),
+    quality: num(args.quality, WEBP_QUALITY), enhance: Boolean(args.enhance), portrait: Boolean(args.portrait), focus: num(args.focus, 0.5) };
   run('ffmpeg', framesArgs(input, o));
   const list = fs.readdirSync(out).filter((f) => /^f\d{4}\.webp$/.test(f)).sort();
   const [w, h] = run('ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height', '-of', 'csv=p=0', path.join(out, list[0])]).trim().split(',').map(Number);
