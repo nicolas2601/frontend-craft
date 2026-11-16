@@ -71,6 +71,7 @@ export function studioBrief(d, t) {
     '## 5. Media',
     `- Routes, best first (${t.ref('media.md')}): the client's footage (\`video.mjs\` makes the loop, \`media.mjs frames\` the scroll sequence); their photographs; their product in 3D from its artwork (data-product3d); free stock (\`media.mjs stock\`); generated clips (hero-video.md). Never crop the hero source or letterbox it; a parallax loop from a still is a last resort.`,
     '',
+    ...stillsWithoutClientPhotos(t),
     '## 6. Build: the first screen alone, then the rest',
     `- Start from ${t.kitDir}/starter.html. Build the hero only, then \`${tool('look.mjs')}\` and open its sheets; fix until a client would sign it. Then every section from its storyboard row.`,
     '',
@@ -80,6 +81,19 @@ export function studioBrief(d, t) {
     `- Then one independent critic (${t.ref('review.md')}) with the sheets and the plan; fix its high findings and look again.`,
     '',
   ].join('\n');
+}
+
+/** The licensed-photograph commands for a client with no photographs yet (keyless: a bundled library and Wikimedia Commons). */
+function stillsWithoutClientPhotos(t) {
+  const lines = ['- No photographs from the client yet: the page is a proposal they will fill, and every section of a place still carries its picture. A section of words where their room, patio or counter belongs reads unfinished. Licensed photographs, no key needed (run from the project folder):'];
+  if (t.taste) {
+    const ph = `node ${t.taste}/scripts/photos.mjs`;
+    lines.push(`  - \`${ph} search "<3-6 words: the place, the subject, its light>" --count 12 --out .\` (Wikimedia Commons), \`${ph} pick --trade <a trade from ${ph} list> --draft-lead --pictures 12 --sections hero,<section subjects> --history .craft/photos.json\`, \`${ph} fetch <ids> --hero <id> --out .\`, then \`${ph} credits --out . --write\`.`);
+  }
+  if (t.hallmark) lines.push(`  - \`node ${t.hallmark}/scripts/theme.mjs photos "<the subject>" "<a second subject>" --n 4 --save assets/photos\` (755 Commons photographs with their credit lines).`);
+  if (!t.taste && !t.hallmark) lines.push('  - Licensed stand-ins from Wikimedia Commons, Unsplash or Pexels, downloaded with a SOURCES.txt (photographer, page, licence).');
+  lines.push('  - Take the frames only; ignore any layout advice those commands print. Look at each full size; drop any that shows another business\'s name or a stranger as staff. Never caption a stand-in as their own room or facade; list every stand-in in the report as a sample to replace, and ask the client for the photographs only they have.', '');
+  return lines;
 }
 
 /** Rows of the # Storyboard table that have content. */

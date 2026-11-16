@@ -139,7 +139,9 @@ function studioRun(args, cwd, dir, { kind, lang, moods, pages }) {
   const rel = path.relative(cwd, script);
   const ms = findMotionsites(SKILL);
   const motionsites = ms ? { dir: ms, examples: closestExamples(parseIndex(fs.readFileSync(path.join(ms, 'examples', 'INDEX.md'), 'utf8')), { kind, moods }) } : null;
-  const brief = studioBrief(current, { scripts: path.join(SKILL, 'scripts'), ref: (f) => path.join(SKILL, 'references', f), kitDir: kit, checkCmd: `node ${rel.startsWith('..') ? script : rel}`, motionsites });
+  const hallmark = path.join(SKILL, '..', 'hallmark');
+  const brief = studioBrief(current, { scripts: path.join(SKILL, 'scripts'), ref: (f) => path.join(SKILL, 'references', f), kitDir: kit, checkCmd: `node ${rel.startsWith('..') ? script : rel}`, motionsites,
+    taste: tasteSkill(), hallmark: fs.existsSync(path.join(hallmark, 'scripts', 'theme.mjs')) ? hallmark : null });
   fs.writeFileSync(path.join(dir, 'brief.md'), brief);
   const tail = target ? `Gate armed on ${target.url ?? `${target.root}/${target.page ?? ''}`}.` : 'No target yet: once the dev server runs, re-run start.mjs with --url <dev url> (nothing is lost), or pass --root <build folder>.';
   return { text: `${brief}
