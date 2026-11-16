@@ -86,13 +86,13 @@
 .r-carousel__nav button {
   display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border-radius: 50%;
   border: 1px solid var(--c-line); background: transparent; color: var(--c-ink); cursor: pointer; font-size: var(--t-sm, 0.875rem);
-  transition: background-color 160ms var(--ease-out), transform 140ms var(--ease-out), opacity 160ms var(--ease-out);
+  transition: background-color 160ms var(--ease-out), transform 140ms var(--ease-out), color 160ms var(--ease-out);
 }
 .r-carousel__nav button::before {
   content: ""; width: 9px; height: 9px; border-top: 2px solid currentColor; border-right: 2px solid currentColor; rotate: 45deg; translate: -2px 0;
 }
 .r-carousel__nav [data-prev]::before { rotate: -135deg; translate: 2px 0; }
-.r-carousel__nav button:disabled { opacity: 0.32; cursor: default; border-style: dashed; }
+.r-carousel__nav button:disabled { color: color-mix(in oklab, var(--c-muted) 70%, var(--c-bg)); border-style: dashed; cursor: default; }
 .r-carousel__nav button:not(:disabled):active { transform: scale(0.94); }
 @media (hover: hover) and (pointer: fine) {
   .r-carousel__nav button:not(:disabled):hover { background: color-mix(in oklab, var(--c-ink) 8%, transparent); }
@@ -149,6 +149,7 @@
 .r-map__directions { position: absolute; z-index: 2; left: var(--s-4); bottom: var(--s-4); }
 .r-map .maplibregl-ctrl-attrib a { display: inline-block; padding-block: 8px; }
 .r-map .maplibregl-ctrl button, .r-map .maplibregl-ctrl-attrib-button, .r-map .maplibregl-ctrl-attrib { font-size: var(--t-sm, 0.875rem); }
+.r-map .maplibregl-ctrl-group button { width: 44px; height: 44px; }
 .r-map__pin { font-size: var(--t-sm, 0.875rem); display: flex; align-items: center; gap: var(--s-2); pointer-events: none; }
 .r-map__dot { width: 18px; height: 18px; border-radius: 50%; background: var(--c-accent); box-shadow: 0 0 0 5px color-mix(in oklab, var(--c-accent) 28%, transparent), 0 4px 12px rgb(0 0 0 / 0.3); }
 .r-map__label {

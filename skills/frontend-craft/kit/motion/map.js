@@ -59,6 +59,9 @@ export function map(el, ctx) {
     pin.className = 'r-map__pin';
     pin.innerHTML = `<span class="r-map__dot"></span>${el.dataset.label ? `<span class="r-map__label"></span>` : ''}`;
     if (el.dataset.label) pin.querySelector('.r-map__label').textContent = el.dataset.label;
+    // MapLibre makes a marker without a role a "button"; this pin does nothing when pressed, so it is a picture.
+    pin.setAttribute('role', 'img');
+    pin.setAttribute('aria-label', el.dataset.label || 'Location');
     new gl.Marker({ element: pin, anchor: 'left', offset: [-9, 0] }).setLngLat([lng, lat]).addTo(instance);
     instance.once('load', () => {
       el.setAttribute('data-map-on', '');

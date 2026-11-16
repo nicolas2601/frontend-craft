@@ -1,5 +1,16 @@
 # Changelog
 
+## 4.0.1 - 2026-11-16
+
+Fixes from looking at the 4.0 test build after release.
+
+- `journey`: both lines stay at full ink to the end of the pass. The stage leaves with its section, so the fade only
+  left an empty band where the second line had been as the next section came in.
+- `map`: the pin is a picture (`role="img"`, named after the place); MapLibre had made it a "button" that did
+  nothing when pressed. The zoom buttons are 44 px.
+- `carousel`: a disabled arrow is shown with a muted colour and a dashed border instead of opacity alone.
+- Nav links are at least 44 px wide ("Visita" was 41 on a phone).
+
 ## 4.0.0 - 2026-11-16
 
 The studio run. The model is the design lead: nothing is dealt, the client's own material comes first, every section
