@@ -5,7 +5,7 @@ export const PLAN_TEMPLATE = `# Brief
 What is sold:
 Who buys it, and why they would choose this one:
 The one action on the page (its real link):
-Facts only this client has (names, places, numbers, how it is made):
+Facts only this client has (names, places, numbers, how it is made), each with where it comes from:
 Material: every photograph, video, logo and text file you have, and what is missing:
 
 # References
