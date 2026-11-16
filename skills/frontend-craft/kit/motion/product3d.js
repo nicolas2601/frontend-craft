@@ -11,7 +11,7 @@ const THREE_SPEC = 'three';
 const SEG_X = 48;
 const SEG_Y = 64;
 const POINTER_LEAN = 0.18;
-const FILL = 0.72;
+const FILL = 0.8;
 const DAMP = 0.08;
 
 /** Pillow surface: flat in the middle, curving to the seam at the edges. */
@@ -136,7 +136,7 @@ export function product3d(el, ctx) {
       const r = el.getBoundingClientRect();
       renderer.setSize(r.width, r.height, false);
       camera.aspect = r.width / Math.max(1, r.height);
-      // The pack fills about 72% of the frame's height, never more than 75% of its width.
+      // The pack fills about 80% of the frame's height, never more than 75% of its width.
       const span = Math.max(h / FILL, w / (0.75 * camera.aspect));
       camera.position.z = span / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) + d;
       camera.updateProjectionMatrix();

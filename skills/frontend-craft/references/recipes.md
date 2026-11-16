@@ -43,13 +43,13 @@ For an origin story (farm to cup), a process, a route, a timeline. Five to eight
     <ol class="r-journey__track">
       <li><figure><img src="..." alt="..." width="1044" height="1392" loading="lazy"><figcaption>One fact.</figcaption></figure></li>
     </ol>
-    <p class="r-journey__line r-journey__line--soft" data-line="1">a la Carrera 29</p>
+    <p class="r-journey__line" data-line="1">a la Carrera 29</p>
     <div class="r-journey__progress"><span></span></div>
   </div>
 </section>
 ```
 
-- `data-line` is the speed and direction of a line (negative: right to left). Captions are facts, one line each.
+- `data-line` is the speed and direction of a line (negative: right to left). Both lines in the ink: a grey second line reads as the "one word in another colour" default (`r-journey__line--soft` exists for a quieter line under a busy track, used with a reason). Captions are facts, one line each.
 - The section's height is set from the track, so the pass ends with the last photograph.
 - Under reduced motion it becomes a swipeable row.
 

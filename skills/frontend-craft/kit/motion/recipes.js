@@ -8,7 +8,7 @@
 import { clamp, pinned } from './context.js';
 
 const DIVE_DEPTH = 0.85;
-const JOURNEY_LINE_TRAVEL = 0.55;
+const JOURNEY_LINE_TRAVEL = 0.45;
 const KEY_STEP = { ArrowLeft: -1, ArrowRight: 1 };
 
 const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
@@ -41,7 +41,7 @@ function journey(el, ctx) {
     stop = null;
     el.style.removeProperty('height');
     track.style.removeProperty('translate');
-    lines.forEach((l) => l.style.removeProperty('translate'));
+    lines.forEach((l) => { l.style.removeProperty('translate'); l.style.removeProperty('opacity'); });
     if (ctx.reduced) { el.classList.add('r-still'); return; }
     el.classList.remove('r-still');
     distance = Math.max(0, track.scrollWidth - stage.clientWidth);
@@ -49,9 +49,14 @@ function journey(el, ctx) {
     stop = ctx.scrub(el, (vh) => {
       const p = pinned(el, vh);
       track.style.translate = `${(-p * distance).toFixed(1)}px 0`;
+      // Each line is centred in the stage halfway through the pass (whole when it fits), crosses at its speed, and
+      // fades in the last tenth so it never sits over the next section.
+      const fade = Math.min(1, Math.max(0, (1 - p) / 0.1));
       for (const l of lines) {
         const speed = Number.parseFloat(l.dataset.line) || -1;
-        l.style.translate = `${((p - 0.5) * speed * JOURNEY_LINE_TRAVEL * stage.clientWidth).toFixed(1)}px 0`;
+        const centre = (stage.clientWidth - l.scrollWidth) / 2;
+        l.style.translate = `${(centre + (p - 0.5) * speed * JOURNEY_LINE_TRAVEL * stage.clientWidth).toFixed(1)}px 0`;
+        l.style.opacity = fade.toFixed(3);
       }
       if (bar) bar.style.scale = `${p.toFixed(4)} 1`;
     });

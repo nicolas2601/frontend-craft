@@ -60,7 +60,11 @@ export function map(el, ctx) {
     pin.innerHTML = `<span class="r-map__dot"></span>${el.dataset.label ? `<span class="r-map__label"></span>` : ''}`;
     if (el.dataset.label) pin.querySelector('.r-map__label').textContent = el.dataset.label;
     new gl.Marker({ element: pin, anchor: 'left', offset: [-9, 0] }).setLngLat([lng, lat]).addTo(instance);
-    instance.once('load', () => el.setAttribute('data-map-on', ''));
+    instance.once('load', () => {
+      el.setAttribute('data-map-on', '');
+      // The credit stays one tap away (and in the footer), never a panel over the map on a phone.
+      el.querySelector('.maplibregl-ctrl-attrib.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show');
+    });
   };
   ctx.once(el, () => {
     start().catch((err) => { el.setAttribute('data-map-off', ''); console.warn('[craft] data-map stays an address:', err?.message ?? err); });

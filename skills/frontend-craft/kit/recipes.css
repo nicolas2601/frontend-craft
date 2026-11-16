@@ -21,8 +21,8 @@
 .r-dive__copy {
   position: relative; z-index: 2; width: 100%; max-width: 1440px; margin-inline: auto;
   padding: 0 var(--gutter) clamp(2.5rem, 7svh, 6rem);
-  opacity: calc(1 - var(--p, 0) * 2.4);
-  translate: 0 calc(var(--pe, 0) * -14svh);
+  opacity: calc(1 - var(--p, 0) * 3.6);
+  translate: 0 calc(var(--pe, 0) * -8svh);
 }
 .r-dive__copy h1 { max-width: 14ch; margin: 0 0 var(--s-6); font-size: var(--t-display); line-height: var(--display-leading, 0.95); text-wrap: balance; }
 .r-dive__copy p { max-width: 38ch; margin: 0 0 var(--s-8); font-size: var(--t-lg); line-height: 1.5; color: color-mix(in oklab, currentColor 86%, transparent); }
@@ -30,25 +30,27 @@
 .r-dive__stage::after {
   content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
   background: var(--next-ground, var(--c-bg));
-  opacity: clamp(0, calc((var(--p, 0) - 0.82) * 5.5), 1);
+  opacity: clamp(0, calc((var(--p, 0) - 0.9) * 10), 1); /* only the last tenth: the move lands in the picture first */
 }
 .r-dive.r-still { height: auto; }
 .r-dive.r-still .r-dive__stage { position: relative; min-height: 100svh; }
 
 /* A hero that opens the page sits under the sticky kit nav, so its picture reaches the top edge. */
 .nav ~ main > .r-dive:first-child { margin-top: calc(-1 * var(--nav-h, 68px)); }
+.nav ~ main > .r-dive:first-child .r-dive__copy { padding-top: var(--nav-h, 68px); }
 
 /* ---------- journey: a pinned horizontal story; photographs pass, two lines of type cross ---------- */
 .r-journey { position: relative; background: var(--c-bg); color: var(--c-ink); }
 .r-journey__stage {
   position: sticky; top: 0; height: 100svh; overflow: clip;
   display: grid; grid-template-rows: auto 1fr auto; align-content: center; row-gap: clamp(1rem, 3svh, 2rem);
-  padding-block: clamp(4.5rem, 10svh, 7rem) clamp(1.5rem, 4svh, 3rem);
+  /* below the sticky kit nav (taller on a small phone, --nav-h) */
+  padding-block: calc(var(--nav-h, 68px) + clamp(1rem, 4svh, 2.5rem)) clamp(1.5rem, 4svh, 3rem);
 }
 .r-journey__line {
-  margin: 0; padding-inline: var(--gutter); white-space: nowrap; pointer-events: none;
+  margin: 0; width: max-content; white-space: nowrap; pointer-events: none;
   font-family: var(--f-display); font-weight: var(--display-weight, 700); letter-spacing: var(--display-tracking, -0.02em);
-  font-size: clamp(3.25rem, 1rem + 9vw, 10rem); line-height: 0.9; will-change: translate;
+  font-size: clamp(2.5rem, 0.6rem + 6vw, 7.5rem); line-height: 0.9; will-change: translate;
 }
 .r-journey__line--soft { color: color-mix(in oklab, var(--c-ink) 52%, var(--c-bg)); } /* 3:1 or more: large text */
 .r-journey__track {
@@ -58,10 +60,10 @@
 .r-journey__track > li { flex: none; }
 .r-journey__track figure { margin: 0; }
 .r-journey__track img {
-  display: block; height: clamp(14rem, 44svh, 30rem); width: auto; aspect-ratio: var(--ratio, 4 / 5);
+  display: block; height: clamp(16rem, 52svh, 36rem); width: auto; aspect-ratio: var(--ratio, 4 / 5);
   object-fit: cover; border-radius: var(--r-sm);
 }
-.r-journey__track > li:nth-child(even) img { height: clamp(11rem, 34svh, 23rem); }
+.r-journey__track > li:nth-child(even) img { height: clamp(13rem, 42svh, 28rem); }
 .r-journey__track > li:nth-child(3n) { align-self: flex-start; }
 .r-journey__track > li:nth-child(3n + 2) { align-self: flex-end; }
 .r-journey__track figcaption { margin-top: var(--s-3); max-width: 28ch; font-size: var(--t-sm, 0.875rem); line-height: 1.4; color: var(--c-muted); }
@@ -71,7 +73,7 @@
 .r-journey.r-still .r-journey__stage { position: relative; height: auto; }
 .r-journey.r-still .r-journey__track { width: auto; overflow-x: auto; scroll-snap-type: x mandatory; }
 .r-journey.r-still .r-journey__track > li { scroll-snap-align: start; }
-.r-journey.r-still .r-journey__line { white-space: normal; }
+.r-journey.r-still .r-journey__line { width: auto; padding-inline: var(--gutter); white-space: normal; }
 
 /* ---------- carousel: a snapping row with arrows, drag, keys and a live count ---------- */
 .r-carousel { position: relative; }
