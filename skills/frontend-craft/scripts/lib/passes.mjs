@@ -7,7 +7,10 @@ import {
 } from './probes.js';
 import { probePhotoColour, probeRichness, probeStickySections } from './probes-richness.js';
 import { probeSlop } from './probes-slop.js';
-import { probeEmptyBoxes, probeFooter, probeHeroPicture } from './probes-finish.js';
+import { probeDrawnSvg, probeEmptyBoxes, probeFooter, probeHeroPicture } from './probes-finish.js';
+import { decodePng, screenFlatness } from './png.mjs';
+
+const BLANK_SAMPLES = 28;
 
 const MAX_SCROLL_PAIRS = 10;
 
@@ -142,6 +145,7 @@ export async function normalPass(browser, url, shotsDir, { selectors = [] } = {}
   facts.slop = await s.run(probeSlop, selectors);
   facts.emptyBoxes = await s.run(probeEmptyBoxes);
   facts.footer = await s.run(probeFooter);
+  facts.drawnSvg = await s.run(probeDrawnSvg);
   const reveals = changed(before, after, (row) => Number(row[9]) > vh && Number(row[0]) < 0.2).length;
   const { linked, sections, indices } = await scrollLinked(s, max, vh);
   const late = await lateScrub(s, indices, vh);
@@ -154,6 +158,15 @@ export async function normalPass(browser, url, shotsDir, { selectors = [] } = {}
     tiles.push(await shot(s, path.join(shotsDir, `1440-${String(k).padStart(2, '0')}.png`)));
   }
   const invisibleScrolled = await alwaysInvisible(s, [0, ...tiles.map((_, k) => (k + 1) * vh), max]);
+  // Blank screens: every three quarters of a screen down the page, how much of a small screenshot is one flat colour.
+  facts.blank = [];
+  const vw = await s.run(() => innerWidth);
+  for (let y = 0, n = 0; y <= max && n < BLANK_SAMPLES; y += Math.round(vh * 0.75), n += 1) {
+    const at = await scrollTo(s, y);
+    await sleep(380);
+    const { data } = await s.send('Page.captureScreenshot', { format: 'png', clip: { x: 0, y: at, width: vw, height: vh, scale: 0.1 } });
+    facts.blank.push({ y: at, ...screenFlatness(decodePng(Buffer.from(data, 'base64'))) });
+  }
   for (const w of [1280, 768, 390]) {
     await scrollTo(s, 0);
     await setViewport(s, w);

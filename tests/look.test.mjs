@@ -32,7 +32,8 @@ test('the sober method refuses cream grounds, brown or navy ink, dull, violet or
 
 test('fonts must exist with those weights; a display face cannot set the text; the usual headline faces warn', () => {
   assert.ok(fonts && fonts.size > 1000, 'the Google Fonts list from ui-ux-pro-max');
-  assert.deepEqual(typeFindings(buildType({ display: 'Fraunces', text: 'Instrument Sans', fonts }), fonts), []);
+  assert.deepEqual(typeFindings(buildType({ display: 'Fraunces', text: 'Public Sans', fonts }), fonts), []);
+  assert.ok(ids(typeFindings(buildType({ display: 'Fraunces', text: 'Instrument Sans', fonts }), fonts)).includes('WARN:font-overused-text'), 'impeccable calls it overused as the text face');
   assert.ok(ids(typeFindings(buildType({ display: 'Frauncess', text: 'Inter', fonts }), fonts)).includes('FAIL:font-unknown-display'));
   assert.ok(ids(typeFindings(buildType({ display: 'Inter', text: 'Lobster', fonts }), fonts)).includes('FAIL:font-text-display'));
   assert.ok(ids(typeFindings(buildType({ display: 'Poppins', text: 'Inter', fonts }), fonts)).includes('WARN:font-overused'));

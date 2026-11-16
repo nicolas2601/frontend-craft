@@ -85,3 +85,21 @@ export function probeFooter() {
     words: text.split(/\s+/).filter(Boolean).length,
   };
 }
+
+/**
+ * Inline drawings that stand in for a picture: an SVG of at least 15% of the screen made only of boxes, straight
+ * lines, dots and labels (no curve, no embedded image). The drawn street map and the diagram of boxes are this.
+ */
+export function probeDrawnSvg() {
+  const out = [];
+  const screen = innerWidth * innerHeight;
+  for (const svg of document.querySelectorAll('svg')) {
+    const r = svg.getBoundingClientRect();
+    if (r.width * r.height < screen * 0.15 || svg.closest('[aria-hidden="true"] svg[aria-hidden="true"]')) continue;
+    if (svg.querySelector('image, foreignObject')) continue;
+    const shapes = svg.querySelectorAll('rect, line, polyline, polygon, circle, ellipse, text, path').length;
+    const curved = [...svg.querySelectorAll('path')].some((p) => /[CcSsQqTtAa]/.test(p.getAttribute('d') ?? ''));
+    if (!curved && shapes >= 6) out.push({ shapes, area: Math.round((r.width * r.height * 100) / screen), label: svg.getAttribute('aria-label') ?? svg.closest('section')?.id ?? '' });
+  }
+  return out;
+}

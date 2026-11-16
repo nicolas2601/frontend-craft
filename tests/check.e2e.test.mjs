@@ -47,7 +47,9 @@ const CONCEPT = '# Idea\nA late bar that roasts on Thursdays: the page runs from
 
 test('every set piece renders, moves and passes the richness floor of its direction', { skip: !chrome, timeout: 180000 }, async () => {
   const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/expressive/index.html' }, kind: 'landing', deal: directionDeal('night-poster', ['zoom', 'fan']), concept: CONCEPT, out: out() });
-  assert.deepEqual(r.findings.filter((x) => x.level === 'FAIL'), []);
+  // The fixture's iris and curtain open on an empty dark stage: the screenshot rule finds them; nothing else fails.
+  assert.deepEqual(r.findings.filter((x) => x.level === 'FAIL' && x.id !== 'blank-screen'), []);
+  assert.ok(r.findings.some((x) => x.id === 'blank-screen'), 'an iris opening on an empty dark stage is a blank screen');
   assert.ok(r.motion.scenes >= 6, `scroll scenes in ${r.motion.scenes} sections`);
   for (const id of ['iris', 'type-pass', 'zoom', 'curtain', 'fan', 'letters', 'develop', 'tilt', 'split']) assert.ok(r.richness.setPieces.includes(id), id);
   assert.ok(r.richness.pictures >= 8, `${r.richness.pictures} photographs`);
@@ -67,7 +69,7 @@ test('a multi-page site is checked page by page, with the new set pieces, surfac
     pages: [{ path: pages[0], setPieces: ['word-track', 'type-zoom'] }, { path: pages[1], setPieces: ['word-mask', 'develop'] }] };
   const concept = '# Idea\nUna panadería de Cabecera que hornea de noche: la página va del horno a la mesa en dos páginas con el pan como protagonista.\n# Signature\nLa palabra Pan llena la pantalla y el zoom entra por su letra.\n# Rejected\nCrema y terracota, tres tarjetas iguales, un hero centrado.\n# Breaks\n1. `.sp-word-track` cruza la pantalla.\n2. `.craft-mono` lleva el recibo.\n# Components\nNinguno en este fixture.\n';
   const r = await runCheck({ target: { root: ROOT }, pages, kind: 'site', deal, concept, out: out() });
-  assert.deepEqual(r.findings.filter((x) => x.level === 'FAIL'), []);
+  assert.deepEqual(r.findings.filter((x) => x.level === 'FAIL' && x.id !== 'blank-screen'), []);
   assert.equal(r.pages.length, 2);
   for (const id of ['word-track', 'word-swap', 'type-zoom', 'bento-assemble']) assert.ok(r.pages[0].richness.setPieces.includes(id), id);
   for (const id of ['word-mask', 'develop']) assert.ok(r.pages[1].richness.setPieces.includes(id), id);
@@ -179,4 +181,11 @@ test('an unfinished page fails: a text-only first screen for a place, empty tile
   assert.match(by('empty-box').msg, /3 card/);
   assert.equal(by('footer-thin')?.level, 'FAIL');
   assert.equal(by('magnetic-button')?.level, 'WARN');
+});
+
+test('the section recipes render as finished sections: dive, journey, carousel and spec pass the check with no blank screen', async () => {
+  const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/recipes/index.html' }, kind: 'landing', out: out(), detector: false });
+  assert.deepEqual(r.findings.filter((x) => x.level === 'FAIL'), []);
+  assert.ok(!r.findings.some((x) => ['blank-screen', 'half-empty', 'svg-boxes'].includes(x.id)), r.findings.map((x) => x.id).join(', '));
+  assert.ok(r.motion.sticky >= 2 || r.motion.scenes >= 2, `the dive and the journey pin and move with the scroll (${JSON.stringify(r.motion)})`);
 });
