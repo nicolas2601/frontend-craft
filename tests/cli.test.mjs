@@ -141,32 +141,36 @@ test('start.mjs --palette-from takes the colours from the subject picture and ke
   fs.rmSync(dir, { recursive: true, force: true });
 });
 
-test('start.mjs asks the model for the structure and the direction, then leaves the look pending for design.mjs', () => {
+test('start.mjs deals nothing by default: it writes the studio brief and the plan, and leaves the look pending for design.mjs', () => {
   const { dir, link } = linkedSkill();
   const project = path.join(dir, 'hostal');
   fs.mkdirSync(project);
   const env = { XDG_STATE_HOME: path.join(dir, 'state') };
   const start = (...args) => node([path.join(link, 'scripts', 'start.mjs'), ...args], project, env);
-  const menu = start('--kind', 'landing', '--moods', 'hospitality,heritage,warm', '--lang', 'es');
-  assert.equal(menu.status, 3);
-  assert.match(menu.stdout, /# Choose the structure first/);
-  assert.match(menu.stdout, /\*\*photo-full\*\*/);
-  assert.doesNotMatch(menu.stdout, /\*\*bento-dominant\*\*/, 'a photo-led subject is offered photo-first structures only');
-  assert.match(menu.stdout, /# Choose the art direction/);
-  assert.ok(!fs.existsSync(path.join(project, '.craft', 'deal.json')), 'nothing is written before the choice');
-  const res = start('--kind', 'landing', '--moods', 'hospitality,heritage,warm', '--lang', 'es', '--composition', 'photo-full', '--direction', 'cinematic-chapters');
+  const res = start('--kind', 'landing', '--moods', 'hospitality,heritage,warm', '--lang', 'es');
   assert.equal(res.status, 0, res.stderr);
+  assert.match(res.stdout, /# Studio brief \(landing, es\)/);
+  assert.match(res.stdout, /media\.mjs social/);
+  assert.match(res.stdout, /look\.mjs/);
   const deal = JSON.parse(fs.readFileSync(path.join(project, '.craft', 'deal.json'), 'utf8'));
-  assert.deepEqual([deal.composition.id, deal.direction.id, deal.look, deal.palette, deal.type], ['photo-full', 'cinematic-chapters', 'model', null, null]);
-  assert.match(res.stdout, /## Colour and type: you choose them/);
+  assert.deepEqual([deal.mode, deal.look, deal.palette, deal.type, deal.composition, deal.direction], ['studio', 'model', null, null, undefined, undefined]);
+  assert.match(fs.readFileSync(path.join(project, '.craft', 'plan.md'), 'utf8'), /^# Storyboard$/m);
+  assert.match(fs.readFileSync(path.join(project, 'index.html'), 'utf8'), /craft\/recipes\.css/, 'an empty folder gets the starter page');
   assert.match(fs.readFileSync(path.join(project, 'craft', 'tokens.css'), 'utf8'), /PENDING/);
+  // the dealt run of earlier versions stays behind its flags, and asks for the structure it is missing
+  const legacyDir = path.join(dir, 'legacy');
+  fs.mkdirSync(legacyDir);
+  const legacy = node([path.join(link, 'scripts', 'start.mjs'), '--kind', 'landing', '--moods', 'hospitality,heritage,warm', '--lang', 'es', '--direction', 'cinematic-chapters'], legacyDir, env);
+  assert.equal(legacy.status, 3);
+  assert.match(legacy.stdout, /# Choose the structure first/);
+  assert.doesNotMatch(legacy.stdout, /\*\*bento-dominant\*\*/, 'a photo-led subject is offered photo-first structures only');
   const design = (...args) => node([path.join(link, 'scripts', 'design.mjs'), ...args], project, env);
   const bad = design('set', '--bg', '#f6f1e7', '--ink', '#231e18', '--accent', '#7c3aed', '--display', 'Fraunces', '--text', 'Inter', '--why', 'a test of the refusals');
   assert.equal(bad.status, 1);
   assert.match(bad.stdout, /FAIL accent-violet/);
   assert.match(bad.stdout, /FAIL ground-tinted/);
   assert.match(fs.readFileSync(path.join(project, 'craft', 'tokens.css'), 'utf8'), /PENDING/, 'a refused choice writes nothing');
-  const good = design('set', '--bg', '#fbfaf7', '--ink', '#151413', '--accent', '#9a4a2c', '--display', 'Fraunces', '--text', 'Instrument Sans', '--why', 'accent from the roof tiles in the patio photograph');
+  const good = design('set', '--bg', '#fbfaf7', '--ink', '#151413', '--accent', '#9a4a2c', '--display', 'Fraunces', '--text', 'Public Sans', '--why', 'accent from the roof tiles in the patio photograph');
   assert.equal(good.status, 0, good.stdout + good.stderr);
   const tokens = fs.readFileSync(path.join(project, 'craft', 'tokens.css'), 'utf8');
   assert.match(tokens, /--c-accent: #9a4a2c;/);

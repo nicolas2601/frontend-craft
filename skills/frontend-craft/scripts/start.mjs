@@ -1,30 +1,23 @@
 #!/usr/bin/env node
 /*
-  frontend-craft start: deal a direction, copy the kit into the project and arm the gate.
+  frontend-craft start: copy the kit and the starter page into the project, write the studio brief and the plan
+  template, and arm the gate. Nothing is dealt: the model is the design lead (SKILL.md, references/studio.md).
 
-    node <skill>/scripts/start.mjs --kind landing --moods warm,craft,coffee --lang es --composition <id> --direction <id> [--kit src/craft]
-    node <skill>/scripts/start.mjs --kind site --pages /,/menu,/visit --moods ... --lang es     # a multi-page site
-    node <skill>/scripts/start.mjs --kind app --moods tech,precise --lang en                   # a platform or app UI
-        [--url http://localhost:5173 | --root dist | --file index.html]
-        [--risk safe|bold|wild] [--redeal] [--seed 42]
-        [--pin direction=id,palette=id,type=id,composition=id,signature=id,component=Id,scene=id] [--brand] [--kit-only] [--list]
-        [--palette-from assets/hero-still.webp [--accent 2]]   # the colours from the subject's own picture
-        [--deal-look] [--deal-direction]                        # let the library deal palette and type, or the direction (tests, quick drafts)
+    node <skill>/scripts/start.mjs --kind landing --lang es [--moods coffee,craft] [--kit src/craft]
+    node <skill>/scripts/start.mjs --kind site --pages /,/menu,/visit --lang es     # a multi-page site
+    node <skill>/scripts/start.mjs --kind app --lang en                            # a platform or app UI
+        [--url http://localhost:5173 | --root dist | --file index.html]           # the target the gate checks
+        [--kit-only] [--list]
 
-  The model chooses the structure (--composition, from the shortlist printed when it is missing) and the look
-  (colours and type, with design.mjs set after start.mjs; references/color-type.md) and the art direction
-  (--direction). The set pieces, motion and component are dealt from the chosen direction, for variety.
+  Writes .craft/deal.json (kind, language, the kit folder; the look comes later from design.mjs set), .craft/brief.md
+  (the process, every command with its path), .craft/plan.md (the template the model fills) and .craft/gate.json;
+  copies the kit (tokens.css with neutral stand-ins until design.mjs set, the stylesheets, craft-motion.js and its
+  modules, starter.html) into --kit, and in an empty folder writes index.html from the starter. --moods only helps
+  pick the closest MotionSites designs.
 
-  Websites (every kind but app and docs) are dealt an art direction as well: grounds, type scale,
-  picture treatment, two template breaks and two scroll set pieces per page (never the same piece on
-  two pages). --risk sets how often that direction comes from outside the subject's usual moods
-  (safe never, bold 40%, wild 80%). Apps get a direction that works for product UI, without set pieces.
-  Every build is dealt one library component (React Bits) that fits the direction. --lang is the
-  language the page is written in; the check holds the page to it.
-
-  Writes .craft/deal.json, .craft/brief.md and .craft/gate.json, copies the kit (craft.css,
-  craft-motion.js, motion/) plus a dealt tokens.css into --kit, and prints the brief.
-  Re-running keeps the current deal unless --redeal is given.
+  The dealt run of earlier versions stays for quick drafts and tests: --composition <id> --direction <id> (or
+  --deal-direction, --deal-look, --pin, --seed, --redeal) deals a composition blueprint, an art direction, set pieces
+  and a React Bits component, and prints that brief instead.
 */
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -34,6 +27,7 @@ import { KINDS, RISK, applyPalette, compositionsFor, deal, directionsFor, histor
 import { derivePalette, samplePixels } from './lib/palette-from.mjs';
 import { closestExamples, findMotionsites, parseIndex } from './lib/motionsites.mjs';
 import { briefMd, tokensCss } from './lib/render.mjs';
+import { PLAN_TEMPLATE, studioBrief } from './lib/studio.mjs';
 import { craftDir, isMain, parseArgs, readJson, resolveTarget, writeJson } from './lib/state.mjs';
 
 const SKILL = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -118,6 +112,41 @@ function withPictureColours(current, args, cwd, lib) {
   return { ...applyPalette(current, palette, lib), paletteFrom: file };
 }
 
+/**
+ * The default start: nothing is dealt. Copies the kit and the starter page, writes the studio brief and the plan
+ * template, a pending tokens.css (the model's look comes with design.mjs set), and arms the gate.
+ */
+function studioRun(args, cwd, dir, { kind, lang, moods, pages }) {
+  const existing = readJson(path.join(dir, 'deal.json'));
+  const kitDir = String(args.kit ?? existing?.kitDir ?? defaultKitDir(cwd));
+  const keepLook = existing?.design?.set ? { palette: existing.palette, type: existing.type, design: existing.design } : {};
+  const current = { version: 4, mode: 'studio', kind, lang, moods, look: 'model', kitDir, pages: pages ? normalizePages(pages).map((p) => ({ path: p, setPieces: [] })) : [],
+    palette: null, type: null, motion: { setPieces: [], component: null, scene: null }, ...keepLook, at: existing?.at ?? new Date().toISOString() };
+  copyKit(path.join(cwd, kitDir));
+  fs.writeFileSync(path.join(cwd, kitDir, 'tokens.css'), tokensCss(current));
+  const kit = kitDir.split(path.sep).join('/');
+  const starter = fs.readFileSync(path.join(KIT, 'starter.html'), 'utf8').replaceAll('href="craft/', `href="${kit}/`).replaceAll("from './craft/", `from './${kit}/`);
+  fs.writeFileSync(path.join(cwd, kitDir, 'starter.html'), starter);
+  const plain = !fs.existsSync(path.join(cwd, 'package.json')) && !fs.existsSync(path.join(cwd, 'index.html'));
+  if (plain) fs.writeFileSync(path.join(cwd, 'index.html'), starter);
+  writeJson(path.join(dir, 'deal.json'), current);
+  if (!fs.existsSync(path.join(dir, 'plan.md'))) fs.writeFileSync(path.join(dir, 'plan.md'), PLAN_TEMPLATE);
+  const gate = readJson(path.join(dir, 'gate.json'), {});
+  const target = resolveTarget(args, gate) ?? (plain ? { root: cwd, page: 'index.html' } : null);
+  const sitePages = current.pages.length ? current.pages.map((p) => p.path) : undefined;
+  writeJson(path.join(dir, 'gate.json'), { ...gate, armed: true, off: false, kind, target, pages: sitePages, blocks: gate.blocks ?? 0, startedAt: gate.startedAt ?? new Date().toISOString() });
+  const script = path.join(SKILL, 'scripts', 'check.mjs');
+  const rel = path.relative(cwd, script);
+  const ms = findMotionsites(SKILL);
+  const motionsites = ms ? { dir: ms, examples: closestExamples(parseIndex(fs.readFileSync(path.join(ms, 'examples', 'INDEX.md'), 'utf8')), { kind, moods }) } : null;
+  const brief = studioBrief(current, { scripts: path.join(SKILL, 'scripts'), ref: (f) => path.join(SKILL, 'references', f), kitDir: kit, checkCmd: `node ${rel.startsWith('..') ? script : rel}`, motionsites });
+  fs.writeFileSync(path.join(dir, 'brief.md'), brief);
+  const tail = target ? `Gate armed on ${target.url ?? `${target.root}/${target.page ?? ''}`}.` : 'No target yet: once the dev server runs, re-run start.mjs with --url <dev url> (nothing is lost), or pass --root <build folder>.';
+  return { text: `${brief}
+Kit and starter page in ${kit}/${plain ? ' (also index.html)' : ''}; your plan goes in .craft/plan.md.
+${tail}`, deal: current };
+}
+
 /** The structures and art directions that fit, for the model to choose from; printed when one is missing. */
 export function compositionMenu(lib, kind, moods, { needComposition = true, needDirection = true } = {}) {
   const fit = compositionsFor(lib, kind, moods);
@@ -169,6 +198,8 @@ export function run(argv, cwd = process.cwd()) {
   const pages = args.pages && args.pages !== true ? String(args.pages) : '';
   if (pages && kind !== 'site') throw new Error('--pages is for --kind site (a multi-page website)');
 
+  const legacy = args.composition || args.direction || args['deal-direction'] || args['deal-look'] || args.pin || args.redeal || args.seed || readJson(path.join(dir, 'deal.json'))?.version === 3;
+  if (!legacy) return studioRun(args, cwd, dir, { kind, lang, moods, pages });
   const existing = readJson(path.join(dir, 'deal.json'));
   const pins = parsePins(args.pin);
   if (args.composition && args.composition !== true) {
