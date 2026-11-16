@@ -93,6 +93,8 @@ test('the studio brief names every tool with its path and the defaults to refuse
   for (const cmd of ['/s/scripts/media.mjs social', '/s/scripts/look.mjs', '/s/scripts/components.mjs', '/s/scripts/design.mjs', 'craft/starter.html']) assert.ok(brief.includes(cmd), cmd);
   assert.match(brief, /near-black ground with one bright accent/);
   assert.match(brief, /drawn map/);
+  assert.match(brief, /dark panel beside the photograph/, 'the split hero on a dark panel is a named default');
+  assert.match(brief, /Go through every line below/, 'the whole list is checked, not only what comes to mind');
 });
 
 test('a large letterboxed picture fails; an app is left alone', async () => {

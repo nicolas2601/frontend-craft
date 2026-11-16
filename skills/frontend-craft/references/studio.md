@@ -34,7 +34,9 @@ These are defaults, not choices: they appear whatever the subject. Refuse them u
 |---|---|
 | A cream ground with a high-contrast serif and a terracotta accent | The sober palette with the accent from the subject |
 | A near-black page with one bright accent | A light page; a dark band only where the subject is night, film or music |
-| A tracked uppercase eyebrow over every heading; "01 / 02" on things that are not a sequence | Headings that answer the visitor's question; numbers only for real steps |
+| A first screen of words on a dark panel beside the photograph in a box | The subject's best picture at full bleed with the words on it (the dive), or the product large on the page's ground |
+| The client's bio slogan as the headline ("Un café con identidad") | What only they are: the place, the person, the street, the product ("El café del 10, en la Carrera 29") |
+| A small tracked label over the headline or every heading; uppercase tracked labels ("DÓNDE", "HORARIO"); "01 / 02" on things that are not a sequence | Headings that answer the visitor's question; labels in the text face, sentence case, untracked; numbers only for real steps |
 | One word of the headline in italic or another colour | The whole headline in the display face; emphasis by size or a line break |
 | Three identical cards; a big number with a small label as a section | One dominant item with its picture; a list of facts |
 | A fade-and-rise on every section; a paragraph lit word by word as the "wow" | One orchestrated moment; quiet reveals only where something changes |

@@ -18,7 +18,7 @@ Palette (4-6 named colours; written with design.mjs set):
 Faces (display, text) and why they fit:
 The one orchestrated moment:
 First screen (ASCII wireframe):
-Defaults I refused (and what I did instead):
+Defaults I refused (every line of the calibration list in the brief, checked against this direction and the storyboard: each one the plan came near, and what you did instead):
 
 # Storyboard
 | # | Visitor's question | What they see (layout, the picture) | Media (file or route) | Motion (what moves, why) | Part (recipe, library piece, kit) |
@@ -31,7 +31,8 @@ Defaults I refused (and what I did instead):
 
 const CALIBRATION = [
   'a warm cream ground with a high-contrast serif and a terracotta accent; a near-black ground with one bright accent',
-  'a tracked uppercase eyebrow over every heading; meta strings joined with middle dots; "01 / 02" markers on things that are not a sequence',
+  'a first screen of words on a dark panel beside the photograph in a box; the client\'s bio slogan or tagline as the headline instead of what only they are',
+  'a small tracked label over the headline or over every heading; uppercase tracked labels ("DÓNDE", "HORARIO"); meta strings joined with middle dots; "01 / 02" markers on things that are not a sequence',
   'one word of the headline in italic or another colour; a big number with a small label as a section; three identical cards',
   'a fade-and-rise on every section; a paragraph that lights up word by word as the default "wow"; an endless band of words',
   'a drawn map, a diagram of boxes and lines, an empty dark stage that opens on three words, a text button under every animation',
@@ -59,7 +60,7 @@ export function studioBrief(d, t) {
     '',
     '## 3. Direction, then attack it',
     `- Fill # Direction: the idea in one sentence, the palette, the faces, the one orchestrated moment, an ASCII wireframe of the first screen. Colours and faces: ${t.ref('color-type.md')}; candidates from ui-ux-pro-max; write them with \`${tool('design.mjs')} set ... --why "..."\`.`,
-    '- Then read it as the client who rejected templates: whatever you would have produced for any similar brief, change, and say what you changed under "Defaults I refused". What generated pages look like (refuse unless the brief asks for it):',
+    '- Then read it as the client who rejected templates: whatever you would have produced for any similar brief, change. Go through every line below against your direction, first screen and storyboard, not only the lines that come to mind, and under "Defaults I refused" write each one the plan came near and what you did instead. What generated pages look like (refuse unless the brief asks for it):',
     ...CALIBRATION.map((c) => `  - ${c}`),
     '',
     '## 4. Storyboard',
