@@ -37,6 +37,7 @@
 | `sparse-screen` | WARN | A screen over 85% one flat colour: a number or a few words alone on an empty ground | A statement screen earns it only with type that fills it; otherwise bring the section's picture in |
 | `half-empty` | WARN | One half of a screen flat while the other holds everything | Fill the half with the section's picture, footage or map, or centre and narrow the content |
 | `svg-boxes` | FAIL | An inline SVG of 15% of the screen or more made only of boxes, straight lines, dots and labels (a drawn map, a wireframe diagram) | A real map (map recipe), the process in footage or photographs, or an illustration drawn for real (`svg-craft`) |
+| `letterbox` | FAIL | A picture or video of a quarter of the screen or more shown whole in a frame of another shape (`object-fit: contain`), with bars of empty ground beside it | `object-fit: cover` with the focal point in `object-position` (or the dive recipe's `--focus`), or a frame with the media's own ratio |
 | `plan-missing` | FAIL | A studio build (`start.mjs` without a deal) whose `.craft/plan.md` has fewer than three storyboard rows | Fill the plan before building: brief, references, direction, a storyboard row per section |
 | `parts-none-taken` | WARN | Parts were searched but nothing was taken | `components.mjs pick` the candidates that fit, or say under `# Components` why each was refused |
 | `content-invisible` | FAIL | Text never becomes visible after scrolling the whole page | A reveal that never fires, or an element hidden by CSS with no script to show it |

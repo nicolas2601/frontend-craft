@@ -94,3 +94,10 @@ test('the studio brief names every tool with its path and the defaults to refuse
   assert.match(brief, /near-black ground with one bright accent/);
   assert.match(brief, /drawn map/);
 });
+
+test('a large letterboxed picture fails; an app is left alone', async () => {
+  const { letterboxRules } = await import('../skills/frontend-craft/scripts/lib/rules-finish.mjs');
+  assert.equal(letterboxRules({ letterbox: ['video hero.mp4 (1100x1350 in a 1440x832 frame)'], kind: 'landing' })[0].id, 'letterbox');
+  assert.deepEqual(letterboxRules({ letterbox: [], kind: 'landing' }), []);
+  assert.deepEqual(letterboxRules({ letterbox: ['img a.jpg'], kind: 'app' }), []);
+});

@@ -42,6 +42,7 @@ These are defaults, not choices: they appear whatever the subject. Refuse them u
 | A drawn map; a diagram of boxes and lines | A real map (the map recipe); the process in footage or photographs |
 | A dark stage that opens on three words; a pinned section that runs past its content | Every screen holds the subject; pinned sections as long as their content |
 | A text button under every animation | The kit's small corner pause icon, only on what moves for more than five seconds |
+| The same split (words left, picture right) section after section | Vary the structure: a full-bleed picture with words over it, a strip of the client's photographs, a list, type set large |
 | A cropped or letterboxed hero picture | The full picture at full bleed, the focal point chosen with object-position |
 
 ## Moves by trade

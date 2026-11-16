@@ -84,6 +84,13 @@ export function drawnSvgRules({ drawnSvg = [], kind }) {
     'a place is shown on a real map (the data-map recipe: MapLibre + OpenStreetMap) or in its photograph; a process in its footage or photographs. An illustration is drawn for real (svg-craft), never a wireframe of rectangles')];
 }
 
+/** A large picture or video shown whole in a frame of another shape leaves bars of empty ground beside it. */
+export function letterboxRules({ letterbox = [], kind }) {
+  if (OPERATE_KINDS.includes(kind) || !letterbox.length) return [];
+  return [f('FAIL', 'letterbox', `${letterbox.length} large picture(s) or video(s) letterboxed with object-fit: contain: ${letterbox.slice(0, 2).join('; ')}`,
+    'fill the frame with object-fit: cover and choose the focal point with object-position (or the dive recipe\'s --focus), or give the frame the media\'s own ratio. Never crop the source file and never show bars of empty ground')];
+}
+
 /** Studio builds think before they build: the storyboard in .craft/plan.md is what the page is checked against. */
 export function planRules({ deal, plan }) {
   if (deal?.mode !== 'studio' || plan === undefined) return [];
@@ -93,5 +100,5 @@ export function planRules({ deal, plan }) {
 }
 
 export function finishRules(facts) {
-  return [...heroPictureRules(facts), ...emptyBoxRules(facts), ...footerRules(facts), ...magneticRules(facts), ...lookRules(facts), ...partsRules(facts), ...blankRules(facts), ...drawnSvgRules(facts), ...planRules(facts)];
+  return [...heroPictureRules(facts), ...emptyBoxRules(facts), ...footerRules(facts), ...magneticRules(facts), ...lookRules(facts), ...partsRules(facts), ...blankRules(facts), ...drawnSvgRules(facts), ...letterboxRules(facts), ...planRules(facts)];
 }

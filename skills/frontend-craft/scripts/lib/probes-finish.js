@@ -103,3 +103,24 @@ export function probeDrawnSvg() {
   }
   return out;
 }
+
+/**
+ * Pictures and videos shown whole inside a frame of another shape (object-fit: contain), so bars of empty ground sit
+ * beside or above them: a portrait facade in a landscape hero. Only frames of a quarter of the screen or more.
+ */
+export function probeLetterbox() {
+  const out = [];
+  const screen = innerWidth * innerHeight;
+  for (const el of document.querySelectorAll('img, video')) {
+    const fit = getComputedStyle(el).objectFit;
+    if (fit !== 'contain' && fit !== 'scale-down') continue;
+    const r = el.getBoundingClientRect();
+    if (r.width * r.height < screen * 0.25) continue;
+    const w = el.naturalWidth || el.videoWidth;
+    const h = el.naturalHeight || el.videoHeight;
+    if (!w || !h) continue;
+    const mismatch = Math.abs(Math.log((w / h) / (r.width / r.height)));
+    if (mismatch > 0.2) out.push(`${el.tagName.toLowerCase()} ${(el.currentSrc || el.src || '').split('/').pop()} (${w}x${h} in a ${Math.round(r.width)}x${Math.round(r.height)} frame)`);
+  }
+  return out;
+}

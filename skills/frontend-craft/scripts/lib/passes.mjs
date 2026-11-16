@@ -7,7 +7,7 @@ import {
 } from './probes.js';
 import { probePhotoColour, probeRichness, probeStickySections } from './probes-richness.js';
 import { probeSlop } from './probes-slop.js';
-import { probeDrawnSvg, probeEmptyBoxes, probeFooter, probeHeroPicture } from './probes-finish.js';
+import { probeDrawnSvg, probeEmptyBoxes, probeFooter, probeHeroPicture, probeLetterbox } from './probes-finish.js';
 import { decodePng, screenFlatness } from './png.mjs';
 
 const BLANK_SAMPLES = 28;
@@ -146,6 +146,7 @@ export async function normalPass(browser, url, shotsDir, { selectors = [] } = {}
   facts.emptyBoxes = await s.run(probeEmptyBoxes);
   facts.footer = await s.run(probeFooter);
   facts.drawnSvg = await s.run(probeDrawnSvg);
+  facts.letterbox = await s.run(probeLetterbox);
   const reveals = changed(before, after, (row) => Number(row[9]) > vh && Number(row[0]) < 0.2).length;
   const { linked, sections, indices } = await scrollLinked(s, max, vh);
   const late = await lateScrub(s, indices, vh);
