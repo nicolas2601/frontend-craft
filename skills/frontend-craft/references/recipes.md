@@ -8,7 +8,8 @@ page's tokens. Choose one by the story the section tells; a page rarely needs mo
 ## dive: fly forward into the hero picture
 
 The first screen is the subject's best photograph or loop at full bleed; scrolling flies the camera into it toward a
-focal point while the words step aside, then dissolves into the next section. The moment for a place (into the
+focal point while the words step aside; at its closest the picture scrolls off with the section (no fade to a flat
+ground, which would leave an empty screen). The moment for a place (into the
 shopfront, the window, the sign) or a product (into its detail).
 
 ```html
@@ -28,8 +29,7 @@ shopfront, the window, the sign) or a product (into its detail).
 - `data-dive` is the depth (0.5 a step closer, 1 deep into it). `--focus` is where the camera goes and how the picture
   is framed (object-position): the sign, the door, the cup. Never crop the source file; pick the focus.
 - A video works the same (`<video data-loop ...>` in `.r-dive__media`).
-- After the kit nav it sits under the sticky bar on its own. `--next-ground` on the section sets the colour it
-  dissolves into (the next section's ground).
+- After the kit nav it sits under the sticky bar on its own.
 
 ## journey: a horizontal story while scrolling down
 
@@ -39,11 +39,11 @@ For an origin story (farm to cup), a process, a route, a timeline. Five to eight
 ```html
 <section class="r-journey" data-journey aria-label="...">
   <div class="r-journey__stage">
-    <p class="r-journey__line" data-line="-1">Del Cañón del Chicamocha</p>
+    <p class="r-journey__line" data-line="-1">Del trigo de Boyacá</p>
     <ol class="r-journey__track">
       <li><figure><img src="..." alt="..." width="1044" height="1392" loading="lazy"><figcaption>One fact.</figcaption></figure></li>
     </ol>
-    <p class="r-journey__line" data-line="1">a la Carrera 29</p>
+    <p class="r-journey__line" data-line="1">al horno de la calle 10</p>
     <div class="r-journey__progress"><span></span></div>
   </div>
 </section>
@@ -113,8 +113,8 @@ on the door, cooperative gestures (it never traps the page's scroll) and the cre
 directions link stay inside it as the fallback.
 
 ```html
-<div class="r-map" data-map data-lat="7.1203256" data-lng="-73.1133486" data-zoom="16.4" data-label="Agostino">
-  <p>Agostino Coffee, Cra 29 #41-76, Sotomayor, Bucaramanga.</p>
+<div class="r-map" data-map data-lat="4.5981" data-lng="-74.0760" data-zoom="16.4" data-label="Riomar">
+  <p>Panadería Riomar, Calle 10 #4-21, Bogotá.</p>
 </div>
 ```
 
@@ -132,7 +132,7 @@ Hours, address, editions, sizes, what is included: a two-column list instead of 
 ```html
 <dl class="r-spec">
   <div><dt>Horario</dt><dd>Todos los días, 8:00 a 20:00</dd></div>
-  <div><dt>Teléfono</dt><dd><a href="tel:+573006613219">300 661 3219</a></dd></div>
+  <div><dt>Teléfono</dt><dd><a href="tel:+576015550142">601 555 0142</a></dd></div>
 </dl>
 ```
 
