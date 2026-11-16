@@ -23,10 +23,13 @@
 </head>
 <body>
   <a class="craft-skip" href="#main">{{skip to content, in the page language}}</a>
-  <header class="nav">
+  <header class="nav" data-nav>
     <a class="brand" href="#main">{{name}}</a>
-    <nav class="links" aria-label="{{sections, in the page language}}"><!-- 3-4 links to the sections --></nav>
+    <nav class="links" id="nav-links" aria-label="{{sections, in the page language}}"><!-- 3-4 links to the sections -->
+      <a class="btn nav__cta" href="{{the main action's real link}}" data-press>{{main action}}</a>
+    </nav>
     <a class="btn" href="{{the main action's real link}}" data-press>{{main action, the same words as the hero's}}</a>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-links"><span class="craft-sr">{{Menu, in the page language}}</span></button>
   </header>
   <main id="main">
     <!-- one <section> per storyboard row in .craft/plan.md, built from references/recipes.md -->

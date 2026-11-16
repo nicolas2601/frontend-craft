@@ -136,6 +136,34 @@
 .r-product__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .r-product[data-product3d-on] > img { visibility: hidden; }
 
+/* ---------- journey3d: the product travels a pinned stage while chapters of its story pass beside it ---------- */
+.r-journey3d { position: relative; }
+.r-journey3d__stage { position: sticky; top: 0; height: 100svh; overflow: clip; }
+.r-journey3d__stage > .r-product { position: absolute; inset: 0; aspect-ratio: auto; min-height: 0; }
+.r-journey3d__stage > .r-product > img { max-height: 62svh; max-width: 30vw; }
+.r-journey3d__chapters { position: relative; z-index: 1; margin-top: -100svh; pointer-events: none; }
+.r-journey3d__chapter { min-height: 100svh; display: grid; align-items: center; padding: var(--s-16, 4rem) var(--gutter); }
+.r-journey3d__chapter > * { pointer-events: auto; max-width: min(34rem, 38vw); }
+.r-journey3d__chapter[data-side="left"] > * { justify-self: start; }
+.r-journey3d__chapter[data-side="right"] > * { justify-self: end; }
+.r-journey3d__chapter[data-side="intro"] { align-items: end; }
+.r-journey3d__chapter[data-side="intro"] > * { justify-self: start; max-width: min(30rem, 28vw); }
+.r-journey3d__when { display: block; font-family: var(--f-display); font-weight: var(--display-weight, 800); font-size: clamp(3rem, 1rem + 5vw, 6.5rem); line-height: 0.9; margin: 0 0 var(--s-4, 1rem); }
+@media (max-width: 760px) {
+  .r-journey3d__stage > .r-product > img { max-width: 52vw; max-height: 40svh; align-self: start; margin-top: 10svh; }
+  .r-journey3d__chapter, .r-journey3d__chapter[data-side="intro"] { align-items: end; padding: 0 0 var(--s-8, 2rem); }
+  /* the words sit on the section's own ground, fading up over the pack's foot */
+  .r-journey3d__chapter > *, .r-journey3d__chapter[data-side="intro"] > * {
+    justify-self: stretch; max-width: none; padding: var(--s-12, 3rem) var(--gutter) 0;
+    background: linear-gradient(to bottom, transparent, var(--page-ground, var(--c-bg)) var(--s-12, 3rem));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .r-journey3d__stage { position: relative; height: 70svh; }
+  .r-journey3d__chapters { margin-top: 0; }
+  .r-journey3d__chapter { min-height: 0; }
+}
+
 /* ---------- map: a real map of the place (MapLibre + OpenFreeMap) ---------- */
 .r-map { position: relative; min-height: clamp(20rem, 52svh, 34rem); border-radius: var(--r-md); overflow: clip; background: var(--c-surface); }
 /* MapLibre's own stylesheet sets the container relative; the map must fill the frame whatever loads last. */

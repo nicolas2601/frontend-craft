@@ -19,6 +19,7 @@ needs; under reduced motion everything is simply there, and without JavaScript n
 | `data-unveil` (`up`, `down`, `left`, `right`) | a frame holding an img or video | Opens from that edge while the picture settles from a slight zoom; pairs with `data-parallax="0.06"`-`"0.22"` for depth |
 | `data-ground="#hex"` (and `data-ink="#hex"`) | a section | The page's ground eases to this colour while the section holds the middle of the screen; the section's words take its ink. Keep words clear of the section's edges |
 | `data-hover="zoom"` / `"line"` | a frame / a link | The picture leans in; the link draws its underline |
+| `data-nav` | the header | A floating bar in the colours of the section under it (`data-nav-ground` / `data-nav-ink` on a section over a photograph); it steps away while the visitor reads down and returns on the way up. On a phone its links open as a full screen from `<button class="nav__toggle" aria-expanded="false" aria-controls="<links id>">`; a `.btn.nav__cta` inside the links shows there. Without JavaScript the links stay a row |
 
 ```html
 <section class="story" data-ground="#F1E9DC" aria-label="La historia">
@@ -145,22 +146,55 @@ Keep it under about 6 MB of frames: fewer frames per second, a narrower width or
 
 ## product3d: the client's product in 3D
 
-A soft pillow pouch (a coffee bag, a sachet, a pack) printed with the product's own front and back artwork, lit by a
-small studio, swaying with the scroll and leaning toward the pointer. It needs the straight-on artwork: the client's
-print file, or a perspective-corrected crop of a sharp photograph (`magick in.jpg -distort Perspective '<4 corners>'`).
-A blurry or tilted texture looks cheap: ask the client for the file.
+A stand-up bag (a coffee bag, a sachet, a pack): a boxy body with soft edges, side gussets folded in, a crimped heat
+seal on top and a flat bottom, printed with the product's own front and back artwork, lit by a small studio, leaning
+toward the pointer. It turns with the scroll of its section, or travels a pinned stage chapter by chapter (journey3d,
+below). The print decides how it looks: the client's file, or a straight-on crop of their sharpest photograph. Two
+photographs of the same pack can be joined (feature matching and a homography, then one feathered seam) when neither
+shows all of it; take the reflections and the background out, and say in the report which photographs it came from.
 
 ```html
-<div class="r-product" data-product3d data-front="assets/img/bag-front.jpg" data-back="assets/img/bag-back.jpg" data-size="1 1.62 0.34" style="--ratio: 4 / 5">
-  <img src="assets/img/bag-front.jpg" alt="..." width="600" height="970">
+<div class="r-product" data-product3d data-front="assets/img/bag-front.webp" data-size="1 2.3 0.5" data-valve="0.44 0.19" data-finish="gloss" style="--ratio: 4 / 5">
+  <img src="assets/img/bag-front.webp" alt="..." width="955" height="2240">
 </div>
 ```
 
-- `data-size` is width, height and depth of the pack; `data-spin` the turn per pass (0.24 keeps the front in view),
-  `data-from` the starting angle.
+- `data-size` is width, height and depth (a tall coffee bag is about `1 2.3 0.5`); `data-spin` the turn per pass
+  (0.24 keeps the front in view), `data-from` the starting angle.
+- `data-valve="u v"` puts a degassing valve where the bag has one (u across, v from the top); leave it out when the
+  front has none. `data-finish`: `matte` (paper), `gloss` (film), `foil` (metallised).
 - It needs three.js. Plain HTML: `<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js" } }</script>`.
   A bundled project: `npm i three` and `init(document, { libs: { three: () => import('three') } })`.
 - Without WebGL or three.js the image stays.
+
+## journey3d: the product travels while its story passes beside it
+
+A pinned stage holds the product in 3D; as the visitor scrolls, chapters of its story pass on alternate sides and the
+product moves to the other side, turning to show its gussets, one full turn before the last chapter. Use it for the
+one product a page is about (the bag of the house, the edition with the club's crest), with four or five chapters of
+real facts: its origin, its history, what is in it, where to get it. On a phone the product stays under the bar,
+swaying toward each chapter's side, and the words rise over its foot on the section's ground. Under reduced motion
+the stage is not pinned and the chapters read in order.
+
+```html
+<section class="r-journey3d" id="leopardo" data-ground="#22392B" data-ink="#F1E9DC" aria-labelledby="bag-title">
+  <div class="r-journey3d__stage">
+    <div class="r-product" data-product3d data-front="assets/img/bag-front.webp" data-size="1 2.3 0.5" data-finish="gloss"
+         data-path="0 0.02 -0.02; 0.5 0 0.1; -0.5 0 -0.12; 0.5 0 0.08; -0.5 0 1.02">
+      <img src="assets/img/bag-front.webp" alt="..." width="955" height="2240">
+    </div>
+  </div>
+  <div class="r-journey3d__chapters">
+    <div class="r-journey3d__chapter" data-side="intro"><div><h2 id="bag-title">…</h2><p>…</p></div></div>
+    <article class="r-journey3d__chapter" data-side="left"><div><h3><span class="r-journey3d__when">1730</span>Colombia</h3><p>…</p></div></article>
+    <article class="r-journey3d__chapter" data-side="right">…</article>
+  </div>
+</section>
+```
+
+- `data-path` has one pose per chapter, `x y turn`: x and y in half-widths and half-heights of the stage (0.5 is a
+  quarter of the screen to the right), the turn in turns. Put the words on the other side from the product.
+- `data-path-narrow` sets the phone poses when the default (under the bar, swaying) does not fit.
 
 ## map: a real map, never a drawn one
 
