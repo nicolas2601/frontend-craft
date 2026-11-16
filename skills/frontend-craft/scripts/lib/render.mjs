@@ -1,7 +1,7 @@
 // Turn a deal into files: tokens.css, font loading snippets and the direction brief.
 import { hexToRgb, luminance } from './color.mjs';
 import { PHOTO_LED } from './deal.mjs';
-import { componentBlock, finishBlock, languageBlock, pagesBlock, platformBlock, referencesBlock, sceneBlock, tellsBlock } from './brief-blocks.mjs';
+import { componentBlock, designsBlock, finishBlock, languageBlock, pagesBlock, partsBlock, platformBlock, referencesBlock, sceneBlock, tellsBlock } from './brief-blocks.mjs';
 
 const plus = (family) => family.replace(/ /g, '+');
 const fallback = (face) => (face.serif ? 'Georgia, serif' : 'system-ui, sans-serif');
@@ -171,8 +171,9 @@ function conceptBlock(d) {
     '```md', '# Idea', 'One or two sentences: the one thing only this subject has (its place, its process, a number, its people) and how this page shows it.',
     '# Signature', 'Which set piece or effect carries that idea, and what moves when. Motion that tells the idea (time passing, a thing being made), not only things appearing.',
     '# Rejected', 'Three defaults this page will not use for this subject (for a cafe: cream and terracotta with a serif, three feature cards, a centred hero over a cup).',
-    '# Breaks', 'One line per break of the direction, naming the element that carries it in backticks: `.hero-letterbox`, `#tape-hours`. The check looks for each one.',
-    '# Components', `The dealt library component${d.motion.component ? ` (${d.motion.component.id})` : ''} and any other library piece you used: where it sits, what you changed, its source.`, '```', ''];
+    '# Breaks', 'One line per break of the direction (the two listed under the direction above): what you built and the class or id of the element that carries it, in backticks, e.g. `.<your-class>`. The check looks for each element on the page.',
+    '# Components', `The dealt library component${d.motion.component ? ` (${d.motion.component.id})` : ''} and each part you took with components.mjs pick: where it sits, what you changed, its source; a part you searched and built yourself, with why nothing fitted.`,
+    '# Look', 'The colours and faces you chose with design.mjs set, and where each comes from (the accent from the hero photograph, the display face for the subject\'s character).', '```', ''];
 }
 
 /** The model chooses the colours and type: the method, where candidates come from, and the command that checks the choice. */
@@ -221,11 +222,11 @@ export function briefMd(d, { kitDir, checkCmd, taste = null, setPiecesRef = 'ref
   lines.push(`## Composition: ${c.id}`, c.idea, '', `First screen: ${c.firstScreen}`, '',
     'Sections, in order (rename them for the subject; keep the pacing):', ...c.sections.map((s, i) => `${i + 1}. ${s}`), '');
   if (d.landing) lines.push(`Reading order a visitor expects on this kind of page (ui-ux-pro-max, ${d.landing.id}): ${d.landing.order.join(' > ')}. Main action: ${d.landing.cta}. Lay the sections above along it; where they differ, the composition's pacing wins. Proof means what the client gave you, never invented.`, '');
-  lines.push(...conceptBlock(d), ...pagesBlock(d, { setPiecesRef }), ...platformBlock(d), ...referencesBlock(d), ...photosBlock(d, { taste, hallmark: tools.hallmark ?? null }));
+  lines.push(...conceptBlock(d), ...pagesBlock(d, { setPiecesRef }), ...platformBlock(d), ...referencesBlock(d), ...designsBlock(d, { motionsites: tools.motionsites ?? null, ref: tools.motionsitesRef, photoLed: d.moods.some((m) => PHOTO_LED.includes(m)) }), ...photosBlock(d, { taste, hallmark: tools.hallmark ?? null }));
   lines.push('## Motion', motionBlock(d, setPiecesRef),
     '- Entrance: data-enter on 3-6 first-screen elements in reading order (nav, headline, line, action, visual); done by 1.5 s.',
     '- Press feedback: data-press on every button and button-like link.', '');
-  lines.push(...sceneBlock(d, { scenesRef }), ...componentBlock(d, { componentsRef }), ...tellsBlock());
+  lines.push(...sceneBlock(d, { scenesRef }), ...partsBlock(d, { partsCmd: tools.parts }), ...componentBlock(d, { componentsRef }), ...tellsBlock());
   lines.push('## Start from the blueprint',
     `${kitDir}/blueprint.html is this composition as a working page: layout, scale, sticky scenes and kit attributes already wired. Copy its structure into your page or components, replace every {{...}} (the check fails on any left), and build every .visual for real. Restyle details freely; keep the skeleton and the scale.`, '',
     '## Files', `Kit copied to ${kitDir}: tokens.css, craft.css, layouts.css, set-pieces.css, surfaces.css, craft-motion.js (+ motion/), blueprint.html. Load tokens.css, craft.css, layouts.css, set-pieces.css, surfaces.css in that order, then call init(document) once. Glass, bento, riso, mono and page transitions: ${surfacesRef}.`, '',

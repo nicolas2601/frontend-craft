@@ -49,7 +49,7 @@ export function mapDetector(rows = [], { soft = [] } = {}) {
 /** Run the detector on a URL. Resolves to { findings, ran, note }; never throws. */
 export function runDetector(url, { viewport = '1440x900', soft = [] } = {}) {
   const bin = impeccableBin();
-  if (!bin) return Promise.resolve({ findings: [], ran: false, note: 'impeccable is not installed next to frontend-craft: its detector did not run' });
+  if (!bin) return Promise.resolve({ findings: [], ran: false, note: 'impeccable is not installed next to frontend-craft: its detector did not run', missing: true });
   const env = { ...process.env, DO_NOT_TRACK: '1', IMPECCABLE_NO_TELEMETRY: '1' };
   return new Promise((resolve) => {
     execFile(bin, ['detect', url, '--json', '--no-advisory', '--viewport', viewport], { env, timeout: TIMEOUT_MS, maxBuffer: 8 << 20 }, (err, stdout) => {

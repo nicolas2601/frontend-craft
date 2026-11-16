@@ -23,13 +23,17 @@ import { PERSUADE_KINDS, evaluate } from './lib/rules.mjs';
 import { parseConcept } from './lib/rules-richness.mjs';
 import { breakRules } from './lib/rules-slop.mjs';
 import { serve } from './lib/serve.mjs';
+import { loadParts } from './lib/source-scan.mjs';
 import { craftDir, isMain, parseArgs, readJson, resolveTarget, writeJson } from './lib/state.mjs';
 
 const OWN_KINDS_NOJS = ['landing', 'site', 'product', 'event', 'venue', 'brand', 'campaign'];
-const PER_SITE = new Set(['concept-missing', 'concept-thin', 'deal-component', 'deal-break', 'no-direction']);
+const PER_SITE = new Set(['concept-missing', 'concept-thin', 'deal-component', 'deal-break', 'no-direction', 'parts-unsearched', 'parts-none-taken', 'deal-component-unused', 'tool-missing']);
+
+/** A bundled tool the check runs is absent: say so as a finding, not only a note. */
+const toolMissing = (skill, what) => ({ level: 'WARN', id: 'tool-missing', msg: `${skill} is not installed next to frontend-craft, so ${what} did not run`, fix: 'install every skill of the repo as siblings: npx skills@latest add nicolas2601/frontend-craft --all (node <skill>/scripts/setup.mjs reports what is missing)' });
 
 /** One page: the three browser passes, the rules and impeccable's detector. */
-async function checkPage(browser, { url, shotsDir, kind, deal, concept, quick, requireDeal, detector }) {
+async function checkPage(browser, { url, shotsDir, kind, deal, concept, parts, quick, requireDeal, detector }) {
   const selectors = parseConcept(concept)?.breaks ?? [];
   const { facts, shots } = await normalPass(browser, url, shotsDir, { selectors });
   const reduced = quick ? { lost: [], playing: [] } : await reducedPass(browser, url);
@@ -37,7 +41,7 @@ async function checkPage(browser, { url, shotsDir, kind, deal, concept, quick, r
   facts.reducedVideos = reduced.playing;
   const noJs = quick ? { lost: [], textLength: 1000 } : await noJsPass(browser, url);
   facts.invisible.nojs = noJs.lost;
-  Object.assign(facts, { kind, deal, concept });
+  Object.assign(facts, { kind, deal, concept, parts });
   const findings = evaluate(facts);
   if (requireDeal && !deal && PERSUADE_KINDS.includes(kind)) {
     findings.unshift({ level: 'FAIL', id: 'no-direction', msg: 'no dealt direction for this page (.craft/deal.json is missing)', fix: 'run node <skill>/scripts/start.mjs --kind <kind> --moods <moods> in the project folder and rebuild from its blueprint; use --brand if the project already has its colors and fonts' });
@@ -46,7 +50,8 @@ async function checkPage(browser, { url, shotsDir, kind, deal, concept, quick, r
     findings.push({ level: 'WARN', id: 'nojs-empty', msg: 'the page is empty without JavaScript (client-only render)', fix: 'prerender or SSR the marketing page so crawlers and slow phones get content' });
   }
   const det = detector && !quick ? await runDetector(url, { soft: dealtChoices(deal) }) : { findings: [], ran: false, note: null };
-  return { findings: [...findings, ...det.findings], facts, shots, detectorNote: det.note };
+  const missing = det.missing ? [toolMissing('impeccable', 'its detector')] : [];
+  return { findings: [...findings, ...det.findings, ...missing], facts, shots, detectorNote: det.note };
 }
 
 /**
@@ -91,7 +96,7 @@ const slug = (page) => (page === '/' ? 'home' : page.replace(/^\/+|\/+$/g, '').r
  * Check a page, or every page of a multi-page site (pages: ["/", "/menu", ...] relative to the target).
  * A site's deal gives each page its own set pieces.
  */
-export async function runCheck({ target, pages = null, kind = 'landing', deal = null, concept = null, out, quick = false, requireDeal = false, detector = true }) {
+export async function runCheck({ target, pages = null, kind = 'landing', deal = null, concept = null, parts = null, out, quick = false, requireDeal = false, detector = true }) {
   fs.mkdirSync(path.join(out, 'shots'), { recursive: true });
   const server = target.root ? await serve(target.root) : null;
   const base = target.url ?? new URL(target.page ?? '', server.url).href;
@@ -106,12 +111,13 @@ export async function runCheck({ target, pages = null, kind = 'landing', deal = 
       const own = deal?.pages?.find((p) => p.path === page);
       // the hero scene belongs to the first page of a site
       const pageDeal = own ? { ...deal, motion: { ...deal.motion, setPieces: own.setPieces, scene: page === list[0] ? deal.motion.scene : null } } : deal;
-      const result = { page: page ?? '/', url, ...await checkPage(browser, { url, shotsDir, kind, deal: pageDeal, concept, quick, requireDeal, detector }) };
+      const result = { page: page ?? '/', url, ...await checkPage(browser, { url, shotsDir, kind, deal: pageDeal, concept, parts, quick, requireDeal, detector }) };
       if (detector && !quick && target.root) {
         const kitDir = deal?.kitDir ?? 'craft';
         const lint = await runSloplint(pageFiles(target.root, page ?? target.page, kitDir), { kit: path.resolve(target.root, kitDir) });
         result.findings = [...result.findings, ...lint.findings];
         if (lint.note) result.detectorNote = [result.detectorNote, lint.note].filter(Boolean).join('; ');
+        if (lint.missing) result.findings.push(toolMissing('hallmark', 'its sloplint'));
       }
       results.push(result);
     }
@@ -121,7 +127,7 @@ export async function runCheck({ target, pages = null, kind = 'landing', deal = 
       url: base, kind, at: new Date().toISOString(), findings: mergeFindings(results),
       motion: first.facts.motion, richness: first.facts.richness, h1: first.facts.doc.h1, shots: results.flatMap((r) => r.shots),
       pages: results.length > 1 ? results.map((r) => ({ page: r.page, url: r.url, motion: r.facts.motion, richness: r.facts.richness, h1: r.facts.doc.h1 })) : undefined,
-      detector: results.find((r) => r.detectorNote)?.detectorNote ?? null,
+      detector: results.find((r) => r.detectorNote)?.detectorNote ?? (detector && !quick ? 'ran' : 'off'),
     };
     writeJson(path.join(out, 'check.json'), report);
     return report;
@@ -145,7 +151,7 @@ export function formatReport(report) {
   const pageLine = (r, label = 'Page') => `${label}: ${r.pictures} photograph(s)${r.fullBleed ? ', one full bleed' : ''}, ${r.grounds.length} sections, set pieces: ${r.setPieces.join(', ') || 'none'}`;
   if (report.pages) for (const p of report.pages) { if (p.richness) lines.push(pageLine(p.richness, `Page ${p.page}`)); }
   else if (report.richness) lines.push(pageLine(report.richness));
-  if (report.detector) lines.push(`Note: ${report.detector}`);
+  if (report.detector && !['ran', 'off'].includes(report.detector)) lines.push(`Note: ${report.detector}`);
   if (report.h1) lines.push(`Headline: "${report.h1.text.slice(0, 70)}" in ${report.h1.family} ${report.h1.weight}, ${Math.round(report.h1.size)}px`);
   lines.push(`Screens to open and look at: ${report.shots.map((s) => path.relative(process.cwd(), s)).join(', ')}`);
   lines.push('', `RESULT: ${fails.length ? 'FAIL' : 'PASS'}  ${fails.length} FAIL, ${warns.length} WARN`);
@@ -169,6 +175,8 @@ async function main() {
     pages,
     detector: !args['no-detector'],
     concept: fs.existsSync(conceptFile) ? fs.readFileSync(conceptFile, 'utf8') : null,
+    // the library search log (components.mjs); a dealt build that never searched gets an empty one, so it fails
+    parts: loadParts(path.dirname(dir), deal, readJson),
     kind: String(args.kind ?? gate?.kind ?? deal?.kind ?? 'landing'),
     deal,
     requireDeal: !args['no-deal'] && !gate?.kitOnly,

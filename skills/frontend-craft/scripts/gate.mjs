@@ -12,6 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { formatReport, runCheck } from './check.mjs';
+import { loadParts } from './lib/source-scan.mjs';
 import { isMain, parseArgs, readJson, writeJson } from './lib/state.mjs';
 
 export const MAX_BLOCKS = 4;
@@ -69,6 +70,10 @@ export async function decide({ state, stopHookActive, check }) {
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
+  if (args.help) {
+    console.log(fs.readFileSync(new URL(import.meta.url), 'utf8').split('*/')[0].replace(/^#!.*\n\/\*/, '').trim());
+    return;
+  }
   const input = args.hook ? readStdin() : {};
   const file = findGate(input.cwd ?? process.cwd());
   if (!file) {
@@ -87,7 +92,8 @@ async function main() {
   const deal = readJson(path.join(out, 'deal.json'));
   const conceptFile = path.join(out, 'concept.md');
   const concept = fs.existsSync(conceptFile) ? fs.readFileSync(conceptFile, 'utf8') : null;
-  const check = (st) => runCheck({ target: st.target, pages: st.pages ?? deal?.pages?.map((p) => p.path), kind: st.kind ?? deal?.kind ?? 'landing', deal: deal?.brand ? null : deal, concept, out, requireDeal: !st.kitOnly && !deal?.brand });
+  const parts = loadParts(project, deal, readJson);
+  const check = (st) => runCheck({ target: st.target, pages: st.pages ?? deal?.pages?.map((p) => p.path), kind: st.kind ?? deal?.kind ?? 'landing', deal: deal?.brand ? null : deal, concept, parts, out, requireDeal: !st.kitOnly && !deal?.brand });
 
   if (!args.hook) {
     process.chdir(project);

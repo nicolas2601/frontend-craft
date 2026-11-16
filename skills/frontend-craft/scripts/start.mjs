@@ -32,6 +32,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { KINDS, RISK, applyPalette, compositionsFor, deal, directionsFor, historyFile, landingFor, loadLibrary, moodsOf, normalizePages, rngFrom, summarize } from './lib/deal.mjs';
 import { derivePalette, samplePixels } from './lib/palette-from.mjs';
+import { closestExamples, findMotionsites, parseIndex } from './lib/motionsites.mjs';
 import { briefMd, tokensCss } from './lib/render.mjs';
 import { craftDir, isMain, parseArgs, readJson, resolveTarget, writeJson } from './lib/state.mjs';
 
@@ -201,7 +202,11 @@ export function run(argv, cwd = process.cwd()) {
     writeJson(hFile, [...history, { at: current.at, kind, ...summarize(current) }].slice(-HISTORY_MAX));
   }
 
-  if (args['palette-from'] && args['palette-from'] !== true) current = withPictureColours(current, args, cwd, lib);
+  if (args['palette-from'] && args['palette-from'] !== true) {
+    // The look is the model's (design.mjs set): a photo's colours are candidates, never a palette written over it.
+    if (current.look === 'model') console.error(`start: --palette-from is for dealt looks. The look is yours: node ${path.join(SKILL, 'scripts', 'design.mjs')} accents ${args['palette-from']} lists the picture's colours, then design.mjs set writes the look.`);
+    else current = withPictureColours(current, args, cwd, lib);
+  }
 
   const kitDir = String(args.kit ?? current.kitDir ?? defaultKitDir(cwd));
   let createdPage = null;
@@ -222,7 +227,10 @@ export function run(argv, cwd = process.cwd()) {
   const rel = path.relative(cwd, script);
   const checkCmd = `node ${rel.startsWith('..') ? script : rel}`;
   const ref = (f) => path.join(SKILL, 'references', f);
-  const tools = { uupm: path.join(SKILL, '..', 'ui-ux-pro-max'), hallmark: path.join(SKILL, '..', 'hallmark'), design: path.join(SKILL, 'scripts', 'design.mjs'), colorRef: ref('color-type.md') };
+  const ms = findMotionsites(SKILL);
+  const motionsites = ms ? { dir: ms, examples: closestExamples(parseIndex(fs.readFileSync(path.join(ms, 'examples', 'INDEX.md'), 'utf8')), { kind, moods: current.moods }) } : null;
+  const tools = { uupm: path.join(SKILL, '..', 'ui-ux-pro-max'), hallmark: path.join(SKILL, '..', 'hallmark'), design: path.join(SKILL, 'scripts', 'design.mjs'), colorRef: ref('color-type.md'),
+    parts: path.join(SKILL, 'scripts', 'components.mjs'), motionsites, motionsitesRef: ref('motionsites.md') };
   const brief = briefMd(current, { kitDir, checkCmd, taste: tasteSkill(), setPiecesRef: ref('set-pieces.md'), componentsRef: ref('components.md'), surfacesRef: ref('surfaces.md'), scenesRef: ref('scenes.md'), tools });
   fs.writeFileSync(path.join(dir, 'brief.md'), brief);
   const tail = target ? `Gate armed on ${target.url ?? target.root}.`
