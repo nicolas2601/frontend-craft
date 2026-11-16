@@ -17,7 +17,7 @@ The studio run. The model is the design lead: nothing is dealt, the client's own
 is planned before it is built and looked at in motion after, and the check refuses only what is broken.
 
 ### Why
-A DeepSeek build of a café (Agostino) passed the 3.1 check and still looked half done: a black curtain opening on
+A DeepSeek build of a real café passed the 3.1 check and still looked half done: a black curtain opening on
 three words, an empty stage, a huge "10" beside a word-lit paragraph, a hand-drawn street map, a lopsided product
 row, a text "Pause" button under every animation, and the client's TikTok videos never downloaded. Forensics of the
 session showed the causes in the skill: five dealt decisions (set pieces, scene, signature, component) that the check

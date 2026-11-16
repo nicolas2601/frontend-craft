@@ -8,7 +8,7 @@ before the review. It is judgment, not a checklist: the check catches defects, t
 1. **The client's own material carries it.** Their place, their product, their people, their footage, on every
    screen. A café shows its corner, its cups, its bags and its barista; a SaaS shows its own interface doing its job;
    a studio shows its work. Stock is atmosphere (light, texture, a city), never their place or product.
-2. **One idea.** One sentence a stranger could repeat ("the 10's café is a corner you walk into"). Every section
+2. **One idea.** One sentence a stranger could repeat ("the bakery you smell from the plaza before you see it"). Every section
    serves it; anything that does not is cut.
 3. **One orchestrated moment.** One place where the page performs: the hero flies into the sign, the product turns
    in the light, the road from the farm to the cup runs sideways. Everything around it is calm and exact. Two big
@@ -35,7 +35,7 @@ These are defaults, not choices: they appear whatever the subject. Refuse them u
 | A cream ground with a high-contrast serif and a terracotta accent | The sober palette with the accent from the subject |
 | A near-black page with one bright accent | A light page; a dark band only where the subject is night, film or music |
 | A first screen of words on a dark panel beside the photograph in a box | The subject's best picture at full bleed with the words on it (the dive), or the product large on the page's ground |
-| The client's bio slogan as the headline ("Un café con identidad") | What only they are: the place, the person, the street, the product ("El café del 10, en la Carrera 29") |
+| The client's bio slogan as the headline ("Hecho con pasión") | What only they are: the place, the person, the street, the product ("Pan de masa madre en la calle 10, desde las 6:00") |
 | A small tracked label over the headline or every heading; uppercase tracked labels ("DÓNDE", "HORARIO"); "01 / 02" on things that are not a sequence | Headings that answer the visitor's question; labels in the text face, sentence case, untracked; numbers only for real steps |
 | One word of the headline in italic or another colour | The whole headline in the display face; emphasis by size or a line break |
 | Three identical cards; a big number with a small label as a section | One dominant item with its picture; a list of facts |
@@ -46,6 +46,7 @@ These are defaults, not choices: they appear whatever the subject. Refuse them u
 | A text button under every animation | The kit's small corner pause icon, only on what moves for more than five seconds |
 | The same split (words left, picture right) section after section | Vary the structure: a full-bleed picture with words over it, a strip of the client's photographs, a list, type set large |
 | A cropped or letterboxed hero picture | The full picture at full bleed, the focal point chosen with object-position |
+| A social cover with its burned-in title ("DÍA 8 DE 10") used as a photograph | A clean frame from the clip, or the cover cropped above its text |
 
 ## Moves by trade
 

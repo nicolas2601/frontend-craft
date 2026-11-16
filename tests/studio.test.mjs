@@ -65,10 +65,10 @@ test('look.mjs photographs a short section three times and a pinned one at four 
 });
 
 test('media.mjs builds the yt-dlp, ffmpeg and stock calls, and parses Pexels and Pixabay', () => {
-  const s = socialArgs('https://www.tiktok.com/@agostinocoffee', { out: 'assets/video/raw', max: 4 });
+  const s = socialArgs('https://www.tiktok.com/@example.bakery', { out: 'assets/video/raw', max: 4 });
   assert.ok(s.includes('--playlist-end') && s[s.indexOf('--playlist-end') + 1] === '4');
   assert.ok(s.join(' ').includes('height<=1080'));
-  assert.throws(() => socialArgs('agostinocoffee'), /URL/);
+  assert.throws(() => socialArgs('example.bakery'), /URL/);
   const f = framesArgs('clip.mp4', { out: 'assets/seq', fps: 18, width: 1280, start: 2, end: 6 });
   assert.deepEqual(f.slice(2, 6), ['-ss', '2', '-to', '6']);
   assert.ok(f.join(' ').includes('fps=18,scale=1280'));
