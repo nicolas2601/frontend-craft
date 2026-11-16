@@ -41,7 +41,7 @@ function journey(el, ctx) {
     stop = null;
     el.style.removeProperty('height');
     track.style.removeProperty('translate');
-    lines.forEach((l) => { l.style.removeProperty('translate'); l.style.removeProperty('opacity'); });
+    lines.forEach((l) => l.style.removeProperty('translate'));
     if (ctx.reduced) { el.classList.add('r-still'); return; }
     el.classList.remove('r-still');
     distance = Math.max(0, track.scrollWidth - stage.clientWidth);
@@ -49,14 +49,12 @@ function journey(el, ctx) {
     stop = ctx.scrub(el, (vh) => {
       const p = pinned(el, vh);
       track.style.translate = `${(-p * distance).toFixed(1)}px 0`;
-      // Each line is centred in the stage halfway through the pass (whole when it fits), crosses at its speed, and
-      // fades in the last tenth so it never sits over the next section.
-      const fade = Math.min(1, Math.max(0, (1 - p) / 0.1));
+      // Each line is centred in the stage halfway through the pass (whole when it fits) and crosses at its speed. It
+      // stays at full ink to the end: the stage leaves with the section, so a fade would only leave an empty band.
       for (const l of lines) {
         const speed = Number.parseFloat(l.dataset.line) || -1;
         const centre = (stage.clientWidth - l.scrollWidth) / 2;
         l.style.translate = `${(centre + (p - 0.5) * speed * JOURNEY_LINE_TRAVEL * stage.clientWidth).toFixed(1)}px 0`;
-        l.style.opacity = fade.toFixed(3);
       }
       if (bar) bar.style.scale = `${p.toFixed(4)} 1`;
     });
