@@ -35,14 +35,33 @@ test('screen flatness reads a screenshot: a black screen is flat, a busy one is 
   assert.ok(half.right === 1 && half.left < 0.5 && half.all < 0.6, JSON.stringify(half));
 });
 
+test('emptiness counts cells with nothing in them, whatever the ground colour', () => {
+  const twoTone = screenFlatness(decodePng(png(60, 30, (x, y) => (y < 15 ? [247, 246, 242] : [239, 238, 234]))));
+  assert.ok(twoTone.empty > 0.95 && twoTone.all < 0.6, `a cream and grey ground with nothing on it is empty: ${JSON.stringify(twoTone)}`);
+  const words = screenFlatness(decodePng(png(60, 30, (x, y) => (y >= 6 && y < 9 && x >= 6 && x < 30 && (x + y) % 2 ? [20, 18, 16] : [247, 246, 242]))));
+  assert.ok(words.empty > 0.8 && words.empty < 1, `one line of words on a big ground is mostly empty: ${words.empty}`);
+  const photo = screenFlatness(decodePng(png(60, 30, (x, y) => [(x * 37 + y * 11) % 256, (x * 13) % 256, (y * 29) % 256])));
+  assert.ok(photo.empty < 0.1, `a picture fills the screen: ${photo.empty}`);
+});
+
+test('an empty stretch of two screens fails; one empty screen warns; a FAQ and a footer pass', () => {
+  const s = (y, empty, all = 0.6) => ({ y, all, left: all, right: all, empty });
+  const ids = (blank) => blankRules({ blank, kind: 'landing' }).map((x) => `${x.level}:${x.id}`);
+  assert.deepEqual(ids([s(0, 0.1), s(675, 0.78), s(1350, 0.78), s(2025, 0.82), s(2700, 0.3)]), ['FAIL:empty-run'], 'a black stage with a number on it');
+  assert.deepEqual(ids([s(0, 0.1), s(675, 0.85), s(1350, 0.4)]), ['WARN:sparse-screen'], 'a statement screen alone');
+  assert.deepEqual(ids([s(0, 0.1), s(675, 0.76), s(1350, 0.71)]), [], 'a FAQ list and a footer');
+  assert.deepEqual(ids([s(0, 0.74), s(675, 0.86), s(1350, 0.78)]), ['WARN:sparse-screen'], 'dark cards with large titles break the stretch');
+  assert.deepEqual(blankRules({ blank: [s(0, 0.9), s(675, 0.9), s(1350, 0.9)], kind: 'app' }), []);
+});
+
 test('blank screens fail, sparse and half-empty ones warn, and an app is left to its own rules', () => {
   const ids = (blank, kind = 'landing') => blankRules({ blank, kind }).map((x) => `${x.level}:${x.id}`);
   assert.deepEqual(ids([{ y: 900, all: 1, left: 1, right: 1 }]), ['FAIL:blank-screen']);
-  assert.deepEqual(ids([{ y: 900, all: 0.95, left: 0.95, right: 0.95 }]), ['WARN:sparse-screen'], 'a dark band of small stats, a curtain on a big motto');
+  assert.deepEqual(ids([{ y: 900, all: 0.95, left: 0.95, right: 0.95, empty: 0.86 }]), ['WARN:sparse-screen'], 'a dark band of small stats, a curtain on a big motto');
   assert.deepEqual(ids([{ y: 900, all: 0.8, left: 0.995, right: 0.62 }]), ['WARN:half-empty']);
   assert.deepEqual(ids([{ y: 900, all: 0.69, left: 0.85, right: 0.53 }]), [], 'a page whose sections hold photographs');
   assert.deepEqual(ids([{ y: 0, all: 1, left: 1, right: 1 }], 'app'), []);
-  assert.ok(FLAT.blank > FLAT.sparse);
+  assert.ok(FLAT.blank > FLAT.empty);
 });
 
 test('a big drawing of boxes fails; the plan must have a storyboard in studio builds only', () => {
@@ -95,6 +114,9 @@ test('the studio brief names every tool with its path and the defaults to refuse
   assert.match(brief, /drawn map/);
   assert.match(brief, /dark panel beside the photograph/, 'the split hero on a dark panel is a named default');
   assert.match(brief, /Go through every line below/, 'the whole list is checked, not only what comes to mind');
+  assert.match(brief, /No photographs from the client yet/);
+  const withLibraries = studioBrief({ kind: 'venue', lang: 'es' }, { scripts: '/s/scripts', ref: (f) => f, kitDir: 'craft', checkCmd: 'check', motionsites: null, taste: '/t', hallmark: '/h' });
+  assert.ok(withLibraries.includes('/t/scripts/photos.mjs search') && withLibraries.includes('/h/scripts/theme.mjs photos'), 'the keyless photograph libraries are printed with their paths');
 });
 
 test('a large letterboxed picture fails; an app is left alone', async () => {

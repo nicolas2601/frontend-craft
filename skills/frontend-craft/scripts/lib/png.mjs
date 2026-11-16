@@ -71,8 +71,36 @@ function flatShare({ width, height, data }, x0, x1) {
   return n ? top / n : 0;
 }
 
-/** How flat a screen is: overall, left half and right half (1 = a single colour). */
+// On a 10%-scale screenshot a cell of 6 px is about 60 CSS px; a cell whose luminance spreads less than 14 levels
+// holds nothing: no word, edge or picture, whatever the colour of the ground under it.
+const EMPTY_CELL = 6;
+const EMPTY_RANGE = 14;
+
+/** Share of the screen's cells with nothing in them (1 = an empty screen, in one colour or several). */
+function emptyShare({ width, height, data }) {
+  let cells = 0;
+  let empty = 0;
+  for (let cy = 0; cy + EMPTY_CELL <= height; cy += EMPTY_CELL) {
+    for (let cx = 0; cx + EMPTY_CELL <= width; cx += EMPTY_CELL) {
+      let lo = 255;
+      let hi = 0;
+      for (let y = cy; y < cy + EMPTY_CELL; y += 1) {
+        for (let x = cx; x < cx + EMPTY_CELL; x += 1) {
+          const o = (y * width + x) * 4;
+          const l = 0.2126 * data[o] + 0.7152 * data[o + 1] + 0.0722 * data[o + 2];
+          lo = Math.min(lo, l);
+          hi = Math.max(hi, l);
+        }
+      }
+      cells += 1;
+      if (hi - lo < EMPTY_RANGE) empty += 1;
+    }
+  }
+  return cells ? empty / cells : 0;
+}
+
+/** How flat a screen is (overall, left half, right half; 1 = a single colour) and how empty (1 = nothing on it). */
 export function screenFlatness(img) {
   const half = Math.floor(img.width / 2);
-  return { all: flatShare(img, 0, img.width), left: flatShare(img, 0, half), right: flatShare(img, half, img.width) };
+  return { all: flatShare(img, 0, img.width), left: flatShare(img, 0, half), right: flatShare(img, half, img.width), empty: emptyShare(img) };
 }

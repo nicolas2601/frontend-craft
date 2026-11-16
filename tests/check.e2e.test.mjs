@@ -47,8 +47,8 @@ const CONCEPT = '# Idea\nA late bar that roasts on Thursdays: the page runs from
 
 test('every set piece renders, moves and passes the richness floor of its direction', { skip: !chrome, timeout: 180000 }, async () => {
   const r = await runCheck({ target: { root: ROOT, page: 'tests/fixtures/expressive/index.html' }, kind: 'landing', deal: directionDeal('night-poster', ['zoom', 'fan']), concept: CONCEPT, out: out() });
-  // The fixture's iris and curtain open on an empty dark stage: the screenshot rule finds them; nothing else fails.
-  assert.deepEqual(r.findings.filter((x) => x.level === 'FAIL' && x.id !== 'blank-screen'), []);
+  // The fixture's iris and curtain open on an empty dark stage: the screenshot rules find them; nothing else fails.
+  assert.deepEqual(r.findings.filter((x) => x.level === 'FAIL' && !['blank-screen', 'empty-run'].includes(x.id)), []);
   assert.ok(r.findings.some((x) => x.id === 'blank-screen'), 'an iris opening on an empty dark stage is a blank screen');
   assert.ok(r.motion.scenes >= 6, `scroll scenes in ${r.motion.scenes} sections`);
   for (const id of ['iris', 'type-pass', 'zoom', 'curtain', 'fan', 'letters', 'develop', 'tilt', 'split']) assert.ok(r.richness.setPieces.includes(id), id);
