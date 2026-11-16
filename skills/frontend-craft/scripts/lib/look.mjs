@@ -23,12 +23,12 @@ export function mixHex(a, b, t) {
 
 const ratio = (a, b) => contrast(hexToRgb(a), hexToRgb(b));
 
-/** The muted text colour: the ink pulled toward the ground until it would drop under 4.5:1, then held there. */
-function mutedFor(bg, ink) {
+/** The muted text colour: the ink pulled toward the ground while it keeps 4.5:1 on the ground and on the surface. */
+function mutedFor(bg, ink, surface = bg) {
   let best = ink;
   for (let t = 0.1; t <= 0.6; t += 0.05) {
     const c = mixHex(ink, bg, t);
-    if (ratio(c, bg) < 4.6) break;
+    if (ratio(c, bg) < 4.6 || ratio(c, surface) < 4.6) break;
     best = c;
   }
   return best;
@@ -38,12 +38,13 @@ function mutedFor(bg, ink) {
 export function buildRoles({ bg, ink, accent, surface, muted, line, accentInk }) {
   for (const [k, v] of Object.entries({ bg, ink, accent })) if (!HEX.test(v ?? '')) throw new Error(`--${k} must be a hex colour like #1a1a1a, got "${v ?? ''}"`);
   const dark = oklchOf(bg).L < oklchOf(ink).L;
+  const ground2 = surface ?? mixHex(bg, ink, dark ? 0.06 : 0.035);
   return {
     scheme: dark ? 'dark' : 'light',
     roles: {
       bg, ink, accent,
-      surface: surface ?? mixHex(bg, ink, dark ? 0.06 : 0.035),
-      muted: muted ?? mutedFor(bg, ink),
+      surface: ground2,
+      muted: muted ?? mutedFor(bg, ink, ground2),
       line: line ?? mixHex(bg, ink, dark ? 0.18 : 0.12),
       accentInk: accentInk ?? (ratio(bg, accent) >= ratio(ink, accent) ? bg : ink),
     },
@@ -65,6 +66,7 @@ export function paletteFindings({ roles }, { mode = 'sober', allowViolet = false
   const pair = (a, b, min, id, what) => { const r = ratio(a, b); if (r < min) out.push(f('FAIL', id, `${what} is ${r.toFixed(2)}:1, needs ${min}:1`)); };
   pair(roles.ink, roles.bg, 4.5, 'contrast-ink', 'ink on the ground');
   pair(roles.muted, roles.bg, 4.5, 'contrast-muted', 'muted text on the ground');
+  pair(roles.muted, roles.surface, 4.5, 'contrast-muted-surface', 'muted text on the surface');
   pair(roles.accentInk, roles.accent, 4.5, 'contrast-accent-ink', 'text on the accent');
   pair(roles.accent, roles.bg, 3, 'contrast-accent', 'the accent against the ground (a button edge, a link)');
   if (ratio(roles.ink, roles.bg) < 7) out.push(f('WARN', 'contrast-soft', `ink on the ground is ${ratio(roles.ink, roles.bg).toFixed(2)}:1; a sober page reads best at 7:1 or more`));
@@ -97,6 +99,8 @@ export function loadFonts(csvFile) {
 
 /** Display faces seen on most AI-made pages: fine as text, a tell as the headline face. */
 export const OVERUSED_DISPLAY = ['inter', 'roboto', 'poppins', 'montserrat', 'open sans', 'lato', 'playfair display', 'space grotesk', 'instrument serif'];
+/** Text faces impeccable's detector calls overused (it fails a page set mostly in one of them). */
+export const OVERUSED_TEXT = ['inter', 'roboto', 'geist', 'plus jakarta sans', 'space grotesk', 'instrument sans', 'dm sans', 'fraunces'];
 
 export function typeFindings({ display, text }, fonts) {
   const out = [];
@@ -108,6 +112,7 @@ export function typeFindings({ display, text }, fonts) {
     if (missing.length) out.push(f('FAIL', `font-weight-${role}`, `"${known.family}" has no weight ${missing.join(', ')} (it has ${known.weights.join(', ')})`));
   }
   if (OVERUSED_DISPLAY.includes(display.family.toLowerCase())) out.push(f('WARN', 'font-overused', `"${display.family}" as the headline face is what most generated pages use; pick a face with the subject's character for headlines and keep it for text if you like`));
+  if (OVERUSED_TEXT.includes(text.family.toLowerCase())) out.push(f('WARN', 'font-overused-text', `"${text.family}" as the text face is one impeccable's detector calls overused; a quieter, less common reading face (Schibsted Grotesk, Public Sans, Source Sans 3, IBM Plex Sans, Hanken Grotesk, Newsreader) keeps the page from looking generated`));
   if (fonts.get(text.family.toLowerCase())?.category === 'display' || fonts.get(text.family.toLowerCase())?.category === 'handwriting') out.push(f('FAIL', 'font-text-display', `"${text.family}" is a display or handwriting face; body text needs a text face`));
   return out;
 }

@@ -112,7 +112,7 @@ The two-keyframe route was written from the Spaces' parameters; its first end-to
     <source src="assets/hero.webm" type="video/webm">
     <source src="assets/hero.mp4" type="video/mp4">
   </video>
-  <button type="button" data-loop-toggle aria-pressed="false">Pause</button>
+  <button type="button" data-loop-toggle aria-pressed="false"><span class="craft-sr">Pause</span></button>
 </div>
 ```
 
@@ -122,7 +122,7 @@ Load `surfaces.css` and call the kit's `init(document)`. Leave out the `autoplay
 - under reduced motion or Save-Data, it holds on the poster until the person presses the button;
 - a pause the person chooses sticks.
 
-**The button.** It is required: motion that lasts more than five seconds must be pausable (WCAG 2.2.2). Write its label in the page's language ("Pausar"). The kit sets `aria-pressed`, so the label stays the same.
+**The pause control.** Motion that lasts more than five seconds must be pausable (WCAG 2.2.2), so the loop keeps one control: the kit draws it as a small round icon in the corner of the video (as Apple does), never a text button under it. Its label is for screen readers only, in the page's language (`<span class="craft-sr">Pausar</span>`). The kit sets `aria-pressed` and swaps the icon.
 
 **The direction's picture treatment.** The loop is a photograph that moves, so it takes the same treatment as the page's photographs. Riso: `class="craft-loop craft-riso"` (the grey filter, the second ink and the grain cover the video; the button stays above them). Duotone or mono: the same `filter` and `mix-blend-mode` the direction gives its images, on the `video`. A full-colour loop on a page whose photographs are all treated reads as stock footage pasted in.
 

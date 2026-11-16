@@ -1,16 +1,15 @@
 ---
 name: frontend-craft
 description: >-
-  Entry point for frontend work in any framework (plain HTML, React, Next.js, Vue, Svelte, Astro,
-  Tailwind) that routes each task to the skill that does it best and enforces a browser gate before
-  finishing. Landing pages and multi-page sites get a dealt art direction that changes from build
-  to build (bento, glass, riso, terminal, poster, cinematic and more), two scroll set pieces per
-  page, a React Bits component, licensed photographs and a motion kit; platforms and app screens
-  get a product-UI direction, HeroUI/shadcn controls and Emil's motion rules. The check fails flat
-  pages and AI tells and runs impeccable's detector. Use whenever you build, redesign, restyle or
-  polish a landing page, website, multi-page site, portfolio, shop, event, SaaS, platform or app
-  interface, add animations or scroll effects, review a page, or when the user says a page looks
-  basic, flat, generic, templated, the same as before or "AI-made".
+  Builds websites, landing pages and interfaces the way a design studio does, in any framework (plain HTML,
+  React, Next.js, Vue, Svelte, Astro, Tailwind): the client's own material first (their photographs, their
+  TikTok and Instagram videos), real references, a written direction and a section-by-section storyboard,
+  real media (the client's footage, licensed stock, their product in 3D, a real map), finished section
+  recipes and component libraries (21st.dev, cult-ui, React Bits), and a browser that photographs every
+  section in motion so nothing ships half done. The model makes every design decision; scripts fetch media
+  and catch defects. Use whenever you build, redesign or polish a landing page, website, multi-page site,
+  portfolio, shop, event, SaaS, platform or app interface, add animation or scroll effects, review a page,
+  or when the user says a page looks basic, flat, generic, templated, unfinished or "AI-made".
 hooks:
   Stop:
     - hooks:
@@ -21,88 +20,68 @@ hooks:
 
 # frontend-craft
 
-The user gives the subject; you supply the design judgment through the skills this one routes to, and you finish only when a browser gate passes. Never answer a visual request from memory: run the routed skill's scripts. `<skill>` is this folder; sibling skills sit next to it (`<skill>/../<name>`). Needs Node 22+ and Chrome, Chromium or Edge.
+You are the design lead of a studio. This client pays for a site that could not belong to anyone else and has already rejected proposals that felt templated. Every design decision is yours: structure, colour, type, motion, media. The scripts fetch media, photograph the page and catch defects; they never decide for you. `<skill>` is this folder; sibling skills sit next to it (`<skill>/../<name>`). Needs Node 22+, Chrome or Chromium, ffmpeg, and yt-dlp for the client's videos (`scripts/setup.mjs` checks and installs).
 
 ## Route first
 
 | Task | Do |
 |---|---|
-| Website or landing page (company, product, shop, cafe, hotel, studio, event, portfolio, SaaS, AI tool, game) or a redesign of one | **The run** below with a website kind |
-| A site with several pages (home, menu, about, contact...) | **The run** with `--kind site --pages /,/menu,/about`: each page gets its own two set pieces and the check runs on every page |
-| The user asks for a quiet, sober or classic small-business site (a "sobria", "minimal", "sin animaciones" request) | `design-taste-frontend`'s own run, to its `GATE: PASS` |
-| Platform, app screen, dashboard, admin | The run with `--kind app`: a product-UI direction (bento, glass, terminal, swiss), no scroll set pieces, HeroUI/shadcn controls, Emil's motion rules; `ui-ux-pro-max` search for UX rules |
-| Docs | The run with `--kind docs` (no direction; restraint) |
-| Add or fix motion in existing UI | `craft-motion`, with `animate`, `choreograph` and `animation-performance` |
-| Review a page without editing | `craft-review`, plus `impeccable` (critique, audit, and `impeccable detect <url>`) |
-| The user names Hallmark (`/hallmark`, its `redesign` or `audit`) | `hallmark`'s own run |
-| A component the page needs (menu, gallery, booking form, slider, command palette) | `node <skill>/scripts/components.mjs search "<its job>"` (21st.dev, cult-ui, React Bits), then `references/components.md` |
-| UI that must survive bad data | `break-ui` |
+| Website, landing page, portfolio, shop, event, SaaS or a redesign of one | **The studio run** below |
+| A site with several pages | The run with `--kind site --pages /,/menu,/visit`; one storyboard per page |
+| A quiet, classic small-business site the user asks for ("sobria", "sin animaciones") | `design-taste-frontend`'s own run |
+| Platform, app screen, dashboard | The run with `--kind app`: restraint, HeroUI or shadcn controls, Emil's motion rules, `ui-ux-pro-max` for UX rules |
+| Motion on an existing UI | `craft-motion` |
+| Review without editing | `craft-review`, plus `impeccable` (critique, audit, detect) |
+| The user names Hallmark or MotionSites | That skill's own run |
+| One component (gallery, booking form, command palette) | `node <skill>/scripts/components.mjs search "<its job>"`, then `references/components.md` |
 | Icon, logo, illustration, diagram | `svg-craft` |
-| End of a session with design corrections | `craft-learn` |
 
-Bundled tools run from their own folder (`<skill>/../<name>`): `ui-ux-pro-max` search is `python3 <its folder>/scripts/search.py "<query>" --design-system`; `impeccable` is `<its folder>/scripts/impeccable <verb>` (`impeccable.cmd` on Windows), which downloads its engine once; `design-taste-frontend/scripts/photos.mjs` supplies licensed photographs (the brief prints the commands).
+## The bar
 
-Order when advice conflicts: the user, then accessibility, then the subject (its place, materials and photographs), then your direction and look (checked by the scripts), then the libraries you read as candidates (ui-ux-pro-max, Hallmark themes, MotionSites designs), then `impeccable` and the Emil skills, then defaults.
+What a page worth paying for has (in full: `references/studio.md`):
+- The client's real material on every screen: their place, product, people and footage. Stock is atmosphere, never their place or product.
+- One idea, one orchestrated moment, everything around it calm and exact.
+- Type with character set large and tight; a sober palette (a white ground, near-black ink, one accent taken from the subject); photographs in true colour.
+- Motion that explains or rewards and is finished while it can be read; nothing moves only to fill.
+- Every part finished: a real map, a real carousel, a real footer, every state, every width.
 
-## The run
+What generated pages look like, refused unless the brief asks: a cream ground with a serif and a terracotta accent; a near-black page with one bright accent; eyebrow labels and "01 / 02" markers; one word of the headline in italic or another colour; three identical cards; a big number with a small label as a section; a fade-and-rise on every section; a paragraph lit word by word as the "wow"; an endless band of words; a drawn map or a diagram of boxes; a dark stage that opens on three words; a text button under every animation; a cropped or letterboxed hero.
 
-1. **Read the project.** `package.json`, framework, existing `DESIGN.md`, tokens and components. Preserve what exists. If the brand already has colors and fonts, add `--brand` in step 3. A new project goes in a new folder inside the current working directory; run every script from that folder.
-2. **Pick the kind, 2-3 moods and the language.** Kinds: landing, site, product, portfolio, event, venue, brand, campaign, app, docs. Site is several pages; app is a platform or product UI. The language is the one the user wrote in and the audience reads (`es`, `en`, `pt-BR`). Moods: beauty, bold, brutal, calm, coffee, craft, creative, culture, developer, editorial, energetic, fashion, festive, finance, food, fresh, friendly, health, heritage, hospitality, industrial, luxury, minimal, modern, music, nature, nightlife, organic, playful, precise, print, retro, science, sport, tea, tech, travel, warm, wellness, youth.
-3. **Choose the structure and the direction.** `node <skill>/scripts/start.mjs --kind landing --moods warm,craft,coffee --lang es` (a site: `--kind site --pages /,/menu,/visit`) prints the compositions and art directions that fit. Choose one of each as a designer (more structures: ui-ux-pro-max `--domain landing`) and run it again with `--composition <id> --direction <id>`. It deals two set pieces per page, motion and one library component (React Bits) from that direction, copies the kit (`src/craft/`, `app/craft/` or `craft/`) and prints the brief (also `.craft/brief.md`).
-4. **Concept, then copy.** Read the MotionSites designs the brief names for their precision (`references/motionsites.md`). Write `.craft/concept.md` (Idea, Signature, Rejected, Breaks, Components; template in the brief) before any markup. Then write the copy (rules below) in the dealt language.
-5. **Photographs, colour and type.** Real photographs carry a website: the client's files, or the brief's `photos.mjs` commands; look at each frame full size and keep it in true colour. Then choose the look yourself (`references/color-type.md`): a white ground, near-black ink and one accent with life taken from the subject (`design.mjs accents <photo>`), faces from ui-ux-pro-max's candidates. Write it with `node <skill>/scripts/design.mjs set ... --why "..."`, which checks it; the check fails while it is pending.
-6. **Build from the blueprint, hero first.** Build the first screen alone, look at it at 1440 and 390 and fix it (`<skill>/../hallmark/references/review-hero.md`) before the rest. Before you hand-build any part (nav, gallery, form, menu, map, FAQ), search for it: `node <skill>/scripts/components.mjs search "<its job>" --section <id>`, then `pick` the best (the check fails until three parts were searched). `<kit>/blueprint.html` is the dealt composition as a working page. Move its structure into your page, replace every `{{...}}`, and apply the direction on top: grounds, type scale, photo treatment and both breaks. Build both set pieces (`references/set-pieces.md`) in two different sections, put the dealt hero scene in the first screen (`references/scenes.md`; real subjects get a loop, `references/hero-video.md`), build the dealt component into the page, and take materials (glass, bento, riso, mono, page transitions) from `references/surfaces.md`. Wire the kit (below).
-7. **Check.** Start the dev server or build, then once: `node <skill>/scripts/start.mjs --url http://localhost:5173 --lang <same>` (or `--root dist`). Then `node <skill>/scripts/check.mjs` (every dealt page of a site). It also measures the direction's floor and the AI tells, and runs `impeccable detect` and Hallmark's `sloplint`.
-8. **Fix and look.** Fix every FAIL (`references/checks.md`). Open every screenshot in `.craft/shots/`, then look yourself with `playwright-cli` (or a browser tool) at 1440, 390 and 320 px, scrolling and with reduced motion: is the subject seen first, do the set pieces read at 390 px, where is the action. Fix the three weakest. Re-run until `RESULT: PASS`.
-9. **Design review.** Two independent reviewers in parallel, a design critic and a motion and mobile auditor (`references/review.md`: the plugin's agents, subagents with its briefs, or one after the other). Fix every high finding; the subject outranks the deal, and a fix that only tames the page to a default is refused. Then `impeccable` polish and the Emil motion review as a Before | After | Why table. Run the check again; it must still pass.
-10. **Report** in the format at the end. In Claude Code the Stop hook runs the check for you; elsewhere run `node <skill>/scripts/gate.mjs` and do not stop while it exits 1.
+## The studio run
 
-## Copy rules
+1. **Start.** Read the project (`package.json`, framework, existing tokens and components; preserve them). A new project goes in a new folder inside the working directory. From it: `node <skill>/scripts/start.mjs --kind landing --lang es [--moods coffee,craft]`. Kinds: landing, site, product, portfolio, event, venue, brand, campaign, app, docs. It copies the kit and a starter page, writes `.craft/brief.md` (the process with every command) and `.craft/plan.md` (your template), and arms the gate. Nothing is dealt.
+2. **Material first.** Fill `# Brief` in the plan (a filled example: `references/plan-example.md`): what is sold, who buys it, the one action, the facts only this client has, every file you have and what is missing. The client's own videos: `node <skill>/scripts/media.mjs social <their profile or post URL>` (their content, with their permission). Look at every clip (`media.mjs sheet <clip>`) and every photograph full size. Ask for what only the client has (the packaging artwork, the logo file).
+3. **Look at real work.** Three references a client would admire, one from the trade: the Awwwards MCP (`search_sites`), land-book, the MotionSites designs the brief names (`references/inspiration.md`, `references/motionsites.md`). Under `# References`, the one move you take from each, never its look.
+4. **Direction, then attack it.** Under `# Direction`: the idea in one sentence, the palette and faces (`references/color-type.md`; candidates from ui-ux-pro-max; written and checked with `node <skill>/scripts/design.mjs set ... --why "..."`), the one orchestrated moment, an ASCII wireframe of the first screen. Then read it as the client who rejected templates: change whatever you would have produced for any similar brief, and say what you changed. If the user wants to approve a design before code and the Figma MCP is connected, draw the first screen and one section there first (`references/studio.md`, Figma).
+5. **Storyboard.** One row per section under `# Storyboard`: the visitor's question, what they see, the media and where it comes from, the motion and why (or "none"), the part. Parts: the finished recipes in `references/recipes.md` (dive, journey, carousel, sequence, product3d, map); anything else a library has: `components.mjs search "<job>"`, open the previews, `pick` the best.
+6. **Media.** `references/media.md`: the client's footage (`video.mjs` for a loop, `media.mjs frames` for a scroll sequence), their product in 3D from its artwork, free stock (`media.mjs stock`), generated clips (`references/hero-video.md`). Never crop or letterbox the hero's source; a parallax loop from a still is the last resort.
+7. **Build the first screen alone.** From `<kit>/starter.html`. Then `node <skill>/scripts/look.mjs` and open its sheets. Fix it until a client would sign it. Then build every section from its storyboard row.
+8. **Look in motion.** `look.mjs` photographs every section as it enters, in its middle and as it leaves, at 1440 and 390. Open every sheet. Under `# Review`: what you see, what a studio would change; change it and look again.
+9. **Check.** `node <skill>/scripts/check.mjs` finds defects only (broken media, blank or half-empty screens, drawn placeholders, overflow, contrast, invisible content, AI tells, accessibility). Fix every FAIL; read every WARN. In Claude Code the Stop hook runs it; elsewhere `node <skill>/scripts/gate.mjs` and do not stop while it exits 1.
+10. **Critic.** One independent reviewer with the sheets and the plan (`references/review.md`: the plugin's agent, a subagent, or a fresh look in this thread). Fix its high findings, then the motion review with Emil's rules as a Before | After | Why table. Look and check again.
 
-- Headline: 3-9 words that name the specific thing (product, place, number, promise). Never "Welcome to", never just the category.
-- Line under it: one sentence of at most 22 words: who it is for and what they get.
-- Primary action: verb + object, 2-4 words ("Reserve a bag"). The same label in the nav and the hero.
-- Each section heading answers one visitor question: what is it, why trust it, what does it cost, where and when, how do I start.
-- No testimonials, ratings, client logos or press quotes unless supplied. Menu items, prices and hours may be realistic samples; list them in the report as samples to replace.
-- Facts over slogans: every section says something only this business has (a time, a street, a name, a number, how it is made). Slogan shapes fail ("A little X. A lot of Y.", "Tear it. Toast it. Share it.", "more than just", "made with love").
-- One numbering system at most; no eyebrow labels; no round tilted badge.
-- Banned: lorem ipsum, emoji, "elevate", "unlock", "seamless", "cutting-edge", "next level", "Get Started", "Learn More" (and their Spanish forms). The check flags more.
+## Craft rules
 
-## House rules
-
-**Type.** Headlines use `.craft-display` (dealt family, weight, tracking, leading). Hero headline at `--t-display` or `--t-mega`, max-width 10-16ch, at most 5 lines at 390 px, no broken words. Body 16-20 px (`--t-base`, `--t-lg`), lines under 65ch, line-height 1.5-1.6. At most 3 text sizes per screen besides the headline. No italic accent word in the headline. No eyebrows or tracked-caps labels (Hallmark's sloplint fails them).
-
-**Color.** Only `var(--c-*)`; never a new hex value. Large fields use bg, surface, ink or accent (an ink field takes `--c-bg` text). The accent marks the primary action and at most one other thing per screen. No gradients beyond two of your colours, no glow blobs, never violet.
-
-**Layout.** The first screen at 1440x900 and 390x844 shows the headline, the line, the primary action and the composition's first-screen visual. Spacing from `--s-*`; sections use `padding-block: var(--section)` and `padding-inline: var(--gutter)`. Never a row of 3+ identical cards, nor a big card holding one number: one dominant item, unequal sizes, or a list. The footer is the blueprint's `.site-footer`, filled for real. No horizontal scroll at any width: `min-width: 0` on grid and flex children.
-
-**Motion.** Websites must have:
-- an entrance: `data-enter` on 3-6 first-screen elements in reading order, or `data-words` on the h1 plus `data-enter` on the rest; finished by about 1.5 s;
-- the two dealt set pieces (`sp-*` classes, `references/set-pieces.md`) in two different sections, plus the dealt signature and supports;
-- `data-press` on every button and button-like link.
-At most 2 moving effects in one viewport and one pinned or scrubbed scene per screen; scroll-driven motion uses `var(--p)` and is finished while its element can be read. Your own CSS motion animates only `transform`, `opacity`, `clip-path` and `filter`, 150-300 ms for UI, `var(--ease-out)`; never `transition: all`, never `ease-in` on entrances, never `scale(0)`. Things the user does often (nav links, tabs, inputs) get at most a 150 ms color or opacity change. Kit attributes and options: `references/motion.md`.
-
-**Media.** Never invent or hotlink image or video URLs. Use supplied files, the licensed frames the brief's `photos.mjs` commands fetch (with credits), or Unsplash/Pexels stand-ins with a `SOURCES.txt`; say in the report which are samples. Build illustrations in SVG or canvas (`svg-craft`), never as empty boxes. Every `img` has `alt` and `width`/`height` or `aspect-ratio`.
-
-**Access.** One `h1`; `header`, `main`, `footer`; `lang`, `title`, meta description, a viewport meta that allows zoom; targets of 44x44 px; control and label text 14 px or more; the navigation reachable at 390 px (visible links or a menu button); text over images gets a scrim. Focus rings and reduced motion come with the kit; do not remove them.
-
-## Wiring the kit
-
-The blueprint is wired: `tokens.css`, `craft.css`, `layouts.css`, `set-pieces.css`, `surfaces.css` in that order, then your styles; `<script>document.documentElement.classList.add('craft-js')</script>` in `<head>`; `init(document)` from `craft-motion.js` once after the DOM exists (it returns a cleanup). React, Next.js, Vue, Svelte, Astro, Tailwind v4: `references/frameworks.md`. Elements with `data-words`, `data-scroll-words`, `data-count` or `data-scramble` hold static text.
+- **Copy.** The headline names the specific thing (the place, the product, a number, a promise) in 3-9 words; never "Welcome to" or just the category. One sentence under it: who it is for and what they get. The main action is a verb and an object, the same words in the nav and the hero. Each section answers one visitor question with facts only this client has, each one in `# Brief` with its source (a phone from their listing, not the recruiting address). No invented testimonials, ratings, logos or numbers; sample prices or hours are listed in the report. No lorem ipsum, emoji, "elevate", "seamless", "Get Started".
+- **Type.** One display face with character, one text face; the headline at the kit's display sizes, 10-16 characters a line, at most five lines at 390. Body 16-20 px, lines under 65ch.
+- **Colour.** Only `var(--c-*)` from `design.mjs set`. The accent marks the main action and at most one other thing per screen. Never violet, never a gradient as decoration.
+- **Layout.** The first screen at 1440x900 and 390x844 shows the headline, the line, the main action and the subject's picture. No row of identical cards, no box holding one number, no half-empty screen, no sideways scroll.
+- **Motion.** One orchestrated moment; everything else answers the reader (press feedback, a reveal that shows what changed). Scroll-driven motion is finished while its element can be read; only `transform`, `opacity`, `clip-path`, `filter`; UI motion 150-300 ms with `var(--ease-out)`. Anything that moves for more than five seconds gets the kit's small corner pause icon (`references/recipes.md`). Reduced motion shows the final state.
+- **Media.** Never invent or hotlink a file; credit every source in the footer or `SOURCES.txt`. Every `img` has `alt` and its size. Illustrations are drawn for real (`svg-craft`), never a wireframe of boxes.
+- **Access.** One `h1`; `header`, `main`, `footer`; `lang`, title, description; zoom allowed; 44 px targets; 14 px or larger control text; the nav reachable at 390; text over pictures on a scrim.
 
 ## Report
 
 ```
 Ship: yes | yes, with fixes | no
-Direction: <direction> (wildcard: yes|no) / <palette> / <type> / <composition> / set pieces <a>, <b> / component <id> (dealt, seed <n>)
-Idea: <the concept's idea in one line>
-Pages: <each page and its set pieces> (sites only)
-Review: <critic and auditor verdicts, the high findings fixed>
-Motion review: <Before | After | Why rows, or "none needed">
+Idea: <one line>   Moment: <the one orchestrated moment>
+Look: <palette, faces, why> (design.mjs set)
+Sections: <each, with its recipe or part and its media source>
+Media: <client files, client videos, stock with credits, generated>
 Ran: <commands> -> RESULT: PASS, <n> WARN
-Looked at: <screenshot files> - <one sentence on what the first screen and 390 px show>
-Not verified: <what you could not check>
-Samples to replace: <invented menu items, prices, hours, numbers>
+Looked at: <look.mjs sheets> - <what the first screen and 390 show>
+Review: <the critic's verdict, the high findings fixed>; motion review <Before | After | Why rows>
+Not verified: <what you could not check>   Samples to replace: <invented prices, hours, copy>
 ```
 
-Never write "done", "verified" or "premium" without the check output above it.
+Never write "done", "verified" or "premium" without the check line and the sheets you looked at above it.

@@ -1,5 +1,57 @@
 # Changelog
 
+## 4.0.0 - 2026-11-16
+
+The studio run. The model is the design lead: nothing is dealt, the client's own material comes first, every section
+is planned before it is built and looked at in motion after, and the check refuses only what is broken.
+
+### Why
+A DeepSeek build of a café (Agostino) passed the 3.1 check and still looked half done: a black curtain opening on
+three words, an empty stage, a huge "10" beside a word-lit paragraph, a hand-drawn street map, a lopsided product
+row, a text "Pause" button under every animation, and the client's TikTok videos never downloaded. Forensics of the
+session showed the causes in the skill: five dealt decisions (set pieces, scene, signature, component) that the check
+then required whether they fitted or not, quantity rules (two set pieces, scroll scenes in two sections), a check
+that read the concept the agent itself wrote (the agent edited it three times to pass), a WCAG rule that pushed a
+text button under every loop, and no step for the client's videos. The most installed design skills (Anthropic's
+frontend-design, Hallmark, MotionSites, impeccable) work from written judgment, a plan reviewed against the brief,
+one orchestrated moment and self-critique on screenshots.
+
+### Changed (breaking)
+- `start.mjs` deals nothing by default: it copies the kit and a starter page, writes the studio brief
+  (`.craft/brief.md`: the process with every command) and the plan template (`.craft/plan.md`: brief, references,
+  direction, storyboard, review), and arms the gate. The dealt run stays behind `--composition`, `--direction`,
+  `--deal-direction`, `--deal-look`, `--pin`, `--seed` and `--redeal`.
+- SKILL.md rewritten as the studio run (1430 words, from 1879): the bar, the calibration list of generated-page
+  defaults, ten steps, short craft rules.
+- The pause control for loops and bands is a small round icon in the corner of what it controls (as Apple does), its
+  label for screen readers only; never a text button under the animation.
+- `parts-unsearched` fails only when no part was searched at all; one or two searches warn.
+
+### Added
+- Section recipes in the kit (`kit/motion/recipes.js`, `product3d.js`, `map.js`, `kit/recipes.css`,
+  `references/recipes.md`): `dive` (fly into the hero picture), `journey` (a pinned horizontal story), `carousel`,
+  `sequence` (the client's clip scrubbed by scroll), `product3d` (the packaged product in 3D from its artwork,
+  three.js), `map` (a real map: OpenFreeMap tiles through MapLibre 5, free and keyless), `spec` (facts as a list).
+- `scripts/media.mjs`: `social` (the client's own TikTok, Instagram, YouTube videos with yt-dlp), `frames` (webp
+  frames and a manifest for the sequence recipe), `sheet` (twelve frames over a clip to look at), `stock` (Pexels and
+  Pixabay with free keys, credits written).
+- `scripts/look.mjs`: every section photographed as it enters, in its middle and as it leaves (four points of a
+  pinned pass), at 1440 and 390, laid out on contact sheets.
+- `kit/starter.html`: a wired page shell (head, kit stylesheets, nav, main, footer, init).
+- Check rules: `blank-screen` (FAIL: a screen one flat colour over 96.5%, measured from real screenshots down the
+  page), `sparse-screen` and `half-empty` (WARN), `svg-boxes` (FAIL: a big drawing made only of boxes, lines and
+  labels), `plan-missing` (FAIL: a studio build without a storyboard).
+- References: `studio.md` (the bar, the calibration list, moves by trade, the review questions, Figma), `recipes.md`,
+  `media.md` (routes, licences, the rules that keep media expensive).
+- `setup.mjs` reports yt-dlp and the Awwwards and Figma MCP servers, and installs them where it can.
+- `docs/installation.md`: a copy-paste prompt that makes any agent install and verify everything.
+
+### Fixed
+- `design.mjs` derived a muted text colour that failed contrast on the surface ground; it now holds 4.5:1 on both.
+- `design.mjs` warns on text faces impeccable's detector calls overused (Inter, Geist, Instrument Sans...).
+- The pinned statement in the blueprints is set large enough not to leave an empty stage.
+- The critic brief reads the plan and the look sheets and judges against the studio bar.
+
 ## 3.1.0 - 2026-11-16
 
 The libraries are searched, not mentioned. Every part of a page is looked up in 21st.dev, cult-ui and React Bits before

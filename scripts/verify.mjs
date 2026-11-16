@@ -56,7 +56,8 @@ function checkVocabulary() {
   const moodLine = text.match(/Moods: ([a-z, ]+)\./)?.[1].split(',').map((s) => s.trim()) ?? [];
   const kindLine = text.match(/Kinds: ([a-z, ]+)\./)?.[1].split(',').map((s) => s.trim()) ?? [];
   const moods = moodsOf(lib);
-  if (moodLine.join() !== moods.join()) fail('frontend-craft', `mood list in SKILL.md differs from the library: ${moods.join(', ')}`);
+  // The studio run names no moods; a page that lists them must list them all.
+  if (moodLine.length && moodLine.join() !== moods.join()) fail('frontend-craft', `mood list in SKILL.md differs from the library: ${moods.join(', ')}`);
   if (kindLine.join() !== KINDS.join()) fail('frontend-craft', `kind list in SKILL.md differs from deal.mjs: ${KINDS.join(', ')}`);
 }
 
