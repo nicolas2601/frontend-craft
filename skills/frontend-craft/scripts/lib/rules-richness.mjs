@@ -45,7 +45,7 @@ function conceptRules(concept, deal) {
   const out = [];
   if (parsed.missing.length) out.push(f('FAIL', 'concept-thin', `.craft/concept.md has no ${parsed.missing.join(', ')} section`, 'give each of # Idea, # Signature, # Rejected, # Breaks and # Components its own lines'));
   else if (parsed.ideaWords < MIN_IDEA_WORDS) out.push(f('FAIL', 'concept-thin', `the idea is ${parsed.ideaWords} words`, 'name the one thing only this subject has and how the page shows it, in one or two full sentences'));
-  else if (!parsed.breaks.length) out.push(f('FAIL', 'concept-thin', '# Breaks names no element', 'under # Breaks, one line per break with the element that carries it in backticks, e.g. `.hero-letterbox`'));
+  else if (!parsed.breaks.length) out.push(f('FAIL', 'concept-thin', '# Breaks names no element', 'under # Breaks, one line per break with the element that carries it in backticks, e.g. `.<your-class>`'));
   const component = deal?.motion?.component;
   if (component && !parsed.missing.includes('components') && !new RegExp(`\\b${component.id}\\b`, 'i').test(parsed.components)) {
     out.push(f('FAIL', 'deal-component', `the dealt component ${component.id} is not under # Components in .craft/concept.md`, `add it (references/components.md: shadcn add ${component.add.tsTailwind}, or port its source) and say where it sits and what it does; use a different library piece only with the reason`));
