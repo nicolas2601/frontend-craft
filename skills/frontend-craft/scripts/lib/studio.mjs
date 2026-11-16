@@ -30,11 +30,12 @@ Defaults I refused (every line of the calibration list in the brief, checked aga
 `;
 
 const CALIBRATION = [
-  'a warm cream ground with a high-contrast serif and a terracotta accent; a near-black ground with one bright accent',
+  'a white page with one accent and nothing else of the client\'s colour; a cream ground with a high-contrast serif and a terracotta accent whatever the subject; a near-black ground with one bright accent',
+  'a headline in one size, flush left, as it came; the same split section (words left, picture right) section after section',
   'a first screen of words on a dark panel beside the photograph in a box; the client\'s bio slogan or tagline as the headline instead of what only they are',
   'a small tracked label over the headline or over every heading; uppercase tracked labels ("DÓNDE", "HORARIO"); meta strings joined with middle dots; "01 / 02" markers on things that are not a sequence',
   'one word of the headline in italic or another colour; a big number with a small label as a section; three identical cards',
-  'a fade-and-rise on every section; a paragraph that lights up word by word as the default "wow"; an endless band of words',
+  'a generic fade-up on every section; a paragraph that lights up word by word as the default "wow"; an endless band of words',
   'a drawn map, a diagram of boxes and lines, an empty dark stage that opens on three words, a text button under every animation',
   'a cropped or letterboxed hero picture; a stock photograph standing in for the client\'s own place, product or people; a social cover with its burned-in title used as a photograph',
 ];
@@ -44,9 +45,10 @@ export function studioBrief(d, t) {
   return [
     `# Studio brief (${d.kind}${d.lang ? `, ${d.lang}` : ''})`,
     '',
-    'You are the design lead of a studio. This client pays for a site that could not belong to anyone else, and has already',
-    'rejected proposals that felt templated. Every design decision is yours. The scripts fetch media and measure defects;',
-    `they never decide. The bar: ${t.ref('studio.md')}. Write your thinking in .craft/plan.md (template already there;`,
+    'You are the design lead of a studio. This client pays for a site at the level of an Awwwards Site of the Day, one that',
+    'could not belong to anyone else; they rejected proposals that were clean but plain. Every design decision is yours.',
+    'The scripts fetch media and measure defects; they never decide, and no tool is required for its own sake.',
+    `The bar: ${t.ref('studio.md')}. Write your thinking in .craft/plan.md (template already there;`,
     `a filled example: ${t.ref('plan-example.md')}).`,
     '',
     '## 1. Material first',
@@ -59,7 +61,8 @@ export function studioBrief(d, t) {
     ...(t.motionsites ? [`- MotionSites, closest to this subject: ${t.motionsites.examples.length ? t.motionsites.examples.map((e) => e.file).join(', ') : 'none close; read its index for precision only'} (in ${t.motionsites.dir}/examples). Read one in full for its precision: every value given.`] : []),
     '',
     '## 3. Direction, then attack it',
-    `- Fill # Direction: the idea in one sentence, the palette, the faces, the one orchestrated moment, an ASCII wireframe of the first screen. Colours and faces: ${t.ref('color-type.md')}; candidates from ui-ux-pro-max; write them with \`${tool('design.mjs')} set ... --why "..."\`.`,
+    `- Fill # Direction: the idea in one sentence, the palette (the client's colours as grounds, section by section), a display face with their character, how type is composed, the motion system and the one orchestrated moment, an ASCII wireframe of the first screen. Colours and faces: ${t.ref('color-type.md')}; candidates from ui-ux-pro-max; write them with \`${tool('design.mjs')} set ... --why "..."\`.`,
+    '- When the look is uncertain or the client wants to approve it: two or three versions of the first screen in Figma with the real photographs, then choose (studio.md, Figma: the Figma MCP\'s own skills).',
     '- Then read it as the client who rejected templates: whatever you would have produced for any similar brief, change. Go through every line below against your direction, first screen and storyboard, not only the lines that come to mind, and under "Defaults I refused" write each one the plan came near and what you did instead. What generated pages look like (refuse unless the brief asks for it):',
     ...CALIBRATION.map((c) => `  - ${c}`),
     '',
@@ -73,7 +76,7 @@ export function studioBrief(d, t) {
     '',
     ...stillsWithoutClientPhotos(t),
     '## 6. Build: the first screen alone, then the rest',
-    `- Start from ${t.kitDir}/starter.html. Build the hero only, then \`${tool('look.mjs')}\` and open its sheets; fix until a client would sign it. Then every section from its storyboard row.`,
+    `- Start from ${t.kitDir}/starter.html (smooth scroll and the premium layer are wired: data-lines, data-unveil, data-ground, data-hover; recipes.md). Build the hero only, then \`${tool('look.mjs')}\` and open its sheets; fix until a client would sign it. Then every section from its storyboard row.`,
     '',
     '## 7. Look in motion, critique, fix',
     `- \`${tool('look.mjs')}\` photographs every section as it enters, in the middle and as it leaves, at 1440 and 390. Open every sheet. Fill # Review: what you see, what a studio would change; change it.`,
