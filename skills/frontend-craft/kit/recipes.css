@@ -26,12 +26,8 @@
 }
 .r-dive__copy h1 { max-width: 14ch; margin: 0 0 var(--s-6); font-size: var(--t-display); line-height: var(--display-leading, 0.95); text-wrap: balance; }
 .r-dive__copy p { max-width: 38ch; margin: 0 0 var(--s-8); font-size: var(--t-lg); line-height: 1.5; color: color-mix(in oklab, currentColor 86%, transparent); }
-/* The last part of the pass dissolves into the next section's ground. */
-.r-dive__stage::after {
-  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
-  background: var(--next-ground, var(--c-bg));
-  opacity: clamp(0, calc((var(--p, 0) - 0.9) * 10), 1); /* only the last tenth: the move lands in the picture first */
-}
+/* No dissolve at the end: the stage leaves with its section, so a fade to a flat ground would scroll away as an
+   empty screen. The picture, at its closest, scrolls off and the next section comes in under it. */
 .r-dive.r-still { height: auto; }
 .r-dive.r-still .r-dive__stage { position: relative; min-height: 100svh; }
 
@@ -168,3 +164,34 @@
   .r-dive__media > img, .r-dive__media > video { scale: 1; }
   .r-sequence__steps > * { transition: none; }
 }
+
+/* ---------- collage: the client's pictures at different sizes, offset, slightly turned, overlapping ---------- */
+.r-collage { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--s-6); align-items: start; padding-block: var(--s-8); }
+.r-collage__item { position: relative; margin: 0; border-radius: var(--r-md, 6px); overflow: clip; aspect-ratio: var(--ratio, 4 / 5); rotate: var(--rot, 0deg); box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.35); }
+.r-collage__item > :is(img, video) { width: 100%; height: 100%; object-fit: cover; object-position: var(--focus, 50% 50%); display: block; }
+.r-collage__item:nth-child(6n + 1) { grid-column: 1 / 6; --rot: -2deg; }
+.r-collage__item:nth-child(6n + 2) { grid-column: 7 / 12; margin-top: 16svh; --rot: 1.5deg; --ratio: 3 / 4; }
+.r-collage__item:nth-child(6n + 3) { grid-column: 3 / 8; margin-top: -10svh; --rot: 2.5deg; --ratio: 1 / 1; z-index: 2; }
+.r-collage__item:nth-child(6n + 4) { grid-column: 9 / 13; margin-top: 4svh; --rot: -3deg; }
+.r-collage__item:nth-child(6n + 5) { grid-column: 2 / 6; margin-top: -6svh; --rot: 1deg; --ratio: 3 / 2; }
+.r-collage__item:nth-child(6n + 6) { grid-column: 7 / 11; margin-top: 8svh; --rot: -1.5deg; --ratio: 4 / 3; }
+.r-collage__item figcaption { position: absolute; left: var(--s-4); bottom: var(--s-4); right: var(--s-4); color: #fff; font-size: var(--t-sm); text-shadow: 0 1px 12px rgb(0 0 0 / 0.5); }
+/* A word set across the pictures: the collage's one line of type, large, above them. */
+.r-collage__word { position: absolute; inset: 50% 0 auto; translate: 0 -50%; z-index: 3; margin: 0; text-align: center; pointer-events: none;
+  font-family: var(--f-display); font-weight: var(--display-weight); font-size: var(--t-mega); line-height: 0.9; letter-spacing: var(--display-tracking); color: var(--c-ink); }
+@media (max-width: 720px) {
+  .r-collage { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s-4); row-gap: var(--s-4); }
+  .r-collage__item:nth-child(n) { grid-column: auto; margin-top: 0; --rot: 0deg; }
+  .r-collage__item:nth-child(even) { margin-top: 10svh; }
+  .r-collage__word { position: relative; inset: auto; translate: none; grid-column: 1 / -1; order: -1; font-size: var(--t-display); text-align: start; }
+}
+
+/* ---------- statement: a display headline composed line by line, with small connecting words ---------- */
+.r-statement { margin: 0; font-family: var(--f-display); font-weight: var(--display-weight); font-size: var(--t-mega); line-height: 0.92; letter-spacing: var(--display-tracking); text-wrap: balance; }
+/* Lines are the heading's own spans (also once data-lines has moved them into its visual layer). */
+.r-statement > span:not(.craft-sr):not([aria-hidden]), .r-statement > [aria-hidden] > span { display: block; padding-inline-start: var(--indent, 0); }
+.r-statement small { font-family: var(--f-text); font-weight: 500; font-size: 0.26em; letter-spacing: 0.01em; vertical-align: 1.1em; margin-inline: 0.2em; }
+@media (max-width: 720px) { .r-statement > span:not(.craft-sr):not([aria-hidden]), .r-statement > [aria-hidden] > span { padding-inline-start: calc(var(--indent, 0) * 0.35); } }
+
+/* ---------- lede: an editorial paragraph set large in the display face ---------- */
+.r-lede { margin: 0; max-width: 30ch; font-family: var(--f-display); font-size: clamp(1.5rem, 1rem + 1.7vw, 2.75rem); line-height: 1.18; letter-spacing: -0.01em; text-wrap: pretty; }

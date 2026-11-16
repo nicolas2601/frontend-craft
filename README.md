@@ -45,9 +45,9 @@ OpenCode, Codex and the manual install: [docs/installation.md](docs/installation
 Copy one into your agent, in any language:
 
 ```
-Use the frontend-craft skill: the landing page for Agostino Coffee, a new specialty café at Cra 29 #41-76 in
-Bucaramanga. Their photos are in ./fotos and their videos are on https://www.tiktok.com/@agostinocoffee (they gave
-permission). Page in Spanish. Follow the studio run and show me the plan before you build.
+Use the frontend-craft skill: the landing page for Panadería Riomar, a sourdough bakery at Calle 10 #4-21 in
+Bogotá. Their photos are in ./fotos and their videos are on their TikTok (they gave permission). Page in Spanish.
+Follow the studio run and show me the plan before you build.
 ```
 
 ```

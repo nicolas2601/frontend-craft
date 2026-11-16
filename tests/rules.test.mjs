@@ -50,9 +50,10 @@ test('an italic accent word in another color fails on any palette', () => {
   assert.ok(ids(evaluate(facts({ doc: { ...facts().doc, h1 } }))).includes('tell-italic-accent'));
 });
 
-test('a landing page with no entrance and no scroll story fails; an app does not', () => {
+test('a landing page with no entrance and no scroll story is warned, never failed; an app is left alone', () => {
   const still = { motion: { entrance: 0, reveals: 2, scrollLinked: 0, sticky: [] } };
-  assert.deepEqual(ids(evaluate(facts(still))).sort(), ['motion-entrance', 'motion-scroll-story']);
+  const found = evaluate(facts(still)).filter((x) => x.id.startsWith('motion-'));
+  assert.deepEqual(found.map((x) => `${x.level}:${x.id}`).sort(), ['WARN:motion-entrance', 'WARN:motion-scroll-story']);
   assert.deepEqual(ids(evaluate(facts({ ...still, kind: 'app' }))), []);
 });
 

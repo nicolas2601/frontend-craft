@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{lang}}">
+<html lang="{{lang}}" data-smooth>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,8 +13,10 @@
   <link rel="stylesheet" href="craft/set-pieces.css">
   <link rel="stylesheet" href="craft/surfaces.css">
   <link rel="stylesheet" href="craft/recipes.css">
-  <!-- Only when a section uses data-product3d (three.js) or data-map (MapLibre); references/recipes.md:
-  <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js" } }</script>
+  <link rel="stylesheet" href="craft/premium.css">
+  <!-- Lenis drives data-smooth; add "three" when a section uses data-product3d (references/recipes.md). -->
+  <script type="importmap">{ "imports": { "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.mjs" } }</script>
+  <!-- Only when a section uses data-map (MapLibre); references/recipes.md:
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.1/dist/maplibre-gl.css">
   <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.1/dist/maplibre-gl.js" defer></script> -->
   <link rel="stylesheet" href="styles.css">

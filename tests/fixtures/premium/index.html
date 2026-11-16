@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es" data-smooth>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panadería Riomar: pan de masa madre en la calle 10</title>
+  <meta name="description" content="Pan de masa madre horneado de noche en la calle 10, listo a las seis de la mañana.">
+  <script>document.documentElement.classList.add('craft-js')</script>
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/craft.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/layouts.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/recipes.css">
+  <link rel="stylesheet" href="../../../skills/frontend-craft/kit/premium.css">
+  <style>
+    @font-face { font-family: 'Fixture Display'; src: local('DejaVu Sans Bold'), local('DejaVuSans-Bold'), local('Liberation Sans Bold'); font-weight: 800; }
+    @font-face { font-family: 'Fixture Text'; src: local('DejaVu Sans'), local('DejaVuSans'), local('Liberation Sans'); font-weight: 400; }
+    :root { --c-bg: #f1e9dc; --c-ink: #1e130d; --c-accent: #9c4a28; --c-accent-ink: #f1e9dc; --c-muted: #6a5f56; --c-line: #d5ccc0; --c-surface: #e9e0d4; }
+    body { background: var(--c-bg); color: var(--c-ink); font-family: 'Fixture Text', sans-serif; }
+    section { padding: var(--section) var(--gutter); }
+    .hero__grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: var(--s-8); align-items: end; }
+    .hero__fig { margin: 0; aspect-ratio: 4 / 5; border-radius: 8px; overflow: clip; }
+    .hero__fig img, .r-collage__item img { width: 100%; height: 100%; object-fit: cover; }
+    .r-statement { font-family: 'Fixture Display', sans-serif; font-weight: 800; text-transform: uppercase; font-size: clamp(2.75rem, 1rem + 4.4vw, 6rem); line-height: 0.92; margin: 0 0 var(--s-6); }
+    .hero { padding-block: var(--s-12); }
+    .hero__fig { max-height: 70svh; }
+    @media (max-width: 720px) { .hero__grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <a class="craft-skip" href="#main">Saltar al contenido</a>
+  <header class="nav">
+    <a class="brand" href="#main">Riomar</a>
+    <nav class="links" aria-label="Secciones"><a href="#pan" data-hover="line">El pan</a><a href="#visita" data-hover="line">Visita</a></nav>
+    <a class="btn" href="tel:+576015550142" data-press>Encargar pan</a>
+  </header>
+  <main id="main">
+    <section class="hero" aria-label="La panadería">
+      <div class="hero__grid">
+        <div>
+          <h1 class="r-statement" data-lines><span>Pan de</span><span style="--indent: 1em"><small>masa</small> madre</span><span><small>en la</small> calle 10</span></h1>
+          <p class="r-lede" data-lines>Horneado de noche con harina de Boyacá, listo a las seis de la mañana.</p>
+          <a class="btn" href="tel:+576015550142" data-press>Encargar pan</a>
+        </div>
+        <figure class="hero__fig" data-unveil data-hover="zoom"><img src="../../../skills/design-taste-frontend/assets/photos/img/m179564041-1200.webp" alt="El horno de la panadería encendido" width="1200" height="800" fetchpriority="high"></figure>
+      </div>
+    </section>
+    <section id="pan" data-ground="#22392B" data-ink="#F1E9DC" aria-labelledby="pan-title">
+      <h2 class="r-statement" id="pan-title" data-lines><span>Del trigo</span><span style="--indent: 1.2em"><small>al</small> horno</span></h2>
+      <div class="r-collage">
+        <figure class="r-collage__item" data-unveil data-parallax="0.06"><img src="../../../skills/design-taste-frontend/assets/photos/img/m21913761-1200.webp" alt="Pan de masa madre recién sacado del horno" width="1200" height="800" loading="lazy"><figcaption>La hogaza</figcaption></figure>
+        <figure class="r-collage__item" data-unveil data-parallax="0.14"><img src="../../../skills/design-taste-frontend/assets/photos/img/m108358720-1200.webp" alt="Panes enfriándose en una rejilla" width="1200" height="800" loading="lazy"><figcaption>El reposo</figcaption></figure>
+        <figure class="r-collage__item" data-unveil data-parallax="0.22"><img src="../../../skills/design-taste-frontend/assets/photos/img/m111881197-1200.webp" alt="Harina sobre la mesa de trabajo" width="1200" height="800" loading="lazy"><figcaption>La harina</figcaption></figure>
+      </div>
+    </section>
+    <section id="visita" data-ground="#F1E9DC" aria-labelledby="visit-title">
+      <h2 class="r-statement" id="visit-title" data-lines><span>Calle 10</span><span style="--indent: 0.6em">#4-21</span></h2>
+      <dl class="r-spec">
+        <div><dt>Horario</dt><dd>Todos los días, 6:00 a 13:00</dd></div>
+        <div><dt>Teléfono</dt><dd><a href="tel:+576015550142" data-hover="line">601 555 0142</a></dd></div>
+      </dl>
+    </section>
+  </main>
+  <footer class="site-footer" data-ground="#22392B" data-ink="#F1E9DC">
+    <div class="site-footer__top">
+      <p class="site-footer__name">Riomar</p>
+      <p class="site-footer__line">Pan de masa madre en la calle 10, listo a las seis de la mañana.</p>
+      <a class="btn" href="tel:+576015550142" data-press>Encargar pan</a>
+    </div>
+    <div class="site-footer__cols">
+      <div class="site-footer__col"><h2 class="site-footer__h">Visita</h2><address>Calle 10 #4-21, Bogotá</address><p>Todos los días, 6:00 a 13:00</p></div>
+      <div class="site-footer__col"><h2 class="site-footer__h">Contacto</h2><a href="tel:+576015550142">601 555 0142</a><a href="mailto:pan@example.com">pan@example.com</a><a href="https://wa.me/576015550142">WhatsApp</a></div>
+      <div class="site-footer__col"><h2 class="site-footer__h">La panadería</h2><a href="#pan">El pan</a><a href="#visita">Cómo llegar</a></div>
+    </div>
+  </footer>
+  <script type="module">
+    import { init } from '../../../skills/frontend-craft/kit/craft-motion.js';
+    init(document);
+  </script>
+</body>
+</html>

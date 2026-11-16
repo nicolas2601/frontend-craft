@@ -48,14 +48,20 @@ export function createContext(options = {}) {
     if (alive && !raf) raf = requestAnimationFrame(tick);
   };
 
+  // One IntersectionObserver per margin and threshold; an element may have several handlers (a section's ground and
+  // the words that wait for it), and one that joins late gets the element's last known state.
   function observer(margin, threshold) {
     const key = `${margin}|${threshold}`;
     if (!observers.has(key)) {
-      const handlers = new WeakMap();
+      const handlers = new Map();
+      const last = new WeakMap();
       const io = new IntersectionObserver((entries) => {
-        for (const e of entries) handlers.get(e.target)?.(e.isIntersecting, e);
+        for (const e of entries) {
+          last.set(e.target, e);
+          for (const cb of [...(handlers.get(e.target) ?? [])]) cb(e.isIntersecting, e);
+        }
       }, { rootMargin: margin, threshold });
-      observers.set(key, { io, handlers });
+      observers.set(key, { io, handlers, last });
     }
     return observers.get(key);
   }
@@ -70,10 +76,22 @@ export function createContext(options = {}) {
     },
     /** Call cb(isVisible) whenever el enters or leaves the viewport. */
     watch(el, cb, { margin = '0px 0px -12% 0px', threshold = 0 } = {}) {
-      const { io, handlers } = observer(margin, threshold);
-      handlers.set(el, cb);
-      io.observe(el);
-      return () => { io.unobserve(el); handlers.delete(el); };
+      const { io, handlers, last } = observer(margin, threshold);
+      const set = handlers.get(el);
+      if (set) {
+        set.add(cb);
+        const e = last.get(el);
+        if (e) queueMicrotask(() => { if (set.has(cb)) cb(e.isIntersecting, e); });
+      } else {
+        handlers.set(el, new Set([cb]));
+        io.observe(el);
+      }
+      return () => {
+        const own = handlers.get(el);
+        if (!own) return;
+        own.delete(cb);
+        if (!own.size) { io.unobserve(el); handlers.delete(el); }
+      };
     },
     /** Call cb once, the first time el is visible. */
     once(el, cb, opts) {

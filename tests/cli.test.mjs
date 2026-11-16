@@ -168,7 +168,10 @@ test('start.mjs deals nothing by default: it writes the studio brief and the pla
   const bad = design('set', '--bg', '#f6f1e7', '--ink', '#231e18', '--accent', '#7c3aed', '--display', 'Fraunces', '--text', 'Inter', '--why', 'a test of the refusals');
   assert.equal(bad.status, 1);
   assert.match(bad.stdout, /FAIL accent-violet/);
-  assert.match(bad.stdout, /FAIL ground-tinted/);
+  assert.doesNotMatch(bad.stdout, /ground-tinted/, 'the client\'s colours are committed by default');
+  const sober = design('set', '--mode', 'sober', '--bg', '#f6f1e7', '--ink', '#231e18', '--accent', '#9a4a2c', '--display', 'Fraunces', '--text', 'Public Sans', '--why', 'a quiet page asked for');
+  assert.equal(sober.status, 1);
+  assert.match(sober.stdout, /FAIL ground-tinted/, 'a sober page keeps a white ground');
   assert.match(fs.readFileSync(path.join(project, 'craft', 'tokens.css'), 'utf8'), /PENDING/, 'a refused choice writes nothing');
   const good = design('set', '--bg', '#fbfaf7', '--ink', '#151413', '--accent', '#9a4a2c', '--display', 'Fraunces', '--text', 'Public Sans', '--why', 'accent from the roof tiles in the patio photograph');
   assert.equal(good.status, 0, good.stdout + good.stderr);
