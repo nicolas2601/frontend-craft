@@ -26,6 +26,8 @@ const MIN_NODE = 22;
 export const MCP = {
   playwright: { test: /^(?:plugin:[^:\s]+:)?playwright:/m, add: ['mcp', 'add', 'playwright', '-s', 'user', '--', 'npx', '-y', '@playwright/mcp@latest'] },
   'hf-mcp-server': { test: /hf-mcp-server|huggingface\.co\/mcp/, add: ['mcp', 'add', 'hf-mcp-server', '-s', 'user', '-t', 'http', 'https://huggingface.co/mcp?login'] },
+  awwwards: { test: /awwwards/, add: ['mcp', 'add', 'awwwards', '-s', 'user', '--', 'npx', '-y', 'awwwards-mcp'] },
+  figma: { test: /mcp\.figma\.com|^figma:/m, add: ['mcp', 'add', 'figma', '-s', 'user', '-t', 'http', 'https://mcp.figma.com/mcp'] },
 };
 const SYSTEM = {
   ffmpeg: 'Arch: sudo pacman -S ffmpeg · Debian/Ubuntu: sudo apt install ffmpeg · macOS: brew install ffmpeg · Windows: winget install Gyan.FFmpeg',
@@ -56,6 +58,7 @@ export function report({ run = defaultRun, skillsDir = path.dirname(SKILL), chro
     depth: { ok: run('python3', ['-c', 'import numpy, onnxruntime']) !== null },
     playwrightCli: { ok: run('playwright-cli', ['--version']) !== null },
     cli21st: { ok: run('21st', ['help']) !== null, login: /logged in/i.test(run('21st', ['whoami']) ?? '') },
+    ytdlp: { ok: run('yt-dlp', ['--version']) !== null },
     motionsites: { ok: !!library(), path: library() },
     siblings: Object.fromEntries(SIBLINGS.map((s) => [s, fs.existsSync(path.join(skillsDir, s, 'SKILL.md'))])),
     claude,
@@ -68,6 +71,7 @@ export function installPlan(r, { cacheExists = () => fs.existsSync(CACHE) } = {}
   const plan = [];
   if (!r.playwrightCli.ok) plan.push(['npm', ['install', '-g', '@playwright/cli@latest']]);
   if (!r.cli21st?.ok) plan.push(['npm', ['install', '-g', '@21st-dev/cli@latest']]);
+  if (r.ytdlp && !r.ytdlp.ok) plan.push(['python3', ['-m', 'pip', 'install', '--user', '--upgrade', 'yt-dlp']]);
   if (!r.motionsites?.ok && !cacheExists()) plan.push(['git', ['clone', '--quiet', UPSTREAM, CACHE]], ['git', ['-C', CACHE, '-c', 'advice.detachedHead=false', 'checkout', '--quiet', PIN]]);
   if (r.claude) for (const [k, v] of Object.entries(MCP)) if (!r.mcp?.[k]) plan.push(['claude', v.add]);
   return plan;
@@ -83,6 +87,7 @@ function text(r) {
     `${mark(r.depth.ok)} numpy + onnxruntime${r.depth.ok ? '' : ` - ${SYSTEM.depth}`} (parallax hero loops from a still)`,
     `${mark(r.playwrightCli.ok)} playwright-cli${r.playwrightCli.ok ? '' : ' - npm install -g @playwright/cli@latest (or --install)'} (looking at the page, the reviewers)`,
     `${mark(r.cli21st.ok && r.cli21st.login)} 21st.dev CLI${!r.cli21st.ok ? ' - npm install -g @21st-dev/cli@latest (or --install), then 21st login' : r.cli21st.login ? '' : ' - run 21st login once (browser sign-in, free)'} (library parts: components.mjs search)`,
+    `${mark(r.ytdlp.ok)} yt-dlp${r.ytdlp.ok ? '' : ' - pipx install yt-dlp (or --install: python3 -m pip install --user yt-dlp)'} (the client's own videos: media.mjs social)`,
     `${mark(r.motionsites.ok)} MotionSites library${r.motionsites.ok ? ` ${r.motionsites.path}` : ' - --install clones it into ~/.cache/frontend-craft/libraries (optional)'} (reference designs, media shelf)`,
     ...Object.entries(r.siblings).map(([s, ok]) => `${mark(ok)} skill ${s}${ok ? '' : ' - install every skill of the repo as siblings: npx skills@latest add nicolas2601/frontend-craft --all'}`),
   ];
