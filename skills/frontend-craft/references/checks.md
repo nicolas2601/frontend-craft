@@ -13,14 +13,14 @@
 | `font-display-system` | FAIL | The h1 renders in a system font | Fonts not loaded or headings not using `var(--f-display)` / `.craft-display` |
 | `font-display-missing` | FAIL | The h1 names a family no `@font-face` provides | The font link or next/font import is missing or misspelled |
 | `deal-font` | FAIL | The h1 family is not the dealt display family | You swapped the pairing; use the dealt one or `--redeal` |
-| `deal-palette` | FAIL | The first screen's main field is not a dealt color | A hard-coded hex; use `var(--c-bg)`, `--c-surface`, `--c-ink` or `--c-accent` |
+| `deal-palette` | FAIL | The first screen's main field is not one of the look's colours (`design.mjs set`, or a dealt palette in `--deal-look` builds) | A hard-coded hex; use `var(--c-bg)`, `--c-surface`, `--c-ink` or `--c-accent` |
 | `tell-default-editorial` | FAIL | Cream ground + serif headline with an italic word + terracotta + mono labels (3 of 4) | The look every model falls back to; follow the deal, drop the italic word and the eyebrows |
 | `overflow` | FAIL | Horizontal scroll at some width | Fixed widths, long words, `100vw` with a scrollbar, flex children without `min-width: 0` |
 | `text-small` | FAIL | Text under 12 px | Use `--t-xs` at least |
 | `contrast` | FAIL | Text under WCAG AA (4.5:1, or 3:1 at 24 px+) | Muted text on surface tints, text on accent without `--c-accent-ink`, opacity on text |
 | `target-tiny` | FAIL | A control under 24 px at 390 | Icon buttons without padding; give 44x44 px |
 | `transition-all` | FAIL | `transition: all` (or Tailwind `transition-all`) | List the properties |
-| `photo-recoloured` | FAIL | A subject sold by its photographs (hospitality, heritage, travel, food, coffee, tea, beauty, wellness, nature, organic, fashion) shows more than a third of its photographs or videos grey, sepia, hue-shifted, under riso or with a blend mode | True colour, and the palette from the hero picture (`start.mjs --palette-from`) |
+| `photo-recoloured` | FAIL | A subject sold by its photographs (hospitality, heritage, travel, food, coffee, tea, beauty, wellness, nature, organic, fashion) shows more than a third of its photographs or videos grey, sepia, hue-shifted, under riso or with a blend mode | True colour; take the accent from the hero picture instead (`design.mjs accents <photo>`, then `design.mjs set`) |
 | `nav-mobile` | FAIL | At 390 px the header's nav shows fewer links than at 1440 and there is no menu button (`aria-expanded`) | Keep the links as a row (the kit's `.nav` wraps and scrolls them) or add a menu button |
 | `control-text-small` | FAIL | A button, field or label under 14 px at 390 | `var(--t-sm)` or larger |
 | `marquee-pause` | WARN | A `data-marquee` band with no `data-marquee-toggle` button beside it | Add the button (WCAG 2.2.2) |
@@ -32,6 +32,8 @@
 | `magnetic-button` | WARN | A button follows the cursor (`data-magnetic`) | Remove it: `data-press` and a hover colour are the feedback a button needs |
 | `look-pending` | FAIL | The colours and type were never chosen: `tokens.css` still holds the neutral stand-ins | Choose them (`references/color-type.md`) and run `design.mjs set` |
 | `hallmark/<gate>` | FAIL or WARN | Hallmark's `sloplint` on the page's own files (not the kit). Gates any page should pass fail: middle-dot meta strings, eyebrows and tracked-caps labels, an italic word in a heading, em dashes and stock words in copy, purple gradients, a card in a card, emoji icons, drawn browser windows, invented proof, a fake send, motion without a reduced-motion fallback. Its other gates and reflexes warn | Each line names the gate; `skills/hallmark/references/gates.md` explains it and its fix |
+| `parts-unsearched` | FAIL | A website or app built from a deal searched fewer than three of its parts in the component libraries (`.craft/components.json`, written by `components.mjs search`) | Before hand-building the nav, a gallery, a form, a menu, a map or an FAQ, run `components.mjs search "<its job>" --section <id>` and take the best with `pick` (`references/components.md`) |
+| `parts-none-taken` | WARN | Parts were searched but nothing was taken | `components.mjs pick` the candidates that fit, or say under `# Components` why each was refused |
 | `content-invisible` | FAIL | Text never becomes visible after scrolling the whole page | A reveal that never fires, or an element hidden by CSS with no script to show it |
 | `reduced-invisible` | FAIL | With reduced motion, text stays hidden | Custom animations that only reach the visible state by animating |
 | `nojs-invisible` | FAIL | Without JavaScript, text is hidden | Hidden initial states not scoped to `html.craft-js` |
@@ -47,7 +49,7 @@
 | `target-small` | WARN | Controls under 44 px on touch | Pad them |
 | `ease-in`, `vh-unit` | WARN | Entrance with ease-in; `100vh` | `var(--ease-out)`; `100svh` |
 | `nojs-empty` | WARN | The page is empty without JavaScript | Prerender or SSR the marketing page |
-| `meta-description`, `deal-accent` | WARN | No description; accent unused | Add one sentence; give the primary action `var(--c-accent)` |
+| `meta-description`, `deal-accent` | WARN | No description; the look's accent unused | Add one sentence; give the primary action `var(--c-accent)` |
 | `rich-grounds`, `rich-pictures`, `rich-full-bleed`, `rich-type`, `rich-scenes` | FAIL | Below the dealt direction's floor (websites) | Too few section grounds or photographs, no full-bleed picture, a small h1, motion in fewer than two sections; the brief gives the numbers |
 | `deal-set-piece` | FAIL | A dealt set piece is not on the page (on a site: on that page) | Build it from `set-pieces.md` with its `sp-` class |
 | `concept-missing`, `concept-thin` | FAIL | `.craft/concept.md` missing, a heading missing, a thin idea, or `# Breaks` names no element | Write the five sections; name each break's element in backticks |

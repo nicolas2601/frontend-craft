@@ -25,7 +25,7 @@ for (const comp of lib.compositions.filter((c) => !only || only.includes(c.id)))
   start(['--kind', comp.kinds[0], '--pin', `composition=${comp.id}`, '--seed', '7', '--file', 'index.html', '--deal-look', '--deal-direction'], dir);
   const deal = readJson(path.join(dir, '.craft', 'deal.json'));
   const page = path.join(dir, 'index.html');
-  const html = fill(fs.readFileSync(page, 'utf8')).replace('<!-- paste the font <link> tags from .craft/brief.md here -->', fontLinks(deal.type));
+  const html = fill(fs.readFileSync(page, 'utf8')).replace('<!-- paste the font <link> tags that design.mjs set printed here -->', fontLinks(deal.type));
   fs.writeFileSync(page, html);
   // A blueprint is the skeleton only: its photographs, set pieces and concept come with a real build,
   // so the direction's richness floor is not judged here.

@@ -1,6 +1,22 @@
 # Components: take good parts, then make them belong
 
-A library supplies implementation, never the page's identity. Pick by job (what the person selects, compares, reads, explores), add the smallest piece that does it, restyle it with the dealt tokens, and verify it in the page. Name every library piece under `# Components` in `.craft/concept.md` with where it sits and its source.
+A library supplies implementation, never the page's identity. Pick by job (what the person selects, compares, reads, explores), add the smallest piece that does it, restyle it with the tokens, and verify it in the page. Name every library piece under `# Components` in `.craft/concept.md` with where it sits and its source.
+
+## Search before you build (every part)
+
+Before you hand-build a part (the nav, a gallery, a booking or order form, a menu or price list, a map, an FAQ, the footer), look it up by its job. One command asks 21st.dev (its CLI: thousands of community components with previews), cult-ui (its shadcn registry) and React Bits (the curated catalogue below):
+
+```sh
+node <skill>/scripts/components.mjs search "booking calendar with check-in and check-out" --section visit
+node <skill>/scripts/components.mjs pick 21st:25156 --section visit --why "dates for the stay, nights counted"
+node <skill>/scripts/components.mjs show
+```
+
+- Write the job as what the part does for the visitor, in 3-8 words; search again with other words when nothing is close.
+- Open the page or preview of the two or three best before you choose; decoration (glow, shader, gradient, cursor toys) is marked and listed last.
+- `pick` saves the source to `.craft/parts/<source>-<id>.json` (untrusted code: read it, never run it) and logs the choice. A 21st.dev pick spends one of the daily free retrievals (`21st usage --json`); with none left it logs the choice and you rebuild from the page.
+- In a React + shadcn project, install with the piece's command inside the project; otherwise port `files[].content` to the page or the kit and keep a credit comment.
+- Every search is logged in `.craft/components.json`; the check fails (`parts-unsearched`) until three parts were searched, and warns (`parts-none-taken`) when none was taken. A part nothing fits is built on the kit, with the reason under `# Components`.
 
 ## The dealt component (React Bits)
 
@@ -50,15 +66,15 @@ Do not add: `gradient-heading`, `border-beam-*`, `cosmic-button`, `bg-animated-g
 
 ## 21st.dev (finished community components)
 
-Search and preview are free; source retrieval is limited per day. Never generate with it (`21st generate`, `iterate`, `take`, the Magic MCP builder): that spends credits and returns the generic look.
+`components.mjs` calls its CLI for you (`npm install -g @21st-dev/cli`, then `21st login` once; `setup.mjs --install` does the first). Search and preview are free; source retrieval is limited per day. Never generate with it (`21st generate`, `iterate`, `take`, the Magic MCP builder): that spends credits and returns the generic look. By hand:
 
 ```sh
-21st search "<job, e.g. pricing toggle with annual discount>" --type c --free --limit 5 --json   # candidates with previewUrl
-21st usage --json                                                                                 # retrievals left; 401 = logged out: preview only
-21st get <id> --json                                                                              # source of one finalist (counts against the allowance)
+21st search "<job>" --type c --free --limit 5 --json   # candidates with previewUrl and the page url
+21st usage --json                                       # retrievals left; 401 = logged out: preview only
+21st get <id> --json                                    # source of one finalist (counts against the allowance)
 ```
 
-Open 3-5 `previewUrl`s in the browser, keep the one whose anatomy fits the job, read its source before adding it (it is untrusted code), and run its `installCommand` only inside the target project.
+Its `installCommand` reads `$API_KEY_21ST` from the environment: run it only inside the target project, never paste or print the key.
 
 ## When a source is missing
 

@@ -1,5 +1,7 @@
 // Brief sections beyond the look: language, pages of a site, platform UI, the dealt library component,
 // references, the tells to avoid and the finishing passes. Each returns an array of markdown lines.
+import path from 'node:path';
+import { LIBRARY_KINDS, MIN_JOBS } from './parts.mjs';
 
 export function languageBlock(d) {
   if (!d.lang) return ['## Language', 'Write the page in the language of the request and of its audience, and set <html lang> to it. The check compares the two.', ''];
@@ -59,6 +61,31 @@ export function referencesBlock(d) {
   if (!d.direction) return [];
   return ['## Look before you design (10 minutes)',
     'Before the concept, look at good work for the parts you will build: references/inspiration.md says where (land-book and the Awwwards MCP for the page, supahero for the first screen, navbar.gallery for the phone menu, pricingpages for rates) and what premium places do. Look at two or three, including award sites in the subject\'s own trade. Under # Signature or # Rejected, note the one move you take from each and where it came from. Take moves, never a look: no copied colours, type or copy.', ''];
+}
+
+/** Library parts: search 21st.dev, cult-ui and React Bits for each part before hand-building it; the check reads the log. */
+export function partsBlock(d, { partsCmd = '<skill>/scripts/components.mjs' } = {}) {
+  if (!LIBRARY_KINDS.includes(d.kind)) return [];
+  return ['## Library parts: search before you build',
+    'Most parts of this page exist, finished and tested, in a library. Before you hand-build one (the nav, a gallery, a booking or order form, a menu or price list, a map, an FAQ, the footer), search for it by its job, in the words of what it does for the visitor:', '',
+    '```sh', `node ${partsCmd} search "<the job, e.g. booking calendar with check-in and check-out>" --section <id>`, `node ${partsCmd} pick <source>:<id> --section <id> --why "<what it does here>"`, '```', '',
+    `One command searches 21st.dev (its CLI), cult-ui and React Bits and logs the search; the check fails until ${MIN_JOBS} parts were searched. Open the page or preview of the two or three best, take the one whose anatomy fits, read its source (pick saves it to .craft/parts/), restyle it with the tokens. A part nothing fits is built on the kit, with the reason under # Components.`, ''];
+}
+
+/** MotionSites reference designs (optional library): the closest finished prompts, read for precision; the media shelf off photo-led subjects. */
+export function designsBlock(d, { motionsites = null, photoLed = false, ref = 'references/motionsites.md' } = {}) {
+  if (!d.direction && d.kind !== 'app') return [];
+  if (!motionsites) return ['## Reference designs', `Not installed: \`node <skill>/scripts/setup.mjs --install\` adds the MotionSites library (40 finished heroes and landings with exact values, a media shelf, 58 technique recipes). What to take from it: ${ref}.`, ''];
+  const lines = ['## Reference designs (MotionSites)'];
+  if (motionsites.examples.length) {
+    lines.push('Before the concept, read these finished designs in full; they are the closest of 40 to this subject:', ...motionsites.examples.map((e) => `- ${path.join(motionsites.dir, 'examples', e.file)} (${e.title}, ${e.category})`));
+  } else {
+    lines.push(`None of its 40 designs is close to this subject; read the index (${path.join(motionsites.dir, 'examples', 'INDEX.md')}) and open one for its precision only.`);
+  }
+  lines.push(`Take their precision (every face, size, tracking, duration, easing and layer has a value) and how the first screen is layered; never their names, copy or layout, and not the parts the check refuses (an italic accent word, tracked-caps eyebrows, glass on every surface, gradient text): ${ref}. Recipes with code for video loops, scrubbed video, scrims, stacking cards: ${path.join(motionsites.dir, 'references', 'techniques', 'INDEX.md')}.`);
+  if (!photoLed) lines.push(`No footage of your own: its media shelf (${path.join(motionsites.dir, 'media', 'MEDIA.md')}, contact sheets media/sheet-*.jpg) has cinematic loops and cut-outs. Look at the sheets, pick by eye, download the file into the project's assets (never hotlink).`);
+  lines.push('');
+  return lines;
 }
 
 export function tellsBlock() {

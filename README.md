@@ -67,12 +67,13 @@ Use craft-review on http://localhost:5173: strict review, Before | After | Why, 
 prompt ─> frontend-craft (router)
   1  read the project, pick the kind, 2-3 moods and the language
   2  start.mjs lists the structures and art directions that fit  ─> the model chooses (ui-ux-pro-max landing patterns)
-  3  concept.md: the idea only this client has, what it refuses   ─> inspiration.md, the Awwwards MCP
+  3  concept.md: the idea only this client has, what it refuses   ─> inspiration.md, the Awwwards MCP, the closest MotionSites designs
   4  photographs: the client's, or two licensed libraries          ─> design-taste-frontend, Hallmark (755 Wikimedia photos)
   5  the look: the model chooses colours and faces                 ─> color-type.md, ui-ux-pro-max, Hallmark themes,
                                                                        design.mjs accents <photo>, then design.mjs set (checked)
   6  hero loop when the subject is real                            ─> parallax.mjs (CPU), hf-asset-generate, kaggle-video
-  7  build the first screen alone, look at it, then the rest       ─> blueprints, the motion kit, set pieces, components
+  7  build the first screen alone, look at it, then the rest       ─> blueprints, the motion kit, set pieces,
+                                                                       components.mjs search (21st.dev, cult-ui, React Bits) per part
   8  check.mjs in Chrome                                           ─> defects, richness, finish, impeccable detect, Hallmark sloplint
   9  two reviewers in parallel                                     ─> craft-design-critic, craft-motion-auditor (playwright-cli)
  10  polish and the motion review, check again, report             ─> impeccable, Emil Kowalski's skills
@@ -86,6 +87,7 @@ What decides what:
 | Colours | The model: a white or near-white ground, a near-black ink, one accent with life taken from the subject (or a Hallmark theme taken whole) | `design.mjs` checks contrast, the sober method, violet, neon and framework-default accents, and writes `tokens.css`; the check fails while the look is pending |
 | Faces | The model, from ui-ux-pro-max's pairings and Google Fonts | `design.mjs` checks the families and weights exist and warns on the faces every generated page uses |
 | Set pieces, motion, the library component | Dealt from the chosen direction, for variety | The check measures that they render, move, and finish while they can be read |
+| The page's parts (nav, gallery, booking form, menu, map, FAQ) | The model, from 21st.dev, cult-ui and React Bits candidates that `components.mjs search` lists with previews | The check fails (`parts-unsearched`) until three parts were searched; every search and pick is logged in `.craft/components.json` |
 | Everything else | The two reviewers and the user | The order is: the user, accessibility, the subject, then the brief |
 
 ## What the check refuses
@@ -95,6 +97,7 @@ JavaScript off) and runs impeccable's detector and Hallmark's sloplint. A few of
 
 - a subject sold by its photographs whose first screen is text, with the picture below the fold;
 - cards and tiles left mostly empty, a footer with no way to reach the business;
+- parts built by hand without ever looking for them in a component library;
 - photographs tinted to match a palette, a palette that never was chosen;
 - scroll animations that finish after their element has left the screen, motion with no reduced-motion fallback;
 - eyebrows and tracked-caps labels, middle-dot meta strings, em dashes, an italic word in a heading, purple
@@ -133,6 +136,14 @@ The full list with causes and fixes: [checks.md](skills/frontend-craft/reference
 | `emil-design-eng`, `animate`, `choreograph`, `animation-performance`, `animation-vocabulary`, `review-animations`, `improve-animations`, `remove-animations`, `find-animation-opportunities`, `gestures`, `break-ui`, `pick-ui-library`, `prototype`, `apple-design`, `learn-taste` | [emilkowalski/skills](https://github.com/emilkowalski/skills), MIT | Motion and interaction craft |
 | [`ui-animation`](skills/ui-animation/SKILL.md) | [mblode/agent-skills](https://github.com/mblode/agent-skills), MIT | Springs, easing fitted from recordings, interface sound |
 | [`playwright-cli`](skills/playwright-cli/SKILL.md) | [microsoft/playwright-cli](https://github.com/microsoft/playwright-cli), Apache-2.0 | Looking at and measuring the page from the shell |
+
+**Libraries read at build time** (downloaded or called on your machine, not copied into this repository):
+
+| Library | What the build takes from it | How it gets there |
+|---|---|---|
+| [21st.dev](https://21st.dev) | Community components for each part of the page, searched by job, with previews | Its CLI: `npm install -g @21st-dev/cli`, then `21st login` (free search, two free source retrievals a day) |
+| [cult-ui](https://www.cult-ui.com) | Interaction pieces from its shadcn registry, MIT | Its public registry, cached for a week |
+| [MotionSites](https://github.com/Motionsites-AI/claude-skill) | 40 finished hero and landing designs read for their precision, a shelf of cinematic loops and cut-outs, 58 technique recipes ([what to take and leave](skills/frontend-craft/references/motionsites.md)) | `setup.mjs --install` clones it into `~/.cache` at a pinned commit; its examples and media stay (c) MotionSites |
 
 **MCP servers** ([.mcp.json](.mcp.json) in the plugin; the others in [docs/installation.md](docs/installation.md)):
 Playwright, Hugging Face (free stills and clips) and, optionally, Awwwards (references and motion timing of award
