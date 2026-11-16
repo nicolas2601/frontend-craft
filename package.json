@@ -1,6 +1,6 @@
 {
   "name": "frontend-craft",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "private": true,
   "description": "A professional frontend design skill set for coding agents: the model chooses structure, direction, colours and faces with real candidates and scripts that check them, real photographs, timed motion, free hero loops, and a browser check (with impeccable and Hallmark) that refuses the generated look",
   "scripts": {
