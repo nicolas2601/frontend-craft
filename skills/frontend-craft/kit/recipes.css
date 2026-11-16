@@ -156,7 +156,7 @@
 
 /* ---------- spec: facts as a quiet two-column list (dl > div > dt + dd) ---------- */
 .r-spec { display: grid; margin: var(--s-8) 0; border-top: 1px solid var(--c-line); }
-.r-spec > div { display: grid; grid-template-columns: minmax(6rem, 9rem) minmax(0, 1fr); align-items: center; gap: var(--s-4); min-height: 3.25rem; padding-block: var(--s-2); border-bottom: 1px solid var(--c-line); }
+.r-spec > div { display: grid; grid-template-columns: minmax(6rem, 9rem) minmax(0, 1fr); align-items: center; gap: var(--s-4); min-height: 3.25rem; padding-block: var(--s-3); border-bottom: 1px solid var(--c-line); }
 .r-spec dt { color: color-mix(in oklab, var(--c-ink) 72%, var(--c-bg)); } /* AA on the ground and on the surface */
 .r-spec dd { margin: 0; font-weight: 500; }
 .r-spec a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; text-decoration: underline; text-decoration-color: var(--c-line); text-underline-offset: 0.25em; }
