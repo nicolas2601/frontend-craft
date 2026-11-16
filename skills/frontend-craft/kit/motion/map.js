@@ -5,7 +5,7 @@
 // stylesheet from the CDN (references/recipes.md). Version 6 is ESM-only and its worker cannot load cross-origin.
 // Without it, or without WebGL, the element's own children (an address and a directions link) stay.
 //   data-lat, data-lng (required), data-zoom="16", data-style="positron|bright|liberty|dark|fiord" (default from
-//   the page ground: dark grounds get "dark"), data-label="Agostino Coffee"
+//   the page ground: dark grounds get "dark"), data-label="Panadería Riomar"
 const STYLES = new Set(['positron', 'bright', 'liberty', 'dark', 'fiord']);
 const STYLE_URL = 'https://tiles.openfreemap.org/styles/';
 

@@ -2,6 +2,8 @@
 
 `start.mjs` copies the kit into `src/craft/` (or `app/craft/`, `craft/`, or `--kit <dir>`). Paths below assume `src/craft/`. In every case: load `tokens.css`, then `craft.css`; call `init(document)` once after the DOM exists; keep the cleanup.
 
+The recipes and the premium layer (`references/recipes.md`) load after them: `layouts.css`, `recipes.css`, then `premium.css`. In a bundled project smooth scroll needs `npm i lenis` and `init(document, { libs: { lenis: () => import('lenis') } })`, with `data-smooth` on `<html>`; without it the page scrolls natively.
+
 ## Plain HTML
 
 ```html

@@ -43,7 +43,7 @@ test('keys never reach a file: a literal api_key value becomes the environment v
   assert.equal(parseRef('npm:left-pad'), null);
 });
 
-test('the check fails a dealt page that searched fewer than three parts, warns when it took none', () => {
+test('the check warns when a dealt page searched fewer than three parts or took none; it never fails on it', () => {
   assert.deepEqual(partsRules({ kind: 'landing', parts: null }), [], 'no log passed: not a dealt build');
   assert.deepEqual(partsRules({ kind: 'docs', parts: emptyLog() }), []);
   assert.equal(partsRules({ kind: 'landing', parts: emptyLog() })[0].id, 'parts-unsearched');

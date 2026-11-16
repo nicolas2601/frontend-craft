@@ -1,0 +1,81 @@
+/* frontend-craft premium layer (kit/motion/premium.js). Load after recipes.css.
+   The values come from four Awwwards Sites of the Day in hospitality and food (probed 2026-11-16): expo-out,
+   reveals of about a second, smooth scroll. One system on every section reads as premium; a different trick per
+   section reads as a template. Everything here has a final state without JavaScript and under reduced motion. */
+
+:root {
+  --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --dur-reveal: 1100ms;
+  --dur-unveil: 1400ms;
+  --stagger-line: 90ms;
+}
+
+/* ---------- smooth scroll: Lenis's recommended CSS ---------- */
+html.lenis, html.lenis body { height: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+html.lenis { scroll-behavior: auto; }
+
+/* ---------- data-lines: headings and ledes rise line by line from a mask ---------- */
+.craft-mask {
+  display: inline-block; vertical-align: top; overflow: clip;
+  /* Room for accents above and descenders below, so the mask never cuts a glyph at tight leading. */
+  padding-block: 0.34em 0.16em; margin-block: -0.34em -0.16em;
+}
+.craft-js [data-lines-ready] .craft-word {
+  display: inline-block;
+  /* Past the mask's padding with room for accents above the caps (É, Ñ) at tight leading. */
+  translate: 0 calc(100% + 0.6em);
+  transition: translate var(--dur-reveal) var(--ease-expo) calc(var(--i, 0) * var(--stagger-line));
+}
+.craft-js [data-lines-ready][data-craft-on] .craft-word { translate: 0 0; }
+/* Small connecting words keep their own size and place: they fade in with their line instead of rising from a mask. */
+.craft-js [data-lines-ready] small .craft-word { translate: none; opacity: 0; transition: opacity var(--dur-reveal) var(--ease-expo) calc(var(--i, 0) * var(--stagger-line) + 120ms); }
+.craft-js [data-lines-ready][data-craft-on] small .craft-word { opacity: 1; }
+
+/* ---------- data-unveil: a picture opens from an edge and settles from a slight zoom ---------- */
+.craft-js [data-unveil-ready] {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path var(--dur-unveil) var(--ease-expo);
+}
+.craft-js [data-unveil-ready][data-unveil="down"] { clip-path: inset(0 0 100% 0); }
+.craft-js [data-unveil-ready][data-unveil="left"] { clip-path: inset(0 100% 0 0); }
+.craft-js [data-unveil-ready][data-unveil="right"] { clip-path: inset(0 0 0 100%); }
+.craft-js [data-unveil-ready] :is(img, video, canvas) {
+  scale: 1.18;
+  transition: scale calc(var(--dur-unveil) + 400ms) var(--ease-expo);
+}
+.craft-js [data-unveil-ready][data-craft-on] { clip-path: inset(0 0 0 0); }
+.craft-js [data-unveil-ready][data-craft-on] :is(img, video, canvas) { scale: 1; }
+
+/* ---------- data-ground: the page's ground and ink follow the section in the middle of the screen ---------- */
+html[data-grounds] body {
+  background-color: var(--page-ground, var(--c-bg));
+  transition: background-color 900ms var(--ease-expo);
+}
+html[data-grounds] [data-ground] { background-color: transparent; }
+/* A section's plain links take its ink: the browser's blue on a committed ground is unreadable. */
+[data-ink] a:not([class]) { color: inherit; }
+
+/* ---------- hover: the picture leans in, a link draws its line ---------- */
+[data-hover="zoom"] { overflow: clip; }
+[data-hover="zoom"] :is(img, video) { transition: transform 900ms var(--ease-expo); }
+[data-hover="line"] {
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0% 1px no-repeat;
+  transition: background-size 600ms var(--ease-expo);
+}
+@media (hover: hover) and (pointer: fine) {
+  [data-hover="zoom"]:hover :is(img, video) { transform: scale(1.05); }
+  [data-hover="line"]:hover { background-size: 100% 1px; }
+}
+[data-hover="line"]:focus-visible { background-size: 100% 1px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .craft-js [data-lines-ready] .craft-word { translate: none; transition: none; }
+  .craft-js [data-unveil-ready], .craft-js [data-unveil-ready] :is(img, video, canvas) { clip-path: none; scale: none; transition: none; }
+  [data-hover="zoom"] :is(img, video) { transition: none; }
+  html[data-grounds] body { transition-duration: 300ms; }
+}

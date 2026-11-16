@@ -61,8 +61,22 @@ export function installHelpers() {
     }
     return out;
   };
+  // A section with data-ground is transparent and the page's ground eases to its colour while it is on screen
+  // (kit premium layer): its words are read against the colour it declares, whatever the scroll position.
+  const groundOf = (n) => {
+    const probe = document.createElement('i');
+    probe.style.cssText = `position:absolute;visibility:hidden;background-color:${n.dataset.ground}`;
+    n.append(probe);
+    const c = rgba(getComputedStyle(probe).backgroundColor);
+    probe.remove();
+    return c;
+  };
   const bgOf = (el) => {
     for (let n = el; n && n.nodeType === 1; n = n.parentElement) {
+      if (n.dataset?.ground && document.documentElement.hasAttribute('data-grounds')) {
+        const g = groundOf(n);
+        if (g[3] >= 0.9) return { color: g };
+      }
       const cs = getComputedStyle(n);
       if (cs.backgroundImage && cs.backgroundImage !== 'none') return { image: true };
       const c = rgba(cs.backgroundColor);

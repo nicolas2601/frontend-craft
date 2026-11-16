@@ -52,7 +52,12 @@ export function lookRules({ deal }) {
   return [f('FAIL', 'look-pending', 'the colours and type were never chosen: the page runs on the neutral stand-ins', 'choose them as references/color-type.md says (ui-ux-pro-max for candidates, the subject for the reasons), then run design.mjs set')];
 }
 
-export const FLAT = { blank: 0.965, sparse: 0.9, half: 0.985, other: 0.93 };
+// empty: a sample that is part of an empty stretch; sparse: one empty screen on its own; run: samples in a stretch
+// (three samples three quarters of a screen apart span two screens). Calibrated on real pages: a black stage with a
+// number and a pinned paragraph (0.78-0.92 over three samples) and cards of 60svh holding one line (0.89-0.93) fail;
+// a FAQ and a footer (0.76, 0.71) and dark cards with large titles (0.74) pass. On dark grounds with text the
+// measure separates less sharply, hence two screens before it fails.
+export const FLAT = { blank: 0.965, empty: 0.77, sparse: 0.82, run: 3, half: 0.985, other: 0.93 };
 
 /**
  * Screens that show almost nothing, read from real screenshots down the page: one flat colour over 96.5% of the
@@ -64,17 +69,35 @@ export const FLAT = { blank: 0.965, sparse: 0.9, half: 0.985, other: 0.93 };
 export function blankRules({ blank = [], kind }) {
   if (OPERATE_KINDS.includes(kind) || !blank.length) return [];
   const at = (list) => list.slice(0, 4).map((b) => b.y).join(', ');
-  const empty = blank.filter((b) => b.all >= FLAT.blank);
-  const sparse = blank.filter((b) => b.all >= FLAT.sparse && b.all < FLAT.blank);
+  const flat = blank.filter((b) => b.all >= FLAT.blank);
+  const isEmpty = (b) => b.all < FLAT.blank && (b.empty ?? 0) >= FLAT.empty;
+  const runs = emptyRuns(blank, isEmpty);
+  const inRun = new Set(runs.flat());
+  const sparse = blank.filter((b) => isEmpty(b) && (b.empty ?? 0) >= FLAT.sparse && !inRun.has(b));
   const half = blank.filter((b) => b.all < FLAT.blank && Math.max(b.left, b.right) >= FLAT.half && Math.min(b.left, b.right) < FLAT.other);
   const out = [];
-  if (empty.length) out.push(f('FAIL', 'blank-screen', `${empty.length} screen(s) are one flat colour while scrolling at 1440 (at y ${at(empty)})`,
+  if (flat.length) out.push(f('FAIL', 'blank-screen', `${flat.length} screen(s) are one flat colour while scrolling at 1440 (at y ${at(flat)})`,
     'open the look.mjs sheets at those heights: give the stage its picture or footage, shorten a pinned section that runs past its content, or remove the effect that leaves the screen empty (a curtain or iris on a dark ground, a scene or map that did not render)'));
-  if (sparse.length) out.push(f('WARN', 'sparse-screen', `${sparse.length} screen(s) are mostly one flat colour (at y ${at(sparse)}): a few words, a number or a band of stats alone on an empty ground`,
-    'look at those heights in the look.mjs sheets as the client would: a dark stage that opens on a few words reads unfinished. Bring the section\'s picture or footage into it, set the words to fill the screen, or tighten the section'));
+  if (runs.length) out.push(f('FAIL', 'empty-run', `${runs.length} stretch(es) of two screens or more with almost nothing in them at 1440 (${runs.slice(0, 3).map((r) => `y ${r[0].y} to ${r.at(-1).y}`).join('; ')}): a few words on a big ground, a section left unfinished`,
+    'open the look.mjs sheets there as the client would: give each section its picture or footage, set the words large enough to hold the screen, or cut the section to its content'));
+  if (sparse.length) out.push(f('WARN', 'sparse-screen', `${sparse.length} screen(s) are mostly empty (at y ${at(sparse)}): a few words, a number or a band of stats alone on an empty ground`,
+    'look at those heights in the look.mjs sheets as the client would: bring the section\'s picture or footage into it, set the words to fill the screen, or tighten the section'));
   if (half.length) out.push(f('WARN', 'half-empty', `${half.length} screen(s) have one half empty while the other holds everything (at y ${at(half)})`,
     'fill the empty half with the section\'s picture, footage or map, or centre the content and narrow the section'));
   return out;
+}
+
+/** Consecutive empty samples, each three quarters of a screen apart: FLAT.run of them span two screens. */
+function emptyRuns(blank, isEmpty) {
+  const runs = [];
+  let run = [];
+  for (const b of blank) {
+    if (isEmpty(b)) { run.push(b); continue; }
+    if (run.length >= FLAT.run) runs.push(run);
+    run = [];
+  }
+  if (run.length >= FLAT.run) runs.push(run);
+  return runs;
 }
 
 /** A big drawing of boxes, straight lines and labels where a picture or a real map belongs. */

@@ -25,7 +25,7 @@ client is atmosphere; say which files are stand-ins in the report.
 - **The hero keeps its whole picture.** Choose the framing with `object-position` (or `--focus` in the dive recipe);
   never crop the source file and never letterbox it with `object-fit: contain` and black bars.
 - **True colour.** Never tint the client's photographs to match the palette.
-- **No burned-in captions or stickers.** Social videos often carry them: crop above them or pick another moment.
+- **No burned-in captions, titles or stickers.** Social videos and their covers carry them ("DÍA 8 DE 10" on a cover, the app's buttons on a screenshot): crop above them, take a clean frame from the clip, or pick another picture. A cover with its title is a poster for the feed, not a photograph for the page.
 - **One photograph, one place.** A frame used twice reads as a template; take another frame from their videos.
 - **Resolution.** A 720 px frame upscaled to a full-width hero is soft: use it at its size (a framed loop, a card) or
   take the facade's photograph instead.

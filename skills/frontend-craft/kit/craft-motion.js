@@ -18,8 +18,9 @@ import { loop } from './motion/video.js';
 import { recipes } from './motion/recipes.js';
 import { product3d } from './motion/product3d.js';
 import { map } from './motion/map.js';
+import { premium } from './motion/premium.js';
 
-const EFFECTS = { ...entrance, ...scroll, ...pointer, ...text, scene, loop, ...recipes, product3d, map };
+const EFFECTS = { ...entrance, ...scroll, ...pointer, ...text, scene, loop, ...recipes, product3d, map, ...premium };
 const active = new WeakMap();
 
 /** Names of every data attribute the kit understands (data-<name>). */

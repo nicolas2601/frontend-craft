@@ -129,10 +129,11 @@ function visibilityRules({ invisible }) {
 function motionRules({ motion, kind }) {
   if (!PERSUADE_KINDS.includes(kind)) return [];
   const out = [];
-  if (!motion.entrance) out.push(f('FAIL', 'motion-entrance', 'nothing animates in on the first screen', 'add data-enter to 3-6 hero elements (nav, headline, line, action, visual) or data-words on the h1'));
+  // Advice, not a requirement: motion is the design lead's choice (references/studio.md), these say what is missing.
+  if (!motion.entrance) out.push(f('WARN', 'motion-entrance', 'nothing animates in on the first screen', 'if the first screen should arrive, data-lines on the headline and data-unveil on the picture (kit premium layer) or data-enter on its parts'));
   if (!motion.scrollLinked && !motion.sticky.length) {
     const why = motion.reveals ? `only ${motion.reveals} fade-in reveal(s)` : 'nothing responds to scroll';
-    out.push(f('FAIL', 'motion-scroll-story', `${why}: no scroll-linked moment`, 'add one: data-scroll-words in a data-pin section, data-stack cards, a data-rail, or data-scrub with var(--p)'));
+    out.push(f('WARN', 'motion-scroll-story', `${why}: nothing responds to scrolling`, 'award-winning pages move with the reader: smooth scroll (data-smooth), a recipe (dive, journey, collage with data-parallax, product3d) or a ground that changes with the section'));
   }
   return out;
 }

@@ -13,7 +13,8 @@
     node <skill>/scripts/design.mjs accents <photo>     the colours in the subject's own picture, as accent candidates
     node <skill>/scripts/design.mjs show                the look now in .craft/deal.json
 
-  --mode colour is for a user or a brand that asks for coloured grounds; sober (white, black, one accent) is the default.
+  Grounds may carry the subject's colour (paper, the brand's colour, the night of the place): contrast, violet and neon
+  still fail. --mode sober holds a white or near-black ground, near-black ink and one accent, for a client who asks for it.
 */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -36,7 +37,7 @@ const str = (v) => (v === undefined || v === true ? undefined : String(v).trim()
 
 /** The palette, type and findings for a set of flags. Pure apart from reading the font list. */
 export function evaluateLook(args, fonts = loadFonts(FONTS_CSV), { links = null } = {}) {
-  const mode = str(args.mode) === 'colour' || str(args.mode) === 'color' ? 'colour' : 'sober';
+  const mode = str(args.mode) === 'sober' ? 'sober' : 'colour';
   const { scheme, roles } = buildRoles({ bg: str(args.bg), ink: str(args.ink), accent: str(args.accent), surface: str(args.surface), muted: str(args.muted), line: str(args.line), accentInk: str(args['accent-ink']) });
   const type = buildType({ display: str(args.display), displayWeights: list(args['display-weights']), text: str(args.text), textWeights: list(args['text-weights']), mono: str(args.mono), tracking: str(args.tracking), leading: args.leading ? Number(args.leading) : undefined, upper: !!args.upper, fonts });
   if (links) type.links = links;
